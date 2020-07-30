@@ -1,0 +1,27 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "An example of how you can write a Cognigy.AI 4.0.0 Extension containing Nodes.",
+  "main": "build/module.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "package": "tar cfz example.tar.gz build/* package.json package-lock.json icon.png"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "4.0.0",
+    "extensions",
+    "4.0.0"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.9.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.4",
+    "@types/node-fetch": "^2.5.7",
+    "typescript": "^3.8.3"
+  }
+}

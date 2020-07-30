@@ -1,0 +1,15 @@
+/**/credentials.json
+/**/token.json
+extensions/*/build
+extensions/*/node_modules
+extensions/*/src/shared
+extensions/*/.env
+extensions/service-endpoint/creds.data
+extensions/service-endpoint/gactions
+.env
+coverage/
+*.zip
+.idea
+*.bat
+
+/**/.DS_Store

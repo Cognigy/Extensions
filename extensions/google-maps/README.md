@@ -22,7 +22,7 @@ If the Searchquery field is empty or no Place was found, the module use the defa
 **View**
 
 In combination with the google-maps Webchat Plugin you get this view:
-![Create Location Node](./docs/google-maps-Webchat.PNG)
+![Create Location Node](./docs/google-maps-Webchat.png)
 
 ## Node: Get User Location From Text Message
 

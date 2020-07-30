@@ -4,8 +4,10 @@
   "description": "An example of how you can write a Cognigy.AI 4.0.0 Extension containing Nodes.",
   "main": "build/module.js",
   "scripts": {
-    "build": "tsc -p .",
-    "package": "tar cfz example.tar.gz build/* package.json package-lock.json icon.png"
+    "transpile": "tsc -p .",
+    "zip": "zip example.zip build/* package.json package-lock.json README.md icon.png icon-large.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
     "Cognigy.AI",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^13.13.4",
     "@types/node-fetch": "^2.5.7",
+    "tslint": "^6.1.2",
     "typescript": "^3.8.3"
   }
 }

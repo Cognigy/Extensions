@@ -4,6 +4,7 @@ extensions/*/build
 extensions/*/node_modules
 extensions/*/src/shared
 extensions/*/.env
+extensions/*/*.tar.gz
 extensions/service-endpoint/creds.data
 extensions/service-endpoint/gactions
 .env

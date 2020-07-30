@@ -1,0 +1,30 @@
+{
+  "name": "random-cat-image",
+  "version": "1.0.0",
+  "description": "Outputs a random cat image to the user",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz random-cat-image.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "4.0.0",
+    "extensions",
+    "4.0.0"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.9.0",
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^13.13.4",
+    "tslint": "^6.1.2",
+    "typescript": "^3.8.3"
+  }
+}

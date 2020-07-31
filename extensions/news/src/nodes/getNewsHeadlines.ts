@@ -25,7 +25,7 @@ export const getNewsHeadlines = createNodeDescriptor({
     fields: [
         {
             key: "connection",
-            label: "The provided api-key",
+            label: "The provided API key",
             type: "connection",
             params: {
                 connectionType: "api-key",
@@ -34,13 +34,13 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "stopOnError",
-            label: "Whether to stop on error or continue",
+            label: "Whether to stop on error or not",
             type: "toggle",
             defaultValue: false,
         },
         {
             key: "query",
-            label: "The search query",
+            label: "Search term",
             type: "cognigyText",
             params: {
                 required: true,
@@ -48,7 +48,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "country",
-            label: "The news country (e.g. de (Germany), us (USA))",
+            label: "News country",
             type: "select",
             defaultValue: "us",
             params: {
@@ -79,26 +79,26 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "site",
-            label: "The news site",
+            label: "Newspaper",
             type: "select",
             params: {
                 required: true,
-                options: [{ label: "bbc-news", value: "bbc-news" }, { label: "the-verge", value: "the-verge" }, { label: "cbs-news", value: "cbs-news" }, { label: "abc-news", value: "abc-news" }, { label: "bild", value: "bild" }, { label: "cnn", value: "cnn" }, { label: "der-tagesspiegel", value: "der-tagesspiegel" }, { label: "focus", value: "focus" }, { label: "fox-news", value: "fox-news" }, { label: "t3n", value: "t3n" }, { label: "marca", value: "marca" }, { label: "the-telegraph", value: "the-telegraph" }, { label: "wired", value: "wired" }, { label: "the-wall-street-journal", value: "the-wall-street-journal" }, { label: "spiegel-online", value: "spiegel-online" }, { label: "the-washington-times", value: "the-washington-times" }, { label: "the-new-york-times", value: "the-new-york-times" }, { label: "die-zeit", value: "die-zeit" }, { label: "la-repubblica", value: "la-repubblica" }, { label: "nhl-news", value: "nhl-news" }, { label: "espn", value: "espn" }],
+                options: [{ label: "BBC News", value: "bbc-news" }, { label: "The Verge", value: "the-verge" }, { label: "CBS News", value: "cbs-news" }, { label: "ABC News", value: "abc-news" }, { label: "Bild", value: "bild" }, { label: "CNN", value: "cnn" }, { label: "Der Tagesspiegel", value: "der-tagesspiegel" }, { label: "Focus", value: "focus" }, { label: "FOX News", value: "fox-news" }, { label: "t3n", value: "t3n" }, { label: "Marca", value: "marca" }, { label: "The Telegraph", value: "the-telegraph" }, { label: "Wired", value: "wired" }, { label: "The Wall Street Journal", value: "the-wall-street-journal" }, { label: "Spiegel Online", value: "spiegel-online" }, { label: "The Washington Times", value: "the-washington-times" }, { label: "The New York Times", value: "the-new-york-times" }, { label: "Die Zeit", value: "die-zeit" }, { label: "La Repubblica", value: "la-repubblica" }, { label: "NHL News", value: "nhl-news" }, { label: "ESPN", value: "espn" }],
             }
         },
         {
             key: "category",
-            label: "The news category",
+            label: "Category",
             type: "select",
             defaultValue: "general",
             params: {
                 required: true,
-                options: [{ label: "general", value: "general" }, { label: "business", value: "business" }, { label: "technology", value: "technology" }, { label: "entertainment", value: "entertainment" }, { label: "health", value: "health" }, { label: "science", value: "science" }, { label: "sports", value: "sports" }],
+                options: [{ label: "General", value: "general" }, { label: "Business", value: "business" }, { label: "Technology", value: "technology" }, { label: "Entertainment", value: "entertainment" }, { label: "Health", value: "health" }, { label: "Science", value: "science" }, { label: "Sports", value: "sports" }],
             }
         },
         {
             key: "contextStore",
-            label: "Context key to store Result",
+            label: "Context key",
             type: "cognigyText",
             defaultValue: "news",
             params: {
@@ -117,7 +117,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "stopSection",
-            label: "additional settings",
+            label: "Additional Settings",
             defaultCollapsed: true,
             fields: [
                 "stopOnError",
@@ -130,13 +130,22 @@ export const getNewsHeadlines = createNodeDescriptor({
             fields: [
                 "connection",
             ]
+        },
+        {
+            key: "newsOptions",
+            label: "News Options",
+            defaultCollapsed: false,
+            fields: [
+                "category",
+                "site",
+                "language",
+                "country"
+            ]
         }
     ],
     form: [
         { type: "field", key: "query" },
-        { type: "field", key: "country" },
-        { type: "field", key: "site" },
-        { type: "field", key: "category" },
+        { type: "section", key: "newsOptions" },
         { type: "section", key: "contextSection" },
         { type: "section", key: "connectionSection" },
         { type: "section", key: "stopSection" },

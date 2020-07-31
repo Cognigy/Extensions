@@ -25,7 +25,7 @@ export const getNewsHeadlines = createNodeDescriptor({
     fields: [
         {
             key: "connection",
-            label: "The provided API key",
+            label: "API Key",
             type: "connection",
             params: {
                 connectionType: "api-key",
@@ -40,7 +40,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "query",
-            label: "Search term",
+            label: "Search Term",
             type: "cognigyText",
             params: {
                 required: true,
@@ -48,7 +48,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "country",
-            label: "News country",
+            label: "News Country",
             type: "select",
             defaultValue: "us",
             params: {
@@ -61,7 +61,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         {
             key: "language",
             type: "select",
-            label: "News language",
+            label: "News Language",
             defaultValue: "en",
             params: {
                 required: true,
@@ -98,7 +98,7 @@ export const getNewsHeadlines = createNodeDescriptor({
         },
         {
             key: "contextStore",
-            label: "Context key",
+            label: "Context Key",
             type: "cognigyText",
             defaultValue: "news",
             params: {

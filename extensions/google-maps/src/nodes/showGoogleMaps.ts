@@ -20,7 +20,7 @@ export interface IShowGoogleMaps extends INodeFunctionBaseParams {
     };
 }
 export const showGoogleMaps = createNodeDescriptor({
-    type: "show google maps",
+    type: "showGoogleMaps",
     defaultLabel: "Show Google Maps",
     preview: {
         key: "searchquery",
@@ -29,7 +29,7 @@ export const showGoogleMaps = createNodeDescriptor({
     fields: [
         {
             key: "connection",
-            label: "The api-key which should be used.",
+            label: "API Key",
             type: "connection",
             params: {
                 connectionType: "api-key",
@@ -39,7 +39,7 @@ export const showGoogleMaps = createNodeDescriptor({
         {
             key: "searchchoice",
             type: "select",
-            label: "location type",
+            label: "Location Type",
             defaultValue: "address",
             params: {
                 options: [
@@ -56,7 +56,7 @@ export const showGoogleMaps = createNodeDescriptor({
         },
         {
             key: "searchquery",
-            label: "Centers the map on the address",
+            label: "Address",
             type: "cognigyText",
             defaultValue: "Speditionsstraße 1",
             condition: {
@@ -71,7 +71,7 @@ export const showGoogleMaps = createNodeDescriptor({
         },
         {
             key: "latitude",
-            label: "If no address: the latitute of the start position (e.g. 51.2139586)",
+            label: "Latitude",
             type: "cognigyText",
             defaultValue: "",
             condition: {
@@ -86,7 +86,7 @@ export const showGoogleMaps = createNodeDescriptor({
         },
         {
             key: "longitude",
-            label: "If no address: the longitude of the start position (e.g. 6.7489951)",
+            label: "Longitude",
             type: "cognigyText",
             condition: {
                 key: "searchchoice",
@@ -100,7 +100,7 @@ export const showGoogleMaps = createNodeDescriptor({
         },
         {
             key: "zoom",
-            label: "The zoom factor of the map (e.g. 20)",
+            label: "Map Zoom",
             type: "cognigyText",
             params: {
                 disabled: false,

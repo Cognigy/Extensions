@@ -23,7 +23,7 @@ export const getRandomCatImage = createNodeDescriptor({
     fields: [
         {
             key: "connection",
-			label: "The api-key connection which should be used.",
+			label: "API Key",
 			type: "connection",
 			params: {
 				connectionType: "api-key"

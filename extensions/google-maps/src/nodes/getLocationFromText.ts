@@ -24,7 +24,7 @@ export const getLocationFromText = createNodeDescriptor({
     fields: [
         {
             key: "connection",
-            label: "The api-key which should be used.",
+            label: "API Key",
             type: "connection",
             params: {
                 connectionType: "api-key",
@@ -33,7 +33,7 @@ export const getLocationFromText = createNodeDescriptor({
         },
         {
             key: "place",
-            label: "place",
+            label: "Place",
             type: "cognigyText",
             defaultValue: "",
             params: {
@@ -42,7 +42,7 @@ export const getLocationFromText = createNodeDescriptor({
         },
         {
             key: "city",
-            label: "city",
+            label: "City",
             type: "cognigyText",
             params: {
                 required: true
@@ -50,7 +50,7 @@ export const getLocationFromText = createNodeDescriptor({
         },
         {
             key: "country",
-            label: "country",
+            label: "Country",
             type: "cognigyText",
             params: {
                 required: true
@@ -58,7 +58,7 @@ export const getLocationFromText = createNodeDescriptor({
         },
         {
             key: "contextStore",
-            label: "Context key to store Result",
+            label: "Context Key",
             type: "cognigyText",
             defaultValue: "address",
             params: {

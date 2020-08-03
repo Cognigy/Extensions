@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import request from 'request-promise';
+import { getGoogleMapsLocation } from "../helper/getGoogleMapsLocation";
 
 /**
  * This file contains a simple node with many field types, sections, etc
@@ -8,201 +8,246 @@ import request from 'request-promise';
  * and shows important concepts
  */
 export interface IShowGoogleMaps extends INodeFunctionBaseParams {
-    config: {
-        connection: {
-            key: string;
-        };
-        zoom: any;
-        longitude: any;
-        latitude: any;
-        searchchoice: string;
-        searchquery: any;
-    };
+	config: {
+		connection: {
+			key: string;
+		};
+		zoom: any;
+		longitude: any;
+		latitude: any;
+		searchchoice: string;
+		storeLocation: string;
+		inputKey: string;
+		contextKey: string;
+		searchquery: any;
+	};
 }
 export const showGoogleMaps = createNodeDescriptor({
-    type: "showGoogleMaps",
-    defaultLabel: "Show Google Maps",
-    preview: {
-        key: "searchquery",
-        type: "text"
-    },
-    fields: [
-        {
-            key: "connection",
-            label: "API Key",
-            type: "connection",
-            params: {
-                connectionType: "api-key",
-                required: true
-            }
-        },
-        {
-            key: "searchchoice",
-            type: "select",
-            label: "Location Type",
-            defaultValue: "address",
-            params: {
-                options: [
-                    {
-                        label: "Address",
-                        value: "address",
-                    },
-                    {
-                        label: "Coordinates",
-                        value: "coordinates",
-                    },
-                ],
-            },
-        },
-        {
-            key: "searchquery",
-            label: "Address",
-            type: "cognigyText",
-            defaultValue: "Speditionsstraße 1",
-            condition: {
-                key: "searchchoice",
-                value: "address"
-            },
-            params: {
-                disabled: false,
-                placeholder: "",
-                required: true
-            }
-        },
-        {
-            key: "latitude",
-            label: "Latitude",
-            type: "cognigyText",
-            defaultValue: "",
-            condition: {
-                key: "searchchoice",
-                value: "coordinates"
-            },
-            params: {
-                disabled: false,
-                placeholder: "",
-                required: false
-            }
-        },
-        {
-            key: "longitude",
-            label: "Longitude",
-            type: "cognigyText",
-            condition: {
-                key: "searchchoice",
-                value: "coordinates"
-            },
-            params: {
-                disabled: false,
-                placeholder: "",
-                required: false
-            }
-        },
-        {
-            key: "zoom",
-            label: "Map Zoom",
-            type: "cognigyText",
-            params: {
-                disabled: false,
-                placeholder: "",
-                required: false
-            }
-        },
-    ],
-    sections: [
-        {
-            key: "zoomSection",
-            label: "Zoom",
-            defaultCollapsed: true,
-            fields: [
-                "zoom",
-            ]
-        },
-        {
-            key: "connectionSection",
-            label: "Authentication",
-            defaultCollapsed: false,
-            fields: [
-                "connection",
-            ]
-        }
-    ],
-    form: [
-        { type: "field", key: "searchchoice" },
-        { type: "field", key: "searchquery" },
-        { type: "field", key: "latitude" },
-        { type: "field", key: "longitude" },
-        { type: "section", key: "zoomSection" },
-        { type: "section", key: "connectionSection" },
-    ],
-    appearance: {
-        color: "#1e9c6d"
-    },
-    function: async ({ cognigy, config }: IShowGoogleMaps) => {
-        const { api } = cognigy;
-        const { connection, searchquery, latitude, longitude, zoom } = config;
+	type: "showGoogleMaps",
+	defaultLabel: "Show Google Maps",
+	preview: {
+		key: "searchquery",
+		type: "text"
+	},
+	fields: [
+		{
+			key: "connection",
+			label: "API Key",
+			type: "connection",
+			params: {
+				connectionType: "api-key",
+				required: true
+			}
+		},
+		{
+			key: "searchchoice",
+			type: "select",
+			label: "Location Type",
+			defaultValue: "address",
+			params: {
+				options: [
+					{
+						label: "Address",
+						value: "address",
+					},
+					{
+						label: "Coordinates",
+						value: "coordinates",
+					},
+				],
+			},
+		},
+		{
+			key: "searchquery",
+			label: "Address",
+			type: "cognigyText",
+			defaultValue: "Speditionsstraße 1",
+			condition: {
+				key: "searchchoice",
+				value: "address"
+			},
+			params: {
+				disabled: false,
+				placeholder: "",
+				required: true
+			}
+		},
+		{
+			key: "latitude",
+			label: "Latitude",
+			type: "cognigyText",
+			defaultValue: "",
+			condition: {
+				key: "searchchoice",
+				value: "coordinates"
+			},
+			params: {
+				disabled: false,
+				placeholder: "",
+				required: false
+			}
+		},
+		{
+			key: "longitude",
+			label: "Longitude",
+			type: "cognigyText",
+			condition: {
+				key: "searchchoice",
+				value: "coordinates"
+			},
+			params: {
+				disabled: false,
+				placeholder: "",
+				required: false
+			}
+		},
+		{
+			key: "zoom",
+			label: "Map Zoom",
+			type: "cognigyText",
+			params: {
+				disabled: false,
+				placeholder: "",
+				required: false
+			}
+		},
+		{
+			key: "storeLocation",
+			type: "select",
+			label: "Where to store the result",
+			params: {
+				options: [
+					{
+						label: "Input",
+						value: "input"
+					},
+					{
+						label: "Context",
+						value: "context"
+					}
+				],
+				required: true
+			},
+			defaultValue: "input"
+		},
+		{
+			key: "inputKey",
+			type: "cognigyText",
+			label: "Input Key to store Result",
+			defaultValue: "httprequest",
+			condition: {
+				key: "storeLocation",
+				value: "input"
+			}
+		},
+		{
+			key: "contextKey",
+			type: "cognigyText",
+			label: "Context Key to store Result",
+			defaultValue: "httprequest",
+			condition: {
+				key: "storeLocation",
+				value: "context"
+			}
+		}
+	],
+	sections: [
+		{
+			key: "zoomSection",
+			label: "Zoom",
+			defaultCollapsed: true,
+			fields: [
+				"zoom",
+			]
+		},
+		{
+			key: "connectionSection",
+			label: "Connection",
+			defaultCollapsed: false,
+			fields: [
+				"connection",
+			]
+		},
+		{
+			key: "storageOption",
+			label: "Storage Option",
+			defaultCollapsed: false,
+			fields: [
+				"storeLocation",
+				"inputKey",
+				"contextKey"
+			]
+		}
+	],
+	form: [
+		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "searchchoice" },
+		{ type: "field", key: "searchquery" },
+		{ type: "field", key: "latitude" },
+		{ type: "field", key: "longitude" },
+		{ type: "section", key: "zoomSection" },
+		{ type: "section", key: "storageOption" },
+	],
+	appearance: {
+		color: "#1e9c6d"
+	},
+	function: async ({ cognigy, config }: IShowGoogleMaps) => {
+		const { api } = cognigy;
+		const { connection, storeLocation, inputKey, contextKey, searchquery, latitude, longitude, zoom } = config;
 
-        let request_success: boolean = false;
+		let request_success: boolean = false;
 
-        let longnew: number = longitude;
-        let latnew: number = latitude;
-        let zoomnew: number = zoom;
+		let longnew: number = longitude;
+		let latnew: number = latitude;
+		let zoomnew: number = zoom;
 
-        if (isNaN(latitude) || !latitude) {
-            latnew = (51.2141562) as number;
-        }
-        if (isNaN(longitude) || !longitude) {
-            longnew = (6.7488952) as number;
-        }
-        if (isNaN(zoom) || !zoom) {
-            zoomnew = 10 as number;
-        }
-        if (searchquery >= "" || searchquery != null || searchquery !== "") {
-            try {
-                const place = await request({
-                    uri: 'https://maps.googleapis.com/maps/api/geocode/json',
-                    qs: {
-                        key: connection.key,
-                        address: searchquery
-                    },
-                    json: true
-                });
+		if (isNaN(latitude) || !latitude) {
+			latnew = (51.2141562) as number;
+		}
+		if (isNaN(longitude) || !longitude) {
+			longnew = (6.7488952) as number;
+		}
+		if (isNaN(zoom) || !zoom) {
+			zoomnew = 10 as number;
+		}
+		if (searchquery !== null || searchquery !== "") {
 
-                api.addToContext("maps response", place.results[0], 'simple');
+			const response = await getGoogleMapsLocation(connection.key, searchquery);
 
-                try {
-                    const { lng, lat } = place.results[0].geometry.location;
-                    request_success;
-                    longnew = lng;
-                    latnew = lat;
-                } catch (error) {
-                    api.say(JSON.stringify(place.data));
-                    api.say("location not found");
-                    // location not found
-                }
-            } catch (error) {
-                api.say("Axios-" + error + error.message);
-                api.say(`https://maps.googleapis.com/maps/api/geocode/json?key=${connection.key}&address=${searchquery.replace(/ /g, "%20")}`);
-            }
+			try {
+				const { lng, lat } = response.location.geometry.location;
+				request_success;
+				longnew = lng;
+				latnew = lat;
+			} catch (error) {
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, error, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, error);
+				}
+			}
+		}
 
-        } else {
-            api.say("unable to process data");
-        }
-
-        if (request_success || (longitude != null && latitude != null)) {
-            api.output('', {
-                "_plugin": {
-                    "type": 'google-maps',
-                    "center": {
-                        "lat": latnew,
-                        "lng": longnew
-                    },
-                    "zoom": Number(zoomnew),
-                    "bootstrapURLKeys": connection.key
-                }
-            });
-        } else {
-            api.say("location cant be found");
-        }
-    }
+		if (request_success || (longitude != null && latitude != null)) {
+			api.output('', {
+				"_plugin": {
+					"type": 'google-maps',
+					"center": {
+						"lat": latnew,
+						"lng": longnew
+					},
+					"zoom": Number(zoomnew),
+					"bootstrapURLKeys": connection.key
+				}
+			});
+		} else {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, "location not found", "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, "location not found");
+			}
+		}
+	}
 });

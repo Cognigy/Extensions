@@ -16,11 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "@cognigy/extension-tools": "^0.9.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
+    "axios": "^0.19.2",
     "tslint": "^6.1.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^13.13.15",
     "@types/node-fetch": "^2.5.7",
     "typescript": "^3.8.3"

@@ -39,8 +39,7 @@ export const updateContactNode = createNodeDescriptor({
 			key: "data",
 			label: "Update Contact Data",
 			type: "json",
-			defaultValue: `
-{
+			defaultValue: `{
 	"properties": [
 	  {
 		"property": "firstname",

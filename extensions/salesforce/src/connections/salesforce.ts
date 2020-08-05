@@ -6,6 +6,7 @@ export const salesforceConnection: IConnectionSchema = {
 	fields: [
 		{ fieldName: "username" },
 		{ fieldName: "password" },
-		{ fieldName: "token" }
+		{ fieldName: "token" },
+		{ fieldName: "loginUrl" }
 	]
 };

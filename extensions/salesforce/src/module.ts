@@ -1,6 +1,7 @@
 import { createExtension } from "@cognigy/extension-tools";
 
-import { sqlQueryNode } from "./nodes/sqlQuery";
+import { sqlQueryNode } from "./nodes/crm/sqlQuery";
+import { createEntityNode } from "./nodes/crm/createEntity";
 import { startLiveChatNode } from "./nodes/serviceCloud/startLiveChat";
 import { checkLiveAgentAvailabilityNode } from "./nodes/serviceCloud/checkLiveAgentAvailability";
 import { sendMessageToLiveAgentNode } from "./nodes/serviceCloud/sendMessageToLiveAgent";
@@ -13,6 +14,7 @@ import { livechatConnection } from "./connections/liveChat";
 export default createExtension({
 	nodes: [
 		sqlQueryNode,
+		createEntityNode,
 		startLiveChatNode,
 		checkLiveAgentAvailabilityNode,
 		sendMessageToLiveAgentNode,

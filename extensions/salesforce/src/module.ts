@@ -5,6 +5,7 @@ import { startLiveChatNode } from "./nodes/serviceCloud/startLiveChat";
 import { checkLiveAgentAvailabilityNode } from "./nodes/serviceCloud/checkLiveAgentAvailability";
 import { sendMessageToLiveAgentNode } from "./nodes/serviceCloud/sendMessageToLiveAgent";
 import { stopLiveChatNode } from "./nodes/serviceCloud/stopLiveChat";
+import { getAgentMessageNode } from "./nodes/serviceCloud/getAgentMessage";
 import { salesforceConnection } from "./connections/salesforce";
 import { livechatConnection } from "./connections/liveChat";
 
@@ -15,7 +16,8 @@ export default createExtension({
 		startLiveChatNode,
 		checkLiveAgentAvailabilityNode,
 		sendMessageToLiveAgentNode,
-		stopLiveChatNode
+		stopLiveChatNode,
+		getAgentMessageNode
 	],
 
 	connections: [

@@ -2,19 +2,33 @@ Integrates Cognigy.AI with Salesforce (https://www.salesforce.com)
 
 This Extension is based on jsforce (https://jsforce.github.io/)
 
-### Secret
-This Extension needs a connection to be defined and passed to the Nodes. The secret must have the following keys:
+### Connection (General)
+This Extensions needs a connection to be defined and passed to the Nodes. The connection must contain the following keys:
 
 - username
-
 - password
-
 - token
-
 - **optional**: loginUrl
 
+If the loginUrl is stored in the connection, Salesforce login to this url, e.g. 'https://test.salesforce.com'
 
-If the loginUrl is stored in the secret, Salesforce login to this url, e.g. 'https://test.salesforce.com'
+### Connection (Live Chat)
+If one wants to use the **Start Live Chat** Node, another connection is required. The following keys need to be included:
+
+- organizationId
+  - Your Salesforce Organization ID
+  - [How to find](https://help.salesforce.com/articleView?id=000325251&type=1&mode=1)
+- deploymentId
+  - The ID of your Salesforce Deployment
+- livechatButtonId
+  - The ID of your live chat button
+- liveAgentUrl
+  - The URL of your live agent
+
+Please have a look at this tutorial in order to get all required values: [Get Chat Settings from Your Org](https://developer.salesforce.com/docs/atlas.en-us.noversion.service_sdk_ios.meta/service_sdk_ios/live_agent_cloud_setup_get_settings.htm)
+
+
+# General
 
 ## Node: soqlQuery 
 
@@ -163,9 +177,13 @@ The response looks like the following:
     "errors": []
 ```
 
-## Start Live Chat
+# Service Cloud
 
-This node creates a new Salesforce live chat session and chat request. If it returned that `startedLiveChat` equals true, the live agent should received a chat request in the Salesforce Service Console:
+The following Nodes provide various methods for the [Salesforce Service Cloud](https://www.salesforce.com/de/campaign/sem/service-cloud/).
+
+## Node: Start Live Chat
+
+This Node creates a new Salesforce Live Chat session and chat request. If it returned that `startedLiveChat` equals `true`, the live agent should received a chat request in the Salesforce Service Console:
 
 ```json
 "liveChat": {
@@ -183,7 +201,7 @@ Inside the **Salesforce Service Console**:
 
 ![Chat Request](./docs/chatrequest.png)
 
-## Check Live Agent Availability
+## Node: Check Live Agent Availability
 
 Checks whether there is a free agent for the provided live chat button. It returns the following format:
 
@@ -205,6 +223,23 @@ Checks whether there is a free agent for the provided live chat button. It retur
   }
 ```
 
-In order to get the information, you have to turn on that an agent can **decline a chat request** in Salesforce:
+In order to get the information, one has to turn on that an agent can **decline a chat request** in Salesforce:
 
 ![Configuration](./docs/defaultpresenceconfig.png)
+
+
+## Node: Stop Live Chat
+
+As soon as the user is finished with the agent conversation, this Node can be used to stop the curent live agent session. One needs the `liveAgentAffinity` and `liveAgentSessionKey` which were stored into the context before. After executing this Node, the Salesforce Live Agent chat will end and the Node will return `true`.
+
+## Node: Send Message To Live Agent
+
+In order to send a message to the current live agent session, this Node is required. One needs the `liveAgentAffinity` and `liveAgentSessionKey` which were stored into the context before -- by **Start Live Chat**. Furthermore, a `text` message must be defined. After sending a message, this node doesn't return anything.
+
+## Node: Get Agent Message (BETA)
+
+At the moment, one needs to use this Node in order to retreive sent agent messages. One needs the `liveAgentAffinity` and `liveAgentSessionKey` which were stored into the context before -- by **Start Live Chat**. Behind the scenes, this Node polls for a new Salesforce message and automatically sends it to the user as soon as it arrives.
+
+In a Cognigy Flow, this process could look like this:
+
+![Get Agent Message Flow Example](./docs/getAgentMessageFlow.png)

@@ -1,0 +1,23 @@
+{
+  "name": "language-detection",
+  "version": "1.0.0",
+  "description": "Detects the language of a text.",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz language-detection.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "author": "Cogngiy GmbH",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^13.9.0",
+    "typescript": "^3.8.3",
+    "tslint": "^5.16.0"
+  },
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "languagedetect": "^2.0.0"
+  }
+}

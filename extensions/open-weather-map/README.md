@@ -57,13 +57,3 @@ This node returns the entire weather data of a chosen city:
     "cod": 200
   }
 ```
-
-## Node: getTemperature
-
-This node just returns the temperature of the chosen city:
-
-```json
-{
-    "temperature": 19.76
-}
-```

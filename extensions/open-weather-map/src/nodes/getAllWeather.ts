@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import weather from 'openweather-apis';
+import axios from 'axios';
 
 export interface IGetAllWeatherParams extends INodeFunctionBaseParams {
 	config: {
@@ -7,8 +7,6 @@ export interface IGetAllWeatherParams extends INodeFunctionBaseParams {
 			key: string;
 		};
 		city: string;
-		language: string;
-		units: string;
 		contextStore: string;
 		storeLocation: string;
 		inputKey: string;
@@ -30,110 +28,6 @@ export const getAllWeather = createNodeDescriptor({
 			params: {
 				connectionType: "api-key",
 				required: true
-			}
-		},
-		{
-			key: "language",
-			label: "Language",
-			type: "select",
-			defaultValue: "en",
-			params: {
-				options: [
-					{
-						label: "English",
-						value: "en"
-					},
-					{
-						label: "Russian",
-						value: "ru"
-					},
-					{
-						label: "Spanish",
-						value: "es"
-					},
-					{
-						label: "English",
-						value: "uk"
-					},
-					{
-						label: "German",
-						value: "de"
-					},
-					{
-						label: "Portuguese",
-						value: "pt"
-					},
-					{
-						label: "Romanian",
-						value: "ro"
-					},
-					{
-						label: "Polish",
-						value: "pl"
-					},
-					{
-						label: "Finnish",
-						value: "fi"
-					},
-					{
-						label: "Dutch",
-						value: "nl"
-					},
-					{
-						label: "French",
-						value: "fr"
-					},
-					{
-						label: "Bulgarian",
-						value: "bg"
-					},
-					{
-						label: "Swedish",
-						value: "sv"
-					},
-					{
-						label: "Chinese(T)",
-						value: "zh_tw"
-					},
-					{
-						label: "Turkish",
-						value: "tr"
-					},
-					{
-						label: "Croatian",
-						value: "hr"
-					},
-					{
-						label: "Catalan",
-						value: "ca"
-					},
-					{
-						label: "Chinese",
-						value: "zh"
-					}
-				]
-			}
-		},
-		{
-			key: "units",
-			label: "Units",
-			type: "select",
-			defaultValue: "metric",
-			params: {
-				options: [
-					{
-						label: "Metric",
-						value: "metric"
-					},
-					{
-						label: "Internal",
-						value: "internal"
-					},
-					{
-						label: "Imperial",
-						value: "imperial"
-					}
-				]
 			}
 		},
 		{
@@ -208,8 +102,6 @@ export const getAllWeather = createNodeDescriptor({
 	form: [
 		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "city" },
-		{ type: "field", key: "language" },
-		{ type: "field", key: "units" },
 		{ type: "section", key: "storage" }
 	],
 	appearance: {
@@ -218,43 +110,22 @@ export const getAllWeather = createNodeDescriptor({
 
 	function: async ({ cognigy, config }: IGetAllWeatherParams) => {
 		const { api } = cognigy;
-		const { connection, city, language, units, contextStore, storeLocation, inputKey, contextKey } = config;
+		const { connection, city, storeLocation, inputKey, contextKey } = config;
 		const { key } = connection;
 
 		try {
-			weather.setLang(language);
 
-			// set city by name
-			weather.setCity(city);
-
-			// 'metric'  'internal'  'imperial'
-			weather.setUnits(units);
-
-			// check http://openapimap.org/appid#get for get the APPID
-			weather.setAPPID(key);
-
-			// get all the JSON file returned from server (rich of info)
-
-			await new Promise((resolve, reject) => {
-				weather.getAllWeather((err, JSONObj) => {
-					if (err) {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, err, "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, err);
-						}
-					}
-
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, JSONObj, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, JSONObj);
-					}
-					resolve();
-				});
+			const response = await axios({
+				method: 'get',
+				url: `https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&appid=${key}`
 			});
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error, "simple");

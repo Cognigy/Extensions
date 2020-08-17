@@ -3,24 +3,21 @@ import axios from 'axios';
 import authenticate from "../helpers/authenticate";
 
 
-export interface IDeployAutomationsParams extends INodeFunctionBaseParams {
+export interface IListDevicesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			url: string;
 			username: string;
 			password: string;
 		};
-		fileId: string;
-		deviceIds: string[];
-		botVariables: object;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const deployAutomationsNode = createNodeDescriptor({
-	type: "deployAutomations",
-	defaultLabel: "Deploy Automations",
+export const listDevicesNode = createNodeDescriptor({
+	type: "listDevices",
+	defaultLabel: "List Devices",
 	fields: [
 		{
 			key: "connection",
@@ -28,44 +25,6 @@ export const deployAutomationsNode = createNodeDescriptor({
 			type: "connection",
 			params: {
 				connectionType: "automation-anywhere",
-				required: true
-			}
-		},
-		{
-			key: "fileId",
-			label: "File Id",
-			type: "cognigyText",
-			defaultValue: "",
-			params: {
-				required: true
-			}
-		},
-		{
-			key: "deviceIds",
-			label: "Device Ids",
-			type: "textArray",
-			defaultValue: "",
-			params: {
-				required: true
-			}
-		},
-		{
-			key: "botVariables",
-			label: "Bot Variables",
-			type: "json",
-			defaultValue: `{
-	"variable1": {
-		"string": "value"
-	},
-	"variable2": {
-		"list": [
-			"value1",
-			"value2"
-		]
-	}
-}
-			`,
-			params: {
 				required: true
 			}
 		},
@@ -131,31 +90,20 @@ export const deployAutomationsNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "section", key: "connectionSection" },
-		{ type: "field", key: "fileId" },
-		{ type: "field", key: "deviceIds" },
-		{ type: "field", key: "botVariables" },
 		{ type: "section", key: "storage" }
 	],
 	appearance: {
 		color: "#FAAB1C"
 	},
-	function: async ({ cognigy, config }: IDeployAutomationsParams) => {
+	function: async ({ cognigy, config }: IListDevicesParams) => {
 		const { api, input } = cognigy;
-		const { connection, fileId, deviceIds, botVariables, contextKey, inputKey, storeLocation } = config;
+		const { connection, contextKey, inputKey, storeLocation } = config;
 		const { url, username, password } = connection;
 
-		if (!fileId) throw new Error('No file id defined.');
-		if (!deviceIds) throw new Error('No device ids defined.');
-
 		try {
-			const options  = await authenticate(true, url, username, password, fileId, deviceIds, botVariables);
+			const options  = await authenticate(true, url, username, password, '', [], {});
 
-			const response = await axios({
-			  method: 'post',
-			  url: `${url}/v2/automations/deploy`,
-			  headers: { 'X-Authorization': options['headers']['X-Authorization'] },
-			  data: options['body']
-			});
+			const response = await axios.post(`${url}/v2/devices/list`, {}, options);
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");

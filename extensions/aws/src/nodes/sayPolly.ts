@@ -12,9 +12,6 @@ export interface ISayPollyParams extends INodeFunctionBaseParams {
 		};
 		text: string;
 		voice: string;
-		storeLocation: string;
-		contextKey: string;
-		inputKey: string;
 	};
 }
 export const sayPollyNode = createNodeDescriptor({

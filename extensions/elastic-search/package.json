@@ -1,0 +1,30 @@
+{
+  "name": "elastic-search",
+  "version": "1.0.0",
+  "description": "Elastic Search Integration",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz elastic-search.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cognigy/Extensions"
+  },
+  "keywords": [
+    "Elastic Search"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.12.26",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
+  },
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "elasticsearch": "^15.4.1"
+  }
+}

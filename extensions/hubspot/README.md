@@ -164,32 +164,3 @@ Creates a new **Engagement** in Hubspot. Here is an example for a note:
         "timestamp": 1409172644778
     }
 ```
-
-# Node: getOwners
-
-Returns all Hubspot owners: 
-
-```json
-"owners": [
-    {
-      "portalId": 123356,
-      "ownerId": 123456,
-      "type": "PERSON",
-      "firstName": "Max",
-      "lastName": "Mustermann",
-      "email": "m.mustermann@cognigy.com",
-      "createdAt": 1547690284152,
-      "updatedAt": 1547738101831,
-      "remoteList": [
-        {
-          "id": 123456,
-          "portalId": 6542321,
-          "ownerId": 65432123,
-          "remoteId": "654323",
-          "remoteType": "HUBSPOT",
-          "active": true
-        }
-      ],
-      "hasContactsAccess": false
-    
-```

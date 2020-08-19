@@ -1,0 +1,26 @@
+{
+  "name": "sentiment-analysis",
+  "version": "1.0.0",
+  "description": "Gives sentimental analysis of the text",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz sentiment-analysis.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Sentiment",
+    "Mood"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "tslint": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "typescript": "^3.8.3"
+  }
+}

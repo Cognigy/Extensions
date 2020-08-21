@@ -99,7 +99,7 @@ export const sendSMSNode = createNodeDescriptor({
 		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",

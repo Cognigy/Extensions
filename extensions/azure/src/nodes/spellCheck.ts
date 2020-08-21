@@ -219,7 +219,7 @@ export const spellCheckNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "spellcheck",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -229,7 +229,7 @@ export const spellCheckNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "spellcheck",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -262,60 +262,56 @@ export const spellCheckNode = createNodeDescriptor({
 		const { connection, text, language, storeLocation, inputKey, contextKey } = config;
 		const { key } = connection;
 
-		return new Promise((resolve, reject) => {
+		const host = 'api.cognitive.microsoft.com';
+		const path = '/bing/v7.0/spellcheck';
+		const queryString = `?mkt=${language}&mode=proof`;
 
-			const host = 'api.cognitive.microsoft.com';
-			const path = '/bing/v7.0/spellcheck';
-			const queryString = `?mkt=${language}&mode=proof`;
+		const requestParams = {
+			method: 'POST',
+			hostname: host,
+			path: path + queryString,
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'Content-Length': text.length + 5,
+				'Ocp-Apim-Subscription-Key': key,
+			}
+		};
 
-			const requestParams = {
-				method: 'POST',
-				hostname: host,
-				path: path + queryString,
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Content-Length': text.length + 5,
-					'Ocp-Apim-Subscription-Key': key,
-				}
-			};
-
-			const responseHandler = (response) => {
-				let body = '';
-				response.on('data', (d) => {
-					body += d;
-				});
-				response.on('end', () => {
-					try {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, JSON.parse(body), "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, JSON.parse(body));
-						}
-					} catch (e) {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, { "error": e.message }, "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, { "error": e.message });
-						}
-					}
-				});
-				response.on('error', (err) => {
-
-
+		const responseHandler = (response) => {
+			let body = '';
+			response.on('data', (d) => {
+				body += d;
+			});
+			response.on('end', () => {
+				try {
 					if (storeLocation === "context") {
-						api.addToContext(contextKey, { "error": err.message }, "simple");
+						api.addToContext(contextKey, JSON.parse(body), "simple");
 					} else {
 						// @ts-ignore
-						api.addToInput(inputKey, { "error": err.message });
+						api.addToInput(inputKey, JSON.parse(body));
 					}
-				});
-			};
+				} catch (e) {
+					if (storeLocation === "context") {
+						api.addToContext(contextKey, { "error": e.message }, "simple");
+					} else {
+						// @ts-ignore
+						api.addToInput(inputKey, { "error": e.message });
+					}
+				}
+			});
+			response.on('error', (err) => {
 
-			const req = https.request(requestParams, responseHandler);
-			req.write("text=" + text);
-			req.end();
-		});
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, { "error": err.message }, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, { "error": err.message });
+				}
+			});
+		};
+
+		const req = https.request(requestParams, responseHandler);
+		req.write("text=" + text);
+		req.end();
 	}
 });

@@ -15,9 +15,9 @@ export interface IPassControlParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const passControlToZendeskNode = createNodeDescriptor({
-	type: "passControlToZendesk",
-	defaultLabel: "Pass Control To Zendesk",
+export const passControlNode = createNodeDescriptor({
+	type: "passControlNode",
+	defaultLabel: "Pass Control",
 	fields: [
 		{
 			key: "connection",

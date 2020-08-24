@@ -2,6 +2,7 @@
 
  Icon  | Name  | Description  | Download  | Version  |
 |---|---|---|---|---|
+| <img src="./extensions/aws/icon.png" width="40"></img> |  [AWS](./extensions/aws/) | Use AWS Functions (S3, Lambda, Polly) |  [Download](https://github.com/Cognigy/Extensions/releases/download/aws400/aws.tar.gz) |  4.0.0 |
 | <img src="./extensions/bamboo-hr/icon.png" width="40"></img> |  [Bamboo HR](./extensions/bamboo-hr/) | Get General Employee Information |  [Download](https://github.com/Cognigy/Extensions/releases/download/bamboo-hr400/bamboohr.tar.gz) |  4.0.0 |
 | <img src="./extensions/cognigy/icon.png" width="40"></img> |  [Cognigy](./extensions/cognigy/) | Use Customized Nodes |  [Download](https://github.com/Cognigy/Extensions/releases/download/cognigy400/cognigy.tar.gz) |  4.0.0 |
 | <img src="./extensions/google-maps/icon.png" width="40"></img> |  [Google Maps](./extensions/google-maps/) | Use Google Maps in your Chat |  [Download](https://github.com/Cognigy/Extensions/releases/download/google-maps400/google-maps.tar.gz) |  4.0.0 |

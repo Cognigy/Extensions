@@ -1,0 +1,26 @@
+{
+  "name": "fuzzy-search",
+  "version": "4.0.0",
+  "description": "Adds fuzzy logic to Cognigy AI",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz fuzzy-search.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Fuzzy Search"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "fuse.js": "^6.4.1",
+    "tslint": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "typescript": "^3.8.3"
+  }
+}

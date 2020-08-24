@@ -1,22 +1,23 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
 
-export interface ITypingStopParams extends INodeFunctionBaseParams {
+export interface IPassControlParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			keyId: string;
 			secret: string;
 			appId: string;
 		};
+		switchboardIntegration: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
 
-export const typingStopNode = createNodeDescriptor({
-	type: "typingStop",
-	defaultLabel: "Stop Typing",
+export const passControlToZendeskNode = createNodeDescriptor({
+	type: "passControlToZendesk",
+	defaultLabel: "Pass Control To Zendesk",
 	fields: [
 		{
 			key: "connection",
@@ -26,6 +27,12 @@ export const typingStopNode = createNodeDescriptor({
 				connectionType: "Sunshine Conversations",
 				required: true
 			}
+		},
+		{
+			key: "switchboardIntegration",
+			type: "text",
+			label: "Switchboard Integration Name (pass to)",
+			defaultValue: "next",
 		},
 		{
 			key: "inputKey",
@@ -69,6 +76,14 @@ export const typingStopNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "sunCon",
+			label: "Sunshine Conversations Settings",
+			defaultCollapsed: true,
+			fields: [
+				"switchboardIntegration",
+			]
+		},
+		{
 			key: "storage",
 			label: "Storage Options",
 			defaultCollapsed: true,
@@ -81,14 +96,15 @@ export const typingStopNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "section", key: "storage" },
+		{ type: "section", key: "sunCon" },
+		{ type: "section", key: "storage" }
 	],
 	appearance: {
 		color: "#eec83c"
 	},
-	function: async ({ cognigy, config }: ITypingStopParams) => {
+	function: async ({ cognigy, config }: IPassControlParams) => {
 		const { api, input } = cognigy;
-		const { connection, storeLocation, contextKey, inputKey } = config;
+		const { connection, switchboardIntegration, storeLocation, contextKey, inputKey } = config;
 		const { keyId, secret, appId } = connection;
 		let conversationId = "";
 
@@ -101,7 +117,7 @@ export const typingStopNode = createNodeDescriptor({
 			}
 			const response = await axios({
 				method: 'post',
-				url: `https://api.smooch.io/v2/apps/${appId}/conversations/${conversationId}/activity`,
+				url: `https://api.smooch.io/v2/apps/${appId}/conversations/${conversationId}/passControl`,
 				auth: {
 					username: keyId,
 					password: secret
@@ -110,10 +126,7 @@ export const typingStopNode = createNodeDescriptor({
 					"Accept": "application/json"
 				},
 				data: {
-					type: "typing:stop",
-					author: {
-						role: "appMaker"
-					}
+					"switchboardIntegration": switchboardIntegration
 				}
 			});
 

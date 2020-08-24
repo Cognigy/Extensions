@@ -74,14 +74,6 @@ export const sayPollyNode = createNodeDescriptor({
 	],
 	sections: [
 		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
-		},
-		{
 			key: "polly",
 			label: "AWS Polly Options",
 			defaultCollapsed: true,
@@ -91,7 +83,7 @@ export const sayPollyNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "text" },
 		{ type: "section", key: "polly" }
 	],

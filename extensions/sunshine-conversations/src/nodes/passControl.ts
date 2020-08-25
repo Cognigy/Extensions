@@ -77,7 +77,7 @@ export const passControlNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "sunCon",
-			label: "Sunshine Conversations Settings",
+			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
 				"switchboardIntegration",

@@ -10,7 +10,7 @@ import { sunshineConnection } from "./connections/apiKeyConnection";
 export default createExtension({
 
     nodes: [
-        passControl,
+        passControlNode,
         offerControlNode
     ],
 

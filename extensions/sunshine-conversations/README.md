@@ -33,3 +33,15 @@ This node passes control to the integration as set in the node settings (not rec
 
 - Switchboard Integration Name (pass to): Use either 'next' or 'agent'
 - [API Source](https://docs.smooch.io/eap/v2-api-spec.pdf)
+
+
+# Helpful Links
+
+- Sunshine Conversations
+  - [V2 Api Specifications](https://docs.smooch.io/eap/v2-api-spec.pdf)
+  - [How to integrate with Switchboard](https://docs.google.com/document/d/1iEW6yHEQx1TmyHkBDyXKtpihRUcpYvqvqIPIW6GP8Rk/)
+  - [Bot Partner Program Overview](https://docs.google.com/document/d/1pgNJxD038jzI-lwiedRfOpsKVNg8t0qRKzly7ODloXg/edit?ts=5eea57a6#heading=h.e95922o17ii)
+  - [[External] Sunshine Conversations Switchboard - Early Access Documentation](https://drive.google.com/file/d/1lt_SYsKpUNVBkxsm8z3ApwY6hEjMmFAo/view)
+- Zendesk
+  - [Creating Macros For Tickets](https://support.zendesk.com/hc/en-us/articles/115001236988-Creating-macros-for-tickets)
+  - [About triggers and how they work](https://support.zendesk.com/hc/en-us/articles/203662246-About-triggers-and-how-they-work#:~:text=Triggers%20do%20not%20run%20or,must%20be%20smaller%20than%2065k)

@@ -3,7 +3,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 
 export interface ISendMessageParams extends INodeFunctionBaseParams {
 	config: {
-		text: string;
+		messageText: string;
 		activityParams: any;
 	};
 }
@@ -12,7 +12,7 @@ export const sendMessageNode = createNodeDescriptor({
 	defaultLabel: "Send Message",
 	fields: [
 		{
-			key: "text",
+			key: "messageText",
 			label: "Text",
 			type: "cognigyText",
 			defaultValue: "{{input.text}}",
@@ -30,23 +30,23 @@ export const sendMessageNode = createNodeDescriptor({
 		},
 	],
 	form: [
-		{ type: "field", key: "text" },
+		{ type: "field", key: "messageText" },
 		{ type: "field", key: "activityParams" }
 	],
 	function: async ({ cognigy, config }: ISendMessageParams) => {
 		const { api } = cognigy;
-		const { text, activityParams } = config;
+		const { messageText, activityParams } = config;
 
-		if (!text) throw new Error('The text is missing.');
+		if (!messageText) throw new Error('The text is missing.');
 		if (!activityParams) throw new Error('The Activity Parameters are missing.');
 
-		api.output(text, {
+		api.output("", {
 			"_cognigy": {
 				"_audiocodes": {
 					"activities": [
 						{
 							"type": "message",
-							text,
+							messageText,
 							activityParams
 						}
 					]

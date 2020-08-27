@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
 
-export interface IHangupParams extends INodeFunctionBaseParams {
+export interface IHandoverParams extends INodeFunctionBaseParams {
 	config: {
 		handoverReason: string;
 		transferTarget: string;
@@ -34,7 +34,7 @@ export const handoverNode = createNodeDescriptor({
 		{ type: "field", key: "handoverReason" },
 		{ type: "field", key: "transferTarget" }
 	],
-	function: async ({ cognigy, config }: IHangupParams) => {
+	function: async ({ cognigy, config }: IHandoverParams) => {
 		const { api } = cognigy;
 		const { handoverReason, transferTarget } = config;
 

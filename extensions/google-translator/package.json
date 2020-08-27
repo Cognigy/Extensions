@@ -1,11 +1,11 @@
 {
-	"name": "google-cloud",
+	"name": "google-translator",
 	"version": "1.0.0",
-	"description": "This module integrates Cognigy.AI with the Google Cloud Plattform",
+	"description": "This module integrates Cognigy.AI with the Google Translator",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz google-cloud.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz google-translator.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},

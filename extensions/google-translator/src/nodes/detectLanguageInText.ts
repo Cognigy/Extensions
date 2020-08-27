@@ -14,7 +14,7 @@ export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
 }
 export const detectLanguageInTextNode = createNodeDescriptor({
 	type: "detectLanguageInText",
-	defaultLabel: "Detect Language In Text",
+	defaultLabel: "Detect Language",
 	preview: {
 		key: "text",
 		type: "text"

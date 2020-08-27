@@ -1,6 +1,6 @@
-# Google Cloud
+# Google Translator
 
-With this Extension you can use the [Google Cloud API](https://console.cloud.google.com/) to translate or recognize text inside your Cognigy bot
+With this Extension you can use the [Google Translator API](https://console.cloud.google.com/) to translate or recognize text inside your Cognigy bot
 
 **Connection**
 
@@ -27,7 +27,7 @@ Example sentence: *Soy Alex y trabajo a Cognigy en Düsseldorf.*
 
 
 
-## Node: DetectLanguageInText
+## Node: DetectLanguage
 
 This node detects the language of your given **text** and stores it to the CognigyContext if you want:
 

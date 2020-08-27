@@ -1,5 +1,8 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-
+import {
+	createNodeDescriptor,
+	INodeFunctionBaseParams
+}
+from "@cognigy/extension-tools";
 
 export interface IHandoverParams extends INodeFunctionBaseParams {
 	config: {
@@ -10,8 +13,7 @@ export interface IHandoverParams extends INodeFunctionBaseParams {
 export const handoverNode = createNodeDescriptor({
 	type: "handover",
 	defaultLabel: "Handover",
-	fields: [
-		{
+	fields: [{
 			key: "handoverReason",
 			label: "Reason",
 			type: "cognigyText",
@@ -19,8 +21,7 @@ export const handoverNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-		},
-		{
+		}, {
 			key: "transferTarget",
 			label: "Target",
 			type: "cognigyText",
@@ -30,30 +31,46 @@ export const handoverNode = createNodeDescriptor({
 			}
 		},
 	],
-	form: [
-		{ type: "field", key: "handoverReason" },
-		{ type: "field", key: "transferTarget" }
+	form: [{
+			type: "field",
+			key: "handoverReason"
+		}, {
+			type: "field",
+			key: "transferTarget"
+		}
 	],
-	function: async ({ cognigy, config }: IHandoverParams) => {
-		const { api } = cognigy;
-		const { handoverReason, transferTarget } = config;
+	function : async({
+		cognigy,
+		config
+	}
+		: IHandoverParams) => {
+		const {
+			api
+		} = cognigy;
+		const {
+			handoverReason,
+			transferTarget
+		} = config;
 
-		if (!handoverReason) throw new Error('The handover reason is missing.');
-		if (!transferTarget) throw new Error('The handover target is missing.');
+		if (!handoverReason)
+			throw new Error('The handover reason is missing.');
+		if (!transferTarget)
+			throw new Error('The handover target is missing.');
 
 		api.output('', {
 			"_cognigy": {
-				"_audiocodes": {
-					"activities": [
-						{
-							"type": "event",
-							"name": "handover",
-							"activityParams": {
-								transferTarget,
-								handoverReason
+				"_audioCodes": {
+					"json": {
+						"activities": [{
+								"type": "event",
+								"name": "handover",
+								"activityParams": {
+									transferTarget,
+									handoverReason
+								}
 							}
-						}
-					]
+						]
+					}
 				}
 			}
 		});

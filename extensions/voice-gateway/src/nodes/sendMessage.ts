@@ -23,9 +23,10 @@ export const sendMessageNode = createNodeDescriptor({
 		{
 			key: "activityParams",
 			label: "Activity Parameter",
+			defaultValue: "{}",
 			type: "json",
 			params: {
-				required: true
+				required: false
 			}
 		},
 	],
@@ -38,18 +39,19 @@ export const sendMessageNode = createNodeDescriptor({
 		const { messageText, activityParams } = config;
 
 		if (!messageText) throw new Error('The text is missing.');
-		if (!activityParams) throw new Error('The Activity Parameters are missing.');
 
 		api.output("", {
 			"_cognigy": {
-				"_audiocodes": {
-					"activities": [
-						{
-							"type": "message",
-							messageText,
-							activityParams
-						}
-					]
+				"_audioCodes": {
+					"json": {
+						"activities": [
+							{
+								"type": "message",
+								messageText,
+								activityParams
+							}
+						]
+					}
 				}
 			}
 		});

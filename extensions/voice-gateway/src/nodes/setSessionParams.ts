@@ -14,6 +14,7 @@ export const setSessionParamsNode = createNodeDescriptor({
 			key: "sessionParams",
 			label: "Session Parameter",
 			type: "json",
+			defaultValue: "{}",
 			params: {
 				required: true
 			}
@@ -30,14 +31,16 @@ export const setSessionParamsNode = createNodeDescriptor({
 
 		api.output('', {
 			"_cognigy": {
-				"_audiocodes": {
-					"activities": [
-						{
-							"type": "event",
-							"name": "config",
-							sessionParams
-						}
-					]
+				"_audioCodes": {
+					"json": {
+						"activities": [
+							{
+								"type": "event",
+								"name": "config",
+								sessionParams
+							}
+						]
+					}
 				}
 			}
 		});

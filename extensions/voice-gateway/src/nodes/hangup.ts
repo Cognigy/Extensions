@@ -31,16 +31,18 @@ export const hangupNode = createNodeDescriptor({
 
 		api.output('', {
 			"_cognigy": {
-				"_audiocodes": {
-					"activities": [
-						{
-							"type": "event",
-							"name": "hangup",
-							"activityParams": {
-								hangupReason
+				"_audioCodes": {
+					"json": {
+						"activities": [
+							{
+								"type": "event",
+								"name": "hangup",
+								"activityParams": {
+									hangupReason
+								}
 							}
-						}
-					]
+						]
+					}
 				}
 			}
 		});

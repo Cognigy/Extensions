@@ -16,6 +16,7 @@ export interface IGetParcelInfoParams extends INodeFunctionBaseParams {
 
 export const getParcelInfo = createNodeDescriptor({
 	type: "getParcelInfo",
+	defaultLabel: "Get Parcel Info",
 	fields: [
 		{
 			key: "connection",
@@ -34,6 +35,7 @@ export const getParcelInfo = createNodeDescriptor({
 			key: "language",
 			label: "Language",
 			type: "select",
+			defaultValue: "en",
 			params: {
 				options: [{ label: "German", value: "de" }, { label: "English", value: "en" }]
 			}

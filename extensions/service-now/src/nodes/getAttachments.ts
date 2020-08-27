@@ -32,9 +32,10 @@ export const getAttachmentsNode = createNodeDescriptor({
 		},
 		{
 			key: "limit",
-			label: "Limit",
+			label: "Results Limit",
 			description: "How many results you want to show",
 			type: "number",
+			defaultValue: 1,
 			params: {
 				required: false
 			}
@@ -42,7 +43,7 @@ export const getAttachmentsNode = createNodeDescriptor({
 		{
 			key: "query",
 			label: "Attachment Query",
-			description: "A search query, e.g. 'file_name=attachment.doc'.",
+			description: "A search query, e.g. file_name=attachment.doc.",
 			type: "cognigyText",
 			defaultValue: "file_name=example.doc",
 			params: {
@@ -95,7 +96,7 @@ export const getAttachmentsNode = createNodeDescriptor({
 			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
-				"limit", ,
+				"limit",
 			]
 		},
 		{

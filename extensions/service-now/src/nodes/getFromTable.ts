@@ -44,6 +44,7 @@ export const getFromTableNode = createNodeDescriptor({
 			label: "Result Limit",
 			description: "The limit of the shown results.",
 			type: "number",
+			defaultValue: 1,
 			params: {
 				required: false
 			}
@@ -94,7 +95,7 @@ export const getFromTableNode = createNodeDescriptor({
 			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
-				"limit",,
+				"limit",
 			]
 		},
 		{

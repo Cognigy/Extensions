@@ -60,7 +60,7 @@ In most cases, an extension returns some kind of value -- e.g. an HTTP Request r
  {
 	key: "storageOption",
 	label: "Storage Option",
-	defaultCollapsed: false,
+	defaultCollapsed: true,
 	fields: [
 		"storeLocation",
 		"inputKey",
@@ -83,6 +83,7 @@ With this choice, one can include the following code to handle the user's decisi
 if (storeLocation === "context") {
 	api.addToContext(contextKey, resultObject, "simple");
 } else {
+	// @ts-ignore
 	api.addToInput(inputKey, resultObject);
 }
 ```
@@ -109,25 +110,12 @@ Whenever your extension requires an authentication
 },
 ```
 
-**Section:**
-
-```js
-{
-	key: "connectionSection",
-	label: "Connection",
-	defaultCollapsed: false,
-	fields: [
-		"connection",
-	]
-}
-```
-
 **Form:**
 
 - First position
 
 ```js
 form: [
-	{ type: "section", key: "connectionSection" },
+	{ type: "field", key: "connection" },
 ]
 ```

@@ -1,6 +1,6 @@
 {
   "name": "language-detection",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Detects the language of a text.",
   "main": "build/module.js",
   "scripts": {

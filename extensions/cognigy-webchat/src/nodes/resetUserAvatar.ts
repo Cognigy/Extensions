@@ -5,7 +5,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
  */
 export interface IResetUserAvatar extends INodeFunctionBaseParams {
     config: {
-    }
+    };
 }
 export const resetUserAvatar = createNodeDescriptor({
     type: "resetUserAvatar",

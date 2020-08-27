@@ -134,7 +134,7 @@ export const showGoogleMaps = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -144,7 +144,7 @@ export const showGoogleMaps = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -161,17 +161,9 @@ export const showGoogleMaps = createNodeDescriptor({
 			]
 		},
 		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
-		},
-		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",
@@ -180,7 +172,7 @@ export const showGoogleMaps = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "searchchoice" },
 		{ type: "field", key: "searchquery" },
 		{ type: "field", key: "latitude" },

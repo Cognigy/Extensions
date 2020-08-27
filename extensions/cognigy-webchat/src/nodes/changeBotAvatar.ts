@@ -7,7 +7,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 export interface IChangeBotAvatar extends INodeFunctionBaseParams {
     config: {
         avatarURL: any;
-    }
+    };
 }
 export const changeBotAvatar = createNodeDescriptor({
     type: "changeBotAvatar",

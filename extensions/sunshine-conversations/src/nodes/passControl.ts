@@ -8,6 +8,7 @@ export interface IPassControlParams extends INodeFunctionBaseParams {
 			secret: string;
 			appId: string;
 		};
+		conversationId: string;
 		switchboardIntegration: string;
 		storeLocation: string;
 		contextKey: string;
@@ -25,6 +26,16 @@ export const passControlNode = createNodeDescriptor({
 			type: "connection",
 			params: {
 				connectionType: "Sunshine Conversations",
+				required: true
+			}
+		},
+		{
+			key: "conversationId",
+			type: "cognigyText",
+			label: "Conversation Id",
+			description: "The specific ID of the current smooch conversation.",
+			defaultValue: "{{ci.data.request.payload.conversation.id}}",
+			params: {
 				required: true
 			}
 		},
@@ -81,6 +92,7 @@ export const passControlNode = createNodeDescriptor({
 			defaultCollapsed: true,
 			fields: [
 				"switchboardIntegration",
+				"conversationId"
 			]
 		},
 		{
@@ -103,18 +115,11 @@ export const passControlNode = createNodeDescriptor({
 		color: "#eec83c"
 	},
 	function: async ({ cognigy, config }: IPassControlParams) => {
-		const { api, input } = cognigy;
-		const { connection, switchboardIntegration, storeLocation, contextKey, inputKey } = config;
+		const { api } = cognigy;
+		const { connection, conversationId, switchboardIntegration, storeLocation, contextKey, inputKey } = config;
 		const { keyId, secret, appId } = connection;
-		let conversationId = "";
 
 		try {
-
-			if (input.input.data.request?.payload?.conversation?.id) {
-				let conversationId = input.input.data.request?.payload?.conversation?.id;
-			} else {
-				throw new Error("No conversation Id was found");
-			}
 			const response = await axios({
 				method: 'post',
 				url: `https://api.smooch.io/v2/apps/${appId}/conversations/${conversationId}/passControl`,

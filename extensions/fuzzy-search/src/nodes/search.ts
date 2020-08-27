@@ -3,11 +3,6 @@ import fuseSearch from "../helpers/fuseSearch";
 
 export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
-			region: string;
-			accessKeyId: string;
-			secretAccessKey: string;
-		};
 		searchText: string;
 		items: object;
 		options: object;
@@ -31,17 +26,18 @@ export const searchNode = createNodeDescriptor({
 		{
 			key: "items",
 			label: "Items",
+			description: "Search the current items by free text and get a list of found items according to the options.",
 			type: "json",
 			params: {
 				required: true
 			}
 		},
 		{
-			key: "options",
-			label: "Options",
+			key: "optionsField",
+			label: "Search Options",
 			type: "json",
 			params: {
-				required: true
+				required: false
 			}
 		},
 		{
@@ -94,12 +90,20 @@ export const searchNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey"
 			]
+		},
+		{
+			key: "options",
+			label: "Options",
+			defaultCollapsed: true,
+			fields: [
+				"optionsField",
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "searchText" },
 		{ type: "field", key: "items" },
-		{ type: "field", key: "options" },
+		{ type: "section", key: "options" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -107,8 +111,7 @@ export const searchNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
-		const { connection, searchText, items, options, storeLocation, inputKey, contextKey } = config;
-		const { region, accessKeyId, secretAccessKey } = connection;
+		const { searchText, items, options, storeLocation, inputKey, contextKey } = config;
 
 		try {
 

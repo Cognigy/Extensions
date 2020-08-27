@@ -88,18 +88,10 @@ export const searchSimpleNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "query" },
 		{ type: "section", key: "storage" },
 

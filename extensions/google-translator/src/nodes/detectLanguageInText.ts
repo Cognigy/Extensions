@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-
+import axios from 'axios';
 
 export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
 	config: {
@@ -104,28 +104,28 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 		const { text, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
 
-		/* google detectedLanguage package */
-		const googleTranslate = require('google-translate')(key);
-
-		return new Promise((resolve, reject) => {
-
-			googleTranslate.detectLanguage(text, (err: any, detection: any) => {
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, err.message, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, err.message);
-					}
-				}
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, detection.language, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, detection.language);
+		try {
+			const response = await axios({
+				method: 'get',
+				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				headers: {
+					'Content-Type': 'application/json'
 				}
 			});
-		});
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error.message, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error.message);
+			}
+		}
 	}
 });

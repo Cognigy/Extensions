@@ -1,7 +1,7 @@
 {
 	"name": "google-translator",
-	"version": "1.0.0",
-	"description": "This module integrates Cognigy.AI with the Google Translator",
+	"version": "4.0.0",
+	"description": "Integrates with the Google Translator",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
@@ -16,12 +16,13 @@
 	"author": "Cognigy GmbH",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/axios": "^0.14.0",
 		"@types/node": "^10.17.28",
 		"tslint": "^5.16.0",
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.10.0",
-		"google-translate": "^2.2.0"
+		"axios": "^0.20.0"
 	}
 }

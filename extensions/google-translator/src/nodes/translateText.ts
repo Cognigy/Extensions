@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-
+import axios from 'axios';
 
 export interface ITranslateTextParams extends INodeFunctionBaseParams {
 	config: {
@@ -215,28 +215,28 @@ export const translateTextNode = createNodeDescriptor({
 		const { text, language, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
 
-		/* google translation package */
-		const googleTranslate = require('google-translate')(key);
-
-		return new Promise((resolve, reject) => {
-
-			googleTranslate.translate(text, language, (err: any, translation: any) => {
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, err.message, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, err.message);
-					}
-				}
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, translation.translatedText, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, translation.translatedText);
+		try {
+			const response = await axios({
+				method: 'post',
+				url: `https://translation.googleapis.com/language/translate/v2?key=${key}&q=${text}&target=${language}`,
+				headers: {
+					'Content-Type': 'application/json'
 				}
 			});
-		});
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error.message, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error.message);
+			}
+		}
 	}
 });

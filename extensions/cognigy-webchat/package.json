@@ -1,6 +1,6 @@
 {
   "name": "cognigy-webchat",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Change the Webachat avatars",
   "main": "build/module.js",
   "scripts": {

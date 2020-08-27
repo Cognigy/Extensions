@@ -8,9 +8,6 @@ import axios from 'axios';
  */
 export interface IGetRandomCatImageParams extends INodeFunctionBaseParams {
     config: {
-        connection: {
-			key: string;
-		};
     };
 }
 export const getRandomCatImage = createNodeDescriptor({
@@ -20,20 +17,10 @@ export const getRandomCatImage = createNodeDescriptor({
         key: "cognigytext",
         type: "text"
     },
-    fields: [
-        {
-            key: "connection",
-			label: "API Key",
-			type: "connection",
-			params: {
-				connectionType: "api-key"
-			}
-        },
-    ],
     tokens: [
         {
             label: "catImageUrl",
-            script: "ci.catImage[0].url",
+            script: "input.catImage[0].url",
             type: "answer"
         },
     ],
@@ -42,15 +29,11 @@ export const getRandomCatImage = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IGetRandomCatImageParams) => {
         const { api } = cognigy;
-        const { connection } = config;
 
         try {
             const response = await axios({
                 method: 'get',
                 url: 'https://api.thecatapi.com/v1/images/search',
-                headers: {
-                    'x-api-key': connection
-                }
             });
 
             api.output(null, {

@@ -1,23 +1,22 @@
-# Service Now Custom Module
+# Service Now Extension
 
 Integrates the Service Now Software with Cognigy.AI.
 
 Table Node Source: https://developer.servicenow.com/app.do#!/rest_api_doc?v=madrid&id=c_TableAPI
 
-**Secrets**
-You have to define three secrets to use this Custom Module: 
+**Connection:**
 
-- username
-- password
-- instance (e.g. https://dev12345.service-now.com)
+- Service Now
+  - username
+  - password
+  - instance (e.g. https://dev12345.service-now.com)
 
-## Node: GETFromTable
+## Node: Get From Table
 
 Returns the data from a requested [Table](https://docs.servicenow.com/bundle/jakarta-servicenow-platform/page/administer/reference-pages/reference/r_TablesAndClasses.html?title=Tables_and_Classes) and stores it into the Cognigy Context. You have to specify the columns (Fields) you want to show in the results.
 
 
-
-## Node: PostToTable
+## Node: Post To Table
 
 This Node will post the given **data** to the chosen **table**. The data could look like this: 
 
@@ -51,7 +50,7 @@ The result will be a json object including the new table entry:
 
 
 
-## Node: DeleteFromTable
+## Node: Delete From Table
 
 This Node deletes the entry with the given **sysId** and returns a success message if nothing gone wrong: 
 
@@ -63,7 +62,7 @@ This Node deletes the entry with the given **sysId** and returns a success messa
 
 
 
-## Node: PatchRecordInTable
+## Node: Patch Record In Table
 
 This node updates an entry in your chosen Service Now table. You have to define the **sysId** and the **data** to update. If you don't know the sysId of your entry, just execute the **GetFromTable** Node of this Custom Module and take a look into the **CognigyContext**. 
 
@@ -101,7 +100,7 @@ If you now open your updated table in your **Service Now Instance** you will see
 
 
 
-## Node: GETAttachments
+## Node: Get Attachments
 
 With this node you can reach your Service Now Attachments and store them to your CognigyContext. For this, there are two parameters you can use: 
 
@@ -142,13 +141,13 @@ The result will look like the following:
 
 
 
-## Node: GETAttachmentById
+## Node: Get Attachment By Id
 
 If you don't want to get all attachments, you can reach one by it's specifiy **sysId** by using this node here. You can get the sysId by executing the **GETAttachments** node. The result will look like the above one.
 
 
 
-## Node: DeleteAttachment
+## Node: Delete Attachment
 
 With this node you can easily delete an attachment. You have to type in the attachment's **sysId** to get the success message: 
 
@@ -158,7 +157,7 @@ With this node you can easily delete an attachment. You have to type in the atta
 }
 ```
 
-## Node: PostAttachment
+## Node: Post Attachment
 
 Post an attachment to a specific table entry, such as entry X in table `problem`, where you need the following: 
 

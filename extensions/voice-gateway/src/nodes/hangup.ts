@@ -14,6 +14,7 @@ export const hangupNode = createNodeDescriptor({
 			key: "hangupReason",
 			label: "Reason",
 			type: "cognigyText",
+			defaultValue: "Bot ended the call",
 			params: {
 				required: true
 			}

@@ -89,18 +89,10 @@ export const getAllWeather = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "city" },
 		{ type: "section", key: "storage" }
 	],

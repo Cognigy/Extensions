@@ -115,18 +115,10 @@ export const searchWithDSLNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "index" },
 		{ type: "field", key: "type" },
 		{ type: "field", key: "body" },

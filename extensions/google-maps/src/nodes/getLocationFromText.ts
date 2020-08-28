@@ -18,7 +18,7 @@ export interface IGetLocationFromText extends INodeFunctionBaseParams {
 }
 export const getLocationFromText = createNodeDescriptor({
 	type: "getLocationFromText",
-	defaultLabel: "Location search",
+	defaultLabel: "Search Location",
 	preview: {
 		key: "place",
 		type: "text"
@@ -81,7 +81,7 @@ export const getLocationFromText = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -91,7 +91,7 @@ export const getLocationFromText = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -102,24 +102,16 @@ export const getLocationFromText = createNodeDescriptor({
 		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",
 				"contextKey"
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "place" },
 		{ type: "field", key: "city" },
 		{ type: "field", key: "country" },

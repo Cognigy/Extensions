@@ -1,0 +1,28 @@
+{
+  "name": "sunshine-conversations",
+  "version": "4.0.0",
+  "description": "Perform Sunshine conversations application switchboard actions",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz sunshine-conversations.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Sunshine Conversations"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.19.2",
+    "tslint": "^6.1.3"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^14.6.0",
+    "@types/node-fetch": "^2.5.7",
+    "typescript": "^3.9.7"
+  }
+}

@@ -1,8 +1,5 @@
 # Voice Gateway
 
-## Send Message
-sends a message to the caller
-
 ## Handover
 Transfers the call to another number
 

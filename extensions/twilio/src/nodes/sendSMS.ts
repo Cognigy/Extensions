@@ -97,17 +97,9 @@ export const sendSMSNode = createNodeDescriptor({
 	],
 	sections: [
 		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
-		},
-		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",
@@ -116,7 +108,7 @@ export const sendSMSNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "from" },
 		{ type: "field", key: "to" },
 		{ type: "field", key: "body" },

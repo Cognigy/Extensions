@@ -1,6 +1,6 @@
 {
   "name": "bamboo-hr",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Integrates with Bamboo HR",
   "main": "build/module.js",
   "scripts": {

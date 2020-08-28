@@ -14,6 +14,7 @@ export const hangupNode = createNodeDescriptor({
 			key: "hangupReason",
 			label: "Reason",
 			type: "cognigyText",
+			defaultValue: "Bot ended the call",
 			params: {
 				required: true
 			}
@@ -30,16 +31,18 @@ export const hangupNode = createNodeDescriptor({
 
 		api.output('', {
 			"_cognigy": {
-				"_audiocodes": {
-					"activities": [
-						{
-							"type": "event",
-							"name": "hangup",
-							"activityParams": {
-								hangupReason
+				"_audioCodes": {
+					"json": {
+						"activities": [
+							{
+								"type": "event",
+								"name": "hangup",
+								"activityParams": {
+									hangupReason
+								}
 							}
-						}
-					]
+						]
+					}
 				}
 			}
 		});

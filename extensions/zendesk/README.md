@@ -1,15 +1,17 @@
-﻿Integrates Cognigy.AI with the Zendesk Ticketing System (https://www.zendesk.com)
+﻿# Zendesk
 
-This module is based on node-zendesk (https://www.npmjs.com/package/node-zendesk)
+Integrates Cognigy.AI with the Zendesk Ticketing System (https://www.zendesk.com)
 
-### Secret
-This modules needs a CognigySecret to be defined and passed to the Nodes. The secret must have the following keys:
+This Extension is based on node-zendesk (https://www.npmjs.com/package/node-zendesk)
 
-- username
-- token
-- remoteUri
+**Connection:**
 
-### createTicket
+- Zendesk User
+  - username
+  - token
+  - remoteUri
+
+## Node: Create Ticket
 The ticket has to be in this format:
 
 ```JSON

@@ -1,17 +1,14 @@
 import { createExtension } from "@cognigy/extension-tools";
-
-import { translateTextNode } from "./nodes/translateText";
-import { detectLanguageInTextNode } from "./nodes/detectLanguageInText";
-import { googleCloudConnection } from "./connections/googleCloudConnection";
+import { confluenceConnection } from "./connections/confluenceConnection";
+import { searchtNode } from "./nodes/search";
 
 
 export default createExtension({
 	nodes: [
-		translateTextNode,
-		detectLanguageInTextNode
+		searchtNode
 	],
 
 	connections: [
-		googleCloudConnection
+		confluenceConnection
 	]
 });

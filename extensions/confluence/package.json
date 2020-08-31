@@ -1,14 +1,18 @@
 {
-	"name": "google-translator",
+	"name": "confluence",
 	"version": "4.0.0",
-	"description": "Integrates with the Google Translator",
+	"description": "Integrates with the Atlassian's Confluence.",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz google-translator.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
+	"keywords": [
+		"Knowledge",
+		"Wiki"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"

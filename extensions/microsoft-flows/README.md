@@ -11,10 +11,15 @@ Microsoft Flow can call Cognigy.AI back and inject a message into an existing se
 In order to call Cognigy.AI back, we need various parameters:
 
 userId*
+
 sessionId*
+
 callback url* (this is your inject or notify API URL)
+
 endpoint url token* (this is the unique identifier in the Endpoint URL)
+
 text
+
 data
 
 If the Callback API URL parameter of the Node is not empty, this module will automatically append all parameters marked with * to the Payload which is being sent to Microsoft Flow. Flow can then use a HTTP request to call Cognigy.AI back with the required text and data.

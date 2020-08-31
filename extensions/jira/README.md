@@ -1,4 +1,4 @@
-# Atlassian Jira Custom Module
+# Jira
 
 Integrates Cognigy.AI with Jira (https://www.atlassian.com/software/jira) 
 

@@ -93,7 +93,6 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "text" },
-		{ type: "section", key: "detectedLanguageOptions" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {

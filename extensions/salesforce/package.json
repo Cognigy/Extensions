@@ -1,6 +1,6 @@
 {
 	"name": "salesforce",
-	"version": "1.0.0",
+	"version": "4.0.0",
 	"description": "This Extension integrates Cognigy.AI with Salesforce",
 	"main": "build/module.js",
 	"scripts": {
@@ -9,6 +9,10 @@
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
+	"keywords": [
+		"Salesforce",
+		"CRM"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"
@@ -24,6 +28,6 @@
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.10.0",
 		"axios": "^0.19.2",
-		"jsforce": "^1.9.1"
+		"jsforce": "^1.9.3"
 	}
 }

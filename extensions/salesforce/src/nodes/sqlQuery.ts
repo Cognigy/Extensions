@@ -90,18 +90,10 @@ export const sqlQueryNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "soql" },
 		{ type: "section", key: "storage" },
 	],
@@ -109,7 +101,7 @@ export const sqlQueryNode = createNodeDescriptor({
 		color: "#009EDB"
 	},
 	function: async ({ cognigy, config }: ISQLQueryParams) => {
-		const { api, input } = cognigy;
+		const { api } = cognigy;
 		const { soql, connection, storeLocation, contextKey, inputKey } = config;
 		const { token, password, username } = connection;
 
@@ -146,6 +138,8 @@ export const sqlQueryNode = createNodeDescriptor({
 					});
 				}
 			});
+
+			resolve();
 		});
 	}
 });

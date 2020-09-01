@@ -21,7 +21,7 @@ module-name/
     README.md
     src/
         nodes/
-            getJoke.ts
+            reverseSay.ts
         module.ts
     package.json
     package-lock.json

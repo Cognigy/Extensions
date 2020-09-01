@@ -1,19 +1,64 @@
-# How to get started?
-If you want to build an extension, please first have a look at the 'example' sub-folder as it contains the code for an extension which contains multiple flow-nodes and uses essentially most of the concepts we have introduced with the new 'extensions' functionality in Cognigy.AI 4.0.0.
+# Get Started
+
+In this tutorial we want to show you how to develop your first Extension, which you can upload and install in your existing Cognigy.AI agent. 
+
+## Requirements 
+
+However, in order to start this tutorial, you need the following requirements:
+
+- Basic TypeScript / JavaScript knowledge
+- A code editor
+    - We recommend using [Visual Studio Code](https://code.visualstudio.com/?wt.mc_id=DX_841432)
+- An existing Cogngiy.AI [agent](https://docs.cognigy.com/v4.0/docs/projects)
+    - If you don't have an agent yet, but want to get familiar with Cognigy, we provide registering in our [Free Trial Cloud](https://signup.cognigy.ai). It is totally free and the best way to get in touch with our product.
+
+## Create the module structure
+
+Every Extension has the same folder and file structure:
+
+``` bash
+module-name/
+    README.md
+    src/
+    	nodes/
+			getJoke.ts	
+		module.ts
+    package.json
+    package-lock.json
+    tslint.json
+    tsconfig.json
+    icon.png
+```
+
+This structure includes all required resources to **build** and **upload** the Extension to Cognigy.AI. The `README.md` is used to show the code's content. Thus, other developers or interested usrs can get familiar with the functionality. The entire source code of our exposed [Flow Nodes](https://docs.cognigy.com/v4.0/docs/flow-nodes) is located in the `src/nodes/` folder, in which the next four files (`package.json`, `package-lock.json`, `tslint.json`, `tsconfig.json`) are used to create the Javascript module and check it for mistakes. The icon is required to show the module's logo in Cognigy. In most cases, the icon shows the logo of the third-party software product which we are integrating with. 
+
+**Notes:**
+- The `icon.png` needs to have the following dimensions:
+    - 64x64 Pixels
+
+**The example structure can be copied from the [Extension Example](./example)**.
+
+
+## Develop an Extension
 
 We want to introduce you to these new concepts now.
 
-## extension-tools
-In order to make the process of creating extensions much nicer in the future, we want to publish an npm pakage '@cognigy/extension-tools'. While building the product in it's early stages, we have published the code already as '@trash-planet/extension-tools' in order to avoid confusion - our customers could already find a @cognigy-scoped package and try to use it, but it's only compatible with Cognigy.AI 4.
+### Install NPM @cognigy/extension-tools
 
-### createNodeDescriptor
-The method `createNodeDescriptor` is one of the most central methods exposed by the 'extension-tools' package. If a customer wants to build a new extension, we advice to put the source-code of a single `flow-node` into a separate file, unless you are crafting nodes that contain child-nodes (see example/src/nodes/randomPath).
+In order to provide all functions and types to create and develop an Extension, we published the '@cognigy/extension-tools' NPM package. Therefore, please install it globally on your computer:
+
+- `npm i -g @cognigy/extension-tools`
+
+### Use the createNodeDescriptor() Method
+
+The method `createNodeDescriptor` is one of the most central methods exposed by the 'extension-tools' package. If one wants to build a new extension, we advice to put the source code of a single `flow-node` into a separate file, unless you are crafting nodes that contain child-nodes (see example/src/nodes/randomPath).
 
 Defining a node essentially looks like this (you can find this example in 'example/src/nodes/reverseSay):
 
 ```typescript
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@trash-planet/extension-tools";
+import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
+// The interface defines which values the Extension can use in the function below.
 export interface IReverseSayParams extends INodeFunctionBaseParams {
 	config: {
 		text: string;
@@ -22,20 +67,15 @@ export interface IReverseSayParams extends INodeFunctionBaseParams {
 
 export const reverseSay = createNodeDescriptor({
 	type: "reverseSay",
-
-	defaults: {
-		label: "Simple Reverse Say",
-		comment: "Reverses the given string and sends it.",
-		config: {
-			text: "{{ci.text}}"
-		}
-	},
-
+	defaultLabel: "Simple Reverse Say",
 	fields: [
 		{
 			key: "text",
 			label: "The text you want to reverse.",
-			type: "cognigyText"
+			type: "cognigyText",
+			params: {
+				required: true
+			}
 		}
 	],
 
@@ -43,8 +83,10 @@ export const reverseSay = createNodeDescriptor({
 		const { api } = cognigy;
 		const { text } = config;
 
+		// Reverse the input text
 		const reversedText = text.split("").reverse().join();
 
+		// Execute a SAY Node to output the reversed text to the user
 		api.say(reversedText);
 	}
 });
@@ -52,7 +94,7 @@ export const reverseSay = createNodeDescriptor({
 
 Let's analyze the different peaces we can see in the code-window above:
 ```typescript
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@trash-planet/extension-tools";
+import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 ```
 
 Here we are just importing the `createNodeDescriptor` method from the extension-tools package. We are also importing a Typescript interface we want to use.
@@ -78,15 +120,17 @@ In this part of the node-code we are crafting a `new Typescript interface` for t
 ```typescript
 export const reverseSay = createNodeDescriptor({
 	type: "reverseSay",
-
-	defaults: {
-		label: "Simple Reverse Say",
-		comment: "Reverses the given string and sends it.",
-		config: {
-			text: "{{ci.text}}"
+	defaultLabel: "Simple Reverse Say",
+	fields: [
+		{
+			key: "text",
+			label: "The text you want to reverse.",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
 		}
-	},
-
+	],
 	fields: [
 		{
 			key: "text",
@@ -99,12 +143,18 @@ export const reverseSay = createNodeDescriptor({
 		const { api } = cognigy;
 		const { text } = config;
 
+		// Reverse the input text
 		const reversedText = text.split("").reverse().join();
 
+		// Execute a SAY Node to output the reversed text to the user
 		api.say(reversedText);
 	}
 });
 ```
+
+---
+
+### Additional Definitions
 
 Now comes the actual definition & implementation of your flow-node. You essentially pass in an object into `createNodeDescriptor` and it will create a full node-descriptor for you. The method will fill-up properties you don't set with safe default values. Let's discuss some of the properties you have to set:
 - **type**: This is the `type` of your node. It needs to a unique string in your extension.
@@ -112,14 +162,16 @@ Now comes the actual definition & implementation of your flow-node. You essentia
 - **fields**: This section defines the user interface which will get generated for your node-config. You have to add a `field definition` per key in your `config` object. You reference the `key in your config` using the `key` property in the field definition. The label is used in the UI as well. The type gives you a variety of possibilities - you can e.g. say that your field should be of type `cognigyText` or e.g. of type json or toggle.
 - **function**: This actually contains the code of your flow-node. Ensure that you add the `async` keyword. The execution engine will always `await` the execution of your node. We have full Typescript support, please e.g. check the typings of the **cognigy** object as we don't have full documentation, yet.
 
-### createExtension
+#### createExtension
+
 Whereas the `createNodeDescriptor` method essentially just fills-up default-values for your flow-nodes, it's the `createExtension` methods job to bundle all nodes and connection definitions into one large object which will then be passed into the Cognigy.AI system.
 
 Make sure that you are using the `default export ` syntax for the createExtensions return-value as we need to be able to find the complete object.
 
 I suggest that you always create a `module.ts` file which essentially looks like the one in `example/src/module.ts`. Please only import all nodes and connections into this file and assign them to the payload you pass into the create extension method.
 
-### Connections
+#### Connections
+
 In Cognigy 3 we have introduced the concept of `Secrets` which allow you to store configuration in a secure way. Secrets do no longer directly exist in Cognigy 4, but where replaced with `Connections`.
 
 The new part is, that there is a strong relationship between a flow-node which needs a connection and the connection itself. Connections are essentially Secrets and store key/value pairs - so-called fields in an encrypted way.

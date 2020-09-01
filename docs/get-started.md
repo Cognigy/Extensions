@@ -20,9 +20,9 @@ Every Extension has the same folder and file structure:
 module-name/
     README.md
     src/
-    	nodes/
-			getJoke.ts	
-		module.ts
+        nodes/
+            getJoke.ts
+        module.ts
     package.json
     package-lock.json
     tslint.json
@@ -45,7 +45,7 @@ We want to introduce you to these new concepts now.
 
 ### Install NPM @cognigy/extension-tools
 
-In order to provide all functions and types to create and develop an Extension, we published the '@cognigy/extension-tools' NPM package. Therefore, please install it globally on your computer:
+In order to provide all functions and types to create and develop an Extension, we published the ['@cognigy/extension-tools' NPM package](https://www.npmjs.com/package/@cognigy/extension-tools). Therefore, please install it globally on your computer:
 
 - `npm i -g @cognigy/extension-tools`
 

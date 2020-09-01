@@ -6,6 +6,7 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 ## Contents
 
 - [Get Started](./docs/get-started.md)
+- [Installation](./docs/installation.md)
 - [Best Practises](./docs/best-practises.md)
 - [Releases](RELEASES.md)
 

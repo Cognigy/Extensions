@@ -192,3 +192,5 @@ If you want to use a connection within a node, you have to do the following:
 - add the **connection** into your **createExtensions** call - if you miss it there, it will not be there.
 
 You have to ensure that the `params.connectionType` in your flow-node field definition maps to a connection and a proper `type` of the connection. You can define multiple connections within a single extension and the `type` field is used to find the correct connections that satisfy the fields your node requires.
+
+**After developing your first Extension, it can be [installed in your Cognigy environment](./installation.md).**

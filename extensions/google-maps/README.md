@@ -1,8 +1,6 @@
 # Google Maps
 Integrated Cognigy.AI with Google Maps (https://developers.google.com/maps/documentation/)
 
-This module is based on node-request-promise (https://www.npmjs.com/package/request-promise)
-
 **Connection**
 
 - key:  api_key, key
@@ -12,7 +10,7 @@ This module is based on node-request-promise (https://www.npmjs.com/package/requ
 
 **Properties**
 
-There are two ways to use this Custom Module. Use the [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/start) to get the longitude and latitude of the address. 
+There are two ways to use this Extension. Use the [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/start) to get the longitude and latitude of the address. 
 
 *IMPORTANT: You need to enable the **Geocoding API** and the **Maps JavaScript API**, while the first one is used to get the latitude and longitude from the search query and the second one to show it with the webchat plugin.*
 

@@ -37,9 +37,9 @@ async function testLambdaInvoke(): Promise<void> {
 
         config: {
             connection: {
-                region: "ap-southeast-2",
-                accessKeyId: "AKIAV2IMRXNKDDFYAFD4",
-                secretAccessKey: "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",
+                region: "",
+                accessKeyId: "",
+                secretAccessKey: "",
             },
 
             functionName: "cognigyRetailGetOrderDetails",

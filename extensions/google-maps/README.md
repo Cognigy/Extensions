@@ -3,11 +3,10 @@ Integrated Cognigy.AI with Google Maps (https://developers.google.com/maps/docum
 
 This module is based on node-request-promise (https://www.npmjs.com/package/request-promise)
 
-### Secret
-This modules needs a CognigySecret to be defined and passed to the Nodes. The secret must have the following keys:
+**Connection**
 
-- **key**:  api_key, key
-- **value**: Your Google Maps API KEY
+- key:  api_key, key
+- value: Your Google Maps API KEY
 
 ## Node: Show Google Maps
 

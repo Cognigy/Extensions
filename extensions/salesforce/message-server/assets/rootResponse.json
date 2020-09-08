@@ -1,0 +1,47 @@
+{
+	"message": "Welcome to the Cognigy Salesforce Live Chat Message Server.",
+	"endpoints": [
+		{
+			"method": "POST",
+			"description": "Polls Salesforce for new agent messages and sends them back to the ongoing Cognigy conversation.",
+			"path": "/message",
+			"body": {
+				"liveAgent": {
+					"url": {
+						"description": "The Salesforce Chat Settings URL.",
+						"type": "string"
+					},
+					"headers": {
+						"X-LIVEAGENT-SESSION-KEY": {
+							"description": "The Salesforce Chat Session Key.",
+							"type": "string"
+						},
+						"X-LIVEAGENT-AFFINITY": {
+							"description": "The Salesforce Chat Session affinity token.",
+							"type": "string"
+						},
+						"X-LIVEAGENT-API-VERSION": "34"
+					}
+				},
+				"cognigy": {
+					"apiKey": {
+						"description": "The Cognigy API Key",
+						"type": "string"
+					},
+					"userId": {
+						"description": "The Cognigy user ID.",
+						"type": "string"
+					},
+					"URLToken": {
+						"description": "The Cognigy URL token.",
+						"type": "string"
+					},
+					"sessionId": {
+						"description": "The Cognigy session ID.",
+						"type": "string"
+					}
+				}
+			}
+		}
+	]
+}

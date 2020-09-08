@@ -23,7 +23,6 @@ app.post('/message', (req, res) => {
 	const { url, headers } = liveAgent;
 	const { userId, URLToken, sessionId, apiKey } = cognigy;
 
-
 	poll(async () => {
 		try {
 			const messagesResponse = await axios({
@@ -33,43 +32,32 @@ app.post('/message', (req, res) => {
 			});
 
 			try {
-				messagesResponse.data.messages.forEach((message) => {
+				messagesResponse.data.messages.forEach(async (message) => {
 					if (message.type === "ChatMessage") {
-						console.log(message.message.text);
-
-						axios.post(`https://api-trial.cognigy.ai/new//v2.0/endpoint/notify?api_key=${apiKey}`, {
-							headers: {
-								'X-API-Key': apiKey,
-								'Content-Type': 'application/json'
-							},
-							data: {
-								userId,
-								text: message.message.text,
-								data: {},
-								URLToken,
-								sessionId
-							}
-						}).then((response) => {
-							res.json({
-								message: response.data
+						
+						try {
+							const response = await axios({
+								method: 'post',
+								url: `https://api-trial.cognigy.ai/new//v2.0/endpoint/notify?api_key=${apiKey}`,
+								data: {
+									userId,
+									text: message.message.text,
+									data: {},
+									URLToken,
+									sessionId
+								}
 							})
-						}).catch((error) => {
-							res.json({
-								error
-							})
-						})
+						} catch (error) {}
 					}
 				});
 			} catch (e){}
-		} catch (error) {
-			console.log(error)
-		}
+		} catch (error) {}
 	}, 1000)
 });
 
 
 app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`)
+	console.log(`[Salesforce Live Chat] Message Server started`)
 })
 
 

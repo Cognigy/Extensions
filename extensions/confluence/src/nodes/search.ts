@@ -1,42 +1,43 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
+			domain: string;
+			email: string;
 			key: string;
 		};
-		text: string;
+		query: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
+export const searchtNode = createNodeDescriptor({
+	type: "search",
+	defaultLabel: "Search",
 	preview: {
-		key: "text",
+		key: "query",
 		type: "text"
 	},
 	fields: [
 		{
 			key: "connection",
-			label: "API Key",
+			label: "Confluence Connection",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "confluence",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
+			key: "query",
+			label: "Query",
 			type: "cognigyText",
-			defaultValue: "{{input.text}}",
 			params: {
 				required: true,
-			},
+			}
 		},
 		{
 			key: "storeLocation",
@@ -61,7 +62,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "confluence.result",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +72,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "confluence.result",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -92,23 +93,27 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "query" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#0052CC"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
-		const { key } = connection;
+		const { query, connection, storeLocation, contextKey, inputKey } = config;
+		const { domain, email, key } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				url: `${domain}/wiki/rest/api/content/search?cql=type=page+and+text~"${query}"+order+by+id+asc&expand=body.storage`,
 				headers: {
 					'Content-Type': 'application/json'
+				},
+				auth: {
+					username: email,
+					password: key
 				}
 			});
 

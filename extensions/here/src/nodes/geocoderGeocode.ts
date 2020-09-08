@@ -1,39 +1,62 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface IGeocodeGeocoderParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			key: string;
+			appId: string;
+			apiKey: string;
 		};
-		text: string;
+		query: string;
+		limit: number;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
+export const geocodeGeocoderNode = createNodeDescriptor({
+	type: "geocodeGeocoder",
+	defaultLabel: "Get Location",
 	preview: {
-		key: "text",
+		key: "query",
 		type: "text"
 	},
 	fields: [
 		{
 			key: "connection",
-			label: "API Key",
+			label: "Here Connection",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "here",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
+			key: "query",
+			label: "Search Query",
+			description: `
+			Enter a free-text query
+
+			Examples:
+
+			125, Berliner, berlin
+			Beacon, Boston, Hospital
+			Schnurrbart German Pub and Restaurant, Hong Kong
+`,
 			type: "cognigyText",
-			defaultValue: "{{input.text}}",
+			params: {
+				required: true,
+			},
+		},
+		{
+			key: "limit",
+			label: "Results Limit",
+			defaultValue: 20,
+			description: `
+			Default: 20
+			Maximum number of results to be returned.
+`,
+			type: "number",
 			params: {
 				required: true,
 			},
@@ -61,7 +84,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "here.location",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +94,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "here.location",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -88,25 +111,34 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"limit"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "query" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#6BDEBD"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: IGeocodeGeocoderParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
-		const { key } = connection;
+		const { query, limit, connection, storeLocation, contextKey, inputKey } = config;
+		const { apiKey, appId } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				url: `https://geocode.search.hereapi.com/v1/geocode?app_id=${appId}&apiKey=${apiKey}&q=${query}&limit=${limit}`,
 				headers: {
 					'Content-Type': 'application/json'
 				}

@@ -1,39 +1,46 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface ICreateItemParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
 		};
-		text: string;
+		boardID: string;
+		itemName: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
-	preview: {
-		key: "text",
-		type: "text"
-	},
+export const createItemNode = createNodeDescriptor({
+	type: "createItem",
+	defaultLabel: "Create Item",
 	fields: [
 		{
 			key: "connection",
-			label: "API Key",
+			label: "API V2 Key",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "monday",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
+			key: "itemName",
+			label: "Item Name",
 			type: "cognigyText",
-			defaultValue: "{{input.text}}",
+			description: "The name of the board item you want to create.",
+			params: {
+				required: true,
+			},
+		},
+		{
+			key: "boardID",
+			label: "Board ID",
+			type: "cognigyText",
+			defaultValue: "{{context.monday.boards.data.boards[0].id}}",
+			description: "The ID of the board where the item should be created.",
 			params: {
 				required: true,
 			},
@@ -61,7 +68,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "monday.item",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +78,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "monday.item",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -92,24 +99,33 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "boardID" },
+		{ type: "field", key: "itemName" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#f54040"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: ICreateItemParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
+		const { boardID, itemName, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
+
+		let query: string = `mutation ($myItemName: String!) { create_item (board_id:${boardID}, item_name:$myItemName) { id } }`;
+		let vars = { "myItemName": itemName };
 
 		try {
 			const response = await axios({
-				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				method: 'post',
+				url: `https://api.monday.com/v2`,
 				headers: {
-					'Content-Type': 'application/json'
-				}
+					'Content-Type': 'application/json',
+					'Authorization': key
+				},
+				data: JSON.stringify({
+					'query': query,
+					'variables': vars
+				})
 			});
 
 			if (storeLocation === "context") {

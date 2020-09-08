@@ -6,7 +6,9 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 ## Contents
 
 - [Get Started](./docs/get-started.md)
+- [Installation](./docs/installation.md)
 - [Best Practises](./docs/best-practises.md)
+- [New Feature Request](#new-feature-request)
 - [Releases](RELEASES.md)
 
 ## Overview
@@ -35,3 +37,10 @@ In order to create a new Extension, please create a new feature branch:
 If you want to fix an existing module, please create a bug branch:
 
 - `git checkout -b bug/<module-name>`
+
+## New Feature Request
+
+Next to the already published integrations, there are a lot of third-party systems out there that could be integrated into Cognigy.AI 4.0 in the future as well. Therefore, one can follow these steps to request a new Extension if there are no developer resources to develop it on their own:
+
+1. [Check if there is a branch that already implements your requested Extension / feature](https://github.com/Cognigy/Extensions/branches)
+2. [Create a new Feature Request](https://github.com/Cognigy/Extensions/issues/new?assignees=&labels=&template=feature_request.md&title=)

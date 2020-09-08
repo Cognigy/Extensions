@@ -1,42 +1,54 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface IGetAllPagesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
+			domain: string;
+			email: string;
 			key: string;
 		};
-		text: string;
+		space: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
+
+interface IResultPage {
+	id: string;
+	type: string;
+	status: string;
+	title: string;
+	webLink: string;
+	htmlBody: string;
+}
+
+export const getAllPagesNode = createNodeDescriptor({
+	type: "getAllPages",
+	defaultLabel: "Get All Pages",
 	preview: {
-		key: "text",
+		key: "space",
 		type: "text"
 	},
 	fields: [
 		{
 			key: "connection",
-			label: "API Key",
+			label: "Confluence Connection",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "confluence",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
+			key: "space",
+			label: "Space Key",
+			description: "The key of the Confluence space, such as COG",
 			type: "cognigyText",
-			defaultValue: "{{input.text}}",
 			params: {
 				required: true,
-			},
+			}
 		},
 		{
 			key: "storeLocation",
@@ -61,7 +73,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "confluence.pages",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +83,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "confluence.pages",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -92,31 +104,48 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "space" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#0052CC"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: IGetAllPagesParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
-		const { key } = connection;
+		const { space, connection, storeLocation, contextKey, inputKey } = config;
+		const { domain, email, key } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				url: `${domain}/wiki/rest/api/content?type=page&&spacekey=${space}start=0&limit=99999&expand=body.storage`,
 				headers: {
 					'Content-Type': 'application/json'
+				},
+				auth: {
+					username: email,
+					password: key
 				}
 			});
 
+			// Clean up the result
+			let results: IResultPage[] = [];
+			response.data.results.forEach((page: any, index: number) => {
+				results.push({
+					id: page.id,
+					type: page.type,
+					status: page.status,
+					title: page.title,
+					webLink: `${domain}/wiki/spaces/${space}/pages/${page.id}`,
+					htmlBody: page.body.storage.value
+				});
+			});
+
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
+				api.addToContext(contextKey, results, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+				api.addToInput(inputKey, results);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

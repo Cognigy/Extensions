@@ -1,42 +1,59 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface IGetLocationsByFiltersParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
 		};
-		text: string;
+		filters: string;
+		apiVersion: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
-	preview: {
-		key: "text",
-		type: "text"
-	},
+export const getLocationsByFiltersNode = createNodeDescriptor({
+	type: "getLocationsByFilters",
+	defaultLabel: "Get Locations By Filters",
 	fields: [
 		{
 			key: "connection",
 			label: "API Key",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "yext",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
-			type: "cognigyText",
-			defaultValue: "{{input.text}}",
+			key: "filters",
+			label: "Filters",
+			type: "json",
+			description: "The filters to use for this search",
+			defaultValue: `[
+	{
+		"city": {
+			"contains": [
+				"value"
+			]
+		}
+	}
+]
+`,
 			params: {
-				required: true,
-			},
+				required: true
+			}
+		},
+		{
+			key: "apiVersion",
+			label: "API Version",
+			type: "cognigyText",
+			description: "The version of the API your organization is using.",
+			defaultValue: "20190424",
+			params: {
+				required: true
+			}
 		},
 		{
 			key: "storeLocation",
@@ -61,7 +78,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "yext.locations",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +88,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "yext.locations",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -88,27 +105,42 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"apiVersion"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "filters" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#02444f"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: IGetLocationsByFiltersParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
+		const { filters, apiVersion, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				url: `https://api.yext.com/v2/accounts/me/locationsearch`,
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Allow': 'application/json'
+				},
+				params: {
+					filters: JSON.stringify(filters),
+					api_key: key,
+					v: apiVersion
 				}
 			});
 

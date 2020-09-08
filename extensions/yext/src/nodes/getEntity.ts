@@ -1,22 +1,23 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IDetectLanguageInTextParams extends INodeFunctionBaseParams {
+export interface IGetEntityParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
 		};
-		text: string;
+		entity: string;
+		apiVersion: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const detectLanguageInTextNode = createNodeDescriptor({
-	type: "detectLanguageInText",
-	defaultLabel: "Detect Language",
+export const getEntityNode = createNodeDescriptor({
+	type: "getEntity",
+	defaultLabel: "Get Entity",
 	preview: {
-		key: "text",
+		key: "entity",
 		type: "text"
 	},
 	fields: [
@@ -25,18 +26,63 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			label: "API Key",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "yext",
 				required: true
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
-			type: "cognigyText",
-			defaultValue: "{{input.text}}",
+			key: "entity",
+			type: "select",
+			label: "Entity",
+			description: "The type of entity you want to search for.",
+			defaultValue: "Locations",
 			params: {
-				required: true,
+				options: [
+					{
+						label: "Locations",
+						value: "Locations"
+					},
+					{
+						label: "Events",
+						value: "Events"
+					},
+					{
+						label: "Products",
+						value: "Products"
+					},
+					{
+						label: "Assets",
+						value: "Assets"
+					},
+					{
+						label: "Entities",
+						value: "Entities"
+					},
+					{
+						label: "Folders",
+						value: "Folders"
+					},
+					{
+						label: "Menus",
+						value: "Menus"
+					},
+					{
+						label: "Bios",
+						value: "Bios"
+					}
+				],
+				required: true
 			},
+		},
+		{
+			key: "apiVersion",
+			label: "API Version",
+			type: "cognigyText",
+			description: "The version of the API your organization is using.",
+			defaultValue: "20190424",
+			params: {
+				required: true
+			}
 		},
 		{
 			key: "storeLocation",
@@ -61,7 +107,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "yext.entity",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -71,7 +117,7 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "detectedLanguage",
+			defaultValue: "yext.entity",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -88,27 +134,41 @@ export const detectLanguageInTextNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"apiVersion"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "entity" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#3cba54"
+		color: "#02444f"
 	},
-	function: async ({ cognigy, config }: IDetectLanguageInTextParams) => {
+	function: async ({ cognigy, config }: IGetEntityParams) => {
 		const { api } = cognigy;
-		const { text, connection, storeLocation, contextKey, inputKey } = config;
+		const { entity, apiVersion, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://translation.googleapis.com/language/translate/v2/detect?key=${key}&q=${text}`,
+				url: `https://api.yext.com/v2/accounts/me/${entity.toLowerCase()}`,
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Allow': 'application/json'
+				},
+				params: {
+					api_key: key,
+					v: apiVersion
 				}
 			});
 

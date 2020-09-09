@@ -1,7 +1,7 @@
 /**/credentials.json
 /**/token.json
 extensions/*/build
-extensions/*/node_modules
+extensions/**/node_modules
 extensions/*/src/shared
 extensions/*/.env
 extensions/*/*.tar.gz

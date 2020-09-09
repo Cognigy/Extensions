@@ -235,11 +235,3 @@ As soon as the user is finished with the agent conversation, this Node can be us
 ## Node: Send Message To Live Agent
 
 In order to send a message to the current live agent session, this Node is required. One needs the `liveAgentAffinity` and `liveAgentSessionKey` which were stored into the context before -- by **Start Live Chat**. Furthermore, a `text` message must be defined. After sending a message, this node doesn't return anything.
-
-## Node: Get Agent Message (BETA)
-
-At the moment, one needs to use this Node in order to retreive sent agent messages. One needs the `liveAgentAffinity` and `liveAgentSessionKey` which were stored into the context before -- by **Start Live Chat**. Behind the scenes, this Node polls for a new Salesforce message and automatically sends it to the user as soon as it arrives.
-
-In a Cognigy Flow, this process could look like this:
-
-![Get Agent Message Flow Example](./docs/getAgentMessageFlow.png)

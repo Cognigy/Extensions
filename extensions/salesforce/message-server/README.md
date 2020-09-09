@@ -10,6 +10,12 @@ This server polls for Live Agent messages and sends them back to the ongoing Cog
 			"method": "POST",
 			"description": "Polls Salesforce for new agent messages and sends them back to the ongoing Cognigy conversation.",
 			"path": "/message",
+			"headers": {
+				"X-API-Key": {
+					"description": "The Cognigy API Key",
+					"type": "string"
+				}
+			},
 			"body": {
 				"liveAgent": {
 					"url": {
@@ -29,8 +35,8 @@ This server polls for Live Agent messages and sends them back to the ongoing Cog
 					}
 				},
 				"cognigy": {
-					"apiKey": {
-						"description": "The Cognigy API Key",
+					"apiUrl": {
+						"description": "The Cognigy API base URL. E.g. 'https://api-trial.cognigy.ai/new/'",
 						"type": "string"
 					},
 					"userId": {
@@ -72,7 +78,10 @@ const axios = require('axios');
 try {
     const response = await axios({
         method: 'post',
-        url: 'http://localhost:8081/message'
+        url: 'http://localhost:8081/message',
+        headers: {
+            'X-API-Key': 'Cognigy API Key'
+        },
         data: {
             "liveAgent": {
                 "url": "https://....salesforceliveagent.com",
@@ -93,7 +102,7 @@ try {
                 }
             },
             "cognigy": {
-                "apiKey": "",
+                "apiUrl": "https://api-trial.cognigy.ai/new/",
                 "userId": {
                     "$cs": {
                         "script": "ci.userId",

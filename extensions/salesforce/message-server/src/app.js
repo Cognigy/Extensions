@@ -1,27 +1,45 @@
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
-const poll = require('poll').default
-const axios = require('axios')
-const rootResponse = require('../assets/rootResponse.json')
+const poll = require('poll').default;
+const axios = require('axios');
 
+// Import the root path JSON response
+const rootResponse = require('../assets/rootResponse.json');
 
-const app = express()
-const port = 8081
+// Configure Express
+const app = express();
+const port = 8081;
 
+// Enable JSON Body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-	res.json(rootResponse)
+	res.json(rootResponse);
 });
 
 app.post('/message', (req, res) => {
+
+	// Get Header for authentication
+	let apiKey = req.header('X-API-Key');
+	if (apiKey === undefined || apiKey === '') {
+		res.statusCode = 403;
+		res.json({
+			error: "The header is missing the 'X-API-Key' field."
+		});
+	}
+
+	// Directly answer Cognigy to prevent Timeouts
+	res.sendStatus = 202;
+	res.json({
+		message: "[Salesforce Live Chat] Message Server started."
+	});
 
 	// Extract body data
 	const { body } = req;
 	const { liveAgent, cognigy } = body;
 	const { url, headers } = liveAgent;
-	const { userId, URLToken, sessionId, apiKey } = cognigy;
+	const { userId, URLToken, sessionId, apiUrl } = cognigy;
 
 	poll(async () => {
 		try {
@@ -38,7 +56,7 @@ app.post('/message', (req, res) => {
 						try {
 							const response = await axios({
 								method: 'post',
-								url: `https://api-trial.cognigy.ai/new//v2.0/endpoint/notify?api_key=${apiKey}`,
+								url: `${apiUrl}v2.0/endpoint/notify?api_key=${apiKey}`,
 								data: {
 									userId,
 									text: message.message.text,
@@ -46,12 +64,16 @@ app.post('/message', (req, res) => {
 									URLToken,
 									sessionId
 								}
-							})
-						} catch (error) {}
+							});
+						} catch (error) {
+							res.send(error);
+						}
 					}
 				});
 			} catch (e){}
-		} catch (error) {}
+		} catch (error) {
+			res.send(error);
+		}
 	}, 1000)
 });
 

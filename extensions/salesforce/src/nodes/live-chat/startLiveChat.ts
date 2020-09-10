@@ -11,6 +11,7 @@ export interface IStartLiveChatParams extends INodeFunctionBaseParams {
 			livechatButtonId: string;
 		};
 		language: string;
+		data: any;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -47,6 +48,15 @@ export const startLiveChatNode = createNodeDescriptor({
 				],
 				required: true
 			},
+		},
+		{
+			key: "data",
+			label: "User Data",
+			type: "cognigyText",
+			params: {
+				required: true,
+				multiline: true
+			}
 		},
 		{
 			key: "storeLocation",
@@ -98,11 +108,20 @@ export const startLiveChatNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"data"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "language" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -110,7 +129,7 @@ export const startLiveChatNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IStartLiveChatParams) => {
 		const { api, input } = cognigy;
-		const { language, connection, storeLocation, contextKey, inputKey } = config;
+		const { language, data, connection, storeLocation, contextKey, inputKey } = config;
 
 		const { liveAgentUrl, organizationId, deploymentId, livechatButtonId } = connection;
 		if (!liveAgentUrl) throw new Error("The secret is missing the 'liveAgentUrl' key");
@@ -150,11 +169,7 @@ export const startLiveChatNode = createNodeDescriptor({
 						"prechatDetails": [
 							{
 								label: "cognigy",
-								value: JSON.stringify({
-									userId: input.userId,
-									urlToken: input.URLToken,
-									sessionId: input.sessionId
-								}),
+								value: data,
 								transcriptFields: [
 									"Body"
 								],

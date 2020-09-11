@@ -39,6 +39,224 @@ Inside the **Salesforce Service Console**:
 
 ![Chat Request](./docs/chatrequest.png)
 
+### Configure Prechat Information
+
+One has the opportunity to send some information to the Salesforce live agent so that their knows what to talk about. In order to do so, two different types of information can be sent:
+
+1. Visitor Name
+2. Prechat Details
+3. Prechat Entities
+
+**Visitor Name:**
+
+Since the live agent should know who their are talking to, one can defind the visitor's name. From default, it uses the `{{input.text}}` Cognigy Script to get the user Id for the current channel.
+
+**Prechat Details:**
+
+- [Please read the documentation](https://developer.salesforce.com/docs/atlas.en-us.live_agent_rest.meta/live_agent_rest/live_agent_rest_data_types.htm#CustomDetail)
+
+This could contain any kind of information that was collected during the bot conversation, such as context variables:
+
+```json
+[
+	{
+		"label": "Cognigy",
+		"value": "Infos from chat: {{context.key}}",
+		"transcriptFields": [
+			"Body"
+		],
+		"displayToAgent": true
+	}
+]
+```
+
+or
+
+```json
+[
+       {
+         "label":"LastName",
+         "value":"Mustermann",
+         "entityMaps":[
+            {
+               "entityName":"contact",
+               "fieldName":"LastName"
+            }
+         ],
+         "transcriptFields":[
+            "LastName__c"
+         ],
+         "displayToAgent":true
+      },
+      {
+         "label":"FirstName",
+         "value":"Max",
+         "entityMaps":[
+            {
+               "entityName":"contact",
+               "fieldName":"FirstName"
+            }
+         ],
+         "transcriptFields":[
+            "FirstName__c"
+         ],
+         "displayToAgent":true
+      },
+      {
+         "label":"Email",
+         "value":"max.mustermann@mail.de",
+         "entityMaps":[
+            {
+               "entityName":"contact",
+               "fieldName":"Email"
+            }
+         ],
+         "transcriptFields":[
+            "Email__c"
+         ],
+         "displayToAgent":true
+      },
+      {
+         "label":"Status",
+         "value":"New",
+         "entityMaps":[
+            {
+               "entityName":"Case",
+               "fieldName":"Status"
+            }
+         ],
+         "transcriptFields":[
+            "caseStatus__c"
+         ],
+         "displayToAgent":true
+      },
+      {
+         "label":"Origin",
+         "value":"Web",
+         "entityMaps":[
+            {
+               "entityName":"Case",
+               "fieldName":"Origin"
+            }
+         ],
+         "transcriptFields":[
+            "caseOrigin__c"
+         ],
+         "displayToAgent":true
+      },
+
+      {
+         "label":"Subject",
+         "value":"TestCaseSubject",
+         "entityMaps":[
+            {
+               "entityName":"Case",
+               "fieldName":"Subject"
+            }
+         ],
+         "transcriptFields":[
+            "subject__c"
+         ],
+         "displayToAgent":true
+      },
+      {
+         "label":"Description",
+         "value":"TestCaseDescriptionShr",
+         "entityMaps":[
+            {
+               "entityName":"Case",
+               "fieldName":"Description"
+            }
+         ],
+         "transcriptFields":[
+            "description__c"
+         ],
+         "displayToAgent":true
+      }
+   ]
+```
+
+The above JSON information is displayed as **Details** in the Salesforce Service Console.
+
+**Prechat Entities:**
+
+- [Please red the documentation](https://developer.salesforce.com/docs/atlas.en-us.live_agent_rest.meta/live_agent_rest/live_agent_rest_data_types.htm#Entity)
+
+If one wants to connect the bot user with a Salesforce Entity (e.g. Contact), so-called Prechat Entites could be sent to the live chat session:
+
+```json
+[
+   {
+         "entityName":"Contact",         
+         "saveToTranscript": "Contact",
+         "linkToEntityName":"Case",
+         "linkToEntityField":"ContactId",
+         "showOnCreate":true,          
+         "entityFieldsMaps":[
+             {
+               "fieldName":"LastName",
+               "label":"LastName",
+               "doFind":true,
+               "isExactMatch":true,
+               "doCreate":true
+            },
+            {
+               "fieldName":"FirstName",
+               "label":"FirstName",
+               "doFind":true,
+               "isExactMatch":true,
+               "doCreate":true
+            },
+            {
+               "fieldName":"Email",
+               "label":"Email",
+               "doFind":true,
+               "isExactMatch":true,
+               "doCreate":true
+            }          
+         ]
+      },
+       {
+         "entityName":"Case",
+         "showOnCreate":true,          
+         "saveToTranscript":"Case",
+         "entityFieldsMaps":[
+            {
+               "fieldName":"Status",
+               "label":"Status",
+               "doFind":false,
+               "isExactMatch":false,
+               "doCreate":true
+            },
+            {
+               "fieldName":"Origin",
+               "label":"Origin",
+               "doFind":false,
+               "isExactMatch":false,
+               "doCreate":true
+            },  
+
+         {
+               "fieldName":"Subject",
+               "label":"Subject",
+               "doFind":false,
+               "isExactMatch":false,
+               "doCreate":true
+            },
+            {
+               "fieldName":"Description",
+               "label":"Description",
+               "doFind":false,
+               "isExactMatch":false,
+               "doCreate":true
+            }         
+         ]             
+        
+      }      
+      
+   ]
+```
+
 ## Node: Check Live Agent Availability
 
 Checks whether there is a free agent for the provided live chat button. It returns the following format:

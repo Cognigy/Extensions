@@ -1,6 +1,6 @@
-# News API Extension
+# Bamboo HR
 
-This Extension integrats Cognigy with the [News API](https://newsapi.org/).
+This Extension provides getting employee information and use it within a Cognigy.AI conversation.
 
 **Connection:**
 

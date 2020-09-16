@@ -35,6 +35,8 @@ export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[
 	});
 
 	switch (intents.length) {
+		case 1:
+			break;
 		case 2:
 			quickReplies.push({
 				title: intents[1].disambiguationSentence,
@@ -42,7 +44,7 @@ export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[
 				content_type: 'text'
 			});
 			break;
-		case 3:
+		default:
 			quickReplies.push({
 				title: intents[1].disambiguationSentence,
 				payload: intents[1].disambiguationSentence,
@@ -53,7 +55,6 @@ export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[
 				payload: intents[2].disambiguationSentence,
 				content_type: 'text'
 			});
-			break;
 	}
 
 	return quickReplies;

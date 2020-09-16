@@ -6,7 +6,11 @@ export interface ISearchSimpleParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			host: string;
+			auth: string;
+			protocol: string;
+			port: string;
 		};
+		selectAuth: string;
 		query: string;
 		storeLocation: string;
 		contextKey: string;
@@ -22,12 +26,48 @@ export const searchSimpleNode = createNodeDescriptor({
 	},
 	fields: [
 		{
-			key: "connection",
+			key: "selectAuth",
+			label: "Select Authentication",
+			type: "select",
+			defaultValue: "No Auth",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "No Auth",
+						value: "No Auth"
+					},
+					{
+						label: "Basic Auth",
+						value: "Basic Auth"
+					}
+				],
+			}
+		},
+		{
+			key: "basicAuth",
+			label: "Elastic Search Basic Auth",
+			type: "connection",
+			params: {
+				connectionType: "elastic-search-basic-auth",
+				required: true
+			},
+			condition: {
+				key: "selectAuth",
+				value: "Basic Auth",
+			}
+		},
+		{
+			key: "noAuth",
 			label: "Elastic Search Server Host",
 			type: "connection",
 			params: {
 				connectionType: "elastic-search",
 				required: true
+			},
+			condition: {
+				key: "selectAuth",
+				value: "No Auth",
 			}
 		},
 		{
@@ -80,6 +120,16 @@ export const searchSimpleNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "connectionSection",
+			label: "Authentication",
+			defaultCollapsed: false,
+			fields: [
+				"selectAuth",
+				"noAuth",
+				"basicAuth"
+			]
+		},
+		{
 			key: "storage",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -91,7 +141,7 @@ export const searchSimpleNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "field", key: "connection" },
+		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "query" },
 		{ type: "section", key: "storage" },
 
@@ -101,15 +151,30 @@ export const searchSimpleNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchSimpleParams) => {
 		const { api } = cognigy;
-		const { query, connection, storeLocation, contextKey, inputKey } = config;
-		const { host } = connection;
+		const { selectAuth, query, connection, storeLocation, contextKey, inputKey } = config;
+		const { host, auth, protocol, port } = connection;
 
 		if (!query) throw new Error("No search query defined");
 
-		const client = await new elasticsearch.Client({
-			host,
-			log: 'trace'
-		});
+		let client: any;
+		// Check selected authentication and create client
+		if (selectAuth === "Basic Auth") {
+			client = await new elasticsearch.Client({
+				host: [
+					host,
+					auth,
+					protocol,
+					port
+				],
+				log: 'trace'
+			});
+		} else {
+			client = await new elasticsearch.Client({
+				host,
+				log: 'trace'
+			});
+		}
+
 
 		try {
 			const body = await client.search({q: query});

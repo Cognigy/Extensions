@@ -2,10 +2,28 @@
 
 With this Extension you can query for Elastic Search instance to use these information within the conversation.
 
-**Connection (Elastic Search Instance):**
+**Connection (No Auth):**
 
-- Key: host
-- Value: Your Elastic Search instance, e.g. `elastic-instance:9200`
+- key: host
+- value: Your Elastic Search instance, e.g. `elastic-instance:9200`
+
+**Connection (Basic Auth):**
+
+- [Please read this documentation for more information](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/auth-reference.html#_basic_auth)
+
+1. 
+   - key: host
+   - value: Your Elastic Search domain, e.g. `es1.internal.org`
+2. 
+   - key: auth
+   - value: Username and password in this format: `username:password`
+3. 
+   - key: protocol
+   - value: http or https
+4. 
+   - key: port
+   - value: The exposed port form which Elastic search is available in your system
+
 
 ## Node: searchSimple
 

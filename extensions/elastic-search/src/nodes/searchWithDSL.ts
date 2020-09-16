@@ -6,7 +6,11 @@ export interface ISearchWithDSLParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			host: string;
+			auth: string;
+			protocol: string;
+			port: string;
 		};
+		selectAuth: string;
 		index: string;
 		type: string;
 		body: JSON;
@@ -24,12 +28,48 @@ export const searchWithDSLNode = createNodeDescriptor({
 	},
 	fields: [
 		{
-			key: "connection",
+			key: "selectAuth",
+			label: "Select Authentication",
+			type: "select",
+			defaultValue: "No Auth",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "No Auth",
+						value: "No Auth"
+					},
+					{
+						label: "Basic Auth",
+						value: "Basic Auth"
+					}
+				],
+			}
+		},
+		{
+			key: "basicAuth",
+			label: "Elastic Search Basic Auth",
+			type: "connection",
+			params: {
+				connectionType: "elastic-search-basic-auth",
+				required: true
+			},
+			condition: {
+				key: "selectAuth",
+				value: "Basic Auth",
+			}
+		},
+		{
+			key: "noAuth",
 			label: "Elastic Search Server Host",
 			type: "connection",
 			params: {
 				connectionType: "elastic-search",
 				required: true
+			},
+			condition: {
+				key: "selectAuth",
+				value: "No Auth",
 			}
 		},
 		{
@@ -107,6 +147,16 @@ export const searchWithDSLNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "connectionSection",
+			label: "Authentication",
+			defaultCollapsed: false,
+			fields: [
+				"selectAuth",
+				"noAuth",
+				"basicAuth"
+			]
+		},
+		{
 			key: "storage",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -118,7 +168,7 @@ export const searchWithDSLNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "field", key: "connection" },
+		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "index" },
 		{ type: "field", key: "type" },
 		{ type: "field", key: "body" },
@@ -130,17 +180,31 @@ export const searchWithDSLNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchWithDSLParams) => {
 		const { api } = cognigy;
-		const { index, type, body, connection, storeLocation, contextKey, inputKey } = config;
-		const { host } = connection;
+		const { selectAuth, index, type, body, connection, storeLocation, contextKey, inputKey } = config;
+		const { host, auth, protocol, port } = connection;
 
 		if (!index) throw new Error("No elastic search index defined");
 		if (!type) throw new Error("No elastic search index type defined");
 		if (!body) throw new Error("No DSL query body defined");
 
-		const client = await new elasticsearch.Client({
-			host,
-			log: 'trace'
-		});
+		let client: any;
+		// Check selected authentication and create client
+		if (selectAuth === "Basic Auth") {
+			client = await new elasticsearch.Client({
+				host: [
+					host,
+					auth,
+					protocol,
+					port
+				],
+				log: 'trace'
+			});
+		} else {
+			client = await new elasticsearch.Client({
+				host,
+				log: 'trace'
+			});
+		}
 
 		try {
 			// prevent 404

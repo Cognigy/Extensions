@@ -143,3 +143,56 @@ If you wish to alter any styling, copy the complete style tag above, make your m
 
 Similarly, the time format can be altered via ```ci.GetConversationTimeFormat```, which default to ```[(]HH:mm:ss[)]```. See the [moment formatting options](https://momentjs.com/docs/#/displaying/format) for details.
 
+
+## Node: Intent Disambiguation
+
+This node reviews the intent mapper result from the Cognigy NLU and finds intents that are within the speicified score delta. These intents are recorded and saved in order of similarity to the Cognigy Context. The disambiguation sentences for each intent are also posted back to the user as quick replies with a specified `text` message. A maximum of **three** disambiguation sentences in addition to the main intent disambiguation sentence will be posted back as quick replies.
+
+The stored response looks like the following:
+
+```json
+"cognigy": {
+    "disambiguation": {
+      "count": 3,
+      "intents": [
+        {
+          "id": "408fc0a0-f634-4444-9825-7fcb07616b18",
+          "name": "FAQ-Management",
+          "score": 0.11509306606009306,
+          "negated": false,
+          "confirmationSentence": null,
+          "confirmationSentences": [],
+          "disambiguationSentence": "You asked a question about management",
+          "flow": "27476df2-8a8b-47f7-ac7a-767cd7861b57",
+          "delta": 0.3639332824278372
+        },
+        {
+          "id": "0cd025b6-01f9-4b9b-a6af-9575cff4f949",
+          "name": "FAQ-Corporate-Structure",
+          "score": 0.05310899814135705,
+          "negated": false,
+          "confirmationSentence": null,
+          "confirmationSentences": [],
+          "disambiguationSentence": "You asked a question about corporate structure",
+          "flow": "27476df2-8a8b-47f7-ac7a-767cd7861b57",
+          "delta": 0.4259173503465732
+        },
+        {
+          "id": "bf3b3599-fbe7-4a68-be16-a62192d04052",
+          "name": "FAQ-Locations",
+          "score": 0.04672874568886005,
+          "negated": false,
+          "confirmationSentence": null,
+          "confirmationSentences": [],
+          "disambiguationSentence": "You asked a question about locations",
+          "flow": "27476df2-8a8b-47f7-ac7a-767cd7861b57",
+          "delta": 0.4322976027990702
+        }
+      ]
+    }
+  }
+```
+
+**Important**
+
+The `maximum delta value` should be between 0 and 1. The smaller the value, the more refined the disambiguation results will be.

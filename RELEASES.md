@@ -4,7 +4,7 @@
 |---|---|---|---|---|
 | <img src="./extensions/aws/icon.png" width="40"></img> |  [AWS](./extensions/aws/) | Use AWS Functions (S3, Lambda, Polly) |  [Download](https://github.com/Cognigy/Extensions/releases/download/aws400/aws.tar.gz) |  4.0.0 |
 | <img src="./extensions/bamboo-hr/icon.png" width="40"></img> |  [Bamboo HR](./extensions/bamboo-hr/) | Get General Employee Information |  [Download](https://github.com/Cognigy/Extensions/releases/download/bamboo-hr400/bamboohr.tar.gz) |  4.0.0 |
-| <img src="./extensions/cognigy/icon.png" width="40"></img> |  [Cognigy](./extensions/cognigy/) | Use Customized Nodes |  [Download](https://github.com/Cognigy/Extensions/releases/download/cognigy400/cognigy.tar.gz) |  4.0.0 |
+| <img src="./extensions/cognigy/icon.png" width="40"></img> |  [Cognigy](./extensions/cognigy/) | Use Customized Nodes |  [Download](https://github.com/Cognigy/Extensions/releases/download/cognigy410/cognigy.tar.gz) |  4.1.0 |
 | <img src="./extensions/confluence/icon.png" width="40"></img> |  [Confluence](./extensions/confluence/) | Search your Confluence |  [Download](https://github.com/Cognigy/Extensions/releases/download/confluence400/confluence.tar.gz) |  4.0.0 |
 | <img src="./extensions/deepl/icon.png" width="40"></img> |  [DeepL](./extensions/deepl/) | Translate Text Messages |  [Download](https://github.com/Cognigy/Extensions/releases/download/deepl400/deepl.tar.gz) |  4.0.0 |
 | <img src="./extensions/elastic-search/icon.png" width="40"></img> |  [Elastic Search](./extensions/elastic-search/) | Search for items in Databases |  [Download](https://github.com/Cognigy/Extensions/releases/download/elastic-search/elastic-search.tar.gz) |  4.0.0 |

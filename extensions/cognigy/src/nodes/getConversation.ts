@@ -111,7 +111,7 @@ export const getConversationNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "conversation",
+			defaultValue: "cognigy.conversation",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -121,7 +121,7 @@ export const getConversationNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "conversation",
+			defaultValue: "cognigy.conversation",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -160,6 +160,10 @@ export const getConversationNode = createNodeDescriptor({
 	],
 	// function: getConversationFunction
 	function: async ({ cognigy, config }: IGetConversationParams): Promise<any> => {
+		const { api } = cognigy;
+		const { connection, odataBaseUrl, userId, sessionId, outputType, tzOffset, storeLocation, inputKey, contextKey } = config;
+		const { apiKey } = connection;
+
 		const me = 'get-conversation';
 
 		for (let a of ['odataBaseUrl', 'userId', 'sessionId', 'outputType', 'tzOffset', 'storeLocation']) {
@@ -168,10 +172,6 @@ export const getConversationNode = createNodeDescriptor({
 		if (!config.connection || !config.connection.apiKey) {
 			throw new Error(`${me}: The Connection did not contain 'apiKey'.`);
 		}
-
-		const { connection, odataBaseUrl, userId, sessionId, outputType, tzOffset, storeLocation, inputKey, contextKey } = config;
-		const { apiKey } = connection;
-
 
 		// DEBUG logging can be controlled by the array cc.DEBUG=['GetConversation','SomethingElse'] :
 		let LOG = (msg: string) => { /* No-op */ };
@@ -339,9 +339,16 @@ export const getConversationNode = createNodeDescriptor({
 
 
 		if (config.storeLocation === 'context') {
-			cognigy.api.setContext(contextKey, returnVal);
+			cognigy.api.addToContext(contextKey, returnVal, "simple");
 		} else {
 			cognigy.input[inputKey] = returnVal;
+		}
+
+		if (storeLocation === "context") {
+			api.addToContext(contextKey, returnVal, "simple");
+		} else {
+			// @ts-ignore
+			api.addToInput(inputKey, returnVal);
 		}
 	}
 });

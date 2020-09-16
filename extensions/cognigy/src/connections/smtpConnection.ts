@@ -1,7 +1,7 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
-export const cognigyConnection: IConnectionSchema = {
-	type: "cognigy",
+export const smtpConnection: IConnectionSchema = {
+	type: "smtp",
 	label: "SMTP Connection",
 	fields: [
 		{ fieldName: "host" },

@@ -1,15 +1,19 @@
 import { createExtension } from "@cognigy/extension-tools";
 
 import { sendEmailWithAttachmentNode } from "./nodes/sendEmailWithAttachment";
-import { cognigyConnection } from "./connections/cognigyConnection";
+import { smtpConnection } from "./connections/smtpConnection";
+import { getConversationNode } from "./nodes/get-conversation";
+import { cognigyApiConnection } from "./connections/cognigyApiConnection";
 
 
 export default createExtension({
 	nodes: [
-		sendEmailWithAttachmentNode
+		sendEmailWithAttachmentNode,
+		getConversationNode
 	],
 
 	connections: [
-		cognigyConnection
+		smtpConnection,
+		cognigyApiConnection
 	]
 });

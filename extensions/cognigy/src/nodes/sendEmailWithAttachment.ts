@@ -32,7 +32,7 @@ export const sendEmailWithAttachmentNode = createNodeDescriptor({
 			label: "SMTP Connection",
 			type: "connection",
 			params: {
-				connectionType: "cognigy",
+				connectionType: "smtp",
 				required: true
 			}
 		},

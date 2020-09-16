@@ -4,6 +4,6 @@ export const cognigyApiConnection: IConnectionSchema = {
 	type: "cognigy-api",
 	label: "Cognigy API Key for OData",
 	fields: [
-		{ fieldName: "apiKey" }
+		{ fieldName: "key" }
 	]
 };

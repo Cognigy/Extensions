@@ -160,7 +160,7 @@ export const getConversationNode = createNodeDescriptor({
 	function: getConversationFunction
 });
 
-export async function getConversationFunction({ cognigy, config }: IGetConversationParams) {
+export async function getConversationFunction({ cognigy, config }: IGetConversationParams): Promise<any> {
 
 	// const { connection, functionName, qualifier, payload, invocationType, logType, clientContext, outputInputKey, outputContextKey } = config;
 	// if (!connection) throw new Error('aws.GetConversation: The Connection data is missing.');
@@ -192,7 +192,7 @@ export async function getConversationFunction({ cognigy, config }: IGetConversat
 	}
 
 
-	//		const { CognigyODataHost, userId, sessionId, secret, StoreOutputIn, StorageKey, HtmlFormat, tzOffset } = args;
+	// const { CognigyODataHost, userId, sessionId, secret, StoreOutputIn, StorageKey, HtmlFormat, tzOffset } = args;
 
 	if (outputType === 'html') {
 		if (!tzOffset || !tzOffset.match(/^([+-][0-9]+)|0$/)) {

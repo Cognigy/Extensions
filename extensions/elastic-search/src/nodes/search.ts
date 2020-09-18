@@ -1,16 +1,18 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import * as elasticsearch from 'elasticsearch';
+import { Client } from "@elastic/elasticsearch";
+import { authenticateClient } from "../helpers/authenticateClient";
 
 
-export interface ISearchWithDSLParams extends INodeFunctionBaseParams {
+export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			host: string;
-			auth: string;
-			protocol: string;
-			port: string;
+			cloudId: string;
+			username: string;
+			password: string;
+			node: string;
+			apiKey: string;
 		};
-		selectAuth: string;
+		authentication: "cloud" | "basic" | "apiKey";
 		index: string;
 		type: string;
 		body: JSON;
@@ -19,31 +21,48 @@ export interface ISearchWithDSLParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
-export const searchWithDSLNode = createNodeDescriptor({
-	type: "searchWithDSL",
-	defaultLabel: "Search With DSL",
+export const searchNode = createNodeDescriptor({
+	type: "search",
+	defaultLabel: "Search",
 	preview: {
 		key: "index",
 		type: "text"
 	},
 	fields: [
 		{
-			key: "selectAuth",
+			key: "authentication",
 			label: "Select Authentication",
 			type: "select",
-			defaultValue: "No Auth",
+			defaultValue: "basic",
 			params: {
 				required: true,
 				options: [
 					{
-						label: "No Auth",
-						value: "No Auth"
+						label: "Cloud",
+						value: "cloud"
 					},
 					{
-						label: "Basic Auth",
-						value: "Basic Auth"
+						label: "Basic",
+						value: "basic"
+					},
+					{
+						label: "API Key",
+						value: "apiKey"
 					}
 				],
+			}
+		},
+		{
+			key: "cloudAuth",
+			label: "Elastic Search Cloud",
+			type: "connection",
+			params: {
+				connectionType: "cloud",
+				required: true
+			},
+			condition: {
+				key: "authentication",
+				value: "cloud",
 			}
 		},
 		{
@@ -51,38 +70,31 @@ export const searchWithDSLNode = createNodeDescriptor({
 			label: "Elastic Search Basic Auth",
 			type: "connection",
 			params: {
-				connectionType: "elastic-search-basic-auth",
+				connectionType: "basic",
 				required: true
 			},
 			condition: {
-				key: "selectAuth",
-				value: "Basic Auth",
+				key: "authentication",
+				value: "basic",
 			}
 		},
 		{
-			key: "noAuth",
-			label: "Elastic Search Server Host",
+			key: "apiKeyAuth",
+			label: "Elastic Search API Key",
 			type: "connection",
 			params: {
-				connectionType: "elastic-search",
+				connectionType: "apiKey",
 				required: true
 			},
 			condition: {
-				key: "selectAuth",
-				value: "No Auth",
+				key: "authentication",
+				value: "apiKey",
 			}
 		},
 		{
 			key: "index",
 			label: "Search Index",
-			type: "cognigyText",
-			params: {
-				required: true,
-			},
-		},
-		{
-			key: "type",
-			label: "Search Index Type",
+			description: "The Elastic Search Index",
 			type: "cognigyText",
 			params: {
 				required: true,
@@ -90,16 +102,16 @@ export const searchWithDSLNode = createNodeDescriptor({
 		},
 		{
 			key: "body",
-			label: "DSL Querying Structure",
+			label: "Query",
+			description: "The DSL Query Structure",
 			type: "json",
-			defaultValue: `
-			{
-				"query": {
-				  "match": {
-					"body": "elasticsearch"
-				  }
-				}
-			  }
+			defaultValue: `{
+	"query": {
+	  "match": {
+		"quote": "elasticsearch"
+	  }
+	}
+}
 			`,
 			params: {
 				required: true,
@@ -128,7 +140,7 @@ export const searchWithDSLNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "searchResultDSL",
+			defaultValue: "elastic.result",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -138,7 +150,7 @@ export const searchWithDSLNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "searchResultDSL",
+			defaultValue: "elastic.result",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -151,9 +163,10 @@ export const searchWithDSLNode = createNodeDescriptor({
 			label: "Authentication",
 			defaultCollapsed: false,
 			fields: [
-				"selectAuth",
-				"noAuth",
-				"basicAuth"
+				"authentication",
+				"cloudAuth",
+				"basicAuth",
+				"apiKeyAuth"
 			]
 		},
 		{
@@ -170,52 +183,22 @@ export const searchWithDSLNode = createNodeDescriptor({
 	form: [
 		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "index" },
-		{ type: "field", key: "type" },
 		{ type: "field", key: "body" },
 		{ type: "section", key: "storage" },
-
 	],
 	appearance: {
 		color: "#f3d337"
 	},
-	function: async ({ cognigy, config }: ISearchWithDSLParams) => {
+	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
-		const { selectAuth, index, type, body, connection, storeLocation, contextKey, inputKey } = config;
-		const { host, auth, protocol, port } = connection;
+		const { authentication, index, type, body, connection, storeLocation, contextKey, inputKey } = config;
 
-		if (!index) throw new Error("No elastic search index defined");
-		if (!type) throw new Error("No elastic search index type defined");
-		if (!body) throw new Error("No DSL query body defined");
-
-		let client: any;
-		// Check selected authentication and create client
-		if (selectAuth === "Basic Auth") {
-			client = await new elasticsearch.Client({
-				host: [
-					host,
-					auth,
-					protocol,
-					port
-				],
-				log: 'trace'
-			});
-		} else {
-			client = await new elasticsearch.Client({
-				host,
-				log: 'trace'
-			});
-		}
+		// Create Elastic Client
+		const client: Client = authenticateClient(connection, authentication);
 
 		try {
-			// prevent 404
-			await client.indices.delete({
-				index,
-				ignore: [404]
-			  });
-
 			const response = await client.search({
 				index,
-				type,
 				body
 			});
 
@@ -227,10 +210,10 @@ export const searchWithDSLNode = createNodeDescriptor({
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, error.message, "simple");
+				api.addToContext(contextKey, error, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, error.message);
+				api.addToInput(inputKey, error);
 			}
 		}
 	}

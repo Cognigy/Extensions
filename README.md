@@ -9,7 +9,7 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 - [Installation](https://support.cognigy.com/hc/en-us/articles/360016505680)
 - [Best Practises](https://support.cognigy.com/hc/en-us/articles/360016505740)
 - [New Feature Request](#new-feature-request)
-- [Releases]https://support.cognigy.com/hc/en-us/articles/360016505840)
+- [Releases](https://support.cognigy.com/hc/en-us/articles/360016505840)
 
 ## Overview
 

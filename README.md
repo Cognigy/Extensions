@@ -5,11 +5,11 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 
 ## Contents
 
-- [Get Started](./docs/get-started.md)
-- [Installation](./docs/installation.md)
-- [Best Practises](./docs/best-practises.md)
+- [Get Started](https://support.cognigy.com/hc/en-us/articles/360016534459)
+- [Installation](https://support.cognigy.com/hc/en-us/articles/360016505680)
+- [Best Practises](https://support.cognigy.com/hc/en-us/articles/360016505740)
 - [New Feature Request](#new-feature-request)
-- [Releases](RELEASES.md)
+- [Releases]https://support.cognigy.com/hc/en-us/articles/360016505840)
 
 ## Overview
 

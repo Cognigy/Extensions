@@ -1,20 +1,25 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { Client } from "@elastic/elasticsearch";
-import { authenticateClient } from "../helpers/authenticateClient";
 
 
 export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
+		cloudAuth: {
 			cloudId: string;
 			username: string;
 			password: string;
+		};
+		basicAuth: {
+			node: string;
+			username: string;
+			password: string;
+		};
+		apiKeyAuth: {
 			node: string;
 			apiKey: string;
 		};
 		authentication: "cloud" | "basic" | "apiKey";
 		index: string;
-		type: string;
 		body: JSON;
 		storeLocation: string;
 		contextKey: string;
@@ -191,22 +196,57 @@ export const searchNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
-		const { authentication, index, type, body, connection, storeLocation, contextKey, inputKey } = config;
+		const { authentication, index, body, cloudAuth, basicAuth, apiKeyAuth, storeLocation, contextKey, inputKey } = config;
+
+		let options: any;
+		// Check selected Authentication
+		switch (authentication) {
+			case "cloud":
+				options = {
+					cloud: {
+						id: cloudAuth.cloudId,
+					},
+					auth: {
+						username: cloudAuth.username,
+						password: cloudAuth.password
+					}
+				};
+				break;
+			case "basic":
+				options = {
+					node: basicAuth.node,
+					auth: {
+						username: basicAuth.username,
+						password: basicAuth.password
+					}
+				};
+				break;
+			case "apiKey":
+				options = {
+					node: apiKeyAuth.node,
+					auth: {
+						apiKey: apiKeyAuth.apiKey
+					}
+				};
+				break;
+		}
 
 		// Create Elastic Client
-		const client: Client = authenticateClient(connection, authentication);
+		const client = new Client(options);
 
 		try {
+
+			// Search the provided index
 			const response = await client.search({
 				index,
 				body
 			});
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response, "simple");
+				api.addToContext(contextKey, response.body, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response);
+				api.addToInput(inputKey, response.body);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

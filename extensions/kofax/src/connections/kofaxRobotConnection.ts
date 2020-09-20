@@ -2,8 +2,9 @@ import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const kofaxRobotConnection: IConnectionSchema = {
 	type: "kofax-rpa",
-	label: "Kofax RPA API Key",
+	label: "Kofax RPA REST credentials",
 	fields: [
-		{ fieldName: "key" }
+		{ fieldName: "username" },
+		{ fieldName: "password" },
 	]
 };

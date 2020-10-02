@@ -1,0 +1,32 @@
+{
+	"name": "ringcentral-engage",
+	"version": "4.0.0",
+	"description": "Custom Commands",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz ringcentral-engage.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"keywords": [
+		"RingCentral Engage",
+		"Handover"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Cognigy GmbH",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/axios": "^0.14.0",
+		"@types/node": "^10.12.5",
+		"tslint": "^6.1.2",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.10.0",
+		"axios": "^0.19.2"
+	}
+}

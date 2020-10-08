@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+// import axios from 'axios';
+const rp = require('request-promise');
 
 export interface IGetAuthenticationTokenParams extends INodeFunctionBaseParams {
 	config: {
@@ -130,24 +131,36 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 			+ `&client_secret=${clientSecret}`;
 
 		try {
-			const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', tokenPayload, {
+			const response = rp({
+				method: 'POST',
+				uri: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
-				}
+
+				},
+				body: tokenPayload,
+				json: true,
+				resolveWithFullResponse: true
 			});
 
+			// const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', tokenPayload, {
+			// 	headers: {
+			// 		'Content-Type': 'application/x-www-form-urlencoded'
+			// 	}
+			// });
+
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
+				api.addToContext(contextKey, response, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+				api.addToInput(inputKey, response);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, error.message, "simple");
+				api.addToContext(contextKey, error, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, error.message);
+				api.addToInput(inputKey, error);
 			}
 		}
 	}

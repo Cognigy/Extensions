@@ -71,8 +71,9 @@ export const startJobNode = createNodeDescriptor({
 			key: "inputArguments",
 			label: "Input Arguments",
 			type: "json",
+			defaultValue: "{}",
 			params: {
-				required: true
+				required: false
 			}
 		},
 		{
@@ -125,13 +126,21 @@ export const startJobNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"inputArguments"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "releaseKey" },
 		{ type: "field", key: "strategy" },
-		{ type: "field", key: "inputArguments" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {

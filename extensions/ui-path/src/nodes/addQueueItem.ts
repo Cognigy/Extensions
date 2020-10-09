@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getToken, addQueueItemHelper } from '../helpers/api.js';
+import { getToken, addQueueItemHelper } from '../helpers/api';
 import uuid from 'uuid';
 
 export interface IAddQueueItemParams extends INodeFunctionBaseParams {

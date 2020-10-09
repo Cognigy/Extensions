@@ -4,10 +4,10 @@ const request = require('request-promise-native');
 export interface IGetReleasesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			client_id: string;
-			refresh_token: string;
-			account_logical_name: string;
-			service_instance_logical_name: string;
+			userKey: string;
+			accountLogicalName: string;
+			tenantName: string;
+			clientId: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -90,7 +90,7 @@ export const getReleasesNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IGetReleasesParams) => {
 		const { api } = cognigy;
 		const { connection, storeLocation, contextKey, inputKey } = config;
-		const { client_id, refresh_token, account_logical_name, service_instance_logical_name } = connection;
+		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
 		// Always return a Promise
 		// A resolved Promise MUST return the input object
@@ -107,8 +107,8 @@ export const getReleasesNode = createNodeDescriptor({
 				uri: 'https://account.uipath.com/oauth/token',
 				body: {
 					grant_type: "refresh_token",
-					client_id,
-					refresh_token
+					client_id: clientId,
+					refresh_token: userKey
 				},
 				json: true // Automatically stringifies the body to JSON
 			};
@@ -120,10 +120,10 @@ export const getReleasesNode = createNodeDescriptor({
 
 					let finalOptions = {
 						method: 'GET',
-						url: `https://platform.uipath.com/${account_logical_name}/${service_instance_logical_name}/odata/Releases`,
+						url: `https://platform.uipath.com/${accountLogicalName}/${tenantName}/odata/Releases`,
 						headers: {
 							'Content-Type': 'application/json',
-							'X-UIPATH-TenantName': service_instance_logical_name
+							'X-UIPATH-TenantName': tenantName
 						},
 						auth: {
 							'bearer': accessToken
@@ -139,7 +139,7 @@ export const getReleasesNode = createNodeDescriptor({
 								// @ts-ignore
 								api.addToInput(inputKey, jobs);
 							}
-
+							return;
 						})
 						.catch((err) => {
 							if (storeLocation === "context") {
@@ -148,6 +148,7 @@ export const getReleasesNode = createNodeDescriptor({
 								// @ts-ignore
 								api.addToInput(inputKey, err);
 							}
+							return;
 						});
 				})
 				.catch((err) => {
@@ -157,6 +158,7 @@ export const getReleasesNode = createNodeDescriptor({
 						// @ts-ignore
 						api.addToInput(inputKey, err);
 					}
+					return;
 				});
 		});
 	}

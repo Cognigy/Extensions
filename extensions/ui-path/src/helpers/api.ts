@@ -1,18 +1,18 @@
 const request = require('request-promise-native');
 
-module.exports.getToken = ({
-    client_id,
-    refresh_token
+export const getToken = ({
+    clientId,
+    userKey
 }) => request.post('https://account.uipath.com/oauth/token', {
     body: {
         grant_type: "refresh_token",
-        client_id,
-        refresh_token
+        clientId,
+        userKey
     },
     json: true
 });
 
-module.exports.addQueueItemHelper = (queueItem, {
+export const addQueueItemHelper = (queueItem, {
     account_logical_name,
     service_instance_logical_name,
     access_token
@@ -28,7 +28,7 @@ module.exports.addQueueItemHelper = (queueItem, {
     json: true
 });
 
-module.exports.getQueueItemHelper = ({
+export const getQueueItemHelper = ({
     filter
 }, {
     account_logical_name,

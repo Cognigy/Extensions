@@ -4,10 +4,10 @@ import { getToken, addQueueItemHelper } from '../helpers/api';
 export interface IGetQueueItemParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			client_id: string;
-			refresh_token: string;
-			account_logical_name: string;
-			service_instance_logical_name: string;
+			userKey: string;
+			accountLogicalName: string;
+			tenantName: string;
+			clientId: string;
 		};
 		filter: string;
 		storeLocation: string;
@@ -104,12 +104,12 @@ export const getQueueItemsNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IGetQueueItemParams) => {
 		const { api } = cognigy;
 		const { filter, connection, storeLocation, contextKey, inputKey } = config;
-		const { client_id, refresh_token, account_logical_name, service_instance_logical_name } = connection;
+		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
 		try {
 			const tokenResult = await getToken({
-				client_id,
-				refresh_token
+				clientId,
+				userKey
 			});
 
 
@@ -121,8 +121,8 @@ export const getQueueItemsNode = createNodeDescriptor({
 						},
 							{
 								access_token: tokenResult.access_token,
-								account_logical_name: account_logical_name,
-								service_instance_logical_name: service_instance_logical_name
+								account_logical_name: accountLogicalName,
+								service_instance_logical_name: tenantName
 							});
 					} catch (error) {
 						api.log('error', 'Could not find item in return queue.');
@@ -140,6 +140,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, queueItem);
 			}
+			return;
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
@@ -147,6 +148,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
+			return;
 		}
 	}
 });

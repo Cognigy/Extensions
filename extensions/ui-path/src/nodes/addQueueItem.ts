@@ -5,10 +5,10 @@ import uuid from 'uuid';
 export interface IAddQueueItemParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			client_id: string;
-			refresh_token: string;
-			account_logical_name: string;
-			service_instance_logical_name: string;
+			userKey: string;
+			accountLogicalName: string;
+			tenantName: string;
+			clientId: string;
 		};
 		queueName: string;
 		priority: string;
@@ -139,12 +139,12 @@ export const addQueueItemsNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IAddQueueItemParams) => {
 		const { api } = cognigy;
 		const { queueName, priority, specificContent, connection, storeLocation, contextKey, inputKey } = config;
-		const { client_id, refresh_token, account_logical_name, service_instance_logical_name } = connection;
+		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
 		try {
 			const tokenResult = await getToken({
-				client_id,
-				refresh_token
+				clientId,
+				userKey
 			});
 
 			const resultId = uuid.v4();
@@ -163,8 +163,8 @@ export const addQueueItemsNode = createNodeDescriptor({
 
 			const addQueueItemResponse = await addQueueItemHelper(queueItem, {
 				access_token: tokenResult.access_token,
-				account_logical_name: account_logical_name,
-				service_instance_logical_name: service_instance_logical_name
+				account_logical_name: accountLogicalName,
+				service_instance_logical_name: tenantName
 			});
 
 
@@ -174,6 +174,7 @@ export const addQueueItemsNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, addQueueItemResponse);
 			}
+			return;
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
@@ -181,6 +182,7 @@ export const addQueueItemsNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
+			return;
 		}
 	}
 });

@@ -4,10 +4,10 @@ const request = require('request-promise-native');
 export interface IStartJobParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			client_id: string;
-			refresh_token: string;
-			account_logical_name: string;
-			service_instance_logical_name: string;
+			userKey: string;
+			accountLogicalName: string;
+			tenantName: string;
+			clientId: string;
 		};
 		releaseKey: string;
 		strategy: string;
@@ -140,88 +140,67 @@ export const startJobNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IStartJobParams) => {
 		const { api } = cognigy;
 		const { releaseKey, robotId, strategy, inputArguments, connection, storeLocation, contextKey, inputKey } = config;
-		const { client_id, refresh_token, account_logical_name, service_instance_logical_name } = connection;
+		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
-		// Always return a Promise
-		// A resolved Promise MUST return the input object
-		// A rejected Promise will stop Flow execution and show an error in the UI, but not the channel
-		return new Promise((resolve, reject) => {
-
-			let response;
-			// if there is an error, handle it according to the best practice guide
-
-			let accessToken;
-
-			let options = {
+		try {
+			const authResponse = await request({
 				method: 'POST',
 				uri: 'https://account.uipath.com/oauth/token',
 				body: {
 					grant_type: "refresh_token",
-					client_id,
-					refresh_token
+					client_id: clientId,
+					refresh_token: userKey
 				},
 				json: true // Automatically stringifies the body to JSON
-			};
+			});
 
-			request(options)
-				.then((parsedBody) => {
-					response = parsedBody;
-					accessToken = parsedBody.access_token;
+			const { access_token } = authResponse;
 
-					let job = {
+			try {
+				const response = await request({
+					method: 'POST',
+					url: `https://platform.uipath.com/${accountLogicalName}/${tenantName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`,
+					headers: {
+						'Content-Type': 'application/json',
+						'X-UIPATH-TenantName': tenantName
+					},
+					auth: {
+						'bearer': access_token
+					},
+					body: {
 						"startInfo":
 						{
 							"ReleaseKey": releaseKey,
 							"Strategy": strategy,
 							"RobotIds": [Number.parseInt(robotId)],
 							"NoOfRobots": 0,
-							"Source": "Manual",
 							"InputArguments": JSON.stringify(inputArguments)
 						}
-					};
-
-					let finalOptions = {
-						method: 'POST',
-						url: `https://platform.uipath.com/${account_logical_name}/${service_instance_logical_name}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`,
-						headers: {
-							'Content-Type': 'application/json',
-							'X-UIPATH-TenantName': service_instance_logical_name
-						},
-						auth: {
-							'bearer': accessToken
-						},
-						body: job,
-						json: true
-					};
-
-					request(finalOptions)
-						.then((result) => {
-							if (storeLocation === "context") {
-								api.addToContext(contextKey, result, "simple");
-							} else {
-								// @ts-ignore
-								api.addToInput(inputKey, result);
-							}
-
-
-						})
-						.catch((err) => {
-							if (storeLocation === "context") {
-								api.addToContext(contextKey, err, "simple");
-							} else {
-								// @ts-ignore
-								api.addToInput(inputKey, err);
-							}
-						});
-				})
-				.catch((err) => {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, err, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, err);
-					}
+					},
+					json: true
 				});
-		});
+
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, response, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, response);
+				}
+			} catch (error) {
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, error, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, error);
+				}
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
+			}
+		}
 	}
 });

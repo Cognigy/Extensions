@@ -4,10 +4,10 @@ const request = require('request-promise-native');
 export interface IGetJobsParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			client_id: string;
-			refresh_token: string;
-			account_logical_name: string;
-			service_instance_logical_name: string;
+			userKey: string;
+			accountLogicalName: string;
+			tenantName: string;
+			clientId: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -90,7 +90,7 @@ export const getJobsNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IGetJobsParams) => {
 		const { api } = cognigy;
 		const { connection, storeLocation, contextKey, inputKey } = config;
-		const { client_id, refresh_token, account_logical_name, service_instance_logical_name } = connection;
+		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
 		// Always return a Promise
 		// A resolved Promise MUST return the input object
@@ -107,8 +107,8 @@ export const getJobsNode = createNodeDescriptor({
 				uri: 'https://account.uipath.com/oauth/token',
 				body: {
 					grant_type: "refresh_token",
-					client_id,
-					refresh_token
+					client_id: clientId,
+					refresh_token: userKey
 				},
 				json: true // Automatically stringifies the body to JSON
 			};
@@ -120,10 +120,10 @@ export const getJobsNode = createNodeDescriptor({
 
 					let finalOptions = {
 						method: 'GET',
-						url: `https://platform.uipath.com/${account_logical_name}/${service_instance_logical_name}/odata/Jobs`,
+						url: `https://cloud.uipath.com/${accountLogicalName}/${tenantName}/odata/Jobs`,
 						headers: {
 							'Content-Type': 'application/json',
-							'X-UIPATH-TenantName': service_instance_logical_name
+							'X-UIPATH-TenantName': tenantName
 						},
 						auth: {
 							'bearer': accessToken
@@ -141,6 +141,7 @@ export const getJobsNode = createNodeDescriptor({
 								api.addToInput(inputKey, jobs);
 							}
 
+							return;
 						})
 						.catch((err) => {
 							if (storeLocation === "context") {
@@ -149,6 +150,8 @@ export const getJobsNode = createNodeDescriptor({
 								// @ts-ignore
 								api.addToInput(inputKey, err);
 							}
+
+							return;
 						});
 
 				})
@@ -160,6 +163,7 @@ export const getJobsNode = createNodeDescriptor({
 						api.addToInput(inputKey, err);
 					}
 
+					return;
 				});
 		});
 	}

@@ -99,7 +99,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "uipath",
+			defaultValue: "uipath.job",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -109,7 +109,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "uipath",
+			defaultValue: "uipath.job",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -139,6 +139,7 @@ export const startJobNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "releaseKey" },
+		{ type: "field", key: "robotId" },
 		{ type: "field", key: "strategy" },
 		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },

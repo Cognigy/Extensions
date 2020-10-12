@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 const request = require('request-promise-native');
 
-export interface IGetJobsParams extends INodeFunctionBaseParams {
+export interface IGetReleasesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			userKey: string;
@@ -14,9 +14,9 @@ export interface IGetJobsParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
-export const getJobsNode = createNodeDescriptor({
-	type: "getJobs",
-	defaultLabel: "Get Jobs",
+export const getReleasesNode = createNodeDescriptor({
+	type: "getReleases",
+	defaultLabel: "Get Releases",
 	fields: [
 		{
 			key: "connection",
@@ -50,7 +50,7 @@ export const getJobsNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "uipath",
+			defaultValue: "uipath.releases",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -60,7 +60,7 @@ export const getJobsNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "uipath",
+			defaultValue: "uipath.releases",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -87,22 +87,13 @@ export const getJobsNode = createNodeDescriptor({
 	appearance: {
 		color: "#f56105"
 	},
-	function: async ({ cognigy, config }: IGetJobsParams) => {
+	function: async ({ cognigy, config }: IGetReleasesParams) => {
 		const { api } = cognigy;
 		const { connection, storeLocation, contextKey, inputKey } = config;
 		const { userKey, accountLogicalName, tenantName, clientId } = connection;
 
-		// Always return a Promise
-		// A resolved Promise MUST return the input object
-		// A rejected Promise will stop Flow execution and show an error in the UI, but not the channel
-		return new Promise((resolve, reject) => {
-			let result = {};
-			let response;
-			// if there is an error, handle it according to the best practice guide
-
-			let accessToken;
-
-			let options = {
+		try {
+			const authResponse = await request({
 				method: 'POST',
 				uri: 'https://account.uipath.com/oauth/token',
 				body: {
@@ -111,60 +102,46 @@ export const getJobsNode = createNodeDescriptor({
 					refresh_token: userKey
 				},
 				json: true // Automatically stringifies the body to JSON
-			};
+			});
 
-			request(options)
-				.then( (parsedBody): any => {
-					response = parsedBody;
-					accessToken = parsedBody.access_token;
+			const { access_token } = authResponse;
 
-					let finalOptions = {
-						method: 'GET',
-						url: `https://cloud.uipath.com/${accountLogicalName}/${tenantName}/odata/Jobs`,
-						headers: {
-							'Content-Type': 'application/json',
-							'X-UIPATH-TenantName': tenantName
-						},
-						auth: {
-							'bearer': accessToken
-						},
-						json: true
-					};
+			try {
 
-					request(finalOptions)
-						.then((jobs) => {
-
-							if (storeLocation === "context") {
-								api.addToContext(contextKey, jobs, "simple");
-							} else {
-								// @ts-ignore
-								api.addToInput(inputKey, jobs);
-							}
-
-							return;
-						})
-						.catch((err) => {
-							if (storeLocation === "context") {
-								api.addToContext(contextKey, err, "simple");
-							} else {
-								// @ts-ignore
-								api.addToInput(inputKey, err);
-							}
-
-							return;
-						});
-
-				})
-				.catch((err) => {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, err, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, err);
-					}
-
-					return;
+				const response = await request({
+					method: 'GET',
+					url: `https://platform.uipath.com/${accountLogicalName}/${tenantName}/odata/Releases`,
+					headers: {
+						'Content-Type': 'application/json',
+						'X-UIPATH-TenantName': tenantName
+					},
+					auth: {
+						'bearer': access_token
+					},
+					json: true
 				});
-		});
+
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, response, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, response);
+				}
+			} catch (error) {
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, error, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, error);
+				}
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
+			}
+		}
 	}
 });

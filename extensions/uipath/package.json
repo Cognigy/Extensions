@@ -1,11 +1,11 @@
 {
-	"name": "ui-path",
+	"name": "uipath",
 	"version": "4.0.0",
 	"description": "Integrates with UIPath",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz ui-path.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz uipath.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},

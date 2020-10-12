@@ -10,6 +10,7 @@ import { startJobNode } from "./nodes/startJob";
 
 export default createExtension({
 	nodes: [
+		getReleasesNode,
 		startJobNode
 	],
 

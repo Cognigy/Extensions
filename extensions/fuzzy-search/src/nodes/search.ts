@@ -5,7 +5,7 @@ export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
 		searchText: string;
 		items: object;
-		options: object;
+		optionsField: object;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -111,11 +111,11 @@ export const searchNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
-		const { searchText, items, options, storeLocation, inputKey, contextKey } = config;
+		const { searchText, items, optionsField, storeLocation, inputKey, contextKey } = config;
 
 		try {
 
-			const result = await fuseSearch(items, options, searchText);
+			const result = await fuseSearch(items, optionsField, searchText);
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, result, "simple");

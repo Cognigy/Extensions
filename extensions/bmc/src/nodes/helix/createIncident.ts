@@ -7,7 +7,6 @@ export interface ICreateIncidentParams extends INodeFunctionBaseParams {
 		connection: {
 			username: string;
 			password: string;
-			authString: string;
 			server: string;
 		};
 		firstname: string;
@@ -134,7 +133,7 @@ export const createIncidentNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "twilio",
+			defaultValue: "bmc.incident",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -144,7 +143,7 @@ export const createIncidentNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "twilio",
+			defaultValue: "bmc.incident",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -180,7 +179,7 @@ export const createIncidentNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: ICreateIncidentParams) => {
 		const { api } = cognigy;
 		const { connection, firstname, lastname, description, impact, urgency, status, serviceType, storeLocation, inputKey, contextKey } = config;
-		const { username, password, authString, server } = connection;
+		const { username, password, server } = connection;
 
 		try {
 			const authResponse = await axios({
@@ -189,7 +188,6 @@ export const createIncidentNode = createNodeDescriptor({
 				headers: {
 					username,
 					password,
-					authString,
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			});

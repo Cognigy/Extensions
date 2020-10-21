@@ -6,7 +6,6 @@ export const bmcConnection: IConnectionSchema = {
 	fields: [
 		{ fieldName: "username" },
 		{ fieldName: "password"},
-		{ fieldName: "authString"},
 		{ fieldName: "server"}
 	]
 };

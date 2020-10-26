@@ -1,31 +1,24 @@
 {
-	"name": "uipath",
-	"version": "4.0.0",
-	"description": "Integrates with UIPath",
-	"main": "build/module.js",
-	"scripts": {
-		"transpile": "tsc -p .",
-		"zip": "tar cfz uipath.tar.gz build/* package.json package-lock.json README.md icon.png",
-		"build": "npm run transpile && npm run lint && npm run zip",
-		"lint": "tslint -c tslint.json src/**/*.ts"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Cognigy/Extensions"
-	},
-	"author": "Cognigy GmbH",
-	"license": "MIT",
-	"devDependencies": {
-		"@types/node": "^10.17.28",
-		"@types/request": "^2.48.5",
-		"@types/request-promise-native": "^1.0.17",
-		"tslint": "^5.16.0",
-		"typescript": "^3.1.6"
-	},
-	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
-		"request": "^2.88.2",
-		"request-promise-native": "^1.0.9",
-		"uuid": "^8.3.1"
-	}
+  "name": "uipath",
+  "version": "4.0.0",
+  "description": "Provides the functions for the interaction with UiPath Orchestraor",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz uipath.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "UiPath"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.20.0",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {}
 }

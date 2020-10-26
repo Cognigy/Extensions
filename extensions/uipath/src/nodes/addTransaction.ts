@@ -1,25 +1,27 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { StartJob } from "../../types/uipath";
+import { AddTransactionItem } from "../../types/uipath";
 
 export interface ICreateTokenParams extends INodeFunctionBaseParams {
 	config: {
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
-		};
-		accessToken: string;
-        releaseKey: string;
-        robotIds: {ids: string []};
+        };
+        accessToken: string;
+        queueName: string;
+        reference: string;
+        priority: string;
+        specificContent: any;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const startJobNode = createNodeDescriptor({
-	type: "startJobNode",
-	defaultLabel: "Start a specific job",
+export const addTransaction = createNodeDescriptor({
+	type: "addTransaction",
+	defaultLabel: "Add a new transaction",
 	fields: [
 		{
 			key: "instanceInfo",
@@ -39,22 +41,46 @@ export const startJobNode = createNodeDescriptor({
 			}
         },
         {
-			key: "releaseKey",
-			label: "Process Release Key",
+			key: "queueName",
+			label: "Queue Name",
 			type: "cognigyText",
 			params: {
 				required: true
 			}
         },
         {
-			key: "robotIds",
-			label: "Robot IDs",
-			type: "json",
-			defaultValue: `{ "ids": [] }`,
+			key: "reference",
+			label: "Queue Refrence",
+			type: "cognigyText",
 			params: {
+				required: false
+			}
+		},        {
+			key: "priority",
+			label: "Transcation Item Priority",
+			type: "select",
+			params: {
+                options: [
+                    {
+                        label: "Low",
+                        value: "Low"
+                    },
+                    {
+                        label: "High",
+                        value: "High"
+                    }
+                ],
 				required: true
 			}
-        },
+		},
+        {
+			key: "specificContent",
+			label: "Transaction Item Specific Content",
+			type: "json",
+			params: {
+				required: false
+			}
+		},
 		{
 			key: "storeLocation",
 			type: "select",
@@ -78,7 +104,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "uiPathProcessState",
+			defaultValue: "queueItemId",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -88,7 +114,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "uiPathProcessState",
+			defaultValue: "queueItemId",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -110,43 +136,48 @@ export const startJobNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
-		{ type: "field", key: "releaseKey" },
-		{ type: "field", key: "robotIds" },
-		{ type: "section", key: "storageOption" }
+		{ type: "field", key: "queueName" },
+		{ type: "field", key: "reference" },
+		{ type: "field", key: "priority" },
+		{ type: "field", key: "specificContent" },
+		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#2d7cc2"
 	},
 	function: async ({ cognigy, config }: ICreateTokenParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, releaseKey, robotIds, storeLocation, inputKey, contextKey } = config;
+		const { instanceInfo, accessToken, queueName, reference, priority,
+				specificContent, storeLocation, inputKey, contextKey } = config;
 		const { accountLogicalName, tenantLogicalName } = instanceInfo;
 
-        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
+        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem%28%29`;
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
 				'X-UIPATH-TenantName': tenantLogicalName
             }
-        };
-
-        const data = {
-            startInfo: {
-                ReleaseKey: releaseKey,
-                RobotIds: robotIds.ids,
-                Strategy: "Specific"
-              }
 		};
 
+		const data = {
+			itemData: {
+				Name: queueName,
+				Reference: reference,
+				Priority: priority.charAt(0).toUpperCase() + priority.slice(1),
+				"SpecificContent": specificContent.data,
+				"DeferDate": null,
+				"DueDate": null
+			}
+		};
 		try {
-            const result: AxiosResponse <StartJob> =  await axios.post(endpoint, data, axiosConfig);
+            const result: AxiosResponse <AddTransactionItem> =  await axios.post(endpoint, data, axiosConfig);
 
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, result.data.value[0] , 'simple');
+				api.addToContext(contextKey, result.data.Id , 'simple');
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, result.data.value[0]);
+				api.addToInput(inputKey, result.data.Id);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

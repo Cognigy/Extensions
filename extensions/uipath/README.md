@@ -1,31 +1,88 @@
-The UiPath Custom Module can be used to interface with the UiPath Orchestrator API.
-[Orchestrator API Reference](https://docs.uipath.com/orchestrator/reference/api-references)
-  
-It currently features the 5 operations that are listed below.
+# UiPath Extension
 
-**Connection: (UIPath)**
-This module requires a Cognigy Secret with the following keys:
+This Extension integrates [UiPath](https://www.uipath.com/) with Cognigy.AI
 
-1. clientId
-2. userToken
-3. accountLogicalName
-4. tenantName
+# Node: Create Token
 
-You can obtain these, by following the instructions listed here: 
-[https://docs.uipath.com/cloudplatform/docs/about-api-access](https://docs.uipath.com/cloudplatform/docs/about-api-access)
-  
+This Node obtains a new Bearer token for the UiPath Orchestrator instance. Currently, this node only supports instances within the UiPath Cloud. If you are using a On-Premise Solution it is necessary to remove the `accountLogicalName` and `tenantLogicalName` paths from the endpoints. In addition, you have to implement and use the  On-Premise authentication method.
 
-## Node: getReleases
+## Configuration Fields
 
-Use this node, to get a list of releases that can be triggered using the startJob node below. The getReleases node produces an array of process releases, as shown in the following screenshot. The "id" property is the required release key. 
+### **UiPath Connection**
 
-![An example getReleases response](https://tempbucket-waanders.s3.eu-central-1.amazonaws.com/uipath-screens/releases.png)
+- clientId: The client Id required for the REST endpoint
+- refreshToken: The password required to access your REST endpoint
 
-## Node: startJob
+### **Input Parameters**
+- storeLocation: The selection, where to store the bearer token
+- inputKey: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
+- contextKey: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
-The startJob node has a number of required paramaters. These include: 
-- a Secret
-- A release key (obtained by using the getReleases node)
-- Strategy (Specific is used by default)
-- RobotId (This can be obtained by navigating to [https://platform.uipath.com/odata/Robots](https://platform.uipath.com/odata/Robots) while being logged in to the Orchestrator API in your browser. It should return a JSON object that includes the "Id" key with an integer number, which is the RobotId) 
-- Lastly, some option input arguments can be send along. This could for example be dynamic information that the bot obtained from the user. You can use the [CognigyScript](https://docs.cognigy.com/docs/cognigyscript) syntax to send along dynamic information in JSON format. 
+
+# Node: Add Transaction
+This node adds a new transaction item to the specified queue wihtin the UiPath Orchestrator Instance. 
+
+## Configuration Fields
+
+### **UiPath Instance**
+- accountLogicalName: The account name of the the UiPatch Orchestrator Instnace.
+- tenantLogicalName: The tenant name of the the UiPatch Orchestrator Instnace.
+
+### **Input Parameters**
+
+- accessToken: The Bearer token that was obtained with the Node **Create Token**
+- queueName: The name of the queue, where the new transaction should be created.
+- referenceName: The reference name that should be inserted within the new transaction. This field is optional and can be used to store for example the value `Cognigy` for a better traceability. 
+- transactionPriority: This field can be used to set the priority level for the created queue item.
+- queueData: This field can be used to provide the **JSON** object with the relevant data for the respective process. It has to look like that:
+
+``` json
+{
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3",
+}
+``` 
+**Important**: The UiPath Orchestrator does not support nested JSON Objects! If you want to provide nested objects, it is necessary to stringify the object and deseralize it within the respective UiPath Process.
+
+- inputKey: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
+- contextKey: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
+
+# Node: Start Job
+This node starts a specific job.
+
+## Configuration Fields
+
+### **UiPath Instance**
+- accountLogicalName: The account name of the the UiPatch Orchestrator Instnace.
+- tenantLogicalName: The tenant name of the the UiPatch Orchestrator Instnace.
+### **Input Parameters**
+- accessToken: The Bearer token that was obtained with the Node **Create Token**
+- releaseKey: The ID for the respective process.
+- robotIds: The array that contains a list of robots that should perform the respective process. The object has to look like that:
+``` json
+{
+    "ids": [123456, 234567]
+}
+``` 
+- inputKey: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
+- contextKey: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
+
+
+# Node: GetOutputInformationSynch
+Get the output information for a specified transaction item.
+
+**Important**: This is a blocking implementation, which means, that this fucntion will wait till the transaction item has the status `Successful` or `Failed`. This is only the case, when the robot has processed the transaction item. Please consider that in robot processes that have a long process time, this can lead to an exception within Cognigy, since it can exceed the execution time threshold for extensions. Therefore, this function should only be used for PoC purposes.
+
+## Configuration Fields
+
+### **UiPath Instance**
+- accountLogicalName: The account name of the the UiPatch Orchestrator Instnace.
+- tenantLogicalName: The tenant name of the the UiPatch Orchestrator Instnace.
+
+### **Input Parameters**
+- accessToken: The Bearer token that was obtained with the Node **Create Token**
+- releaseKey: The ID for the respective process.
+- transactionItemId: The ID of the transaction item that should be checked.
+- inputKey: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
+- contextKey: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)

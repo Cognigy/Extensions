@@ -131,7 +131,7 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 			+ `&client_secret=${clientSecret}`;
 
 		try {
-			const response = rp({
+			const response = await rp({
 				method: 'POST',
 				uri: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
 				headers: {

@@ -1,6 +1,6 @@
-# Cognigy Extension
+# Cognigy.AI Extension
 
-This Extension provides basic nodes to exstand the Cognigy core features.
+This Extension provides basic nodes to extend the Cognigy.AI core features.
 
 ## Node: Send Email With Attachment
 

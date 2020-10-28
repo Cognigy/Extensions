@@ -5,13 +5,15 @@ import { addTransaction } from './nodes/addTransaction';
 import { createTokenNode } from './nodes/createToken';
 import { startJobNode } from './nodes/startJob';
 import { getOutputInformationSynch } from './nodes/getOutputInformationSynch';
+import { getReleasesNode } from "./nodes/getReleases";
 
 export default createExtension({
 	nodes: [
 		createTokenNode,
 		addTransaction,
 		startJobNode,
-		getOutputInformationSynch
+		getOutputInformationSynch,
+		getReleasesNode
 	],
 
 	connections: [

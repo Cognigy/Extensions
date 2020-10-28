@@ -13,6 +13,7 @@ If one wants to use the **Start Live Chat** Node, another connection is required
   - The ID of your live chat button
 - liveAgentUrl
   - The URL of your live agent
+  - e.g. https://d.foo-bar-ord.salesforceliveagent.com/
 
 Please have a look at this tutorial in order to get all required values: [Get Chat Settings from Your Org](https://developer.salesforce.com/docs/atlas.en-us.noversion.service_sdk_ios.meta/service_sdk_ios/live_agent_cloud_setup_get_settings.htm)
 

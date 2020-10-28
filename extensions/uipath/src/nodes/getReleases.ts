@@ -1,6 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { StartJob } from "../../types/uipath";
 
 export interface IGetReleasesParams extends INodeFunctionBaseParams {
 	config: {
@@ -111,7 +110,7 @@ export const getReleasesNode = createNodeDescriptor({
 		};
 
 		try {
-			const result: AxiosResponse<StartJob> = await axios.get(endpoint, axiosConfig);
+			const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
 
 			if (storeLocation === 'context') {
 				api.addToContext(contextKey, result.data, 'simple');

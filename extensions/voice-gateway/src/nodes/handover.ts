@@ -8,6 +8,7 @@ export interface IHandoverParams extends INodeFunctionBaseParams {
 	config: {
 		handoverReason: string;
 		transferTarget: string;
+		transferReferredByURL: string;
 	};
 }
 export const handoverNode = createNodeDescriptor({
@@ -21,35 +22,51 @@ export const handoverNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-		}, {
+		},
+		{
 			key: "transferTarget",
 			label: "Target",
 			type: "cognigyText",
+			defaultValue: "tel:+49123456789",
 			params: {
-				required: true,
-				placeholder: "tel:+49123456789"
+				required: true
 			}
 		},
+		{
+			key: "transferReferredByURL",
+			label: "Referral URL",
+			type: "cognigyText",
+			description: "Adds a SIP Referred-By header to the outgoing INVITE/REFER message",
+			defaultValue: ""
+		},
 	],
-	form: [{
+	preview: {
+		key: "transferTarget",
+		type: "text"
+	},
+	appearance: {
+		color: "#F5A623"
+	},
+	form: [
+		{
 			type: "field",
 			key: "handoverReason"
-		}, {
+		},
+		{
 			type: "field",
 			key: "transferTarget"
+		},
+		{
+			type: "field",
+			key: "transferReferredByURL"
 		}
 	],
-	function : async({
-		cognigy,
-		config
-	}
-		: IHandoverParams) => {
-		const {
-			api
-		} = cognigy;
+	function : async({ cognigy, config }: IHandoverParams) => {
+		const {	api } = cognigy;
 		const {
 			handoverReason,
-			transferTarget
+			transferTarget,
+			transferReferredByURL
 		} = config;
 
 		if (!handoverReason)
@@ -66,7 +83,8 @@ export const handoverNode = createNodeDescriptor({
 								"name": "handover",
 								"activityParams": {
 									transferTarget,
-									handoverReason
+									handoverReason,
+									transferReferredByURL
 								}
 							}
 						]

@@ -20,6 +20,13 @@ export const hangupNode = createNodeDescriptor({
 			}
 		},
 	],
+	preview: {
+		key: "hangupReason",
+		type: "text"
+	},
+	appearance: {
+		color: "#F5A623"
+	},
 	form: [
 		{ type: "field", key: "hangupReason" }
 	],

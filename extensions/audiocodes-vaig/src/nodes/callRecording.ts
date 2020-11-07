@@ -58,12 +58,12 @@ export const callRecordingNode = createNodeDescriptor({
 			}
 		}
 	],
+	appearance: {
+		color: nodeColor
+	},
 	preview: {
 		key: "activity",
 		type: "text"
-	},
-	appearance: {
-		color: nodeColor
 	},
 	function: async ({ cognigy, config }: ICallRecordingParams) => {
 		const { api } = cognigy;

@@ -11,6 +11,10 @@ export const agentAssistNode = createNodeDescriptor({
 	type: "agentAssist",
 	defaultLabel: "Agent Assist",
 	summary: "Configures Agent Assist capabilities",
+	preview: {
+		key: "activity",
+		type: "text"
+	},
 	fields: [
 		{
 			key: "activity",
@@ -42,10 +46,6 @@ export const agentAssistNode = createNodeDescriptor({
 	],
 	appearance: {
 		color: nodeColor
-	},
-	preview: {
-		key: "activity",
-		type: "text"
 	},
 	form: [
 		{ type: "field", key: "activity" },

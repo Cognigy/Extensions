@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getParamSections, getParameterFields } from '../utils/paramUtils';
+import { getParamSections, getParameterFields, compileParams } from '../utils/paramUtils';
 
 export interface ISetSessionParams extends INodeFunctionBaseParams {
 	config: {
@@ -85,31 +85,7 @@ export const setSessionParamsNode = createNodeDescriptor({
 		} = config;
 
 		let compiledParams = sessionParams || {};
-
-		// compile the necessary parameters from the config
-		Object.keys(config).forEach((key) => {
-			if (key !== "sessionParams") {
-				switch (typeof config[key]) {
-					case "object":
-						if (config[key].length > 0) {
-							compiledParams[key] = config[key];
-						}
-						break;
-
-					case "string":
-						if (config[key]) compiledParams[key] = config[key];
-						break;
-
-					case "number":
-					case "boolean":
-						compiledParams[key] = config[key];
-						break;
-
-					default:
-
-				}
-			}
-		});
+		compileParams(config, compiledParams);
 
 		// output the activity to the voice gateway
 		api.output('', {

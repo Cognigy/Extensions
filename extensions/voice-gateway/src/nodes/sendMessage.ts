@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getParameterFields, getParamSections } from "../utils/paramUtils";
+import { compileParams, getParameterFields, getParamSections } from "../utils/paramUtils";
 
 export interface ISendMessageRequestParams extends INodeFunctionBaseParams {
 	config: {
@@ -285,30 +285,7 @@ export const sendMessageNode = createNodeDescriptor({
         let compiledParams = activityParams || {};
 
         if (setActivityParams) {
-            // compile the necessary parameters from the config
-            Object.keys(config).forEach((key) => {
-                if (key !== "activityParams" && key !== "text" && key !== "setActivityParams") {
-                    switch (typeof config[key]) {
-                        case "object":
-                            if (config[key].length > 0) {
-                                compiledParams[key] = config[key];
-                            }
-                            break;
-
-                        case "string":
-                            if (config[key]) compiledParams[key] = config[key];
-                            break;
-
-                        case "number":
-                        case "boolean":
-                            compiledParams[key] = config[key];
-                            break;
-
-                        default:
-
-                    }
-                }
-            });
+            compileParams(config, compiledParams);
         }
 
 		if (text) api.output(text, {

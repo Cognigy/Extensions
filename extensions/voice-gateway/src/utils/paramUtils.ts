@@ -1,5 +1,73 @@
 import { INodeField, INodeSection } from "@cognigy/extension-tools/build/interfaces/descriptor";
 
+interface IConfigParams {
+    azureSpeechRecognitionMode: string;
+		bargeIn: boolean;
+		bargeInOnDTMF: boolean;
+		bargeInMinWordCount: number;
+		botFailOnErrors: boolean;
+		botNoInputGiveUpTimeoutMS: number;
+		botNoInputTimeoutMS: number;
+		botNoInputRetries: number;
+		botNoInputSpeech: string;
+		botNoInputUrl: string;
+		userNoInputTimeoutMS: number;
+		userNoInputRetries: number;
+		userNoInputSendEvent: boolean;
+		userNoInputSpeech: string;
+		userNoInputUrl: string;
+		continuousASR: boolean;
+		continuousASRDigits: string;
+		continuousASRTimeoutInMS: number;
+		disableTtsCache: boolean;
+		googleInteractionType: string;
+		language: string;
+		sendDTMF: boolean;
+		dtmfCollect: boolean;
+		dtmfCollectInterDigitTimeoutMS: number;
+		dtmfCollectMaxDigits: number;
+		dtmfCollectSubmitDigit: string;
+		sttContextId: string;
+		sttContextPhrases: string[];
+		sttContextBoost: number;
+		sttDisablePunctuation: boolean;
+		azureEnableAudioLogging: boolean;
+		voiceName: string;
+}
+
+/**
+ * Compile the active parameters from the config
+ * @param config Node Config
+ * @param compiledParams Compiled Parameters Object
+ */
+export const compileParams = (config: IConfigParams, compiledParams: Object) => {
+    Object.keys(config).forEach((key) => {
+        if (key !== "activityParams" && key !== "text" && key !== "setActivityParams") {
+            if (!key.startsWith("dtmfCollect") || (key.startsWith("dtmfCollect") && config["dtmfCollect"])) {
+                switch (typeof config[key]) {
+                    case "object":
+                        if (config[key].length > 0) {
+                            compiledParams[key] = config[key];
+                        }
+                        break;
+
+                    case "number":
+                    case "string":
+                        if (config[key]) compiledParams[key] = config[key];
+                        break;
+
+                    case "boolean":
+                        compiledParams[key] = config[key];
+                        break;
+
+                    default:
+
+                }
+            }
+        }
+    });
+};
+
 /**
  * All necessary fields for the voiceGateway parameters
  * @param condition Node Field Condition to hide fields or not, optional
@@ -10,12 +78,12 @@ export const getParameterFields = (): any[] => [
         type: "select",
         label: "Azure STT Mode",
         description: "Defines the Azure STT recognition mode",
-        defaultValue: "conversation",
+        defaultValue: "",
         params: {
 		    options: [
-                { label: "conversation ", value: "conversation " },
-                { label: "dictation ", value: "dictation " },
-                { label: "interactive ", value: "interactive " },
+                { label: "conversation (default)", value: "" },
+                { label: "dictation", value: "dictation" },
+                { label: "interactive", value: "interactive" },
             ]
         }
     },
@@ -53,9 +121,9 @@ export const getParameterFields = (): any[] => [
         type: "slider",
         label: "Barge In Minimum Words",
         description: "Defines the minimum number of words that the user must say for the Voice Gateway to consider it a barge-in",
-        defaultValue: 1,
+        defaultValue: 0,
 		params: {
-			min: 1,
+			min: 0,
 			max: 5,
 			step: 1,
 		},
@@ -183,18 +251,18 @@ export const getParameterFields = (): any[] => [
         type: "select",
         label: "Google Interaction Types",
         description: "Defines the Google STT interaction type",
-        defaultValue: "INTERACTION_TYPE_UNSPECIFIED",
+        defaultValue: "",
         params: {
 		    options: [
-                { label: "INTERACTION_TYPE_UNSPECIFIED ", value: "INTERACTION_TYPE_UNSPECIFIED " },
-                { label: "DISCUSSION ", value: "DISCUSSION " },
-                { label: "PRESENTATION ", value: "PRESENTATION " },
-                { label: "PHONE_CALL ", value: "PHONE_CALL " },
-                { label: "VOICEMAIL ", value: "VOICEMAIL " },
-                { label: "PROFESSIONALLY_PRODUCED ", value: "PROFESSIONALLY_PRODUCED " },
-                { label: "VOICE_SEARCH ", value: "VOICE_SEARCH " },
-                { label: "VOICE_COMMAND ", value: "VOICE_COMMAND " },
-                { label: "DICTATION ", value: "DICTATION " },
+                { label: "INTERACTION_TYPE_UNSPECIFIED (default)", value: "" },
+                { label: "DISCUSSION", value: "DISCUSSION" },
+                { label: "PRESENTATION", value: "PRESENTATION" },
+                { label: "PHONE_CALL", value: "PHONE_CALL" },
+                { label: "VOICEMAIL", value: "VOICEMAIL" },
+                { label: "PROFESSIONALLY_PRODUCED", value: "PROFESSIONALLY_PRODUCED" },
+                { label: "VOICE_SEARCH", value: "VOICE_SEARCH" },
+                { label: "VOICE_COMMAND", value: "VOICE_COMMAND" },
+                { label: "DICTATION", value: "DICTATION" },
             ]
         }
     },
@@ -268,7 +336,7 @@ export const getParameterFields = (): any[] => [
         type: "number",
         label: "Google Cloud STT Context Boost",
         description: "The boost number for context recognition of the speech context phrases",
-        defaultValue: 2
+        defaultValue: 0
     },
     {
         key: "sttDisablePunctuation",

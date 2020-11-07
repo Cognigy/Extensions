@@ -288,20 +288,21 @@ export const sendMessageNode = createNodeDescriptor({
             compileParams(config, compiledParams);
         }
 
-		if (text) api.output(text, {
-            "_cognigy": {
-                "_audioCodes": {
-                    "json": {
-                        "activities": [
-                            {
-                                "type": "message",
-                                "text": text,
-                                "activityParams": compiledParams
-                            }
-                        ]
+        if (text) 
+            api.output(text, {
+                "_cognigy": {
+                    "_audioCodes": {
+                        "json": {
+                            "activities": [
+                                {
+                                    "type": "message",
+                                    "text": text,
+                                    "activityParams": compiledParams
+                                }
+                            ]
+                        }
                     }
                 }
-            }
-        });
+            });
 	}
 });

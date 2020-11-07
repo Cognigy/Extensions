@@ -41,6 +41,7 @@ export interface ISetSessionParams extends INodeFunctionBaseParams {
 export const setSessionParamsNode = createNodeDescriptor({
 	type: "setSessionParams",
 	defaultLabel: "Set Session Parameters",
+	summary: "Sets VG configuration settings for the session",
 	// @ts-ignore
 	fields: [
 		{

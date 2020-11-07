@@ -47,6 +47,7 @@ export interface IRequestParams extends INodeFunctionBaseParams {
 export const playURLNode = createNodeDescriptor({
 	type: "playURL",
 	defaultLabel: "Play URL",
+	summary: "Plays an audio prompt from a file url",
 	// @ts-ignore
 	fields: [
 		{

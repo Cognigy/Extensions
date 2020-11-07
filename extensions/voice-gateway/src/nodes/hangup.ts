@@ -9,6 +9,7 @@ export interface IHangupParams extends INodeFunctionBaseParams {
 export const hangupNode = createNodeDescriptor({
 	type: "hangup",
 	defaultLabel: "Hang Up",
+	summary: "Hangs up the call",
 	fields: [
 		{
 			key: "hangupReason",

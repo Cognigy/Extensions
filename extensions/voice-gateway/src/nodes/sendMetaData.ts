@@ -8,7 +8,8 @@ export interface ISendMetaDataParams extends INodeFunctionBaseParams {
 }
 export const sendMetaDataNode = createNodeDescriptor({
 	type: "sendMetaData",
-	defaultLabel: "Send MEta Data",
+	defaultLabel: "Send Meta Data",
+	summary: "Sends meta data via SIP INFO messages",
 	fields: [
 		{
 			key: "metaData",
@@ -18,7 +19,7 @@ export const sendMetaDataNode = createNodeDescriptor({
 			params: {
 				required: true
 			},
-			description: "Sends meta data via SIP INFO messages"
+			description: "The meta data to send via SIP INFO messages"
 		},
 	],
 	appearance: {

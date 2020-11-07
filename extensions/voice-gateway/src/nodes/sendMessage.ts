@@ -44,6 +44,7 @@ export interface ISendMessageRequestParams extends INodeFunctionBaseParams {
 export const sendMessageNode = createNodeDescriptor({
 	type: "sendMessage",
     defaultLabel: "Send Message",
+    summary: "Sends a prompt via VG",
     // @ts-ignore
 	fields: [
 		{
@@ -288,7 +289,7 @@ export const sendMessageNode = createNodeDescriptor({
             compileParams(config, compiledParams);
         }
 
-        if (text) 
+        if (text) {
             api.output(text, {
                 "_cognigy": {
                     "_audioCodes": {
@@ -304,5 +305,6 @@ export const sendMessageNode = createNodeDescriptor({
                     }
                 }
             });
+        }
 	}
 });

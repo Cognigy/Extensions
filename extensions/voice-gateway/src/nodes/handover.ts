@@ -14,6 +14,7 @@ export interface IHandoverParams extends INodeFunctionBaseParams {
 export const handoverNode = createNodeDescriptor({
 	type: "handover",
 	defaultLabel: "Handover",
+	summary: "Hands the conversations to another target",
 	fields: [{
 			key: "handoverReason",
 			label: "Reason",

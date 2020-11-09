@@ -90,7 +90,7 @@ export const setSessionParamsNode = createNodeDescriptor({
 		compileParams(config, compiledParams);
 
 		// output the activity to the voice gateway
-		api.output('', {
+		api.output(null, {
 			"_cognigy": {
 				"_audioCodes": {
 					"json": {

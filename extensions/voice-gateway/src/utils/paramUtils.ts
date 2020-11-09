@@ -46,7 +46,7 @@ export const compileParams = (config: IConfigParams, compiledParams: Object) => 
             if (!key.startsWith("dtmfCollect") || (key.startsWith("dtmfCollect") && config["dtmfCollect"])) {
                 switch (typeof config[key]) {
                     case "object":
-                        if (config[key].length > 0) {
+                        if (Array.isArray(config[key]) && config[key].length > 0) {
                             compiledParams[key] = config[key];
                         }
                         break;

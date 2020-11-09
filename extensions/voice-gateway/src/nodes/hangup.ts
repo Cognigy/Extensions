@@ -37,7 +37,7 @@ export const hangupNode = createNodeDescriptor({
 
 		if (!hangupReason) throw new Error('The hangup reason is missing.');
 
-		api.output('', {
+		api.output(null, {
 			"_cognigy": {
 				"_audioCodes": {
 					"json": {

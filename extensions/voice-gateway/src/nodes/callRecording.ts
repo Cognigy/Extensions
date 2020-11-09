@@ -3,7 +3,7 @@ import { nodeColor } from '../utils/design';
 
 export interface ICallRecordingParams extends INodeFunctionBaseParams {
 	config: {
-		activity: "startRecording" | "stopRecording";
+		activity: "startCallRecording" | "stopCallRecording";
 		callRecordingServer: string;
 		callRecordingId: string;
 		callRecordingDestUsername: string;
@@ -22,8 +22,8 @@ export const callRecordingNode = createNodeDescriptor({
 			defaultValue: "startRecording",
 			params: {
 				options: [
-					{ value: "startRecording", label: "Start Recording"},
-					{ value: "stopRecording", label: "Stop Recording"},
+					{ value: "startCallRecording", label: "Start Call Recording" },
+					{ value: "stopCallRecording", label: "Stop Call Recording" },
 				]
 			}
 		},
@@ -58,12 +58,12 @@ export const callRecordingNode = createNodeDescriptor({
 			}
 		}
 	],
+	appearance: {
+		color: nodeColor
+	},
 	preview: {
 		key: "activity",
 		type: "text"
-	},
-	appearance: {
-		color: nodeColor
 	},
 	function: async ({ cognigy, config }: ICallRecordingParams) => {
 		const { api } = cognigy;
@@ -72,29 +72,30 @@ export const callRecordingNode = createNodeDescriptor({
 		if (callRecordingServer && callRecordingId && callRecordingDestUsername) {
 			let activities = [];
 
-			if (activity === "startRecording") {
+			if (activity === "startCallRecording") {
 				activities.push(
 					{
 						type: "event",
 						name: "startCallRecording",
 						activityParams: {
 							callRecordingId,
-							callRecordingDestUsername
+							callRecordingDestUsername,
+							callRecordingServer
 						}
 					}
 				);
 			}
 
-			if (activity === "stopRecording") {
+			if (activity === "stopCallRecording") {
 				activities.push(
 					{
 						type: "event",
 						name: "stopCallRecording",
-					  }
+					}
 				);
 			}
 
-			api.output('', {
+			api.output(null, {
 				"_cognigy": {
 					"_audioCodes": {
 						"json": {

@@ -32,7 +32,7 @@ export const sendMetaDataNode = createNodeDescriptor({
 		const { api } = cognigy;
 		const { metaData } = config;
 
-		api.output('', {
+		api.output(null, {
 			"_cognigy": {
 				"_audioCodes": {
 					"json": {

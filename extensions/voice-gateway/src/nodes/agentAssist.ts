@@ -82,7 +82,7 @@ export const agentAssistNode = createNodeDescriptor({
 				);
 			}
 
-			api.output('', {
+			api.output(null, {
 				"_cognigy": {
 					"_audioCodes": {
 						"json": {

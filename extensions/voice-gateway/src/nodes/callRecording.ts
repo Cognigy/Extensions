@@ -97,7 +97,7 @@ export const callRecordingNode = createNodeDescriptor({
 
 			api.output(null, {
 				"_cognigy": {
-					"_audioCodes": {
+					"_voiceGateway": {
 						"json": {
 							activities
 						}

@@ -293,7 +293,7 @@ export const sendMessageNode = createNodeDescriptor({
         if (text) {
             api.output(text, {
                 "_cognigy": {
-                    "_audioCodes": {
+                    "_voiceGateway": {
                         "json": {
                             "activities": [
                                 {

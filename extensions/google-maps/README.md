@@ -5,6 +5,7 @@ Integrated Cognigy.AI with Google Maps (https://developers.google.com/maps/docum
 
 - key:  api_key, key
 - value: Your Google Maps API KEY
+  - Geocode API, JavaScript Maps SDK
 
 ## Node: Show Google Maps
 

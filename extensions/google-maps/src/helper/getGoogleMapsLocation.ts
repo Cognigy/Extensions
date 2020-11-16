@@ -5,7 +5,7 @@ export const getGoogleMapsLocation = async (key: string, searchquery: string): P
 	try {
 		const response = await axios({
 			method: 'get',
-			url: `https://maps.googleapis.com/maps/api/geocode/json?address=${searchquery}&key=${key}`
+			url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(searchquery)}&key=${key}`
 		});
 
 		return {

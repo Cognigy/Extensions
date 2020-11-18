@@ -2,15 +2,19 @@
 
 **Connection:**
 
-- [Docu](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)
+- Cloud Authentication
+  - [Docu](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)
 
-Values: 
+  - key: clientId
+      - value: Microsoft organization client id
+  - key: clientSecret
+      - value: Microsoft organization client secret
 
-- key: clientId
+- Basic Authentication
+  - key: username
     - value: Microsoft Login username (e.g. email)
-- key: clientSecret
+  - key: password
     - value: Microsoft Login password
-
 ## Node: Get Sharepoint Site Info
 
 Returns the entire information of a given Sharepoint site. Therefore, you have to define the `url` as `https://[your-tenant].sharepoint.com/sites/[your-site]`.

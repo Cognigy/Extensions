@@ -4,9 +4,14 @@ const request = require('request-promise');
 
 export interface IGetSharepointSiteInfoParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
+		authentication: "cloud" | "basic";
+		cloudAuth: {
 			clientId: string;
 			clientSecret: string;
+		};
+		basicAuth: {
+			username: string;
+			password: string;
 		};
 		url: string;
 		storeLocation: string;
@@ -19,12 +24,48 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	defaultLabel: "Get Sharepoint Site Info",
 	fields: [
 		{
-			key: "connection",
-			label: "Sharepoint Connection",
+			key: "authentication",
+			label: "Select Authentication",
+			type: "select",
+			defaultValue: "basic",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "Cloud",
+						value: "cloud"
+					},
+					{
+						label: "Basic",
+						value: "basic"
+					}
+				],
+			}
+		},
+		{
+			key: "cloudAuth",
+			label: "Sharepoint Online",
 			type: "connection",
 			params: {
-				connectionType: "sharepoint",
+				connectionType: "cloud",
 				required: true
+			},
+			condition: {
+				key: "authentication",
+				value: "cloud",
+			}
+		},
+		{
+			key: "basicAuth",
+			label: "Sharepoint Basic Auth",
+			type: "connection",
+			params: {
+				connectionType: "basic",
+				required: true
+			},
+			condition: {
+				key: "authentication",
+				value: "basic",
 			}
 		},
 		{
@@ -78,6 +119,16 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "connectionSection",
+			label: "Authentication",
+			defaultCollapsed: false,
+			fields: [
+				"authentication",
+				"cloudAuth",
+				"basicAuth",
+			]
+		},
+		{
 			key: "storageOption",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -89,7 +140,7 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "field", key: "connection" },
+		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "url" },
 		{ type: "section", key: "storageOption" },
 	],
@@ -98,14 +149,28 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetSharepointSiteInfoParams) => {
 		const { api } = cognigy;
-		const { connection, url, storeLocation, inputKey, contextKey } = config;
-		const { clientId, clientSecret } = connection;
+		const { cloudAuth, basicAuth, authentication, url, storeLocation, inputKey, contextKey } = config;
+		const { clientId, clientSecret } = cloudAuth;
+		const { username, password } = basicAuth;
+
+		let auth: any;
+
+		switch (authentication) {
+			case 'basic':
+				auth = {
+					username,
+					password
+				};
+				break;
+			case 'cloud':
+				auth = {
+					clientId,
+					clientSecret
+				};
+		}
 
 		try {
-			const data = await spauth.getAuth(url, {
-				clientId,
-				clientSecret
-			});
+			const data = await spauth.getAuth(url, auth);
 
 			let headers = data.headers;
 			headers['Accept'] = 'application/json;odata=verbose';

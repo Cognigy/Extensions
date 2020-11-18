@@ -1,8 +1,9 @@
 import { createExtension } from "@cognigy/extension-tools";
 
 import { getSharepointSiteInfoNode } from "./nodes/getSharepointSiteInfo";
-import { sharepointConnection } from "./connections/sharepointConnection";
+import { cloudConnection } from "./connections/cloudConnection";
 import { getSharepointListItemsNode } from "./nodes/getSharepointListItems";
+import { basicConnection } from "./connections/basicConnection";
 
 
 export default createExtension({
@@ -12,6 +13,7 @@ export default createExtension({
 	],
 
 	connections: [
-		sharepointConnection
+		cloudConnection,
+		basicConnection
 	]
 });

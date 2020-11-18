@@ -4,9 +4,14 @@ const request = require('request-promise');
 
 export interface IGetSharepointListItemsParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
+		authentication: "cloud" | "basic";
+		cloudAuth: {
 			clientId: string;
 			clientSecret: string;
+		};
+		basicAuth: {
+			username: string;
+			password: string;
 		};
 		url: string;
 		list: string;
@@ -21,12 +26,48 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 	defaultLabel: "Get Sharepoint List Items",
 	fields: [
 		{
-			key: "connection",
-			label: "Sharepoint Connection",
+			key: "authentication",
+			label: "Select Authentication",
+			type: "select",
+			defaultValue: "basic",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "Cloud",
+						value: "cloud"
+					},
+					{
+						label: "Basic",
+						value: "basic"
+					}
+				],
+			}
+		},
+		{
+			key: "cloudAuth",
+			label: "Sharepoint Online",
 			type: "connection",
 			params: {
-				connectionType: "sharepoint",
+				connectionType: "cloud",
 				required: true
+			},
+			condition: {
+				key: "authentication",
+				value: "cloud",
+			}
+		},
+		{
+			key: "basicAuth",
+			label: "Sharepoint Basic Auth",
+			type: "connection",
+			params: {
+				connectionType: "basic",
+				required: true
+			},
+			condition: {
+				key: "authentication",
+				value: "basic",
 			}
 		},
 		{
@@ -99,6 +140,16 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "connectionSection",
+			label: "Authentication",
+			defaultCollapsed: false,
+			fields: [
+				"authentication",
+				"cloudAuth",
+				"basicAuth",
+			]
+		},
+		{
 			key: "storageOption",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -110,7 +161,7 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "field", key: "connection" },
+		{ type: "section", key: "connectionSection" },
 		{ type: "field", key: "url" },
 		{ type: "field", key: "list" },
 		{ type: "field", key: "filter" },
@@ -121,8 +172,26 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetSharepointListItemsParams) => {
 		const { api } = cognigy;
-		const { connection, url, list, filter, storeLocation, inputKey, contextKey } = config;
-		const { clientId, clientSecret } = connection;
+		const { basicAuth, cloudAuth, authentication, url, list, filter, storeLocation, inputKey, contextKey } = config;
+
+		const { clientId, clientSecret } = cloudAuth;
+		const { username, password } = basicAuth;
+
+		let auth: any;
+
+		switch (authentication) {
+			case 'basic':
+				auth = {
+					username,
+					password
+				};
+				break;
+			case 'cloud':
+				auth = {
+					clientId,
+					clientSecret
+				};
+		}
 
 		if (filter.length !== 0) {
 			if (!filter.includes('?')) {
@@ -131,10 +200,7 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 		  }
 
 		try {
-			const data = await spauth.getAuth(url, {
-				clientId,
-				clientSecret
-			});
+			const data = await spauth.getAuth(url, auth);
 
 			let headers = data.headers;
 			headers['Accept'] = 'application/json;odata=verbose';

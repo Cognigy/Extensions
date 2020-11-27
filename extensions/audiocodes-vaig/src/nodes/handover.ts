@@ -77,9 +77,9 @@ export const handoverNode = createNodeDescriptor({
 		if (!transferTarget)
 			throw new Error('The handover target is missing.');
 
-		api.output(null, {
+		api.output('', {
 			"_cognigy": {
-				"_voiceGateway": {
+				"_audioCodes": {
 					"json": {
 						"activities": [{
 								"type": "event",

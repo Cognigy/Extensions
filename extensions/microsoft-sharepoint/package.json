@@ -1,23 +1,26 @@
 {
-  "name": "voice-gateway",
-  "version": "2.2.0",
-  "description": "Cognigy Voice Gateway Helper Nodes",
+  "name": "microsoft-sharepoint",
+  "version": "4.0.0",
+  "description": "Sharepoint integration for Cognigy.AI",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz voice-gateway.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz microsoft-sharepoint.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Voice AI",
-    "Cognigy"
+    "Microsoft",
+    "Sharepoint"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
-    "tslint": "^6.1.2"
+    "tslint": "^6.1.2",
+    "node-sp-auth": "^2.5.7",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   },
   "devDependencies": {
     "@types/node": "^13.13.15",

@@ -1,10 +1,5 @@
 # Voice Gateway
 
-## Handover
-Transfers the call to another number
+**This Extension is deprecated, as Voice Gateway Nodes are now natively integrated into Cognigy.AI.**
 
-## Hangup
-Ends the call
-
-## Set Session Parameters
-Edits the Voice Gateway configuration
+See the documentation for more information: https://docs.cognigy.com/docs/voice-gateway

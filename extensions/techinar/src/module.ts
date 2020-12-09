@@ -2,13 +2,15 @@ import { createExtension } from "@cognigy/extension-tools";
 
 import { weatherConnection } from "./connections/weatherConnection";
 import { getWeatherNode } from "./nodes/getWeatherSimple";
-import { getWeatherAdvancedNode } from "./nodes/getWeatherAdvanced";
+import { getWeatherAdvancedNode, onError, onSuccess } from "./nodes/getWeatherAdvanced";
 
 
 export default createExtension({
 	nodes: [
 		getWeatherNode,
-		getWeatherAdvancedNode
+		getWeatherAdvancedNode,
+		onSuccess,
+		onError
 	],
 
 	connections: [

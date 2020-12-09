@@ -149,7 +149,7 @@ If the required information about a ticket is not known yet, this node can be us
       "created_at":  "2009-05-13T00:07:08Z",
       "updated_at":  "2011-07-22T00:11:12Z",
       "id":          211,
-      "result_type": "group"
+      "result_type": "group",
       "url":         "https://foo.zendesk.com/api/v2/groups/211.json"
     },
     {

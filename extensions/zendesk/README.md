@@ -157,10 +157,9 @@ If the required information about a ticket is not known yet, this node can be us
       "created_at":  "2009-08-26T00:07:08Z",
       "updated_at":  "2010-05-13T00:07:08Z",
       "id":          122,
-      "result_type": "group"
+      "result_type": "group",
       "url":         "https://foo.zendesk.com/api/v2/groups/122.json"
     },
-    ...
   ],
   "facets":    null,
   "next_page": "https://foo.zendesk.com/api/v2/search.json?query=\"type:Group hello\"&sort_by=created_at&sort_order=desc&page=2",

@@ -1,5 +1,6 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { uiPatchAccessData } from './connections/uiPathAccessData';
+import { uiPathAccessData } from './connections/uiPathAccessData';
+import { uiPathOnPremAccessData } from './connections/uiPathOnPrem';
 import { uiPathInstanceData } from './connections/uiPathInstance';
 import { addTransaction } from './nodes/addTransaction';
 import { cloudAuthenticationNode } from './nodes/cloudAuthentication';
@@ -19,7 +20,8 @@ export default createExtension({
 	],
 
 	connections: [
-		uiPatchAccessData,
+		uiPathAccessData,
+		uiPathOnPremAccessData,
 		uiPathInstanceData,
 	]
 });

@@ -84,7 +84,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
-		color: "#2d7cc2"
+		color: "#fa4514"
 	},
 	function: async ({ cognigy, config }: ICloudAuthenticationParams) => {
         const { api } = cognigy;

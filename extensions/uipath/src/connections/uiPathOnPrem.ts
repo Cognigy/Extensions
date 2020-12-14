@@ -1,6 +1,6 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
-export const uiPatchAccessData: IConnectionSchema = {
+export const uiPathOnPremAccessData: IConnectionSchema = {
 	type: "onPremAuth",
 	label: "UiPath Connection",
 	fields: [

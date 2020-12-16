@@ -112,6 +112,8 @@ export const getWeatherNode = createNodeDescriptor({
 				url: `https://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&appid=${key}`
 			});
 
+			api.say(`The weather in ${city} is ${response.data.main.temp} degrees.`, null);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
 			} else {

@@ -127,7 +127,7 @@ export const onError = createNodeDescriptor({
     defaultLabel: "On Error",
 
     appearance: {
-        color: '#9b59b6',
+        color: '#ff0808',
         textColor: 'black',
         variant: 'mini'
     },

@@ -8,8 +8,6 @@ Some nodes require a [Connection](https://docs.cognigy.com/docs/connections) tha
 This example Connection only requires you to fill out one field:
 - key
 
----
-
 ----
 ## Node: randomPath
 
@@ -54,4 +52,6 @@ This Node shows the possible input field types that can be exposed in the Extens
 - XML
 - Say
 - Connection
+
+![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG)
 

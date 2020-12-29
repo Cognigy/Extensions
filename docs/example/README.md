@@ -10,18 +10,6 @@ This example Connection only requires you to fill out one field:
 - key
 
 ----
-## Node: randomPath
-
-This Node picks a (sub) path at random. It shows how you can make Nodes with different outcomes, typically used in logic Nodes like the IF Node. 
-
-<img align="center" width="300" height="181" src="https://github.com/Cognigy/Extensions/blob/master/docs/images/random-path.jpg">
-
-----
-## Node: reverseSay
-
-This Node takes a text input (either dynamic or hardcoded) and reverses the string. It demonstrates how to take dynamic input and process it before outputting it again. This Node also shows how to directly generate output, instead of writing the outcome to the [Context](https://docs.cognigy.com/docs/context) or [Input](https://docs.cognigy.com/docs/input) objects. 
-
-----
 ## Node: executeCognigyApiRequest
 This Node shows how an API request can be executed from within an Extension. 
 It requires the following fields to be filled out:
@@ -33,6 +21,17 @@ The connection that needs to be configured in order to provide an API key.
 #### Path
 The API path to call.
 
+----
+## Node: randomPath
+
+This Node picks a (sub) path at random. It shows how you can make Nodes with different outcomes, typically used in logic Nodes like the IF Node. 
+
+<img align="center" width="300" height="181" src="https://github.com/Cognigy/Extensions/blob/master/docs/images/random-path.jpg">
+
+----
+## Node: reverseSay
+
+This Node takes a text input (either dynamic or hardcoded) and reverses the string. It demonstrates how to take dynamic input and process it before outputting it again. This Node also shows how to directly generate output, instead of writing the outcome to the [Context](https://docs.cognigy.com/docs/context) or [Input](https://docs.cognigy.com/docs/input) objects. 
 
 ----
 

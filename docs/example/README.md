@@ -13,7 +13,7 @@ This example Connection only requires you to fill out one field:
 
 This Node picks a (sub) path at random. It shows how you can make Nodes with different outcomes, typically used in logic Nodes like the IF Node. 
 
-![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/random-path.jpg?raw=true)
+<img align="left" width="300" height="181" src="https://github.com/Cognigy/Extensions/blob/master/docs/images/random-path.jpg">
 
 ----
 ## Node: reverseSay

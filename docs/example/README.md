@@ -3,6 +3,7 @@
 This is an example Extension that is designed to get you started with Cognigy.AI Extensions. It features a number of nodes that show a range of options and features - ranging from custom input fields to dynamic output and API requests. 
 
 **Connection: apiKeyConnection**
+
 Some nodes require a [Connection](https://docs.cognigy.com/docs/connections) that can be used to handle API credentials. 
 
 This example Connection only requires you to fill out one field:

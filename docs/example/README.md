@@ -55,6 +55,6 @@ This Node shows the possible input field types that can be exposed in the Extens
 - Connection
 
 
+<img align="left" width="250" height="496" src="https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG">
 
-![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG?raw=true)
 

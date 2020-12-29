@@ -13,6 +13,7 @@ This example Connection only requires you to fill out one field:
 
 This Node picks a (sub) path at random. It shows how you can make Nodes with different outcomes, typically used in logic Nodes like the IF Node. 
 
+![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/random-path.jpg?raw=true)
 
 ----
 ## Node: reverseSay
@@ -53,5 +54,7 @@ This Node shows the possible input field types that can be exposed in the Extens
 - Say
 - Connection
 
-![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG)
+
+
+![Example](https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG?raw=true)
 

@@ -5,26 +5,26 @@
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "zip example.zip build/* package.json package-lock.json README.md icon.png icon-large.png",
+    "zip": "tar cfz example.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
     "Cognigy.AI",
-    "4.0.0",
+    "example",
     "extensions",
-    "4.0.0"
+    "documentation"
   ],
   "author": "Cognigy GmbH",
   "license": "ISC",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.9.0",
+    "@cognigy/extension-tools": "^0.10.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
-    "@types/node": "^13.13.4",
+    "@types/node": "^13.13.15",
     "@types/node-fetch": "^2.5.7",
-    "tslint": "^6.1.2",
-    "typescript": "^3.8.3"
+    "tslint": "^6.1.3",
+    "typescript": "^3.9.7"
   }
 }

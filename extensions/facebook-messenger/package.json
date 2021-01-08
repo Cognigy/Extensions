@@ -19,7 +19,7 @@
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
     "aws-sdk": "^2.738.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

@@ -1,0 +1,24 @@
+{
+	"name": "avaya-voice",
+	"version": "1.0.0",
+	"description": "Helper Nodes for Cognigy.AI Avaya Endpoint",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "zip avaya.zip build/* package.json package-lock.json README.md icon.png"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Avaya",
+	"license": "MIT",
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.10.0",
+		"tslint": "^6.1.2"
+	},
+	"devDependencies": {
+		"@types/node": "^10.14.6",
+		"typescript": "^3.1.6"
+	}
+}

@@ -2,15 +2,15 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 
 export interface IRedirectParams extends INodeFunctionBaseParams {
 	config: {
-        url: string;
+		url: string;
 	};
 }
 
 export const redirectNode = createNodeDescriptor({
-    type: "redirect",
+	type: "redirect",
 	defaultLabel: "Redirect",
 	fields: [
-         {
+		{
 			key: "url",
 			label: "URL",
 			type: "cognigyText",
@@ -18,36 +18,36 @@ export const redirectNode = createNodeDescriptor({
 				required: true
 			}
 		},
-    ],
-    form: [
-        {
-            type: "field",
-            key: "url"
-        }
-    ],
-    function: async({ cognigy, config } : IRedirectParams) => {
-        const { api } = cognigy;
-        const { url } = config;
+	],
+	form: [
+		{
+			type: "field",
+			key: "url"
+		}
+	],
+	function: async ({ cognigy, config }: IRedirectParams) => {
+		const { api } = cognigy;
+		const { url } = config;
 
-        if (!url) {
-            throw new Error('url is missing.');
-        }
+		if (!url) {
+			throw new Error('url is missing.');
+		}
 
-        api.output('', {
+		api.output('', {
 			"_cognigy": {
 				"_spoken": {
 					"json": {
 						"activities": [{
-								"type": "event",
-								"name": "redirect",
-								"activityParams": {
-									url
-								}
+							"type": "event",
+							"name": "redirect",
+							"activityParams": {
+								url
 							}
+						}
 						]
 					}
 				}
 			}
 		});
-    }
+	}
 });

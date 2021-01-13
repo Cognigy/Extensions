@@ -1,0 +1,1 @@
+Integrates Cognigy.AI with Salesforce CRM

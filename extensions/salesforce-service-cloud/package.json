@@ -1,5 +1,5 @@
 {
-	"name": "salesforce",
+	"name": "salesforce-service-cloud",
 	"version": "4.0.0",
 	"description": "This Extension integrates Cognigy.AI with Salesforce",
 	"main": "build/module.js",

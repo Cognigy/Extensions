@@ -1,4 +1,4 @@
-Integrates Cognigy.AI with Salesforce (https://www.salesforce.com)
+Integrates Cognigy.AI with Salesforce Service Cloud (https://www.salesforce.com)
 
 **Connection (Live Chat)**
 

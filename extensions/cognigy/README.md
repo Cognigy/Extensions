@@ -33,7 +33,7 @@ You need to create a Connection. Name is for example 'Email Connection' or somet
 	- Something like `file.pdf` if it is a PDF file
 - **attachmentUrl**: *If you want to send an attachment, you also have to define the path to the file; the URL*
 	- Example: https://path-to-file.pdf
-	- **IMPORTANT**: The path to the file has to public and accessable from the outer world!
+	- **IMPORTANT**: The path to the file has to public and accessible from the outer world!
 - **contextStore**: *How to store the result in the Cognigy Context. It's a simple name*
 	- Example: `mailResponse`
 - **stopOnError**: *Wether to stop the Flow if something went wrong or not*

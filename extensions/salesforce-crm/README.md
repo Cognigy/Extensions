@@ -2,10 +2,9 @@
 
 Integrates Cognigy.AI with Salesforce CRM (https://www.salesforce.com)
 
-This module is based on jsforce (https://jsforce.github.io/)
+This Extension is based on jsforce (https://jsforce.github.io/)
 
 ### Connection
-This modules needs a CognigySecret to be defined and passed to the Nodes. The secret must have the following keys:
 
 - username
 - password

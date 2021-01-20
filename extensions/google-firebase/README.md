@@ -13,7 +13,7 @@ In order to use this Extension, one needs to add a *Web App* in Firebase and pro
 
 ## Node: Set
 
-This nodes posts / creates a new database entry while it will return "success" when the execution was successful.
+This node posts/creates a new database entry while it returns "success" when the execution was successful.
 
 ## Node: Get
 
@@ -30,7 +30,7 @@ This node retrieves the information of a specific entry in the database while it
 
 ## Node: Update
 
-This node updates or deletes an entry in the database
+This node updates or deletes an entry in the database.
 
 ### Update Entry
 

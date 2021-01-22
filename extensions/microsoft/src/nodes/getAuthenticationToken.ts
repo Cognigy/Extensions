@@ -43,11 +43,8 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 			key: "scope",
 			label: "Scope",
 			description: "For example user.read",
-			type: "cognigyText",
-			defaultValue: "user.read calendars.readWrite",
-			params: {
-				required: true,
-			},
+			type: "textArray",
+			defaultValue: ["user.read", "calendars.readWrite"]
 		},
 		{
 			key: "authCode",

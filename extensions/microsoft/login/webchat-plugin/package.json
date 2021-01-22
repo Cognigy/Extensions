@@ -1,0 +1,29 @@
+{
+  "name": "microsoft-auth",
+  "version": "1.0.0",
+  "description": "Enable Microsoft Login in the Webchat",
+  "main": "build/plugin.js",
+  "scripts": {
+    "create": "parcel build --out-file microsoft-auth.webchat-plugin.js src/index.jsx",
+    "move": "mv dist/microsoft-auth.webchat-plugin.js ../webserver/static",
+    "build": "npm run create && npm run move"
+  },
+  "keywords": [
+    "Microsoft",
+    "Login"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^16.8.18",
+    "parcel": "^1.12.3"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-microsoft-login": "^1.12.1"
+  },
+  "alias": {
+    "react": "./alias/react"
+  }
+}

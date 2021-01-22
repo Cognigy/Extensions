@@ -5,13 +5,13 @@
 	<script src='https://github.com/Cognigy/WebchatWidget/releases/download/v2.19.2/webchat.js'></script>
 
 	<!-- This is the Webchat Plugin that renders the Microsoft button (a React plugin) -->
-	<script src='./microsoft-auth.webchat-plugin.js'></script>
+	<script src="./microsoft-auth.webchat-plugin.js"></script>
 
 	<script>
 
 
 		//Start the webchat PLEASE CHANGE THE CONFIG URL (Can be copied from your Webchat Endpoint in Cognigy)
-		initWebchat('https://endpoint-trial.cognigy.ai/3e31e4142b6cbd6dcf6755f9b22d1650ed3f006e64d89b54f6bd08017b040da6', {
+		initWebchat('https://endpoint-trial.cognigy.ai/caddee63849413d458d23a1f736a94674c759e86f138cc6aeab6be395a1ddf3d', {
 			forceWebsockets: true,
 			settings: {
 				// colorScheme: '#FAB'
@@ -25,7 +25,7 @@
 				// This is optional: It's an Event Handler that allows you create an action in the front-end    
 				webchat.registerAnalyticsService(event => {
 
-					console.log(event)
+					//console.log(event)
 					// if (event.type === 'webchat/incoming-message') {
 					//     const { data } = event.payload;
 

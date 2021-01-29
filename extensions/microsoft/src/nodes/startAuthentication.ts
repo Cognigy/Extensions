@@ -8,8 +8,7 @@ export interface IStartAuthenticationParams extends INodeFunctionBaseParams {
 		};
 		redirectUri: string;
 		scope: string;
-		debug: boolean;
-		buttonTheme: string;
+		tenant: string;
 	};
 }
 export const startAuthenticationNode = createNodeDescriptor({
@@ -39,64 +38,29 @@ export const startAuthenticationNode = createNodeDescriptor({
 			key: "scope",
 			label: "Scope",
 			description: "For example user.read",
-			type: "textArray",
-			defaultValue: ["user.read", "calendars.readWrite"]
-		},
-		{
-			key: "buttonTheme",
-			label: "Login Button Theme",
-			description: "Select the theme of the login button that should be displayed in the webchat",
-			type: "select",
-			defaultValue: "light",
+			type: "cognigyText",
+			defaultValue: "user.read calendars.readWrite",
 			params: {
-				options: [
-					{
-						label: "Light",
-						value: "light"
-					},
-					{
-						label: "Dark",
-						value: "dark"
-					},
-					{
-						label: "Light Short",
-						value: "light_short"
-					},
-					{
-						label: "Dark Short",
-						value: "dark_short"
-					}
-				]
-			}
+				required: true,
+			},
 		},
 		{
-			key: "debug",
-			label: "Debug Mode",
-			description: "Shows more details about the login process in the webbrowser console",
-			type: "toggle",
-			defaultValue: false
+			key: "tenant",
+			label: "Tenant (ID)",
+			defaultValue: "common",
+			type: "cognigyText"
 		},
 	],
-	sections: [
-		{
-			key: "advanced",
-			label: "Adcanced",
-			fields: [
-				"debug"
-			],
-			defaultCollapsed: true
-		}
-	],
+	sections: [],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "redirectUri" },
+		{ type: "field", key: "tenant" },
 		{ type: "field", key: "scope" },
-		{ type: "field", key: "buttonTheme" },
-		{ type: "section", "key": "advanced"}
 	],
 	function: async ({ cognigy, config }: IStartAuthenticationParams) => {
 		const { api } = cognigy;
-		const { redirectUri, scope, debug, connection, buttonTheme } = config;
+		const { redirectUri, scope, tenant, connection } = config;
 		const { clientId, clientSecret } = connection;
 
 		/* trigger the microsoft login webchat plugin */
@@ -106,8 +70,7 @@ export const startAuthenticationNode = createNodeDescriptor({
 				clientId,
 				redirectUri,
 				scope,
-				buttonTheme,
-				debug
+				tenant
 			}
 		});
 

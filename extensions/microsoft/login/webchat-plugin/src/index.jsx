@@ -1,53 +1,55 @@
 import * as React from 'react';
-import MicrosoftLogin from "react-microsoft-login";
+import memoize from 'memoize-one';
 
+import { getStyles } from './styles';
 
-const MSLogin = (props) => {
+// only re-calculate if theme changed
+const getStylesMemo = memoize(getStyles);
 
-	// get info from Cogngiy data
-	const { message, onSendMessage } = props;
-	const { data } = message;
-	const { _plugin } = data;
-	let { clientId, redirectUri, scope, buttonTheme, debug } = _plugin;
-
-	const loginHandler = (err, data) => {
-		if (err) {
-		console.error(err)
-		}
-
-		console.log(data)
-	};
-
-	return (
-		<div style={{
-			display: "flex",
-			justifyContent: "center",
-			alignItems: "center"
-		}}>
-			<MicrosoftLogin
-				debug={debug}
-				clientId={clientId}
-				authCallback={loginHandler}
-				buttonTheme={buttonTheme}
-				redirectUri={redirectUri}
-				graphScopes={scope}
-			/>
-		</div>
-
-	);
-
+window.handleMicrosoftAuthCallback = url => {
+    cognigyWebchat.sendMesage('', {
+        microsoftAuth: {
+            code: '',
+            sessionState: ''
+        }
+    })
 }
 
-const microsoftLoginPlugin = {
-	match: 'microsoft-auth',
-	component: MSLogin,
-	options: {
-		fullwidth: true
-	}
+const SignInWithMicrosoft = (props) => {
+    const {
+        theme,
+        message
+    } = props;
+
+    const {
+        buttonStyles
+    } = getStylesMemo(theme);
+
+    const onClick = () => {
+        const { clientId, redirectUri, scope, tenant } = message.data._plugin;
+
+        window.open(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURI(redirectUri)}&response_mode=query&scope=${scope}`)
+    }
+
+    return (
+        <button
+            type='button'
+            style={buttonStyles}
+            onClick={onClick}
+        />
+    )
+}
+
+const dialogPlugin = {
+    match: 'microsoft-auth',
+    component: SignInWithMicrosoft,
+    options: {
+        fullwidth: true
+    }
 }
 
 if (!window.cognigyWebchatMessagePlugins) {
-	window.cognigyWebchatMessagePlugins = []
+    window.cognigyWebchatMessagePlugins = []
 }
 
-window.cognigyWebchatMessagePlugins.push(microsoftLoginPlugin);
+window.cognigyWebchatMessagePlugins.push(dialogPlugin);

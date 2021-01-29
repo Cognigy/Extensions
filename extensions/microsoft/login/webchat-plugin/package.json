@@ -1,29 +1,17 @@
 {
   "name": "microsoft-auth",
   "version": "1.0.0",
-  "description": "Enable Microsoft Login in the Webchat",
-  "main": "build/plugin.js",
+  "description": "This repository contains a dialog example plugin for the [Cognigy Webchat](https://github.com/Cognigy/WebchatWidget). It is meant to be used as a starting point when building a dialog-like plugin for the Cognigy Webchat. The Dialog is styled based on the Webchat's `theme` for seamless integration.",
+  "main": "index.jsx",
   "scripts": {
-    "create": "parcel build --out-file microsoft-auth.webchat-plugin.js src/index.jsx",
-    "move": "mv dist/microsoft-auth.webchat-plugin.js ../webserver/static",
-    "build": "npm run create && npm run move"
+    "build": "parcel build --out-file dist/microsoft-auth.webchat-plugin.js src/index.jsx",
+    "watch": "parcel watch --out-filedist/microsoft-auth.webchat-plugin.js src/index.jsx"
   },
-  "keywords": [
-    "Microsoft",
-    "Login"
-  ],
-  "author": "Cognigy GmbH",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "@types/react": "^16.8.18",
-    "parcel": "^1.12.3"
-  },
-  "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-microsoft-login": "^1.12.1"
-  },
-  "alias": {
-    "react": "./alias/react"
+    "memoize-one": "^5.0.4",
+    "parcel": "^1.12.3",
+    "react": "^16.8.6"
   }
 }

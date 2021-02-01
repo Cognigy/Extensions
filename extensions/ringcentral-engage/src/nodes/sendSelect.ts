@@ -26,8 +26,6 @@ export const sendSelectNode = createNodeDescriptor({
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "My body", // default value for this field
 			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
 				required: true // any field can be made required
 			}
 		},
@@ -36,22 +34,12 @@ export const sendSelectNode = createNodeDescriptor({
 			label: "Title", // label of the field (shows above field)
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Label", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
-			}
 		},
 		{
 			key: "itemOnePayload", // the internal key for this field, has to be unique on the node
 			label: "Payload", // label of the field (shows above field)
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Payload", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
-			}
 		},
 		{
 			key: "itemTwoLabel", // the internal key for this field, has to be unique on the node
@@ -59,9 +47,7 @@ export const sendSelectNode = createNodeDescriptor({
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Label", // default value for this field
 			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
+				disabled: false
 			}
 		},
 		{
@@ -69,33 +55,18 @@ export const sendSelectNode = createNodeDescriptor({
 			label: "Payload", // label of the field (shows above field)
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Payload", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
-			}
 		},
 		{
 			key: "itemThreeLabel", // the internal key for this field, has to be unique on the node
 			label: "Title", // label of the field (shows above field)
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Label", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
-			}
 		},
 		{
 			key: "itemThreePayload", // the internal key for this field, has to be unique on the node
 			label: "Payload", // label of the field (shows above field)
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "Payload", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false,
-				placeholder: "",
-				required: false // any field can be made required
-			}
 		}
 	],
 	sections: [
@@ -145,7 +116,7 @@ export const sendSelectNode = createNodeDescriptor({
 		color: "#FF8800"
 	},
 	function: async ({ cognigy, config }: ISendSelectParams) => {
-		const { api, input } = cognigy;
+		const { api } = cognigy;
 		const { body, itemOneLabel, itemOnePayload, itemTwoLabel, itemTwoPayload, itemThreeLabel, itemThreePayload } = config;
 		// Send RingCentral Engage Command
 
@@ -181,20 +152,6 @@ export const sendSelectNode = createNodeDescriptor({
 							center_items: true,
 							disable_text_input: false,
 							items: items
-							// items: [
-							// 	{
-							// 		title: "Billing",
-							// 		payload: "I have a question about billing"
-							// 	},
-							// 	{
-							// 		title: "Plans",
-							// 		payload: "I want to learn about your plans"
-							// 	},
-							// 	{
-							// 		title: "Device",
-							// 		payload: "I have a question about my device"
-							// 	}
-							// ]
 						}
 					}
 				}

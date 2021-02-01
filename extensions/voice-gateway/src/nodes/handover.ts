@@ -4,15 +4,19 @@ import {
 }
 from "@cognigy/extension-tools";
 
+import { nodeColor } from '../utils/design';
+
 export interface IHandoverParams extends INodeFunctionBaseParams {
 	config: {
 		handoverReason: string;
 		transferTarget: string;
+		transferReferredByURL: string;
 	};
 }
 export const handoverNode = createNodeDescriptor({
 	type: "handover",
 	defaultLabel: "Handover",
+	summary: "Hands the conversations to another target",
 	fields: [{
 			key: "handoverReason",
 			label: "Reason",
@@ -21,35 +25,51 @@ export const handoverNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-		}, {
+		},
+		{
 			key: "transferTarget",
 			label: "Target",
 			type: "cognigyText",
+			defaultValue: "tel:+49123456789",
 			params: {
-				required: true,
-				placeholder: "tel:+49123456789"
+				required: true
 			}
 		},
+		{
+			key: "transferReferredByURL",
+			label: "Referral URL",
+			type: "cognigyText",
+			description: "Adds a SIP Referred-By header to the outgoing INVITE/REFER message",
+			defaultValue: ""
+		},
 	],
-	form: [{
+	preview: {
+		key: "transferTarget",
+		type: "text"
+	},
+	appearance: {
+		color: nodeColor
+	},
+	form: [
+		{
 			type: "field",
 			key: "handoverReason"
-		}, {
+		},
+		{
 			type: "field",
 			key: "transferTarget"
+		},
+		{
+			type: "field",
+			key: "transferReferredByURL"
 		}
 	],
-	function : async({
-		cognigy,
-		config
-	}
-		: IHandoverParams) => {
-		const {
-			api
-		} = cognigy;
+	function : async({ cognigy, config }: IHandoverParams) => {
+		const {	api } = cognigy;
 		const {
 			handoverReason,
-			transferTarget
+			transferTarget,
+			transferReferredByURL
 		} = config;
 
 		if (!handoverReason)
@@ -57,16 +77,17 @@ export const handoverNode = createNodeDescriptor({
 		if (!transferTarget)
 			throw new Error('The handover target is missing.');
 
-		api.output('', {
+		api.output(null, {
 			"_cognigy": {
-				"_audioCodes": {
+				"_voiceGateway": {
 					"json": {
 						"activities": [{
 								"type": "event",
 								"name": "handover",
 								"activityParams": {
 									transferTarget,
-									handoverReason
+									handoverReason,
+									transferReferredByURL
 								}
 							}
 						]

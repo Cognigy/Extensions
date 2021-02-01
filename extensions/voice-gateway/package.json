@@ -1,7 +1,7 @@
 {
   "name": "voice-gateway",
-  "version": "4.0.0",
-  "description": "Voice AI Helper Nodes",
+  "version": "2.2.0",
+  "description": "Cognigy Voice Gateway Helper Nodes",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

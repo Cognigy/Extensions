@@ -1,0 +1,31 @@
+{
+	"name": "google-firebase",
+	"version": "4.0.0",
+	"description": "Integrates with the Google Firebase",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz google-firebase.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Alexander Teusz",
+	"keywords": [
+		"Realtime Database"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/firebase": "^3.2.1",
+		"@types/node": "^10.17.28",
+		"tslint": "^5.16.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.10.0",
+		"firebase": "^8.2.3"
+	}
+}

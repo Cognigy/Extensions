@@ -152,7 +152,13 @@ export const translateTextNode = createNodeDescriptor({
 	appearance: {
 		color: "#0f2b46"
 	},
-	function: async ({ cognigy, config }: ITranslateTextParams) => {
+	dependencies: {
+		children: [
+			"onSuccess",
+			"onError"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: ITranslateTextParams) => {
 		const { api } = cognigy;
 		const { connection, text, targetLang, storeLocation, inputKey, contextKey } = config;
 		const { key } = connection;
@@ -167,6 +173,9 @@ export const translateTextNode = createNodeDescriptor({
 				}
 			});
 
+			const onSuccesChild = childConfigs.find(child => child.type === "onSuccess");
+			api.setNextNode(onSuccesChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
 			} else {
@@ -174,11 +183,61 @@ export const translateTextNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onError");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
 				// @ts-ignore
 				api.addToInput(inputKey, error.message);
+			}
+		}
+	}
+});
+
+export const onSucces = createNodeDescriptor({
+	type: "onSuccess",
+	parentType: "translateText",
+	defaultLabel: "On Success",
+	appearance: {
+		color: "green",
+		textColor: "white",
+		variant: "mini"
+	},
+	constraints: {
+		editable: false,
+		deletable: true,
+		collapsable: true,
+		creatable: true,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	}
+});
+
+export const onError = createNodeDescriptor({
+	type: "onError",
+	parentType: "translateText",
+	defaultLabel: "On Error",
+	appearance: {
+		color: "red",
+		textColor: "white",
+		variant: "mini"
+	},
+	constraints: {
+		editable: false,
+		deletable: true,
+		collapsable: true,
+		creatable: true,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
 			}
 		}
 	}

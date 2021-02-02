@@ -5,15 +5,29 @@ export interface ISendTimePickerParams extends INodeFunctionBaseParams {
 	config: {
         attachmentId: string;
         title: string;
-        subtitle: string;
-        url: string;
-        urlText: string;
+        latitude: string;
+        longitude: string;
+        radius: number;
+        timeslots: object;
 	};
 }
 export const sendTimePickerNode = createNodeDescriptor({
 	type: "sendTimePickerRingCentral",
 	defaultLabel: "Send Time Picker",
 	fields: [
+        {
+            key: "timeslots",
+            type: "json",
+            label: "timeslots",
+            description: "The time slots that will be displayed.",
+            defaultValue: `[
+    {
+        "duration": 3000,
+        "start_time": "2020-04-26T08:00+0200",
+        "identifier": "timeslot 1"
+    }
+]`
+        },
 		{
             key: "attachmentId",
             type: "cognigyText",
@@ -23,37 +37,36 @@ export const sendTimePickerNode = createNodeDescriptor({
         {
             key: "title",
             type: "cognigyText",
-            label: "Title",
-            params: {
-                required: true
-            }
+            label: "Title"
         },
         {
-            key: "subtitle",
-            type: "cognigyText",
-            label: "Subtitle",
-            params: {
-                required: true
-            }
+            key: "radius",
+            type: "number",
+            label: "Radius"
         },
         {
-            key: "url",
+            key: "latitude",
             type: "cognigyText",
-            label: "URL",
-            params: {
-                required: true
-            }
+            label: "Latitude"
         },
         {
-            key: "urlText",
+            key: "longitude",
             type: "cognigyText",
-            label: "URL Text",
-            params: {
-                required: true
-            }
+            label: "Longitude"
         }
     ],
     sections: [
+        {
+            key: "location",
+            label: "Location",
+            defaultCollapsed: true,
+            fields: [
+                "title",
+                "radius",
+                "latitude",
+                "longitude"
+            ]
+        },
         {
             key: "attachment",
             label: "Attachment",
@@ -64,10 +77,8 @@ export const sendTimePickerNode = createNodeDescriptor({
         }
     ],
 	form: [
-		{ type: "field", key: "title" },
-        { type: "field", key: "subtitle" },
-        { type: "field", key: "url" },
-        { type: "field", key: "urlText" },
+		{ type: "field", key: "timeslots" },
+        { type: "section", key: "location" },
         { type: "section", key: "attachment" }
 	],
 	appearance: {
@@ -75,7 +86,7 @@ export const sendTimePickerNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISendTimePickerParams) => {
 		const { api } = cognigy;
-		const { attachmentId, title, subtitle, url, urlText } = config;
+		const { attachmentId, title, timeslots, latitude, longitude, radius } = config;
 
 		api.say('', {
 			_cognigy: {
@@ -83,14 +94,15 @@ export const sendTimePickerNode = createNodeDescriptor({
 					json: {
 						command: "structured-content",
 						structuredContent: {
-                            type: "rich_link",
+                            type: "time_select",
                             attachment_id: attachmentId,
-                            attachment_fallback_id: attachmentId,
-                            title,
-                            subtitle,
-                            url,
-                            url_fallback: url,
-                            url_text: urlText
+                            location: {
+                                latitude,
+                                longitude,
+                                radius,
+                                title
+                            },
+                           timeslots
 						}
 					}
 				}

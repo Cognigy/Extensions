@@ -1,158 +1,31 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
-
-export interface ISendSelectParams extends INodeFunctionBaseParams {
-	config: {
-		body: string;
-		itemOneLabel: string;
-		itemOnePayload: string;
-		itemTwoLabel: string;
-		itemTwoPayload: string;
-		itemThreeLabel: string;
-		itemThreePayload: string;
-	};
+// Creating the node UI
+export interface ICloseInterventionParams extends INodeFunctionBaseParams {
+	config: {};
 }
-export const sendSelectNode = createNodeDescriptor({
-	type: "sendSelectRingCentral",
-	defaultLabel: "Send Select",
-	preview: {
-		key: "body",
-		type: "text"
-	},
-	fields: [
-		{
-			key: "body", // the internal key for this field, has to be unique on the node
-			label: "The Body of the Select Message", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "My body", // default value for this field
-			params: { // extra parameters which differ by field type
-				required: true // any field can be made required
-			}
-		},
-		{
-			key: "itemOneLabel", // the internal key for this field, has to be unique on the node
-			label: "Title", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Label", // default value for this field
-		},
-		{
-			key: "itemOnePayload", // the internal key for this field, has to be unique on the node
-			label: "Payload", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Payload", // default value for this field
-		},
-		{
-			key: "itemTwoLabel", // the internal key for this field, has to be unique on the node
-			label: "Title", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Label", // default value for this field
-			params: { // extra parameters which differ by field type
-				disabled: false
-			}
-		},
-		{
-			key: "itemTwoPayload", // the internal key for this field, has to be unique on the node
-			label: "Payload", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Payload", // default value for this field
-		},
-		{
-			key: "itemThreeLabel", // the internal key for this field, has to be unique on the node
-			label: "Title", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Label", // default value for this field
-		},
-		{
-			key: "itemThreePayload", // the internal key for this field, has to be unique on the node
-			label: "Payload", // label of the field (shows above field)
-			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
-			defaultValue: "Payload", // default value for this field
-		}
-	],
-	sections: [
-		{
-			key: "bodySection",
-			label: "Body",
-			defaultCollapsed: false,
-			fields: [
-				"body"
-			]
-		},
-		{
-			key: "itemOne",
-			label: "Item 1",
-			defaultCollapsed: true,
-			fields: [
-				"itemOneLabel",
-				"itemOnePayload"
-			]
-		},
-		{
-			key: "itemTwo",
-			label: "Item 2",
-			defaultCollapsed: true,
-			fields: [
-				"itemTwoLabel",
-				"itemTwoPayload"
-			]
-		},
-		{
-			key: "itemThree",
-			label: "Item 3",
-			defaultCollapsed: true,
-			fields: [
-				"itemThreeLabel",
-				"itemThreePayload"
-			]
-		}
-	],
-	form: [
-		{ type: "section", key: "bodySection" },
-		{ type: "section", key: "itemOne" },
-		{ type: "section", key: "itemTwo" },
-		{ type: "section", key: "itemThree" }
-	],
+
+//Creating all necessary parameter for the node to work properly if any parameter are mandatory or optionals.
+export const CloseInterventionNode = createNodeDescriptor({
+	type: "closeInterventionRingCentral",
+	defaultLabel: "Close Intervention",
+	fields: [],
+	sections: [],
+	form: [],
 	appearance: {
 		color: "#FF8800"
-	},
-	function: async ({ cognigy, config }: ISendSelectParams) => {
-		const { api } = cognigy;
-		const { body, itemOneLabel, itemOnePayload, itemTwoLabel, itemTwoPayload, itemThreeLabel, itemThreePayload } = config;
+    },
+    
+	function: async ({ cognigy, config }: ICloseInterventionParams) => {
+		const { api, input} = cognigy;
 		// Send RingCentral Engage Command
 
-		const items = [];
-
-		if (itemOneLabel.length > 0) {
-			items.push({
-				title: itemOneLabel,
-				payload: itemOnePayload
-			});
-		}
-		if (itemTwoLabel.length > 0) {
-			items.push({
-				title: itemTwoLabel,
-				payload: itemTwoPayload
-			});
-		}
-		if (itemThreeLabel.length > 0) {
-			items.push({
-				title: itemThreeLabel,
-				payload: itemThreePayload
-			});
-		}
-
+        // How can I directly call ED API and use Cognigy context data in that call for 'API URL from the endpoint set up' and for 'intervention_id' as Cognigy automatically creates the intervention on the first reply ?
 		api.say('', {
 			_cognigy: {
 				_ringCentralEngage: {
-					json: {
-						command: "structured-content",
-						body: body,
-						structuredContent: {
-							type: "select",
-							center_items: true,
-							disable_text_input: false,
-							items: items
-						}
+					json: { 
+						command: "curl --location --request PUT '<context.API_URL>/interventions/<input.intervention_id>/close'",
 					}
 				}
 			}

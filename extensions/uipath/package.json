@@ -1,6 +1,6 @@
 {
   "name": "uipath-orchestrator",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Provides the functions for the interaction with UiPath Orchestraor",
   "main": "build/module.js",
   "scripts": {

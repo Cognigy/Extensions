@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-
+import { nodeColor } from '../utils/design';
 
 export interface IHangupParams extends INodeFunctionBaseParams {
 	config: {
@@ -9,6 +9,7 @@ export interface IHangupParams extends INodeFunctionBaseParams {
 export const hangupNode = createNodeDescriptor({
 	type: "hangup",
 	defaultLabel: "Hang Up",
+	summary: "Hangs up the call",
 	fields: [
 		{
 			key: "hangupReason",
@@ -20,6 +21,13 @@ export const hangupNode = createNodeDescriptor({
 			}
 		},
 	],
+	preview: {
+		key: "hangupReason",
+		type: "text"
+	},
+	appearance: {
+		color: nodeColor
+	},
 	form: [
 		{ type: "field", key: "hangupReason" }
 	],
@@ -29,9 +37,9 @@ export const hangupNode = createNodeDescriptor({
 
 		if (!hangupReason) throw new Error('The hangup reason is missing.');
 
-		api.output('', {
+		api.output(null, {
 			"_cognigy": {
-				"_audioCodes": {
+				"_voiceGateway": {
 					"json": {
 						"activities": [
 							{

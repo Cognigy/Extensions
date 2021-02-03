@@ -9,7 +9,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
  */
 
 export interface IRandomPathParams extends INodeFunctionBaseParams {
-	config: {}
+	config: {};
 }
 
 export const randomPath = createNodeDescriptor({
@@ -35,10 +35,7 @@ export const randomPath = createNodeDescriptor({
 
 			api.setNextNode(leftPathChild.id);
 			return;
-		}
-
-		/* execute right path */
-		else {
+		} else {
 			const rightPathChild = childConfigs.find(child => child.type === "randomPathRight");
 			if (!rightPathChild) {
 				throw new Error("Unable to find 'rightPathChild'. Seems its not attached.");

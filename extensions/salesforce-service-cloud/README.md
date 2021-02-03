@@ -1,8 +1,10 @@
-Integrates Cognigy.AI with Salesforce (https://www.salesforce.com)
+# Salesforce Service Cloud
+
+Integrates Cognigy.AI with Salesforce Service Cloud (https://www.salesforce.com)
 
 **Connection (Live Chat)**
 
-If one wants to use the **Start Live Chat** Node, another connection is required. The following keys need to be included:
+The following keys need to be included:
 
 - organizationId
   - Your Salesforce Organization ID

@@ -1,6 +1,6 @@
 {
   "name": "google-maps",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "Adds Google Maps functions.",
   "main": "build/module.js",
   "scripts": {

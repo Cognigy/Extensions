@@ -1,17 +1,18 @@
 {
-	"name": "salesforce",
+	"name": "salesforce-service-cloud",
 	"version": "4.0.0",
-	"description": "This Extension integrates Cognigy.AI with Salesforce",
+	"description": "This Extension integrates Cognigy.AI with Salesforce Service Cloud",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz salesforce.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz salesforce-service-cloud.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
 	"keywords": [
 		"Salesforce",
-		"CRM"
+		"Service Cloud",
+		"Live Chat"
 	],
 	"repository": {
 		"type": "git",

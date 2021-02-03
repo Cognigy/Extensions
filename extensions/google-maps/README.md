@@ -22,7 +22,11 @@ If the Searchquery field is empty or no Place was found, the module use the defa
 In combination with the google-maps Webchat Plugin you get this view:
 ![Create Location Node](./docs/google-maps-Webchat.png)
 
-## Node: Get User Location From Text Message
+## Node: Search Location
+
+This node can be used in order to get location information about the current user.
+
+## Address
 
 In order to get the user location, one can ask for the it via plain text. The minimum information required from the user to execute this node is: `place`, `city`, and `country`. 
 
@@ -38,5 +42,16 @@ This node returns the closest location google maps can provide based on the give
     "address": "Speditionstraße 1, 40221 Düsseldorf, Germany",
     "name": "Cognigy"
   }
+}
+```
+
+## Coordinates
+
+Since it could be the case that one only retrieves the **longitude** and **latitude** information, the reserve way can be used. In this case, this node returns the **formatted address** based on the geocodes:
+
+```json
+{
+  "maps": {
+    "address": "Speditionstraße 1, 40221 Düsseldorf"
 }
 ```

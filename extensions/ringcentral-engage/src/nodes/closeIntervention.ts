@@ -6,7 +6,7 @@ export interface ICloseInterventionParams extends INodeFunctionBaseParams {
 }
 
 //Creating all necessary parameter for the node to work properly if any parameter are mandatory or optionals.
-export const CloseInterventionNode = createNodeDescriptor({
+export const closeInterventionNode = createNodeDescriptor({
 	type: "closeInterventionRingCentral",
 	defaultLabel: "Close Intervention",
 	fields: [],

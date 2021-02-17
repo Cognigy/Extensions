@@ -8,7 +8,7 @@ export interface ITranslateTextParams extends INodeFunctionBaseParams {
 		};
 		text: string;
 		targetLang: string;
-		storeLocation: string
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
@@ -173,8 +173,8 @@ export const translateTextNode = createNodeDescriptor({
 				}
 			});
 
-			const onSuccesChild = childConfigs.find(child => child.type === "onSuccess");
-			api.setNextNode(onSuccesChild.id);
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccess");
+			api.setNextNode(onSuccessChild.id);
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
@@ -202,21 +202,9 @@ export const onSucces = createNodeDescriptor({
 	parentType: "translateText",
 	defaultLabel: "On Success",
 	appearance: {
-		color: "green",
+		color: "#61d188",
 		textColor: "white",
 		variant: "mini"
-	},
-	constraints: {
-		editable: false,
-		deletable: true,
-		collapsable: true,
-		creatable: true,
-		movable: false,
-		placement: {
-			predecessor: {
-				whitelist: []
-			}
-		}
 	}
 });
 
@@ -225,20 +213,8 @@ export const onError = createNodeDescriptor({
 	parentType: "translateText",
 	defaultLabel: "On Error",
 	appearance: {
-		color: "red",
+		color: "#cf142b",
 		textColor: "white",
 		variant: "mini"
-	},
-	constraints: {
-		editable: false,
-		deletable: true,
-		collapsable: true,
-		creatable: true,
-		movable: false,
-		placement: {
-			predecessor: {
-				whitelist: []
-			}
-		}
 	}
 });

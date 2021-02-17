@@ -2,6 +2,9 @@
 
 In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.cognigy.com/docs/flow) are used to build Conversational.AI. There, it could be the case that one needs to integrate a third-party system to store or retreive data. Extensions enable anyone to build JavaScript modules and to expose them as [Flow Nodes](https://docs.cognigy.com/docs/general-usage-information) within Cognigy. There are no restrictions on node modules ([NPM](https://www.npmjs.com/)) or functionality.
 
+### NPM: @cognigy/extension-tools
+
+[![npm](https://img.shields.io/npm/v/@cognigy/extension-tools/latest.svg)](https://www.npmjs.com/package/@cognigy/extension-tools)
 
 ## Contents
 

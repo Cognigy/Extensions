@@ -173,7 +173,7 @@ export const translateTextNode = createNodeDescriptor({
 				}
 			});
 
-			const onSuccesChild = childConfigs.find(child => child.type === "onSuccess");
+			const onSuccesChild = childConfigs.find(child => child.type === "onSucces");
 			api.setNextNode(onSuccesChild.id);
 
 			if (storeLocation === "context") {

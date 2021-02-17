@@ -8,7 +8,7 @@ export interface ITranslateTextParams extends INodeFunctionBaseParams {
 		};
 		text: string;
 		targetLang: string;
-		storeLocation: string
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
@@ -152,7 +152,13 @@ export const translateTextNode = createNodeDescriptor({
 	appearance: {
 		color: "#0f2b46"
 	},
-	function: async ({ cognigy, config }: ITranslateTextParams) => {
+	dependencies: {
+		children: [
+			"onSuccess",
+			"onError"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: ITranslateTextParams) => {
 		const { api } = cognigy;
 		const { connection, text, targetLang, storeLocation, inputKey, contextKey } = config;
 		const { key } = connection;
@@ -167,6 +173,9 @@ export const translateTextNode = createNodeDescriptor({
 				}
 			});
 
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccess");
+			api.setNextNode(onSuccessChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
 			} else {
@@ -174,6 +183,10 @@ export const translateTextNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onError");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
@@ -181,5 +194,27 @@ export const translateTextNode = createNodeDescriptor({
 				api.addToInput(inputKey, error.message);
 			}
 		}
+	}
+});
+
+export const onSucces = createNodeDescriptor({
+	type: "onSuccess",
+	parentType: "translateText",
+	defaultLabel: "On Success",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onError = createNodeDescriptor({
+	type: "onError",
+	parentType: "translateText",
+	defaultLabel: "On Error",
+	appearance: {
+		color: "#cf142b",
+		textColor: "white",
+		variant: "mini"
 	}
 });

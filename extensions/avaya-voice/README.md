@@ -2,12 +2,40 @@
 # Avaya Extension  
   
 Integrates Cognigy.AI with Avaya   
+
+ 
+## Node: Hours 
+This node will get office hour operations definition and holiday definitions from Cloud IVR through URL or Id and store result in context variable 
+  
+- **Connection**: You need to create a Connection. Name is for example 'avaya cloud ivr Connection' or something similar. Now you need some Connection keys:
+  
+   - Api Key:   Api key to authenticate
+      - `key`:  **apiKey**
+      - `value`:  Api key from cloud IVR
+      
+	- Tenant Id : Tenant Id should be as cloud IVR tenant Id. This is not required in case of input is URL.
+      - `key`:  **tenantId**
+      - `value`:  Cloud IVR tenant Id
+      
+	- Domain: Domain is base url where resource are stored . This is not required in case of input URL.
+      - `key`:  **domain**
+      - `value`:  base URL.
+
+- **Holiday URL or Id**: Complete URL or just identifier of Holiday hours of operation
+- **Hoop URL or Id**: Complete URL or just identifier of daily hours of operation
+- **HolidayContextKey**: _How to store the result in the Cognigy Context. It's a simple name_
+
+	-   Example:  `holiday`
+- **HoopsContextKey**: _How to store the result in the Cognigy Context. It's a simple name_
+
+	-   Example:  `hoops`
+
     
 ## Node: Prompt  
   
-This node will capture customer’s speech or DTMF inputs. The following arguments can be defined:  
+This node will prompt and capture customer’s speech or DTMF inputs. The following arguments can be defined:  
   
-- **Prompt type**: there are two prompt options, menu and number.  
+- `Type`: there are two prompt options, menu and number.  
   
    - **Menu**: To get single digit DTMF value from a customer for menu navigations.  
       - `Text`: Prompt text, like press 1 for English…. This argument is optional if prompt is audio file via node Play.
@@ -25,7 +53,9 @@ This node will capture customer’s speech or DTMF inputs. The following argumen
   
 This node will hand over the call conversation to the destination, either as a phone number or as a sip address. The following arguments have to be defined:  
   
-- **Handover type**: There are two options to handover, phone and sip.  
+
+- `From`: The optional phone number from which the call is handed over.  
+- `Type`: There are two options to handover, phone and sip.  
   
    - **Phone**: Hand over the call conversation to a phone number.  
       - `Destination`: phone number such as +19712209270.  
@@ -56,14 +86,14 @@ This node will redirect current call to the target Cognigy flow without return.
 
 ## Node: Sms  
   
-This node will sends SMS to the destination with the text for voice channel. 
+This node will send SMS to the destination with the text for voice channel. 
    - `Text`: the message to be sent to the destination. 
    - `To`: The destination phone number to send the sms to such as `+14252019415`. 
 
 ## Node: Conference  
   
 This node will join the CPaaS conference room. 
-   - `Conference Room`  conference name such as `AllHandsCall`.
+   - `Conference Room`  conference room name such as `AllHandsCall`.
 
 ## Node: Hangup  
   
@@ -74,3 +104,9 @@ This node will hang up the call.
 This node will set the locale language and the voice type on CPaaS so that the intended language and the voice will be spoken to the customers. 
    - `Language`: the lauage to be spoken to the customer such as `English(United States)`. 
    - `Voice`: the man or woman's voice to be spoken to the customer such as `woman`.
+
+# Node: Call 
+
+This node will perform a variety of call operations such as make call etc.
+This node will be available in upcoming release.
+  

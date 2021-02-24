@@ -2,15 +2,15 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 
 export interface IConferenceParams extends INodeFunctionBaseParams {
 	config: {
-		conferenceRoom: string;
+        conferenceRoom: string;
 	};
 }
 
 export const conferenceNode = createNodeDescriptor({
-	type: "conference",
+    type: "conference",
 	defaultLabel: "Conference",
 	fields: [
-		{
+         {
 			key: "conferenceRoom",
 			label: "Conference Room",
 			type: "cognigyText",
@@ -19,36 +19,36 @@ export const conferenceNode = createNodeDescriptor({
 				required: true
 			}
 		},
-	],
-	form: [
-		{
-			type: "field",
-			key: "conferenceRoom"
-		}
-	],
-	function: async ({ cognigy, config }: IConferenceParams) => {
-		const { api } = cognigy;
-		const { conferenceRoom } = config;
+    ],
+    form: [
+        {
+            type: "field",
+            key: "conferenceRoom"
+        }
+    ],
+    function: async({ cognigy, config } : IConferenceParams) => {
+        const { api } = cognigy;
+        const { conferenceRoom } = config;
 
-		if (!conferenceRoom) {
-			throw new Error('The conferenceRoom is missing.');
-		}
+        if (!conferenceRoom) {
+            throw new Error('The conferenceRoom is missing.');
+        }
 
-		api.output('', {
+        api.output('', {
 			"_cognigy": {
 				"_spoken": {
 					"json": {
 						"activities": [{
-							"type": "event",
-							"name": "conference",
-							"activityParams": {
-								conferenceRoom
+								"type": "event",
+								"name": "conference",
+								"activityParams": {
+									conferenceRoom
+								}
 							}
-						}
 						]
 					}
 				}
 			}
 		});
-	}
+    }
 });

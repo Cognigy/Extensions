@@ -3,12 +3,13 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 export interface IHandoverParams extends INodeFunctionBaseParams {
 	config: {
 		handoverType: string;
+		from: string;
 		destination: string;
 		callbackUrl: string;
 		user: string;
 		domain: string;
 		connection: {
-			userName: string;
+			username: string;
 			password: string;
 		};
 	};
@@ -18,6 +19,15 @@ export const handoverNode = createNodeDescriptor({
 	type: "handover",
 	defaultLabel: "Handover",
 	fields: [
+		{
+			key: "from",
+			label: "From",
+			type: "cognigyText",
+			defaultValue: "{{To}}",
+			params: {
+				required: false
+			}
+		},
 		{
 			key: "handoverType",
 			label: "Type",
@@ -112,6 +122,7 @@ export const handoverNode = createNodeDescriptor({
 		}
 	],
 	form: [
+		{ type: "field", key: "from" },
 		{ type: "field", key: "handoverType" },
 		{ type: "field", key: "destination" },
 		{ type: "section", key: "sipDetails" },
@@ -119,14 +130,14 @@ export const handoverNode = createNodeDescriptor({
 	],
 	function: async({ cognigy, config }: IHandoverParams) => {
 		const { api } = cognigy;
-		const { handoverType, destination, callbackUrl, user, domain, connection } = config;
-		const { userName, password } = connection;
+		const { from, handoverType, destination, callbackUrl, user, domain, connection } = config;
+		const { username, password } = connection;
 
 		if (handoverType === "phone") {
 			if (!destination) throw new Error('The destination is missing.');
 		}
 		if (handoverType === "sip") {
-			if (!userName) throw new Error("Credential is missing user name");
+			if (!username) throw new Error("Credential is missing user name");
 			if (!password) throw new Error("Credential is missing password]");
 			if (!user) throw new Error('User is missing.');
 			if (!domain) throw new Error('Domain is missing.');
@@ -141,6 +152,7 @@ export const handoverNode = createNodeDescriptor({
 							"type": "event",
 							"name": "handover",
 							"activityParams": {
+								from,
 								handoverType,
 								destination,
 								callbackUrl,

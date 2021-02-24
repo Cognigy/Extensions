@@ -1,11 +1,11 @@
 {
-  "name": "uipath",
-  "version": "4.1.0",
+  "name": "uipath-orchestrator",
+  "version": "4.1.1",
   "description": "Provides the functions for the interaction with UiPath Orchestraor",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz uipath.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz uipath-orchestrator.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },

@@ -1,13 +1,13 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
-export interface IHangupParams extends INodeFunctionBaseParams { }
+export interface IHangupParams extends INodeFunctionBaseParams {}
 
 export const hangupNode = createNodeDescriptor({
     type: "hangup",
     defaultLabel: "Hangup",
     fields: [],
     form: [],
-    function: async ({ cognigy }: IHangupParams) => {
+    function: async({ cognigy } : IHangupParams) => {
         const { api } = cognigy;
 
         api.output('', {
@@ -19,7 +19,7 @@ export const hangupNode = createNodeDescriptor({
                                 "type": "event",
                                 "name": "hangup",
                                 "activityParams": {}
-                            }
+                            }                                         
                         ]
                     }
                 }

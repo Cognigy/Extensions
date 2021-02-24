@@ -9,7 +9,11 @@ import { conferenceNode } from "./nodes/conference";
 import { redirectNode } from "./nodes/redirect";
 import { smsNode } from "./nodes/sms";
 import { localeNode } from "./nodes/locale";
+import { hoursNode } from "./nodes/hours";
+import { callNode } from "./nodes/call";
 import { credentialConnection } from "./connections/credential";
+import { avayaApiConnection } from "./connections/avayaApiConnection";
+import { cpaasConnection } from "./connections/cpaasConnection";
 
 export default createExtension({
     nodes: [
@@ -21,9 +25,13 @@ export default createExtension({
         conferenceNode,
         redirectNode,
         smsNode,
-        localeNode
+        localeNode,
+        hoursNode,
+        callNode
     ],
     connections: [
-        credentialConnection
+        credentialConnection,
+        avayaApiConnection,
+        cpaasConnection
     ]
 });

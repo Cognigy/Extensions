@@ -8,85 +8,85 @@ export interface ILocaleParams extends INodeFunctionBaseParams {
 }
 
 export const localeNode = createNodeDescriptor({
-	type: "locale",
+    type: "locale",
 	defaultLabel: "Locale",
-	fields: [{
-		key: "language",
-		label: "Language",
-		type: "select",
-		defaultValue: "en-US",
-		params: {
-			options: [
-				{
-					label: "English (United States)",
-					value: "en-US"
-				},
-				{
-					label: "Spanish (United States)",
-					value: "es-US"
-				},
-				{
-					label: "Spanish (Spain)",
-					value: "es-ES"
-				},
-				{
-					label: "French (France)",
-					value: "fr-FR"
-				},
-				{
-					label: "Portuguese (Portugal)",
-					value: "pt-PT"
+	fields: [ {
+				key: "language",
+				label: "Language",
+				type: "select",
+				defaultValue: "en-US",
+				params: {
+					options: [
+						{
+							label: "English (United States)",
+							value: "en-US"
+						},
+						{
+							label: "Spanish (United States)",
+							value: "es-US"
+						},
+						{
+							label: "Spanish (Spain)",
+							value: "es-ES"
+						},
+						{
+							label: "French (France)",
+							value: "fr-FR"
+						},
+						{
+							label: "Portuguese (Portugal)",
+							value: "pt-PT"
+						}
+					]
 				}
-			]
-		}
-	},
-	{
-		key: "voice",
-		label: "Voice",
-		type: "select",
-		defaultValue: "woman",
-		params: {
-			options: [
-				{
-					label: "Woman",
-					value: "woman"
-				},
-				{
-					label: "Man",
-					value: "man"
+			},
+			{
+				key: "voice",
+				label: "Voice",
+				type: "select",
+				defaultValue: "woman",
+				params: {
+					options: [
+						{
+							label: "Woman",
+							value: "woman"
+						},
+						{
+							label: "Man",
+							value: "man"
+						}
+					]
 				}
-			]
-		}
-	},
-	],
-	form: [{
-		type: "field",
-		key: "language"
-	}, {
-		type: "field",
-		key: "voice"
-	}
-	],
-	function: async ({ cognigy, config }: ILocaleParams) => {
-		const { api } = cognigy;
+			},
+		],
+    form: [{
+            type: "field",
+            key: "language"
+        }, {
+            type: "field",
+            key: "voice"
+        }
+    ],
+    function: async({ cognigy, config } : ILocaleParams) => {
+        const { api } = cognigy;
 		const { language, voice } = config;
 
-		api.output('', {
+        api.output('', {
 			"_cognigy": {
 				"_spoken": {
 					"json": {
 						"activities": [{
-							"type": "event",
-							"name": "locale",
-							"activityParams": {
-								language,
-								voice
+								"type": "event",
+								"name": "locale",
+								"activityParams": {
+									language,
+									voice
+								}
 							}
-						}
 						]
 					}
 				}
 			}
 		});
-	}
+    }
 });

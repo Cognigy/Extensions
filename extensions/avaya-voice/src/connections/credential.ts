@@ -4,7 +4,7 @@ export const credentialConnection: IConnectionSchema = {
 	type: "credential",
 	label: "Credentials",
 	fields: [
-		{ fieldName: "userName" },
+		{ fieldName: "username" },
 		{ fieldName: "password" }
 	]
 };

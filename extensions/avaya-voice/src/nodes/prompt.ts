@@ -1,13 +1,13 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
 export interface IPromptParams extends INodeFunctionBaseParams {
-    config: {
+	config: {
         promptType: string;
         menuText: string;
-        menuItem: string[];
+		menuItem: string[];
         numberText: string;
         numberOfDigits: number;
-    };
+	};
 }
 
 export const promptNode = createNodeDescriptor({
@@ -86,23 +86,23 @@ export const promptNode = createNodeDescriptor({
         },
     ],
     form: [{
-        type: "field",
-        key: "promptType"
-    }, {
-        type: "field",
-        key: "menuText"
-    }, {
-        type: "field",
-        key: "menuItem"
-    }, {
-        type: "field",
-        key: "numberText"
-    }, {
-        type: "field",
-        key: "numberOfDigits"
-    }
+            type: "field",
+            key: "promptType"
+        }, {
+            type: "field",
+            key: "menuText"
+        }, {
+            type: "field",
+            key: "menuItem"
+        }, {
+            type: "field",
+            key: "numberText"
+        }, {
+            type: "field",
+            key: "numberOfDigits"
+        }
     ],
-    function: async ({ cognigy, config }: IPromptParams) => {
+    function: async({ cognigy, config }: IPromptParams) => {
         const { api } = cognigy;
         const { promptType, menuText, menuItem, numberText, numberOfDigits } = config;
         let menu: any = {};
@@ -130,24 +130,24 @@ export const promptNode = createNodeDescriptor({
         }
 
         api.output('', {
-            "_cognigy": {
-                "_spoken": {
-                    "json": {
-                        "activities": [{
-                            "type": "event",
-                            "name": "prompt",
-                            "activityParams": {
-                                promptType,
-                                menuText,
-                                menu,
-                                numberText,
-                                numberOfDigits
-                            }
-                        }
-                        ]
-                    }
-                }
-            }
-        });
+			"_cognigy": {
+				"_spoken": {
+					"json": {
+						"activities": [{
+								"type": "event",
+								"name": "prompt",
+								"activityParams": {
+                                    promptType,
+                                    menuText,
+                                    menu,
+                                    numberText,
+                                    numberOfDigits
+								}
+							}
+						]
+					}
+				}
+			}
+		});
     }
 });

@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-// import axios from 'axios';
+import axios from 'axios';
 const rp = require('request-promise');
 
 export interface IGetAuthenticationTokenParams extends INodeFunctionBaseParams {
@@ -11,6 +11,7 @@ export interface IGetAuthenticationTokenParams extends INodeFunctionBaseParams {
 		redirectUri: string;
 		scope: string;
 		authCode: string;
+		tenant: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -58,6 +59,12 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 			params: {
 				required: true,
 			},
+		},
+		{
+			key: "tenant",
+			label: "Tenant (ID)",
+			defaultValue: "common",
+			type: "cognigyText"
 		},
 		{
 			key: "storeLocation",
@@ -109,6 +116,14 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "tenantSection",
+			label: "Tenant",
+			defaultCollapsed: true,
+			fields: [
+				"tenant",
+			]
 		}
 	],
 	form: [
@@ -116,11 +131,12 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 		{ type: "field", key: "redirectUri" },
 		{ type: "field", key: "scope" },
 		{ type: "field", key: "authCode" },
+		{ type: "section", key: "tenantSection" },
 		{ type: "section", key: "storage" }
 	],
 	function: async ({ cognigy, config }: IGetAuthenticationTokenParams) => {
 		const { api } = cognigy;
-		const { redirectUri, scope, authCode, connection, storeLocation, inputKey, contextKey } = config;
+		const { redirectUri, scope, authCode, tenant, connection, storeLocation, inputKey, contextKey } = config;
 		const { clientId, clientSecret } = connection;
 
 		const tokenPayload = `client_id=${clientId}`
@@ -131,29 +147,17 @@ export const getAuthenticationTokenNode = createNodeDescriptor({
 			+ `&client_secret=${clientSecret}`;
 
 		try {
-			const response = await rp({
-				method: 'POST',
-				uri: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+			const response = await axios.post(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`, tokenPayload, {
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
-
-				},
-				body: tokenPayload,
-				json: true,
-				resolveWithFullResponse: true
+				}
 			});
 
-			// const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', tokenPayload, {
-			// 	headers: {
-			// 		'Content-Type': 'application/x-www-form-urlencoded'
-			// 	}
-			// });
-
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response, "simple");
+				api.addToContext(contextKey, response.data, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response);
+				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

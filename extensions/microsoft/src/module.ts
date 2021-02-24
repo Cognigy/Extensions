@@ -5,6 +5,7 @@ import { getAuthenticationTokenNode } from "./nodes/getAuthenticationToken";
 import { getEventsFromCalendarNode } from "./nodes/getEventsFromCalendar";
 import { scheduleMeetingNode } from "./nodes/scheduleMeeting";
 import { getUserDetailsNode } from "./nodes/getUserDetails";
+import { sendChannelMessageNode } from "./nodes/microsoft-teams/sendChannelMessage";
 
 
 export default createExtension({
@@ -13,7 +14,8 @@ export default createExtension({
 		getAuthenticationTokenNode,
 		getEventsFromCalendarNode,
 		scheduleMeetingNode,
-		getUserDetailsNode
+		getUserDetailsNode,
+		sendChannelMessageNode
 	],
 	connections: [
 		loginConnection

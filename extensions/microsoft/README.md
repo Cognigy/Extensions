@@ -45,12 +45,13 @@ This node returns the final `access_token`:
 }
 ```
 
-### Use the Graph API
+# Use the Graph API
 
 After storing the **access_token** into the Cognigy Context, the AI is ready to call Graph API functions by adding the specific nodes to a Flow.
 
-**Nodes:**
 
-- Get User Details
-- Schedule Meeting
-- Get Events from Calendar
+## Node: Send Channel Message
+
+This Flow nodes sends an HTML message to a specific Microsoft Teams channel (`channelId`) in a team (`teamId`). In order to do so, one needs to add the following permission scope:
+
+1. ChannelMessage.Send

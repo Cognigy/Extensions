@@ -7,7 +7,7 @@
     "build": "parcel build --out-file dist/microsoft-auth.webchat-plugin.js src/index.jsx",
     "watch": "parcel watch --out-filedist/microsoft-auth.webchat-plugin.js src/index.jsx"
   },
-  "author": "",
+  "author": "Cognigy GmbH",
   "license": "ISC",
   "devDependencies": {
     "memoize-one": "^5.0.4",

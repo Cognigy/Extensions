@@ -49,19 +49,28 @@ export const startAuthenticationNode = createNodeDescriptor({
 			label: "Tenant (ID)",
 			defaultValue: "common",
 			type: "cognigyText"
-		},
+		}
 	],
-	sections: [],
+	sections: [
+		{
+			key: "tenantSection",
+			label: "Tenant",
+			defaultCollapsed: true,
+			fields: [
+				"tenant",
+			]
+		}
+	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "redirectUri" },
-		{ type: "field", key: "tenant" },
 		{ type: "field", key: "scope" },
+		{ type: "section", key: "tenantSection" }
 	],
 	function: async ({ cognigy, config }: IStartAuthenticationParams) => {
 		const { api } = cognigy;
 		const { redirectUri, scope, tenant, connection } = config;
-		const { clientId, clientSecret } = connection;
+		const { clientId } = connection;
 
 		/* trigger the microsoft login webchat plugin */
 		api.output('', {

@@ -13,7 +13,7 @@ export interface IStartAuthenticationParams extends INodeFunctionBaseParams {
 }
 export const startAuthenticationNode = createNodeDescriptor({
 	type: "startAuthentication",
-	defaultLabel: "Start Authentication",
+	defaultLabel: "Display Sign In Button",
 	fields: [
 		{
 			key: "connection",

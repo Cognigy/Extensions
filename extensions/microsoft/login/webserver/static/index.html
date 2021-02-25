@@ -13,7 +13,11 @@
 		//Start the webchat PLEASE CHANGE THE CONFIG URL (Can be copied from your Webchat Endpoint in Cognigy)
 		initWebchat('...', {
 			forceWebsockets: true,
-			settings: {}
+			settings: {
+				title: "Microsoft Login",
+				colorScheme: "#00a2ed",
+				headerLogoUrl: "https://github.com/Cognigy/Extensions/blob/feature/microsoft-teams/extensions/microsoft/icon.png?raw=true"
+			}
 		})
 			.then(webchat => {
 				window.cognigyWebchat = webchat;

@@ -1,6 +1,6 @@
-# Microsoft Login Webserver
+# Microsoft Login Redirect URI / Auth Callback (Webserver)
 
-In order to login to a Microsoft account, a webserver is required that forwards the authentication from `login.microsoft.com` to the Webchat and thus to Cognigy.AI.
+In order to login to a Microsoft account, a webserver is required that forwards the authentication from `login.microsoft.com` / `login.microsoftonline.com` to the Webchat and thus to Cognigy.AI.
 
 ## Configure the Server
 
@@ -12,6 +12,7 @@ In order to login to a Microsoft account, a webserver is required that forwards 
 
 1. Run `http-server static/` in the `./webserver/` folder.
 2. Open a browser and visit `http://localhost:8080`.
+
 Now you can talk to your Cognigy.AI virtual agent.
 
 ## Register an Azure Application

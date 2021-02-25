@@ -19,7 +19,7 @@ export interface IGetAuthenticationTokenParams extends INodeFunctionBaseParams {
 }
 export const getAuthenticationTokenNode = createNodeDescriptor({
 	type: "getAuthenticationToken",
-	defaultLabel: "Get Authentication Token",
+	defaultLabel: "Get Access Token",
 	fields: [
 		{
 			key: "connection",

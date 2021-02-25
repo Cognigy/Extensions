@@ -1,6 +1,10 @@
 # Use the Graph API
 
-After storing the **access_token** into the Cognigy Context, the AI is ready to call Graph API functions by adding the specific nodes to a Flow.
+After storing the Access Token (`access_token`) into the Cognigy Context, the AI is ready to call Graph API functions by adding the specific nodes to a Flow.
+
+- Access the token via Cognigy Script:  `{{context.microsoft.auth.access_token}}`
+
+---
 
 ## Node: Get User Details
 
@@ -34,6 +38,6 @@ With this Flow node, the virtual agent can automatically schedule a meeting in t
 
 ## Node: Microsoft Teams - Send Channel Message
 
-This Flow nodes sends an HTML message to a specific Microsoft Teams channel (`channelId`) in a team (`teamId`). In order to do so, one needs to add the following permission scope:
+This Flow nodes sends an HTML message to a specific Microsoft Teams channel (`channelId` ([Read More](https://docs.microsoft.com/en-us/graph/api/user-list-joinedteams?view=graph-rest-1.0&tabs=http))) in a team (`teamId` ([Read More](https://docs.microsoft.com/en-us/graph/api/channel-list?view=graph-rest-1.0&tabs=http))). In order to do so, one needs to add the following permission scope in the authentication nodes:
 
 1. ChannelMessage.Send

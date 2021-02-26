@@ -15,7 +15,6 @@ export interface IGetTodoListsParams extends INodeFunctionBaseParams {
 export const getTodoListsNode = createNodeDescriptor({
 	type: "getTodoLists",
 	defaultLabel: "Get To Do Lists",
-    summary: "Get To Do lists for the logged in user in order to use it for further steps in the conversation.",
 	fields: [
 		{
 			key: "accessToken",

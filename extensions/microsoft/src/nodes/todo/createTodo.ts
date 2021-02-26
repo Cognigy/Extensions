@@ -18,7 +18,6 @@ export interface ICreateTodoParams extends INodeFunctionBaseParams {
 export const createTodoNode = createNodeDescriptor({
 	type: "createToDo",
 	defaultLabel: "Create To Do",
-    summary: "Create a new To Do task in a specific list for the logged in user.",
 	fields: [
 		{
 			key: "accessToken",
@@ -132,7 +131,7 @@ export const createTodoNode = createNodeDescriptor({
 			]
 		},
         {
-			key: "Details",
+			key: "details",
 			label: "Details",
 			defaultCollapsed: true,
 			fields: [

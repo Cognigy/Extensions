@@ -83,3 +83,16 @@ This node can be used in order to get all available **To Do** lists for the logg
 - Tasks.ReadWrite
 
 After, for example, using the **Get To Do Lists** node, the virtual agent can create a new **task** inside one of the available lists. Therefore, the `listId` and the `title` need to be configured. Additionally, the `importance` and `description` (HTML) can be added. As soon as the node was executed, the task is added to the list.
+
+## Node: Outlook - Send Mail
+
+**Scope:**
+
+- Mail.Send
+
+With this node, Cognigy.AI can send an email with the currently logged in Microsoft user without providing further SMTP information. In order to do so, the following information need to be configured:
+
+1. Subject
+2. Message
+3. List of Recipients
+4. (opional) List of CC Recipients

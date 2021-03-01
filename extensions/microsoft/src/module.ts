@@ -6,6 +6,9 @@ import { getEventsFromCalendarNode } from "./nodes/getEventsFromCalendar";
 import { scheduleMeetingNode } from "./nodes/scheduleMeeting";
 import { getUserDetailsNode } from "./nodes/getUserDetails";
 import { sendChannelMessageNode } from "./nodes/microsoft-teams/sendChannelMessage";
+import { getTodoListsNode } from "./nodes/todo/getTodoLists";
+import { createTodoNode } from "./nodes/todo/createTodo";
+import { sendOutlookMailNode } from "./nodes/outlook/sendMail";
 
 
 export default createExtension({
@@ -15,7 +18,11 @@ export default createExtension({
 		getEventsFromCalendarNode,
 		scheduleMeetingNode,
 		getUserDetailsNode,
-		sendChannelMessageNode
+		sendChannelMessageNode,
+		getTodoListsNode,
+		createTodoNode,
+		sendOutlookMailNode
+
 	],
 	connections: [
 		loginConnection

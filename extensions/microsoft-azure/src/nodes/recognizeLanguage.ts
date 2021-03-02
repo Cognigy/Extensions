@@ -1,7 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const request = require('request');
-const https = require('https');
-
+import axios from 'axios';
 
 export interface IRecognizeLanguageParams extends INodeFunctionBaseParams {
 	config: {
@@ -32,6 +30,7 @@ export const recognizeLanguageNode = createNodeDescriptor({
 			key: "text",
 			label: "Text",
 			type: "cognigyText",
+			description: "The text that should be used in order to recognize the language",
 			defaultValue: "{{input.text}}",
 			params: {
 				required: true
@@ -60,7 +59,7 @@ export const recognizeLanguageNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "microsoft.azure.language",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -70,7 +69,7 @@ export const recognizeLanguageNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "microsoft.azure.language",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -102,69 +101,37 @@ export const recognizeLanguageNode = createNodeDescriptor({
 		const { connection, text, storeLocation, inputKey, contextKey } = config;
 		const { key, region } = connection;
 
-		return new Promise((resolve, reject) => {
-			const accessKey = key;
-
-			const uri = `${region}.api.cognitive.microsoft.com`;
-			const path = '/text/analytics/v2.0/languages';
-
-			const responseHandler = (response) => {
-				let body = '';
-				response.on('data', (d) => {
-					body += d;
-				});
-				response.on('end', () => {
-					try {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, JSON.parse(body), "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, JSON.parse(body));
+		try {
+			const response = await axios({
+				method: "POST",
+				url: `https://${region}.api.cognitive.microsoft.com/text/analytics/v3.0/languages`,
+				headers: {
+					'Ocp-Apim-Subscription-Key': key,
+					'Content-Type': 'application/json'
+				},
+				data: {
+					"documents": [
+						{
+							"id": "1",
+							text
 						}
-					} catch (e) {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, { "error": e.message }, "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, { "error": e.message });
-						}
-					}
-				});
-				response.on('error', (err) => {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { "error": err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { "error": err.message });
-					}
-				});
-			};
+					]
+				}
+			});
 
-			const getLanguage = (documents) => {
-				const body = JSON.stringify(documents);
-
-				const requestParams = {
-					method: 'POST',
-					hostname: uri,
-					path: path,
-					headers: {
-						'Ocp-Apim-Subscription-Key': accessKey,
-					}
-				};
-
-				const req = https.request(requestParams, responseHandler);
-				req.write(body);
-				req.end();
-			};
-
-			const documents = {
-				'documents': [
-					{ 'id': '1', 'text': text }
-				]
-			};
-
-			getLanguage(documents);
-
-		});
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
+			}
+		}
 	}
 });

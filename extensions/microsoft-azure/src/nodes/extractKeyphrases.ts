@@ -1,6 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const request = require('request');
-const https = require('https');
+import axios from 'axios';
 
 
 export interface IExtractKeyphrasesParams extends INodeFunctionBaseParams {
@@ -33,6 +32,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "text",
 			label: "Text",
 			type: "cognigyText",
+			description: "The text that should be used for extracting keyphrases",
 			defaultValue: "{{input.text}}",
 			params: {
 				required: true
@@ -84,7 +84,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "microsoft.azure.keyphrases",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -94,7 +94,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "microsoft.azure.keyphrases",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -127,69 +127,38 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 		const { connection, text, language, storeLocation, inputKey, contextKey } = config;
 		const { key, region } = connection;
 
-		return new Promise((resolve, reject) => {
-			const accessKey = key;
-
-			const uri = `${region}.api.cognitive.microsoft.com`;
-			const path = '/text/analytics/v2.0/keyPhrases';
-
-			const responseHandler = (response) => {
-				let body = '';
-				response.on('data', (d) => {
-					body += d;
-				});
-				response.on('end', () => {
-					try {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, JSON.parse(body), "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, JSON.parse(body));
+		try {
+			const response = await axios({
+				method: "POST",
+				url: `https://${region}.api.cognitive.microsoft.com/text/analytics/v3.0/keyPhrases`,
+				headers: {
+					'Ocp-Apim-Subscription-Key': key,
+					'Content-Type': 'application/json'
+				},
+				data: {
+					"documents": [
+						{
+							"id": "1",
+							text,
+							language
 						}
-					} catch (e) {
-						if (storeLocation === "context") {
-							api.addToContext(contextKey, { "error": e.message }, "simple");
-						} else {
-							// @ts-ignore
-							api.addToInput(inputKey, { "error": e.message });
-						}
-					}
-				});
-				response.on('error', (err) => {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { "error": err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { "error": err.message });
-					}
-				});
-			};
+					]
+				}
+			});
 
-			const getKeyPhrases = (documents) => {
-				const body = JSON.stringify(documents);
-
-				const requestParams = {
-					method: 'POST',
-					hostname: uri,
-					path: path,
-					headers: {
-						'Ocp-Apim-Subscription-Key': accessKey,
-					}
-				};
-
-				const req = https.request(requestParams, responseHandler);
-				req.write(body);
-				req.end();
-			};
-
-			const documents = {
-				'documents': [
-					{ 'id': '1', 'language': language, 'text': text }
-				]
-			};
-
-			getKeyPhrases(documents);
-
-		});
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
+			}
+		}
 	}
 });

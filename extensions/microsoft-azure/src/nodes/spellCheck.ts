@@ -1,6 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const request = require('request');
-const https = require('https');
+import axios from 'axios';
 
 
 export interface ISpellCheckParams extends INodeFunctionBaseParams {
@@ -32,6 +31,7 @@ export const spellCheckNode = createNodeDescriptor({
 			key: "text",
 			label: "Text",
 			type: "cognigyText",
+			description: "The text that should be checked",
 			defaultValue: "{{input.text}}",
 			params: {
 				required: true
@@ -49,16 +49,8 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "es-ES"
 					},
 					{
-						label: "es-MX",
-						value: "es-MX"
-					},
-					{
 						label: "Catalan",
 						value: "es-CL"
-					},
-					{
-						label: "es-AR",
-						value: "es-AR"
 					},
 					{
 						label: "Russian",
@@ -69,7 +61,7 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "pt-PT"
 					},
 					{
-						label: "pt-BR",
+						label: "Brazilian Portuguese",
 						value: "pt-BR"
 					},
 					{
@@ -93,19 +85,19 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "it"
 					},
 					{
-						label: "German",
+						label: "Swiss German",
 						value: "de-CH"
 					},
 					{
-						label: "de-DE",
+						label: "German",
 						value: "de-DE"
 					},
 					{
-						label: "de-AT",
+						label: "Austrian German",
 						value: "de-AT"
 					},
 					{
-						label: "fr-CH",
+						label: "Swiss French",
 						value: "fr-CH"
 					},
 					{
@@ -113,11 +105,7 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "fr-FR"
 					},
 					{
-						label: "fr-CA",
-						value: "fr-CA"
-					},
-					{
-						label: "fr-BE",
+						label: "Belgium French",
 						value: "fr-BE"
 					},
 					{
@@ -125,7 +113,7 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "fi"
 					},
 					{
-						label: "English",
+						label: "US English",
 						value: "en-US"
 					},
 					{
@@ -133,35 +121,11 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "en-GB"
 					},
 					{
-						label: "en-ZA",
-						value: "en-ZA"
-					},
-					{
-						label: "en-PH",
-						value: "en-PH"
-					},
-					{
-						label: "en-NZ",
+						label: "New Zealand English",
 						value: "en-NZ"
 					},
 					{
-						label: "en-MY",
-						value: "en-MY"
-					},
-					{
-						label: "en-ID",
-						value: "en-ID"
-					},
-					{
-						label: "en-IN",
-						value: "en-IN"
-					},
-					{
-						label: "en-CA",
-						value: "en-CA"
-					},
-					{
-						label: "en-AU",
+						label: "Australian English",
 						value: "en-AU"
 					},
 					{
@@ -173,27 +137,15 @@ export const spellCheckNode = createNodeDescriptor({
 						value: "ar"
 					},
 					{
-						label: "zh-CN",
-						value: "zh-CN"
-					},
-					{
-						label: "zh-HK",
-						value: "zh-HK"
-					},
-					{
-						label: "zh-TW",
-						value: "zh-TW"
-					},
-					{
 						label: "Danish",
 						value: "da"
 					},
 					{
-						label: "nl-BE",
+						label: "Belgium Dutch",
 						value: "nl-BE"
 					}
 				],
-				required: false
+				required: true
 			},
 		},
 		{
@@ -219,7 +171,7 @@ export const spellCheckNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "spellcheck",
+			defaultValue: "microsoft.azure.spellcheck",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -229,7 +181,7 @@ export const spellCheckNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "spellcheck",
+			defaultValue: "microsoft.azure.spellcheck",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -262,56 +214,29 @@ export const spellCheckNode = createNodeDescriptor({
 		const { connection, text, language, storeLocation, inputKey, contextKey } = config;
 		const { key } = connection;
 
-		const host = 'api.cognitive.microsoft.com';
-		const path = '/bing/v7.0/spellcheck';
-		const queryString = `?mkt=${language}&mode=proof`;
+		try {
+			const response = await axios({
+				method: "GET",
+				url: `https://api.cognitive.microsoft.com/bing/v7.0/spellcheck?mkt=${language}&mode=proof&text=${text}`,
+				headers: {
+					'Ocp-Apim-Subscription-Key': key,
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+			});
 
-		const requestParams = {
-			method: 'POST',
-			hostname: host,
-			path: path + queryString,
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Content-Length': text.length + 5,
-				'Ocp-Apim-Subscription-Key': key,
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
 			}
-		};
-
-		const responseHandler = (response) => {
-			let body = '';
-			response.on('data', (d) => {
-				body += d;
-			});
-			response.on('end', () => {
-				try {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, JSON.parse(body), "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, JSON.parse(body));
-					}
-				} catch (e) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { "error": e.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { "error": e.message });
-					}
-				}
-			});
-			response.on('error', (err) => {
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, { "error": err.message }, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, { "error": err.message });
-				}
-			});
-		};
-
-		const req = https.request(requestParams, responseHandler);
-		req.write("text=" + text);
-		req.end();
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
+			}
+		}
 	}
 });

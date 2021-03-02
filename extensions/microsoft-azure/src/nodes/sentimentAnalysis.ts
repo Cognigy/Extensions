@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios from 'axios';
 
 
-export interface IExtractKeyphrasesParams extends INodeFunctionBaseParams {
+export interface ISentimentAnalysisParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
@@ -15,9 +15,9 @@ export interface IExtractKeyphrasesParams extends INodeFunctionBaseParams {
 		contextKey: string;
 	};
 }
-export const extractKeyphrasesNode = createNodeDescriptor({
-	type: "extractKeyphrases",
-	defaultLabel: "Extract Keyphrases",
+export const sentimentAnalysisNode = createNodeDescriptor({
+	type: "sentimentAnalysis",
+	defaultLabel: "Analyse Sentiment",
 	fields: [
 		{
 			key: "connection",
@@ -32,7 +32,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "text",
 			label: "Text",
 			type: "cognigyText",
-			description: "The text that should be used for extracting keyphrases",
+			description: "The text that should be used for analysing the sentiment",
 			defaultValue: "{{input.text}}",
 			params: {
 				required: true
@@ -84,7 +84,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "microsoft.azure.keyphrases",
+			defaultValue: "microsoft.azure.sentiment",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -94,7 +94,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "microsoft.azure.keyphrases",
+			defaultValue: "microsoft.azure.sentiment",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -122,7 +122,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 	appearance: {
 		color: "#007fff"
 	},
-	function: async ({ cognigy, config }: IExtractKeyphrasesParams) => {
+	function: async ({ cognigy, config }: ISentimentAnalysisParams) => {
 		const { api } = cognigy;
 		const { connection, text, language, storeLocation, inputKey, contextKey } = config;
 		const { key, region } = connection;
@@ -130,7 +130,7 @@ export const extractKeyphrasesNode = createNodeDescriptor({
 		try {
 			const response = await axios({
 				method: "POST",
-				url: `https://${region}.api.cognitive.microsoft.com/text/analytics/v3.0/keyPhrases`,
+				url: `https://${region}.api.cognitive.microsoft.com/text/analytics/v3.0/sentiment`,
 				headers: {
 					'Ocp-Apim-Subscription-Key': key,
 					'Content-Type': 'application/json'

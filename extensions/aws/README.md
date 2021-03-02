@@ -79,7 +79,7 @@ The options are similar to [S3 Put Object](#Node-S3-Put-Object).
 ----
 ## Node: SayPolly
 
-Uses [AWS Polly](https://aws.amazon.com/polly/) to turn text into audio speech, via the AWS [Polly serice](https://docs.aws.amazon.com/polly/index.html).
+Uses [AWS Polly](https://aws.amazon.com/polly/) to turn text into audio speech, via the AWS [Polly service](https://docs.aws.amazon.com/polly/index.html).
 
 As soon as the node gets executed, it will return the following response: 
 ```json
@@ -111,7 +111,7 @@ To test this, you can use the following HTML file:
         <source src="" type="audio/mpeg">
     </audio>
     <!-- <script src="./persistent-menu.webchat-plugin.js"></script> -->
-    <script src="https://github.com/Cognigy/WebchatWidget/releases/download/v2.10.1/webchat.js"></script>
+    <script src="https://github.com/Cognigy/WebchatWidget/releases/download/v2.25.2/webchat.js"></script>
     <script>
         initWebchat('<webchat-config-url>', {
             settings: {

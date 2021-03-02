@@ -143,14 +143,6 @@ export const getNewsHeadlines = createNodeDescriptor({
 			]
 		},
 		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
-		},
-		{
 			key: "newsOptions",
 			label: "News Options",
 			defaultCollapsed: false,
@@ -163,11 +155,10 @@ export const getNewsHeadlines = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "query" },
 		{ type: "section", key: "newsOptions" },
 		{ type: "section", key: "storage" },
-
 	],
 	appearance: {
 		color: "#000000"

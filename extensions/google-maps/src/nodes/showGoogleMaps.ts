@@ -12,9 +12,9 @@ export interface IShowGoogleMaps extends INodeFunctionBaseParams {
 		connection: {
 			key: string;
 		};
-		zoom: any;
-		longitude: any;
-		latitude: any;
+		zoom: number;
+		longitude: number;
+		latitude: number;
 		searchchoice: string;
 		storeLocation: string;
 		inputKey: string;
@@ -67,8 +67,6 @@ export const showGoogleMaps = createNodeDescriptor({
 				value: "address"
 			},
 			params: {
-				disabled: false,
-				placeholder: "",
 				required: true
 			}
 		},
@@ -76,15 +74,12 @@ export const showGoogleMaps = createNodeDescriptor({
 			key: "latitude",
 			label: "Latitude",
 			type: "cognigyText",
-			defaultValue: "",
 			condition: {
 				key: "searchchoice",
 				value: "coordinates"
 			},
 			params: {
-				disabled: false,
-				placeholder: "",
-				required: false
+				required: true
 			}
 		},
 		{
@@ -96,18 +91,15 @@ export const showGoogleMaps = createNodeDescriptor({
 				value: "coordinates"
 			},
 			params: {
-				disabled: false,
-				placeholder: "",
-				required: false
+				required: true
 			}
 		},
 		{
 			key: "zoom",
 			label: "Map Zoom",
 			type: "cognigyText",
+			defaultValue: "12",
 			params: {
-				disabled: false,
-				placeholder: "",
 				required: false
 			}
 		},
@@ -134,7 +126,7 @@ export const showGoogleMaps = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "google.maps",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -144,7 +136,7 @@ export const showGoogleMaps = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "google.maps",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -153,25 +145,17 @@ export const showGoogleMaps = createNodeDescriptor({
 	],
 	sections: [
 		{
-			key: "zoomSection",
-			label: "Zoom",
+			key: "advanced",
+			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
 				"zoom",
 			]
 		},
 		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
-		},
-		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",
@@ -180,12 +164,12 @@ export const showGoogleMaps = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "searchchoice" },
 		{ type: "field", key: "searchquery" },
 		{ type: "field", key: "latitude" },
 		{ type: "field", key: "longitude" },
-		{ type: "section", key: "zoomSection" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
@@ -193,60 +177,39 @@ export const showGoogleMaps = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IShowGoogleMaps) => {
 		const { api } = cognigy;
-		const { connection, storeLocation, inputKey, contextKey, searchquery, latitude, longitude, zoom } = config;
+		let { connection, storeLocation, inputKey, contextKey, searchquery, latitude, longitude, zoom, searchchoice } = config;
+		const { key } = connection;
 
-		let request_success: boolean = false;
+		try {
 
-		let longnew: number = longitude;
-		let latnew: number = latitude;
-		let zoomnew: number = zoom;
-
-		if (isNaN(latitude) || !latitude) {
-			latnew = (51.2141562) as number;
-		}
-		if (isNaN(longitude) || !longitude) {
-			longnew = (6.7488952) as number;
-		}
-		if (isNaN(zoom) || !zoom) {
-			zoomnew = 10 as number;
-		}
-		if (searchquery !== null || searchquery !== "") {
-
-			const response = await getGoogleMapsLocation(connection.key, searchquery);
-
-			try {
-				const { lng, lat } = response.location.geometry.location;
-				request_success;
-				longnew = lng;
-				latnew = lat;
-			} catch (error) {
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, error, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, error);
-				}
+			// check selected value for searchchoice
+			switch (searchchoice) {
+				case "address":
+					const response = await getGoogleMapsLocation(key, searchquery);
+					const { lng, lat } = response.location.geometry.location;
+					latitude = lat;
+					longitude = lng;
+					break;
 			}
-		}
 
-		if (request_success || (longitude != null && latitude != null)) {
 			api.output('', {
 				"_plugin": {
 					"type": 'google-maps',
 					"center": {
-						"lat": latnew,
-						"lng": longnew
+						"lat": Number(latitude),
+						"lng": Number(longitude)
 					},
-					"zoom": Number(zoomnew),
-					"bootstrapURLKeys": connection.key
+					"zoom": Number(zoom),
+					"apikey": key
 				}
 			});
-		} else {
+
+		} catch (error) {
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, "location not found", "simple");
+				api.addToContext(contextKey, error, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, "location not found");
+				api.addToInput(inputKey, error);
 			}
 		}
 	}

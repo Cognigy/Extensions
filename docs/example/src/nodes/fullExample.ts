@@ -12,7 +12,7 @@ export interface IReverseSayParams extends INodeFunctionBaseParams {
 		cognigytext: string;
 		textarray: string[];
 		checkbox: boolean;
-		text: string;
+		cognigytextconditional: string;
 		chips: string[];
 		number: number;
 		slider: number;
@@ -23,11 +23,9 @@ export interface IReverseSayParams extends INodeFunctionBaseParams {
 		timepicker: string;
 		json: any;
 		xml: any;
-		typescript: any;
 		say: any;
-		rule: any;
 		connection: any;
-	}
+	};
 }
 
 export const fullExample = createNodeDescriptor({
@@ -44,9 +42,30 @@ export const fullExample = createNodeDescriptor({
 			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
 			defaultValue: "My default text", // default value for this field
 			params: { // extra parameters which differ by field type
-				disabled: false, 
-				placeholder: "", 
-				required: true // any field can be made required
+				disabled: false,
+				placeholder: "",
+				required: true// any field can be made required
+			}
+		},
+		{
+			key: "checkbox",
+			label: "Check me to show another text field",
+			type: "checkbox",
+			defaultValue: false
+		},
+		{
+			key: "cognigytextconditional", // the internal key for this field, has to be unique on the node
+			label: "Conditional: Text with Cognigy Script", // label of the field (shows above field)
+			type: "cognigyText", // type of field (use ctrl+space for intellisense autosuggestion to see all types)
+			defaultValue: "My default text", // default value for this field
+			params: { // extra parameters which differ by field type
+				disabled: false,
+				placeholder: "",
+				required: true// any field can be made required
+			},
+			condition: { // this condition has to evaluate to true in order for the field to show
+				key: "checkbox", // the field key to search for (here: the checkbox above)
+				value: true // the value the condition field (checkbox) has to have for this field to show. Can be boolean, string, number.
 			}
 		},
 		{
@@ -59,26 +78,6 @@ export const fullExample = createNodeDescriptor({
 			]
 		},
 		{
-			key: "checkbox",
-			label: "Check me",
-			type: "checkbox",
-			defaultValue: true
-		},
-		{
-			key: "text",
-			label: "Simple text",
-			type: "text",
-			params: {
-				multiline: true,
-				placeholder: "Philipp",
-				autoFocus: false
-			},
-			condition: { // this condition has to evaluate to true in order for the field to show
-				key: "checkbox", // the field key to search for (here: the checkbox above)
-				value: true // the value the condition field (checkbox) has to have for this field to show. Can be boolean, string, number.
-			},
-		},
-		{
 			key: "chips",
 			label: "I contain chips",
 			type: "chipInput"
@@ -88,7 +87,7 @@ export const fullExample = createNodeDescriptor({
 			label: "A number field",
 			type: "number",
 			params: {
-				min: 1000, 
+				min: 1000,
 				max: 2000
 			}
 		},
@@ -97,7 +96,7 @@ export const fullExample = createNodeDescriptor({
 			label: "A slider",
 			type: "slider",
 			params: {
-				min: 1000, 
+				min: 1000,
 				max: 2000,
 				step: 100
 			}
@@ -113,7 +112,7 @@ export const fullExample = createNodeDescriptor({
 			label: "Date Picker",
 			type: "date",
 			params: {
-				locale: "en" //this is a moment.js locale
+				locale: "en" // this is a moment.js locale
 			}
 		},
 		{
@@ -121,7 +120,7 @@ export const fullExample = createNodeDescriptor({
 			label: "Date Time Picker",
 			type: "datetime",
 			params: {
-				locale: "en" //this is a moment.js locale
+				locale: "en" // this is a moment.js locale
 			}
 		},
 		{
@@ -129,7 +128,7 @@ export const fullExample = createNodeDescriptor({
 			label: "Date Range Picker",
 			type: "daterange",
 			params: {
-				locale: "en" //this is a moment.js locale
+				locale: "en" // this is a moment.js locale
 			}
 		},
 		{
@@ -137,7 +136,7 @@ export const fullExample = createNodeDescriptor({
 			label: "Time Picker",
 			type: "time",
 			params: {
-				locale: "en" //this is a moment.js locale
+				locale: "en" // this is a moment.js locale
 			}
 		},
 		{
@@ -149,12 +148,6 @@ export const fullExample = createNodeDescriptor({
 			}
 		},
 		{
-			key: "typescript",
-			type: "typescript",
-			label: "Typescript Input",
-			defaultValue: `console.log("hello world");`
-		},
-		{
 			key: "xml",
 			type: "xml",
 			label: "Xml Input",
@@ -163,11 +156,6 @@ export const fullExample = createNodeDescriptor({
 			key: "say",
 			type: "say",
 			label: "A Cognigy Say Control"
-		},
-		{
-			key: "rule",
-			type: "rule",
-			label: "Rules"
 		},
 		{
 			key: "connection",
@@ -182,14 +170,24 @@ export const fullExample = createNodeDescriptor({
 		{
 			key: "textfields",
 			label: "Text Fields",
-			defaultCollapsed: true,
+			defaultCollapsed: false,
 			fields: [
 				"cognigytext",
-				"text",
+				"checkbox",
+				"cognigytextconditional",
 				"textarray",
-				"timepicker",
 				"chips",
 				"say"
+			]
+		},
+		{
+			key: "other",
+			label: "Other Fields",
+			defaultCollapsed: true,
+			fields: [
+				"number",
+				"toggle",
+				"slider"
 			]
 		},
 		{
@@ -209,26 +207,14 @@ export const fullExample = createNodeDescriptor({
 			defaultCollapsed: true,
 			fields: [
 				"json",
-				"xml",
-				"typescript"
+				"xml"
 			]
 		}
 	],
 	form: [ // if you use sections, you have to use an additional "form" property to describe how the form is rendered.
 		{ type: "section", key: "textfields" },
-		{ type: "field", key: "checkbox" },
-		{ type: "field", key: "toggle" },
-		{ type: "field", key: "number" },
-		{ type: "field", key: "slider" },
-		{ type: "field", key: "rule" },
+		{ type: "section", key: "other" },
 		{ type: "section", key: "datepickers" },
 		{ type: "section", key: "codefields" },
-	],
-
-	function: async ({ cognigy, config }: IReverseSayParams) => {
-		const { api } = cognigy;
-
-		api.output("Your fields contain the following values", null);
-		api.output(JSON.stringify(config, undefined, 4), config);
-	}
+	]
 });

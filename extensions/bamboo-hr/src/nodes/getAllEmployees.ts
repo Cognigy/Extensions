@@ -75,20 +75,11 @@ export const getAllEmployeesNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
 		{ type: "section", key: "storage" },
-
 	],
 	appearance: {
 		color: "#73C41D"

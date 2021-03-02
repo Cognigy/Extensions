@@ -1,5 +1,5 @@
 {
-  "name": "weather",
+  "name": "open-weather-map",
   "version": "4.0.0",
   "description": "Integrates the Open Weather Map with Cognigy.AI",
   "main": "build/module.js",

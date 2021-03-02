@@ -1,17 +1,18 @@
 import { createExtension } from "@cognigy/extension-tools";
-
-import { searchSimpleNode } from "./nodes/searchSimple";
-import { searchWithDSLNode } from "./nodes/searchWithDSL";
-import { elasticSearchConnection } from "./connections/elasticSearchConnection";
+import { apiKeyConnection } from "./connections/apiKeyConnection";
+import { basicConnection } from "./connections/basicConnection";
+import { cloudConnection } from "./connections/cloudConnection";
+import { searchNode } from "./nodes/search";
 
 
 export default createExtension({
 	nodes: [
-		searchSimpleNode,
-		searchWithDSLNode
+		searchNode
 	],
 
 	connections: [
-		elasticSearchConnection
+		cloudConnection,
+		basicConnection,
+		apiKeyConnection
 	]
 });

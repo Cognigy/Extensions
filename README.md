@@ -2,12 +2,17 @@
 
 In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.cognigy.com/docs/flow) are used to build Conversational.AI. There, it could be the case that one needs to integrate a third-party system to store or retreive data. Extensions enable anyone to build JavaScript modules and to expose them as [Flow Nodes](https://docs.cognigy.com/docs/general-usage-information) within Cognigy. There are no restrictions on node modules ([NPM](https://www.npmjs.com/)) or functionality.
 
+### NPM: @cognigy/extension-tools
+
+[![npm](https://img.shields.io/npm/v/@cognigy/extension-tools/latest.svg)](https://www.npmjs.com/package/@cognigy/extension-tools)
 
 ## Contents
 
-- [Get Started](./docs/get-started.md)
-- [Best Practises](./docs/best-practises.md)
-- [Releases](RELEASES.md)
+- [Get Started](https://support.cognigy.com/hc/en-us/articles/360016534459)
+- [Installation](https://support.cognigy.com/hc/en-us/articles/360016505680)
+- [Best Practises](https://support.cognigy.com/hc/en-us/articles/360016505740)
+- [New Feature Request](#new-feature-request)
+- [Releases](https://support.cognigy.com/hc/en-us/articles/360016409380-Extensions)
 
 ## Overview
 
@@ -35,3 +40,10 @@ In order to create a new Extension, please create a new feature branch:
 If you want to fix an existing module, please create a bug branch:
 
 - `git checkout -b bug/<module-name>`
+
+## New Feature Request
+
+Next to the already published integrations, there are a lot of third-party systems out there that could be integrated into Cognigy.AI 4.0 in the future as well. Therefore, one can follow these steps to request a new Extension if there are no developer resources to develop it on their own:
+
+1. [Check if there is a branch that already implements your requested Extension / feature](https://github.com/Cognigy/Extensions/branches)
+2. [Create a new Feature Request](https://github.com/Cognigy/Extensions/issues/new?assignees=&labels=&template=feature_request.md&title=)

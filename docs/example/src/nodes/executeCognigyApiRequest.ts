@@ -13,7 +13,7 @@ export interface IExecuteCognigyApiRequestParams extends INodeFunctionBaseParams
 		connection: {
 			key: string;
 		};
-	}
+	};
 }
 
 export const executeCognigyApiRequest = createNodeDescriptor({
@@ -33,12 +33,12 @@ export const executeCognigyApiRequest = createNodeDescriptor({
 			key: "path",
 			label: "The API path to call. Full path required.",
 			type: "cognigyText",
-			defaultValue: "https://api.chucknorris.io/jokes/random"
+			defaultValue: "https://swapi.dev/api/people/1"
 		}
 	],
 
 	function: async ({ cognigy, config }: IExecuteCognigyApiRequestParams) => {
-		const { api, input } = cognigy;
+		const { api, context } = cognigy;
 		const { path, connection } = config;
 
 		let response, rawResponse: Response;
@@ -47,15 +47,14 @@ export const executeCognigyApiRequest = createNodeDescriptor({
 			rawResponse = await fetch(path);
 			response = await rawResponse.json();
 
-			api.say("The response of your API call is stored in the input object");
+			api.say("The response of your API call is stored in the Context object");
 
 			/* write response into 'input object' */
-			input.apiResponse = response;
+			context.apiResponse = response;
 
 			/* output the connection that was used in this execution */
 			api.say(`The connection that was used during this call: `, connection);
 		} catch (err) {
-			
 			// /* communicate the error in the interaction panel */
 			api.say(`Your response failed. Error was: ${err}`);
 		}

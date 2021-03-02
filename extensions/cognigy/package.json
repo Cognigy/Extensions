@@ -1,6 +1,6 @@
 {
   "name": "cognigy",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Basic Cognigy Extensions",
   "main": "build/module.js",
   "scripts": {
@@ -17,6 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.21.1",
+    "juice": "^7.0.0",
+    "moment": "^2.27.0",
     "nodemailer": "^6.3.1",
     "tslint": "^6.1.2"
   },

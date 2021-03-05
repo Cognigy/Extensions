@@ -1,66 +1,44 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import jsforce from 'jsforce';
 
-export interface IRetrieveEntityParams extends INodeFunctionBaseParams {
+export interface ILoginParams extends INodeFunctionBaseParams {
     config: {
-        connection: {
-            username: string;
-            password: string;
-            loginUrl: string;
-        };
-        entityType: string,
-        entityId: string;
+        username: string;
+        password: string;
+        loginUrl: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
     };
 }
-export const retrieveEntityNode = createNodeDescriptor({
-    type: "retrieveEntity",
-    defaultLabel: "Retrieve Entity",
+export const loginNode = createNodeDescriptor({
+    type: "login",
+    defaultLabel: "Log In",
     fields: [
         {
-            key: "connection",
-            label: "Salesforce CRM Credentials",
-            type: "connection",
+            key: "username",
+            type: "cognigyText",
+            label: "Username",
+            description: "The Salesforce username",
             params: {
-                connectionType: "salesforce-crm",
                 required: true
             }
         },
         {
-            key: "entityType",
-            type: "select",
-            label: "Entity Type",
-            defaultValue: "Contact",
+            key: "password",
+            type: "cognigyText",
+            label: "Password",
+            description: "The Salesforce user password",
             params: {
-                options: [
-                    {
-                        label: "Account",
-                        value: "Account"
-                    },
-                    {
-                        label: "Contact",
-                        value: "Contact"
-                    },
-                    {
-                        label: "Event",
-                        value: "Event"
-                    },
-                    {
-                        label: "Case",
-                        value: "Case"
-                    }
-                ],
                 required: true
-            },
+            }
         },
         {
-            key: "entityId",
+            key: "loginUrl",
             type: "cognigyText",
-            label: "Entity ID",
-            defaultValue: "{{input.salesforce.entity.id}}",
-            description: "The ID of the Salesforce Entity you want to get",
+            label: "Login URL",
+            description: "The Salesforce login URL",
+            defaultValue: "https://login.salesforce.com",
             params: {
                 required: true
             }
@@ -88,7 +66,7 @@ export const retrieveEntityNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "salesforce.entity",
+            defaultValue: "salesforce",
             condition: {
                 key: "storeLocation",
                 value: "input",
@@ -98,7 +76,7 @@ export const retrieveEntityNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "salesforce.entity",
+            defaultValue: "salesforce",
             condition: {
                 key: "storeLocation",
                 value: "context",
@@ -115,22 +93,29 @@ export const retrieveEntityNode = createNodeDescriptor({
                 "inputKey",
                 "contextKey",
             ]
+        },
+        {
+            key: "loginOption",
+            label: "Login Option",
+            defaultCollapsed: true,
+            fields: [
+                "loginUrl"
+            ]
         }
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "entityType" },
-        { type: "field", key: "entityId" },
+        { type: "field", key: "username" },
+        { type: "field", key: "password" },
+        { type: "section", key: "loginOption" },
         { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#009EDB"
     },
-    function: async ({ cognigy, config }: IRetrieveEntityParams) => {
+    function: async ({ cognigy, config }: ILoginParams) => {
         const { api } = cognigy;
-        const { entityType, entityId, connection, storeLocation, contextKey, inputKey } = config;
-        const { username, password, loginUrl } = connection;
-
+        const { username, password, loginUrl, storeLocation, contextKey, inputKey } = config;
 
         try {
 
@@ -138,16 +123,20 @@ export const retrieveEntityNode = createNodeDescriptor({
                 loginUrl
             });
 
-            const userInfo = await conn.login(username, password);
-
-            // Single record creation
-            const entity = await conn.sobject(entityType).retrieve(entityId);
+            const login = await conn.login(username, password);
+            const user = await conn.identity();
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, entity, "simple");
+                api.addToContext(contextKey, {
+                    login,
+                    user
+                }, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, entity);
+                api.addToInput(inputKey, {
+                    login,
+                    user
+                });
             }
 
         } catch (error) {

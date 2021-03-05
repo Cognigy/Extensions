@@ -46,6 +46,10 @@ export const retrieveEntityNode = createNodeDescriptor({
                     {
                         label: "Event",
                         value: "Event"
+                    },
+                    {
+                        label: "Case",
+                        value: "Case"
                     }
                 ],
                 required: true

@@ -12,6 +12,7 @@ export interface ICreateEntityParams extends INodeFunctionBaseParams {
         accountRecord: object;
         contactRecord: object;
         eventRecord: object;
+        caseRecord: object;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -48,6 +49,10 @@ export const createEntityNode = createNodeDescriptor({
                     {
                         label: "Event",
                         value: "Event"
+                    },
+                    {
+                        label: "Case",
+                        value: "Case"
                     }
                 ],
                 required: true
@@ -117,6 +122,24 @@ export const createEntityNode = createNodeDescriptor({
             }
         },
         {
+            key: "caseRecord",
+            type: "json",
+            label: "Case Record",
+            defaultValue: `{
+    "Status": "New",
+    "Origin": "Web",
+    "Subject": "New Case",
+    "Description": "This is a new order"
+}`,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "entityType",
+                value: "Case"
+            }
+        },
+        {
             key: "storeLocation",
             type: "select",
             label: "Where to store the result",
@@ -174,6 +197,7 @@ export const createEntityNode = createNodeDescriptor({
         { type: "field", key: "accountRecord" },
         { type: "field", key: "contactRecord" },
         { type: "field", key: "eventRecord" },
+        { type: "field", key: "caseRecord" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -181,7 +205,7 @@ export const createEntityNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: ICreateEntityParams) => {
         const { api } = cognigy;
-        const { entityType, accountRecord, contactRecord, eventRecord, connection, storeLocation, contextKey, inputKey } = config;
+        const { entityType, accountRecord, contactRecord, eventRecord, caseRecord, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
 
         let entityRecord: object = {};
@@ -194,6 +218,9 @@ export const createEntityNode = createNodeDescriptor({
                 break;
             case 'Event':
                 entityRecord = eventRecord;
+                break;
+            case 'Case':
+                entityRecord = caseRecord;
                 break;
         }
 

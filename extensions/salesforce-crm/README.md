@@ -13,6 +13,60 @@ This Extension is based on jsforce (https://jsforce.github.io/)
     - Salesforce login url, e.g. 'https://test.salesforce.com' or https://login.salesforce.com for production
 
 
+## Node: Log In
+
+If Salesforce should be used in an internal use-case, one could use this node in order to **login** and **identify** a user for further use. For this function, the *username*, *password*, and *login Url* are required. After signing in the user, the following information will be stored to the input or context object:
+
+```json
+{
+"salesforce": {
+    "login": {
+      "id": "...",
+      "organizationId": "...",
+      "url": "https://login.salesforce.com/id/..."
+    },
+    "user": {
+      "id": "https://login.salesforce.com/id/...",
+      "asserted_user": true,
+      "user_id": "...",
+      "organization_id": "...",
+      "username": "a.teusz@cognigy.com",
+      "nick_name": "a.teusz",
+      "display_name": "Alexander Teusz",
+      "email": "a.teusz@cognigy.com",
+      "email_verified": true,
+      "first_name": "Alexander",
+      "last_name": "Teusz",
+      "timezone": "Europe/Berlin",
+      "photos": {
+        "picture": "https://c.salesforce.content.force.com/profilephoto/005/F",
+        "thumbnail": "https://c.salesforce.content.force.com/profilephoto/005/T"
+      },
+      "addr_street": "Speditionstraße 1",
+      "addr_city": "Düsseldorf",
+      "addr_state": "NRW",
+      "addr_country": "DE",
+      "addr_zip": "40221",
+      "mobile_phone": "+49123456789",
+      "mobile_phone_verified": true,
+      "is_lightning_login_user": false,
+      "status": {
+        "created_date": null,
+        "body": null
+      },
+      "urls": {},
+      "active": true,
+      "user_type": "STANDARD",
+      "language": "en_US",
+      "locale": "de_DE_EURO",
+      "utcOffset": 3600000,
+      "last_modified_date": "2021-03-05T15:55:20Z"
+    }
+  }
+}
+```
+
+
 ## Node: Create Entity
 
 All **Salesforce API Fields** are listed in the following PDF File: 

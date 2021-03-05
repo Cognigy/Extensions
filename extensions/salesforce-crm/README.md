@@ -134,6 +134,21 @@ Creates a new **account** in the **Accounts** Salesforce table. The JSON in *Rec
 }
 ```
 
+### Entity: Case
+
+Creates a new **case** in the **Cases** Salesforce table. The JSON in *Case JSON* shows an example.
+
+#### Case JSON
+
+```json
+{
+    "Status": "New",
+    "Origin": "Web",
+    "Subject": "New Case",
+    "Description": "This is a new case"
+}
+```
+
 ## Node: Retrieve Entity
 
 Retrieves the entity by searching for the given ID.

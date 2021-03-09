@@ -15,7 +15,11 @@ This Extension is based on jsforce (https://jsforce.github.io/)
 
 ## Node: Log In
 
-If Salesforce should be used in an internal use-case, one could use this node in order to **login** and **identify** a user for further use. For this function, the *username*, *password*, and *login Url* are required. After signing in the user, the following information will be stored to the input or context object:
+This Node can be used with user-supplied Username and Password in order to **login** and **identify** the user as a Salesforce platform user. For this function, the *username*, *password*, and *login Url* are required.
+
+Note: This Node does **_not_** need to run before other Nodes listed below. It is primarily to verify runtime-supplied Salesforce credentials and return information about the owner of those credentials from Salesforce. Since the the credentials need to be obtained and used in a Flow, security should be considered, such as 'Blind' mode, and this Node may only be applicable to secure, internal use cases.
+
+After signing in the Salesforce user, the following information will be stored to the input or context object:
 
 ```json
 {
@@ -203,3 +207,68 @@ The response looks like the following:
     "success": true,
     "errors": []
 ```
+
+## Node: Query (SOQL)
+
+Carries out a ['Salesforce Object Query Language'](https://developer.salesforce.com/search#stq=SOQL%20Introduction) query, against specific fields in a specific entity type, and returning entity records. The syntax is similar to SQL.
+
+Note that the 'Maximum separate fetches' parameter, under Options, is not a direct limit on the number of records returned. Instead it limits the amount of data and the total time taken, by limiting the number of separate fetches carried out to obtain each chunk of results. It is suggested to experiment with this value to find a reasonable limit that does not take too long to complete, while still returning the records you require.
+
+The response returned into the input or context key will be like:
+```json
+// By default SOQL query, in 'input.salesforce.query':
+"totalSize": 22,
+"done": true,
+"records": [
+  {
+    "attributes": {
+      "type": "Contact",
+      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5fTAAQ"
+    },
+    "Id": "0035g000003j5fTAAQ",
+    "Name": "Rose Gonzalez"
+  },
+  {
+    "attributes": {
+      "type": "Contact",
+      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5fUAAQ"
+    },
+    "Id": "0035g000003j5fUAAQ",
+    "Name": "Sean Forbes"
+  },
+  // ...
+]
+```
+
+## Node: Search (SOSL)
+
+Carries out a ['Salesforce Object Search Language'](https://developer.salesforce.com/search#stq=SOSL%20Introduction) search, searching across fields, and potentially returning aggregate records based on multiple entities. The syntax deviates more from SQL.
+
+Note that SOSL will search across a maximum of 2000 records, being an inherent limit of the Salesforce search facility. By more carefully targeting your search queries, you are less likely to be impacted by this limit.
+
+The response returned into the input or context key will be like:
+```json
+// By default, in 'input.salesforce.search':
+"searchRecords": [
+  {
+    "attributes": {
+      "type": "Contact",
+      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5feAAA"
+    },
+    "Id": "0035g000003j5feAAA",
+    "FirstName": "Jane",
+    "LastName": "Grey"
+  },
+  {
+    "attributes": {
+      "type": "Contact",
+      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5fZAAQ"
+    },
+    "Id": "0035g000003j5fZAAQ",
+    "FirstName": "John",
+    "LastName": "Bond"
+  }
+]
+
+```
+

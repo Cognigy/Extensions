@@ -38,7 +38,7 @@ export const sendAppleAuthNode = createNodeDescriptor({
         }
     ],
 	form: [
-        { type: "field", key: "Text" }
+        { type: "field", key: "response_body" }
         { type: "section", key: "attachment" }
 	],
 	appearance: {

@@ -59,7 +59,7 @@ export const rating = createNodeDescriptor({
       label: "Maximal Rating",
       type: "slider",
       defaultValue: 5,
-      params: { min: 0, max: 10, step: 1 },
+      params: { min: 2, max: 10, step: 1 },
       condition: { key: "variant", value: "heart" }
     },
     { // TODO: remove these duplicates when advanced conditions are available

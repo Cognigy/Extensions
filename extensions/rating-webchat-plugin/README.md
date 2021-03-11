@@ -4,19 +4,19 @@ A companion extension to [Rating Webchat Plugin](https://github.com/Cognigy/Webc
 
 The Show Rating Card node simply sends a message, which is equivalent to running the following in a Code node:
 
-```ts
+```json
 api.say('', {
   "_plugin": {
     "type": "rating",
-    "title": "Rating message example", // Is required
-    "initialRating": 1, // 1, 2, ..., 10
-    "size": "large", // "small", "medium", "large"
-    "variant": "emoji", // "star", "heart", "emoji" 
-    "maxRatingValue": 2, // 2, 3, ..., 10
-    "precision": 1, // 0.5, 1
-    "rateButtonText": "Send Rating",  // Is required
-    "label": "Rating submitted", // Can be empty
-    "payload": "stars" // Can be empty
+    "title": "Rating message example",
+    "initialRating": 1,
+    "size": "large",
+    "variant": "emoji",
+    "maxRatingValue": 2,
+    "precision": 1,
+    "rateButtonText": "Send Rating",
+    "label": "Rating submitted",
+    "payload": "stars"
   }
 });
 ```

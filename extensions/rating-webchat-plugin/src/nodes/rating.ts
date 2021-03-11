@@ -16,14 +16,15 @@ export interface IRatingCardParams extends INodeFunctionBaseParams {
   };
 }
 
-export const rating = createNodeDescriptor({
+export const ratingCardNode = createNodeDescriptor({
   type: "ratingCard",
   defaultLabel: "Show Rating Card",
   fields: [
     {
       key: "title",
       type: "cognigyText",
-      label: "Rating card title",
+      label: "Title",
+      description: "Rating card title",
       defaultValue: "Please give us your rating",
       params: { required: true }
     },
@@ -31,6 +32,7 @@ export const rating = createNodeDescriptor({
       key: "variant",
       type: "select",
       label: "Variant",
+      description: "Which rating icons are shown to the user",
       defaultValue: "star",
       params: {
         options: [
@@ -42,37 +44,42 @@ export const rating = createNodeDescriptor({
     },
     {
       key: "initialRating",
-      label: "Initial rating when card shows up",
+      label: "Initial Rating",
+      description: "Initial rating value when the card shows up",
       type: "slider",
       params: { min: 0, max: 10, step: 1 }
     },
-    { // TODO: remove these duplicates when advanced conditions are available
+    {
       key: "maxRatingValueStar",
       label: "Maximal Rating",
+      description: "Maximal rating value",
       type: "slider",
       defaultValue: 5,
       params: { min: 2, max: 10, step: 1 },
       condition: { key: "variant", value: "star" }
     },
-    { // TODO: remove these duplicates when advanced conditions are available
+    {
       key: "maxRatingValueHeart",
       label: "Maximal Rating",
+      description: "Maximal rating value",
       type: "slider",
       defaultValue: 5,
       params: { min: 2, max: 10, step: 1 },
       condition: { key: "variant", value: "heart" }
     },
-    { // TODO: remove these duplicates when advanced conditions are available
+    {
       key: "precisionStar",
-      label: "Rating precision",
+      label: "Rating Precision",
+      description: "How granular could the rating value be (full icon or half)",
       type: "slider",
       defaultValue: "1",
       params: { min: 0.5, max: 1, step: 0.5 },
       condition: { key: "variant", value: "star" }
     },
-    { // TODO: remove these duplicates when advanced conditions are available
+    {
       key: "precisionHeart",
       label: "Rating precision",
+      description: "How granular could the rating value be (full icon or half)",
       type: "slider",
       defaultValue: "1",
       params: { min: 0.5, max: 1, step: 0.5 },
@@ -80,7 +87,8 @@ export const rating = createNodeDescriptor({
     },
     {
       key: "size",
-      label: "Size of rating icons",
+      label: "Icon Size",
+      description: "Size of the rating icons",
       type: "select",
       defaultValue: "medium",
       params: {
@@ -93,23 +101,25 @@ export const rating = createNodeDescriptor({
     },
     {
       key: "rateButtonText",
-      label: "Text on button that submits rating",
+      label: "Submit Button Text",
+      description: "Text on the button that submits the rating",
       type: "cognigyText",
       defaultValue: "Submit Rating",
       params: { required: true }
     },
     {
       key: "label",
-      label: "Message bubble from user after rating submitted",
+      label: "Rating Message",
+      description: "Message bubble from user after the rating submitted",
       type: "cognigyText"
     },
     {
       key: "payload",
-      label: "Text after rating value in user message",
+      label: "Text After Rating Value",
+      description: "Text after the rating value in the message that is sent from the user to the bot when the rating is submitted",
       type: "cognigyText"
     }
   ],
-  preview: { type: "text", key: "text" },
   function: async ({ cognigy, config }: IRatingCardParams) => {
     const { api } = cognigy;
     const {
@@ -126,9 +136,8 @@ export const rating = createNodeDescriptor({
       payload
     } = config;
 
-    // TODO: refactor this when advanced conditions are available
-    let maxRatingValue = 5;
-    let precision = 1;
+    let maxRatingValue = 5; // Default when variant = "emoji"
+    let precision = 1; // Default when variant = "emoji"
     switch (variant) {
       case 'star': {
         maxRatingValue = maxRatingValueStar;

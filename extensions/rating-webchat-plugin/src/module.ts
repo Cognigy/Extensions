@@ -1,9 +1,9 @@
 import { createExtension } from "@cognigy/extension-tools";
 
-import { rating } from "./nodes/rating";
+import { ratingCardNode } from "./nodes/rating";
 
 export default createExtension({
 	nodes: [
-		rating
+		ratingCardNode
 	]
 });

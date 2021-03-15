@@ -16,10 +16,9 @@ extensions.extensions.forEach((extension) => {
     });
 });
 
-console.log(parsedNodes);
-
 const options = {
     includeScore: true,
+    shouldSort: true,
     keys: [
       {
         name: 'extensionLabel',
@@ -42,8 +41,9 @@ const options = {
   
   // Create a new instance of Fuse
   const fuse = new Fuse(parsedNodes, options)
-  
+  console.time("test");
   // Now search for 'Man'
-  const result = fuse.search('twilio');
+  const result = fuse.search(process.argv[2]);
 
   console.log(result);
+  console.timeEnd("test");

@@ -1,0 +1,59 @@
+{
+    "version": "1.0",
+    "extensions": [
+        {
+            "name": "zendesk",
+            "label": "Zendesk",
+            "description": "Integrates Cognigy.AI with the Zendesk Ticketing System",
+            "tags": [],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNBNAaMQAAAU7SURBVHhe7VpbiBtVGD6J2qp4QbcqVlTobgWjsG5mziSZnJNIVyRYiljdQlurbS1eUVHE6ouLfZGi2O2L4EN90AfxQbyCgoII7UPBCxas+qBoFasFC15bqrv1m81fs5n5k0wm58SBzgcfJDP/7Xwz58w5Z0ZkyJAhQ4YMJzFGb7z52mFz2crVyyn9fxhddcsYZ2uT42vWVUWuWDmSc/zjw6QoVp6ldrcw4c9wttZYrMyK8dJGkfP0t+DxYVJ4+nFqdgtSzXC21ijVDmTNQQD1LmtgkRBgZbPVCzBMAaR6GxlzzcSemmaNrFEdFUV9cTP5AgxLAKn2C887h7ICjvZwYi5iaItSf0SZ2zEMAaT+WRT9UcpImJo6BSe/jBhbonDVvZS5HfYFOIYck5QtBFlbxziYp1Tfi7HGYsraDrsCzGLcuYsyMajXT0Xf3Ms4GqXwqpspYxR2BXiOsnRBqXYl+shfjLMZto28DOwJ8H7QzSlLD8jaGhT6NxNkMEr9mXCuO5ey8LAjwFdCqfMoQ0xIfTscj4UCDUC1T1QqF1L0zjAtgNSHcVdHptzxgNEyeGSwgfuh1K/1vPInYFIA3MWI16DICSHlCBrwAoIdZZN053eipG5FFL7PO9XL6FcL5gTAiK8eoqgG4KpluI1nIMYPQfBQshbnxw61Bw3fhKfK6eQdhVfTeCQ9Q/9aMCWA1LsQrfNgmxjBSIonBdRdm5fVrTlXbctjGp2X6gE06Hrh1JeQZWeU62Mo8BfY76QjLRgRQH0oCoVFFDFlwPw7GBCDQq0IINU3Qk6OULSUwXFOQ5FvnSjWuABS/4o7s0CRUgipty8s2LAAmONXb6IoKYRXvQ1Ftq02TQqAK/8oRUghXO1zj1FjAkj9EjzzzQBpw0TlchR5KFI0aEYAtTe9I36hfhYK/IQv3IQA6kCs6fX/gubS+lW+8CYHEkDq3zDZcsgrfUCBT7KFL+AAAgTT3CnySCGC5TRfeBsTCjAXzDzJOoUINldjbqgkE0C9AquUjvjl8iUo8Ee+8CgTCPApZpNnkmXKUC6fgcb3tZ/YlwBYhYoJfylZpQzBlrrUL7OFd2FsAdClMJMsk0X6kJf6sUjRMRhPADUr3PlNlZTCra1GoZ03SLowlgCueorOpBBedRxX6I+2gvtgTwGkel2I6ZSO+KUVF6HxBxY2qF92F0DtE75/Nh1NGQpTizAw7Q43qF92EeAQu2EaxjXqAtg38m7tQUyOnoBo2/KytlVIvV7I6lVi2sbd0xzxd4Ubk4S8AHr7/IZpJwSvtKXegsbuQYweY486iG60Y14MY5DqYT5Z/2QF4L4ZCBBsxuLKQvz+31MEO9VSvzj4yrFUuwHB/mGTJCArAAenvgR53+Bi9MXgu4DEL0o8VcAt9TsbOCFjCeD7S9H4/Zx/Qs4GXYiix4ScHIHj16FAA7OnAMFbKRsfbQSvzDy1lrL0QKOxGE7vRYIYYA8B8rB5M+xjjupP4davplwdkUO/eZ4PMDi7CuCqTZyPUTa/U+ryqPT0fTC09uFURwEwAUJxP3E+poka7qCsIXh6BfpKojl+XHYUQKp7OHsrlPrz6JcjUl2BE4dZB4PsJACE/5izt8Q5LOgmKDVQLp+Pg1+EjKyQFcDVl+Kc1TsvTDwRaMU5v5Wt3wkb2CIvQG0VZ2uVUn8QpM7hz87ISYtkBfD0I5ytXaqDWFmVt+Qcfy7yOblFiqIfFcDxn+ZsrbJYOSIm775/wl2/UQ6TzoY7I0ve4Bhna5Nyw2aX0mfIkCFDhgwnH4T4F1qbdL6xyR08AAAAAElFTkSuQmCC",
+            "nodes": [
+                {
+                    "type": "createTicket",
+	                "defaultLabel": "Create Ticket",
+                    "description": "Creates a new Ticket in Zendesk",
+                    "tags": []
+                },
+                {
+                    "type": "createUser",
+	                "defaultLabel": "Create User",
+                    "description": "Create a new User in Zendesk",
+                    "tags": []
+                },
+                {
+                    "type": "getTicket",
+	                "defaultLabel": "Get Ticket",
+                    "description": "",
+                    "tags": []
+                },
+                {
+                    "type": "query",
+	                "defaultLabel": "Query",
+                    "description": "Queries the Zendesk Support System",
+                    "tags": []
+                },
+                {
+                    "type": "updateTicket",
+	                "defaultLabel": "Update Ticket",
+                    "description": "Updates a ticket in Zendesk",
+                    "tags": []
+                }
+            ]
+        },
+        {
+            "name": "twilio",
+            "label": "Twilio",
+            "description": "Integrates Cognigy.AI with Twilio",
+            "tags": [],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "sendSMS",
+	                "defaultLabel": "Send SMS",
+                    "description": "Sends an SMS",
+                    "tags": ["sms", "messaging"]
+                }
+            ]
+        }
+    ]
+}

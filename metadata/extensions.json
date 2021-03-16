@@ -143,6 +143,44 @@
                     "tags": ["email", "smtp", "attachment", "file"]
                 }
             ]
+        },
+        {
+            "name": "cognigy-webchat",
+            "label": "Cognigy Webchat",
+            "description": "Change various Webchat settings within the conversation",
+            "tags": [
+                "cognigy",
+                "webchat",
+                "avatar",
+                "bot"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "changeBotAvatar",
+	                "defaultLabel": "Change Bot Avatar",
+                    "description": "Changes the Bot Avatar in the Webchat window",
+                    "tags": ["avatar", "bot", "webchat", "change"]
+                },
+                {
+                    "type": "changeUserAvatar",
+	                "defaultLabel": "Change User Avatar",
+                    "description": "Changes the User Avatar in the Webchat window",
+                    "tags": ["avatar", "user", "webchat", "change"]
+                },
+                {
+                    "type": "resetBotAvatar",
+	                "defaultLabel": "Reset Bot Avatar",
+                    "description": "Reset the Bot Avatar to the default one",
+                    "tags": ["avatar", "bot", "webchat", "reset"]
+                },
+                {
+                    "type": "resetUserAvatar",
+	                "defaultLabel": "Reset Bot Avatar",
+                    "description": "Reset the User Avatar to the default one",
+                    "tags": ["avatar", "user", "webchat", "reset"]
+                }
+            ]
         }
     ]
 }

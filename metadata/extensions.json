@@ -54,6 +54,39 @@
                     "tags": ["sms", "messaging"]
                 }
             ]
+        },
+        {
+            "name": "aws",
+            "label": "Amazon Web Services",
+            "description": "This extension facilitates calls to a number of relevant AWS APIs. Now you can call the AWS SDK from Cognigy, without a single line of code.",
+            "tags": [],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "lambdaInvoke",
+	                "defaultLabel": "Lambda Invoke",
+                    "description": "This Node invoke a Lambda function, supplying input data as a JSON object, and receiving return results and output data as a JSON object.",
+                    "tags": ["aws", "lambda", "invoke"]
+                },
+                {
+                    "type": "s3GetObject",
+	                "defaultLabel": "S3 Get Object",
+                    "description": "This Node 'Gets' (reads) a file from an S3 bucket",
+                    "tags": ["aws", "s3", "bucket", "read", "store"]
+                },
+                {
+                    "type": "s3PutObject",
+	                "defaultLabel": "S3 Put Object",
+                    "description": "This Node 'Puts' (writes) a file into an S3 bucket",
+                    "tags": ["aws", "s3", "bucket", "upload", "store"]
+                },
+                {
+                    "type": "sayPolly",
+	                "defaultLabel": "Say Polly",
+                    "description": "Uses AWS Polly to turn text into audio speech, via the AWS Polly service",
+                    "tags": ["aws", "s3", "bucket", "upload", "store"]
+                }
+            ]
         }
     ]
 }

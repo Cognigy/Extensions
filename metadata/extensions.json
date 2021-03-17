@@ -313,6 +313,38 @@
                     "tags": ["fuzzy", "search", "items"]
                 }
             ]
+        },
+        {
+            "name": "google-firebase",
+            "label": "Google Firebase",
+            "description": "Enables CRUD operations for the Firebase Realtime Database",
+            "tags": [
+                "google",
+                "firebase",
+                "realtime",
+                "database"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "get",
+	                "defaultLabel": "Get",
+                    "description": "Performs a GET request and returns the result from the Realtime Database",
+                    "tags": ["get", "firebase"]
+                },
+                {
+                    "type": "set",
+	                "defaultLabel": "Set",
+                    "description": "Performs a POST request and stores a JSON object to the Realtime Database",
+                    "tags": ["set", "firebase", "post"]
+                },
+                {
+                    "type": "update",
+	                "defaultLabel": "Update",
+                    "description": "Updates a specific object in the Realtime Database",
+                    "tags": ["update", "firebase"]
+                }
+            ]
         }
     ]
 }

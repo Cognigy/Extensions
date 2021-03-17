@@ -392,6 +392,32 @@
                     "tags": ["get", "extract", "spreadsheet"]
                 }
             ]
+        },
+        {
+            "name": "google-translator",
+            "label": "Google Translator",
+            "description": "Translate text or detect a language with Google Translate",
+            "tags": [
+                "google",
+                "translate",
+                "detect",
+                "language"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "translateText",
+	                "defaultLabel": "Translate Text",
+                    "description": "Translate any text to a specified language",
+                    "tags": ["translate", "text"]
+                },
+                {
+                    "type": "detectLanguageInText",
+	                "defaultLabel": "Detect Language",
+                    "description": "Detect the language of a text",
+                    "tags": ["detect", "language", "text"]
+                }
+            ]
         }
     ]
 }

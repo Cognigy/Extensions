@@ -371,6 +371,27 @@
                     "tags": ["search", "user", "location", "address", "coordinates"]
                 }
             ]
+        },
+        {
+            "name": "google-sheets",
+            "label": "Google Sheets",
+            "description": "Use external information from a Google Sheet",
+            "tags": [
+                "google",
+                "sheets",
+                "table",
+                "data",
+                "spreadsheet"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "getSpreadsheet",
+	                "defaultLabel": "Get Spreadsheet",
+                    "description": "Extract data information from a Google Spreadsheet",
+                    "tags": ["get", "extract", "spreadsheet"]
+                }
+            ]
         }
     ]
 }

@@ -244,6 +244,31 @@
                     "tags": ["query", "search", "index"]
                 }
             ]
+        },
+        {
+            "name": "facebook-messenger",
+            "label": "Facebook Messenger",
+            "description": "Custom Facebook Messenger functions",
+            "tags": [
+                "facbook",
+                "messenger",
+                "location"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "getUserLocationFromPinnedLocationMessage",
+	                "defaultLabel": "Get User Location from Pinned Location",
+                    "description": "With this node you can use the Facebook location data that is sent from a user by a pinned location message",
+                    "tags": ["location", "pinned"]
+                },
+                {
+                    "type": "getUserLocationFromTextMessage",
+	                "defaultLabel": "Get User Location from Text",
+                    "description": "This node returns the same result as the Get User Location From Pinned Location Message node, except in this case the returned location is not the user's current location but the closest location google maps can provide based on the given data (place)",
+                    "tags": ["location", "pinned"]
+                }
+            ]
         }
     ]
 }

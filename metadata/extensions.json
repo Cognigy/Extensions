@@ -269,6 +269,31 @@
                     "tags": ["location", "pinned"]
                 }
             ]
+        },
+        {
+            "name": "file-upload",
+            "label": "File Upload",
+            "description": "Triggers the file-upload Webchat Plugin",
+            "tags": [
+                "file",
+                "upload",
+                "plugin"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAC3npUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHja7ZdbkhshDEX/WUWW0JIQEsuheVRlB1l+Lphpjz2TqcrjIx9uyg0thIB7RNsO/cf3Eb7hoixHiGqeckoHrphj5oKGH7frVtMR131dcXfh+cEerg6GSVDL7TH17V9g1/sA2wPofLQHqzuO70C74y2gzJkZje3nO5DwzU77OeQ9rsR329mf3N46b9XzczSI0RTxhAN3ITlw9zmLYAWSpeDO6248LYQ2LztL/Fy7cDWfxLtaT9odZdvlUYpwpO2QnjTadtLPtVsKvV8R3Wd+6DC5pvig3RjNx+i33ZWYoFQKe1NvW1ktOJ6QUtawhGL4KNq2SkZxbLGCWAPNE6UGysRQe1CkRoUG9VVXqlhi5M6Qm5kry7I55M9cF5Q4Cw02YGhBHCQqqAnMfK2F1rx5zVfJMXMjeDIh2CT6oYTPjH9SrkBjzNQlOvzSCuvimdNYxiQ37/ACEBpbU136rhLe5c3xDqyAoC6ZHRssx3kLcSrdc0sWZ4GfHjHs40zWdgBIhLkVi0FGRzoSiVKiw5iNCDo6+BSsHEnOJwiQKjcKA2xEEuA4z7kxxmj5svLNjFcLQKgkMaDBQQGsGBX5Y9GRQ0VFY1DVpKauWUuSFJOmlCzNd1QxsWhqyczcshUXj66e3Nw9e8mcBa8wzSlbyJ5zLgWTFoQuGF3gUcrJp5zx1DOddvqZz1KRPjVWrala9Zpradyk4fi31Cw0b7mVTh2p1GPXnrp177mXgVwbMuLQkYYNH3mUi9qm+kiNnsh9TY02tUksLj+7U4PZ7C0EzdeJTmYgxpFA3CYBJDRPZodTjDzJTWZHZhwKZVAjnXAaTWIgGDuxDrrY3cl9yS1o/C1u/CtyYaL7F+TCRLfJfeT2CbVW1jeKLEDzFE5NDxl4scGhe2Ev8zvpj+vwtwFegV6BXoFegV6BXoFegf6fQAM/HvBXM/wEu1WRl7DgMHwAAAAGYktHRAD/AP8A/6C9p5MAAAAJcEhZcwAABiIAAAYiAWDuvTEAAAAHdElNRQfjDBEKHRiQxm/rAAAC20lEQVR42u3az4vUdRzH8cfO7urqykqbqaDEIpJgECF0aiXRg6dExKBg2T/AFUTp0MmDHQrq1EEPnoSIJOigRzGKZCtFCtFDViqKCytLQeRujTOzHvYjDDKz+53vfL/zq88T3pf5zsxnXq/v5/N+f96f7xCJRCKRSCQSiUQi/0P62jDmAIaxEeuwiH/wCI9R7kUD1mI3DuBNbMMQCuF6Gf/iDn7ARXyH+W6fYetxHL+jEu52kqjgN5zASDcKL+Bt3G5AdL34NXxXoVvED+FTFDMQ/yyK+CR8d0czjK8anO6NLIvzYYyOZDW+zEH48/EFVnViOf0wpztfayacbFMJr8ueUMYWWxQLGO+UbD+C6ymFlEKk+exPYdm1nH7swqmwWZlpIrMfxVTKilHBu62+23vwDZ5kUNamwjruw5GUJlwJNyR3RnA6o9peLb46iaYxoYhX8xa/Gd9nuKGZqpPB05rwfp7iX8B0C8Q3Y8JVvIfXs94p9uPzFopvdiaUcBcf4eUsDHiniRKVVnyzJjyLuTDmQFrxa3CrTeKzMqGMs2mXxaEMtrXNiM/KhArONFoq+0JH127xWZlQwmSjx1czHSI+KxPuYzTpmeAruInBlD/2b1wLA9fiY1yuc20fPljGhDeaOCI7hs+SvPGtnDu5iWXGnshx3OlauaBQpwL0Iq/hxSQGLPSoAWswlsSA2dDt9RqFsLVf0YAH+KtHZ0EpiQHz+LFHxc8mMWCx6nS3l/gT955/sV6zcBF/YHsOP2QUW5e5lhffWnr4mpjJ0FBkXY+L4QS5VhTlswcoYX+jjg3i6xYedecZl9K2xpvwS5eLn8POZtbOGH7uUvGPcTCLBPJSqAylLhL/yNIfMjI9IzyMGzklx6ziCS5gR9I+u1GGsDecGY5jS0iY7foDQyXMzIehzT5n6bFZOS8DqlkV9tcbQrPRjie2/4VENxfKaCQSiUQikUgkEolEVuIpJuyeYUtoKScAAAAASUVORK5CYII=",
+            "nodes": [
+                {
+                    "type": "uploadToAWSBucket",
+	                "defaultLabel": "Upload to AWS Bucket",
+                    "description": "Uploads a file to an AWS S3 bucket",
+                    "tags": ["aws", "s3", "upload", "bucket", "file"]
+                },
+                {
+                    "type": "uploadToAzureContainer",
+	                "defaultLabel": "Upload To Azure Container",
+                    "description": "Uploads a file to an Azure Container",
+                    "tags": ["azure", "container", "upload", "file"]
+                }
+            ]
         }
     ]
 }

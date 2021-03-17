@@ -437,6 +437,56 @@
                     "tags": ["geolocation", "location"]
                 }
             ]
+        },
+        {
+            "name": "hubspot",
+            "label": "Hubspot",
+            "description": "Find and update contacts or companies in Hubspot",
+            "tags": [
+                "hubspot",
+                "crm",
+                "contact",
+                "company"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "createCompany",
+	                "defaultLabel": "Create Company",
+                    "description": "Create a new compnay in Hubspot",
+                    "tags": ["create", "company"]
+                },
+                {
+                    "type": "createContact",
+	                "defaultLabel": "Create Contact",
+                    "description": "Create a new contact in Hubspot",
+                    "tags": ["create", "contact"]
+                },
+                {
+                    "type": "findContact",
+	                "defaultLabel": "Find Contact",
+                    "description": "Find a contact in Hubspot based on a query",
+                    "tags": ["find", "contact", "query"]
+                },
+                {
+                    "type": "findContactByEmail",
+	                "defaultLabel": "Find Contact By Email",
+                    "description": "Find a contact in Hubspot by their email address",
+                    "tags": ["find", "contact", "email"]
+                },
+                {
+                    "type": "updateCompany",
+	                "defaultLabel": "Update Company",
+                    "description": "Update a company in Hubspot",
+                    "tags": ["update", "company"]
+                },
+                {
+                    "type": "updateContact",
+	                "defaultLabel": "Update Contact",
+                    "description": "Update a contact in Hubspot",
+                    "tags": ["update", "contact"]
+                }
+            ]
         }
     ]
 }

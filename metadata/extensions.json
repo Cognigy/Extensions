@@ -654,6 +654,31 @@
                     "tags": ["sharepoint", "site", "list"]
                 }
             ]
+        },
+        {
+            "name": "monday-com",
+            "label": "Monday",
+            "description": "Create and retrieve board information from monday.com",
+            "tags": [
+                "monday",
+                "board",
+                "scrum"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "createItem",
+	                "defaultLabel": "Create Item",
+                    "description": "Create a new board item in monday.com",
+                    "tags": ["monday", "board", "create", "item"]
+                },
+                {
+                    "type": "getBoards",
+	                "defaultLabel": "Get Boards",
+                    "description": "Get all boards from a monday.com organisation",
+                    "tags": ["monday", "get", "boards"]
+                }
+            ]
         }
     ]
 }

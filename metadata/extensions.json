@@ -345,6 +345,32 @@
                     "tags": ["update", "firebase"]
                 }
             ]
+        },
+        {
+            "name": "google-maps",
+            "label": "Google Maps",
+            "description": "Adds Google Maps functions",
+            "tags": [
+                "google",
+                "maps",
+                "location",
+                "plugin"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "showGoogleMaps",
+	                "defaultLabel": "Show Google Maps",
+                    "description": "Displays a Google Map in the Webchat window by using the google-maps Webchat Plugin",
+                    "tags": ["webchat", "map", "plugin"]
+                },
+                {
+                    "type": "getLocationFromText",
+	                "defaultLabel": "Search Location",
+                    "description": "This node can be used in order to get location information about the current user",
+                    "tags": ["search", "user", "location", "address", "coordinates"]
+                }
+            ]
         }
     ]
 }

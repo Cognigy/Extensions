@@ -487,6 +487,37 @@
                     "tags": ["update", "contact"]
                 }
             ]
+        },
+        {
+            "name": "jira",
+            "label": "Jira",
+            "description": "Perform ticket operations in Atlassian Jira",
+            "tags": [
+                "atlassian",
+                "jira",
+                "ticket"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "createTicket",
+	                "defaultLabel": "Create Ticket",
+                    "description": "Create a new ticket in Jira",
+                    "tags": ["create", "jira", "ticket"]
+                },
+                {
+                    "type": "extractTicketFromText",
+	                "defaultLabel": "Extract Ticket from Text",
+                    "description": "Extract a ticket number from a user text message",
+                    "tags": ["extract", "jira", "ticket", "number"]
+                },
+                {
+                    "type": "getTicket",
+	                "defaultLabel": "Get Ticket",
+                    "description": "Get a ticket by number",
+                    "tags": ["get", "jira", "ticket"]
+                }
+            ]
         }
     ]
 }

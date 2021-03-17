@@ -772,6 +772,61 @@
                     "tags": ["rating", "feedback", "plugin"]
                 }
             ]
+        },
+        {
+            "name": "salesforce-crm",
+            "label": "Salesforce CRM",
+            "description": "Perform Salesforce CRM operations",
+            "tags": [
+                "salesforce",
+                "crm",
+                "cloud"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "createEntity",
+	                "defaultLabel": "Create Entity",
+                    "description": "Create a new entity in Salesforce",
+                    "tags": ["salesforce", "crm", "contact", "create", "entity"]
+                },
+                {
+                    "type": "deleteEntity",
+	                "defaultLabel": "Delete Entity",
+                    "description": "Delete an entity in Salesforce",
+                    "tags": ["salesforce", "crm", "contact", "delete", "entity"]
+                },
+                {
+                    "type": "login",
+	                "defaultLabel": "Log In",
+                    "description": "Log In an internal Salesforce user to their account",
+                    "tags": ["salesforce", "login", "user"]
+                },
+                {
+                    "type": "salesforceQuery",
+	                "defaultLabel": "Query (SOQL)",
+                    "description": "Carries out a Salesforce Object Query Language query, against specific fields in a specific entity type, and returning entity records. The syntax is similar to SQL.",
+                    "tags": ["salesforce", "crm", "query", "search"]
+                },
+                {
+                    "type": "retrieveEntity",
+	                "defaultLabel": "Retrieve Entity",
+                    "description": "Retrieve an entity from Salesforce",
+                    "tags": ["salesforce", "crm", "get", "entity"]
+                },
+                {
+                    "type": "updateEntity",
+	                "defaultLabel": "Update Entity",
+                    "description": "Update an entity in Salesforce",
+                    "tags": ["salesforce", "crm", "update", "entity"]
+                },
+                {
+                    "type": "salesforceSearch",
+	                "defaultLabel": "Search (SOSL)",
+                    "description": "Search for entites in Salesforce using the SOSL query language",
+                    "tags": ["salesforce", "search", "query"]
+                }
+            ]
         }
     ]
 }

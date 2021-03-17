@@ -716,6 +716,25 @@
                     "tags": ["weather"]
                 }
             ]
+        },
+        {
+            "name": "parcellab",
+            "label": "Parcel Lab",
+            "description": "Get parcel information from parcel lab",
+            "tags": [
+                "parcel",
+                "delivery",
+                "package"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAGtklEQVRoge1Za1ATVxS+dzckhHd5mYIKKBiktMhUHr6oOhWRqSgyHRVER2CQolAdKbXQkSroiGBFdHBkFAdBJqCp+ELljWLHooAIZCgoKFghouENCWT39getgxAgZDdknOH7mb337vlyzvnuOWch0FoFPmVgqjaAKmYIqBozBFSNGQKqxgwBVWP6CGAYhJD+Y3HAtKD/1I8BAeDOMz0UscNqnml1baNUStB6uJJrISYD99vm9ntcCFudiRBobXvvsennSsFLkiRpOV+JHmBg0MN96bnE/YEBHkwmAwAAIdDW1vDZ6sq1nF0raBR19FB/i1I8AAEwMzU6fNDPe/MaHJedZhLJ0IHIs6m8vI6uPmrvopUAhFBHg/XLT76+3q4mnxtMvJggyFpBU0xs2tXsEqRogtMZQhrqzNXL7C6nHty00UVHW2PS9RgGZ83S99r4zULunIaG18L2TgVeSo8HIADms42Sk8JXLLVjsRgKnNDR0ZPOy4uMSu4VDyGE5N9I1QMQgDkmhj8Geaaej7SxNmMwZET80JD02vX7m30PlT6sNpvL4XD0x94IbDbLcbH1d+7LOkXdzxv/kRLyahQlD0AIjQ10qx6dNzbWlxnDCKFWoWiD14GnNU1SkoQQshh46G6vY9G7xgt5giCf1bxwcPmBkE9nFbyJMQiXO9ngGFRnMQ0N9WRa/7a9MyIqeZGTX/mzF1KSHOYjHpLGJfC+cth58VKORDI0dheOYzbW5jgmb05PmQCEUE+LffxwYEHOSRyTvZ0gyeybpVxb79iErHZRz6iIRgDW1L0K2B2/2m3vq+a2KUX8WEyNABPH9gR4lD1I3r938wSVjUQ8eCn9blffwATGIQirBY1ZV4sIucNdJuQlACF0sLMqyU08dSLUytJ0gpW9fQNsNovPi045G77AwkQmTZYaY9nX1gV3EsL2bRFLBqk4QV4CDBy7cyPO2dFm0pIyIzN/u/+Rd++7t/u4FecmRkfuZKvhH55CACxMjbLSou7ePrHYnltd07Tx+wj5NUdxAhAALU22PCu7u/sz+MXOLkGXebmaGqyIcN/SoqT1a53UcIxjpBcSuKHsYfJ692XCNlHEwXMOK3aV/iUAFDygyKUzKRBCjS1Cv+A47omMSxd+tbezupoRXfG03tjoMwtzDgAgJS0n8mDyW1EPQoglt+DIhFIIDENKkIKG19+4hu7wWbsnaJOzow1BkLn5j+MSeIUllQoXP6OgRAIAAIRQ74Ak6cLN8sr6B/mnS0qr3D3DSYgB+nqz6WgpR4oMAjS3ldPUE1O6qybEJz+VUG4OTAodLbaXxwoGQ3EzlOIBCIDHuiW6bNYEtx4GgOOiBQ8Lzpw7E0YlpZUVQm5rHOuq03cHeOjraY16BAFaMN80MT6kJC/R1sZCTY1SFCgxBzizDE7FhzwpTf6SO/fDX4xBGBrkVf34YnCgp7o6c+wuhMCLpjcEKW/aKzcHMAyzMOM8+fP8o7JaDMPmW5gU30tY4mQrc1SBEKqrbz55Kiv9SoGc3QyYniRmMhkuy+0AAOZmHHMzjsw1fX3iTH7hvrDTPeKpFacqViEAAEmiG7dLY+MzHlX8rcB2ygTGERApMfkAlCDIppdvDh1NzcjMJxVVIkoEIADdPf31DS3WXLORBiAAEk5fmWWo5+W5crzJ3OCg9LeYlJS0O8J3XVRKI8VVCMMwK8vZnV09zquCjxxPa20VjXza2Cz08T+6zT+morJ+VEb2D0iuXb9v7+x/7CRP+K5LYQP+M0PhnTiOPcg/HRnuOygejDqausjZL/NK4cgGV0qSPH7xynV7ww8kicWDwz+2CUXr1odt2RkjaGihpUCSdy7EZODdbTksltqo30mEyh4L4hMyb919hBByd3XU1GBn8ItGKgkEwIY7N3zf1vqGlsSz/N5+CY213RQIdLXeUldnyXyKEMotLN/hF93e0Ys+rp8/AMMgQhRnKDIg72iRIFFuXpmOjuYXC83HVjgQQst5Jr7eaw0NdKuqn/f1S8aeQLvpw5jCbPRNm4ifXVJeUee4eKGurhY2ppfV0mIvdbaFEOYXVdBt57iYWhIjCG/lli1fExIekSRzMAghVGLzIguKqJCwvfNk0h+Wtt787JKB/+VFVVBQRhEAr9veb/M/uvLbPbWCl0qKb3lAqZwWDw49rnq+ZFVwRFRyc8tbumyaEqj2AwiAnn5xbALPxt437fI9ipNaBUDnRz41HFvtskhbW5N/s5R+wR8H9H9mhVBZki8T9LeU05zQn/xcaIaAqjFDQNWYIaBqzBBQNf4F5wCV5BGJWsEAAAAASUVORK5CYII=",
+            "nodes": [
+                {
+                    "type": "getParcelInfo",
+	                "defaultLabel": "Get Parcel Info",
+                    "description": "Retrieve the information of a specific package from parcel lab",
+                    "tags": ["parcel", "delivery", "package"]
+                }
+            ]
         }
     ]
 }

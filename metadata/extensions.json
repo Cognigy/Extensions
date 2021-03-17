@@ -735,6 +735,24 @@
                     "tags": ["parcel", "delivery", "package"]
                 }
             ]
+        },
+        {
+            "name": "random-cat-image",
+            "label": "Random Cat Image",
+            "description": "Displays a random cat image in the Webchat",
+            "tags": [
+                "random",
+                "cat"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAD10lEQVR4Xu2b35HUMAzGN21AJbxBD3RwA21w1MHQAdTAvVEJtLGMfVFG1kr2J/9Llmxedm7P61g/fZJlO1mu1+v1cuJreQBYFbAsS9TB2QSxKYAAnA1CAuDXj0+X9+/eXJa3X/87NVgOVgFQTiQQ96wKMjw4N1wfPn5LwlwH8P35lcHT6+e9KYJ7mwwPdpC6eZ7LA1AgHFkNOcO5qssAQmtSAYNwRDVYRpPHZYkT1KwCCA1ffn6O7YNUEgDUS2NI8MHW1F7JwNdpO/QjZZ7rOwsgDJBmAhWAogZZN5SMvP75UmN7kouk0Za3pYq1XJZUghAApgY+S9DXLQYiZMI9yeNRqfLiocv/9/Qck/mNw3gpnACQeUDeaA0HZNDD21hGnwIAaDwlcEgBSCIc7lXPDXIQmFKLIRApWYnwSJK34GggmgBQHrgH47WcJcbtV4BHhkdqG5SgOK0IgORvzqtHMtI5Fms9c7MfsBVCwA32qAOAYd00yS3mIgDueY/31cpqWS6jiyEPhNJKNuyDxU3RGs9b22cBaE8ImxHOMrpkfJz1AoBsaSlwQ53S/qJzwJpnZZihYLWEp/ZPANS6WvkF3HEHFUjY28YtABYeZw8AUfLieKE1DMysDaprGgBrO93jLSk00/MrZAQuEqpJDqgNgdx5AjJQK+61zQ/6Du0XgbAlwVoAuSkJHaimgB4AaAUYPs0Zq0cOUL3YkASzhUtFv7l84FYAp0qGW9ti6JSFhAG1qVFVFqhXAVbCkt+3GK9B3mADU6ALaCsAT1m6Z1tzWj0LAFLVTbieDYCcEaqS4J5Sbrm3unodqYDaVRw3skcfMqkmNcZIAEkh4szefBXYOqNY8V9VCtdKEPUk2s47DqsYmp4DtG00bkwPb99NHRC94gwNr+e3ClI5F0xCIPyBLohqB6FVkbsD4JuiewCI8/IEFZg5YE8AW3YeDCC7GpTb4nuoYLQCigCiJ9ZD0dm5YEYihAEE4z3nA55kWJr+rL56qAMCQCroAcEylj/MhMALDzXKqwYIDKBXKLz8/mvah+YYqw/093I9Ye4Jysfl5aOlNTdEvDurTWln2HxfoPbAdJZh6H1KByTZFyakGmbPEKiRVruS8THkS2+MIM/ftg609++TpXThjaAigCSZrOdyntPk3sbl+vMYTv24APCpkjqomZZGQCklOzNMSiGQJc4eWN4TRK3xUA5AvZW8kjJ4cbPJd321J/xd+7KXOwQQINYT471UUhPrQ0IAgbF5i4WL53dW21qPy/6GKKCHgbP6eABomQVmeWnkfR4KeCigVzodqdOBff8D0xggbrXLgUMAAAAASUVORK5CYII=",
+            "nodes": [
+                {
+                    "type": "getRandomCatImage",
+	                "defaultLabel": "Random Cat Image",
+                    "description": "Display a random cat image in the Webchat",
+                    "tags": ["random", "cat", "image"]
+                }
+            ]
         }
     ]
 }

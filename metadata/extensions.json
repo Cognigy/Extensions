@@ -950,6 +950,32 @@
                     "tags": ["slack", "message", "post"]
                 }
             ]
+        },
+        {
+            "name": "sunshine-conversations",
+            "label": "Sunshine Conversations",
+            "description": "Perform Sunshine conversations application switchboard actions",
+            "tags": [
+                "sunco",
+                "sunshine",
+                "handover",
+                "support"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "offerControl",
+	                "defaultLabel": "Offer Control",
+                    "description": "Offer the handover to an agent",
+                    "tags": ["handover", "agent"]
+                },
+                {
+                    "type": "passControlNode",
+	                "defaultLabel": "Pass Control",
+                    "description": "Handover the conversation to an agent",
+                    "tags": ["handover", "agent"]
+                }
+            ]
         }
     ]
 }

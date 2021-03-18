@@ -931,6 +931,25 @@
                     "tags": ["service now", "post", "entry"]
                 }
             ]
+        },
+        {
+            "name": "slack",
+            "label": "Slack",
+            "description": "Send a message to Slack",
+            "tags": [
+                "slack",
+                "message",
+                "post"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "sendMessageToLiveAgent",
+	                "defaultLabel": "Send Message",
+                    "description": "Send a message to a Slack channel",
+                    "tags": ["slack", "message", "post"]
+                }
+            ]
         }
     ]
 }

@@ -998,7 +998,7 @@
                 {
                     "type": "addTransaction",
 	                "defaultLabel": "Add a new transaction",
-                    "description": "This node adds a new transaction item to the specified queue wihtin the UiPath Orchestrator Instance. ",
+                    "description": "This node adds a new transaction item to the specified queue wihtin the UiPath Orchestrator Instance",
                     "tags": ["transaction"]
                 },
                 {
@@ -1030,6 +1030,44 @@
 	                "defaultLabel": "Start a specific job",
                     "description": "Start a new job",
                     "tags": ["start", "robot", "job"]
+                }
+            ]
+        },
+        {
+            "name": "yext",
+            "label": "Yext",
+            "description": "Use Yext for store information",
+            "tags": [
+                "yext",
+                "location",
+                "branch",
+                "store"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAA6hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOS0wNC0yNFQxNTowNDoyMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+UGl4ZWxtYXRvciAzLjguMjwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpDb21wcmVzc2lvbj4wPC90aWZmOkNvbXByZXNzaW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+MTwvZXhpZjpDb2xvclNwYWNl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",
+            "nodes": [
+                {
+                    "type": "createLocation",
+	                "defaultLabel": "Create Location",
+                    "description": "Create a new location for a branch in Yext",
+                    "tags": ["store", "location", "create"]
+                },
+                {
+                    "type": "getEntity",
+	                "defaultLabel": "Get Entity",
+                    "description": "Get an entity from Yext, e.g. locations, events or products",
+                    "tags": ["entity", "location", "events", "products", "menus"]
+                },
+                {
+                    "type": "getEntityById",
+	                "defaultLabel": "Get Entity By ID",
+                    "description": "Get an entity from Yext, e.g. locations, events or products, by providing the ID",
+                    "tags": ["entity", "location", "events", "products", "menus"]
+                },
+                {
+                    "type": "getLocationsByFilters",
+	                "defaultLabel": "Get Locations By Filters",
+                    "description": "Get a store location from Yext by providing a filter",
+                    "tags": ["get", "location", "filter", "query"]
                 }
             ]
         }

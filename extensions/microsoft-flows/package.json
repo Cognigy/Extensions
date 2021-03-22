@@ -1,11 +1,11 @@
 {
-  "name": "microsoft-flows",
+  "name": "microsoft-power-automate",
   "version": "4.0.0",
   "description": "Adds Microsoft Power Automate Flow functions.",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz microsoft-flows.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz microsoft-power-automate.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },

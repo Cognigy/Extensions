@@ -22,7 +22,7 @@ export interface IStartMicrosoftFlow extends INodeFunctionBaseParams {
 }
 export const startMicrosoftFlowNode = createNodeDescriptor({
 	type: "startMicrosoftFlow",
-	defaultLabel: "Start Power Automate Flow",
+	defaultLabel: "Start Flow",
 	preview: {
 		key: "flowURL",
 		type: "text"

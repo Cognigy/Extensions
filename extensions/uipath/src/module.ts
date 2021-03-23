@@ -2,21 +2,22 @@ import { createExtension } from "@cognigy/extension-tools";
 import { uiPathAccessData } from './connections/uiPathAccessData';
 import { uiPathOnPremAccessData } from './connections/uiPathOnPrem';
 import { uiPathInstanceData } from './connections/uiPathInstance';
-import { addTransaction } from './nodes/addTransaction';
+import { addQueueItemNode } from './nodes/addQueueItem';
 import { cloudAuthenticationNode } from './nodes/cloudAuthentication';
 import { startJobNode } from './nodes/startJob';
-import { getOutputInformationSynch } from './nodes/getOutputInformationSynch';
+import { getQueueItemByIdNode } from './nodes/getQueueItemById';
 import { getReleasesNode } from "./nodes/getReleases";
-import { onPremAuthenticationNode } from "./nodes/onpremAuthentication";
+import { getQueueItemsNode } from "./nodes/getQueueItems";
+
 
 export default createExtension({
 	nodes: [
 		cloudAuthenticationNode,
-		onPremAuthenticationNode,
-		addTransaction,
+		addQueueItemNode,
 		startJobNode,
-		getOutputInformationSynch,
-		getReleasesNode
+		getQueueItemByIdNode,
+		getReleasesNode,
+		getQueueItemsNode
 	],
 
 	connections: [

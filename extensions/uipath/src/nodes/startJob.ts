@@ -10,7 +10,9 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 		};
 		accessToken: string;
         releaseKey: string;
+		orgUnitId: string;
         robotIds: {ids: string []};
+		inputArguments: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -46,6 +48,14 @@ export const startJobNode = createNodeDescriptor({
 				required: true
 			}
         },
+		{
+			key: "orgUnitId",
+			label: "Organization Unit ID",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
         {
 			key: "robotIds",
 			label: "Robot IDs",
@@ -55,6 +65,15 @@ export const startJobNode = createNodeDescriptor({
 				required: true
 			}
         },
+		{
+			key: "inputArguments",
+			label: "Input Arguments",
+			type: "json",
+			defaultValue: {},
+			params: {
+				required: true
+			}
+		},
 		{
 			key: "storeLocation",
 			type: "select",
@@ -111,7 +130,9 @@ export const startJobNode = createNodeDescriptor({
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
 		{ type: "field", key: "releaseKey" },
+		{ type: "field", key: "orgUnitId" },
 		{ type: "field", key: "robotIds" },
+		{ type: "field", key: "inputArguments" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -119,7 +140,7 @@ export const startJobNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ICreateTokenParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, releaseKey, robotIds, storeLocation, inputKey, contextKey } = config;
+		const { instanceInfo, accessToken, releaseKey, orgUnitId, robotIds, inputArguments, storeLocation, inputKey, contextKey } = config;
 		const { accountLogicalName, tenantLogicalName } = instanceInfo;
 
         const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
@@ -127,21 +148,20 @@ export const startJobNode = createNodeDescriptor({
             headers: {
                 'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantLogicalName
+				'X-UIPATH-TenantName': tenantLogicalName,
+				'X-UIPATH-OrganizationUnitId': orgUnitId
             }
         };
-
         const data = {
             startInfo: {
                 ReleaseKey: releaseKey,
                 RobotIds: robotIds.ids,
-                Strategy: "Specific"
+                Strategy: "Specific",
+				InputArguments: JSON.stringify(inputArguments)
               }
 		};
-
 		try {
             const result: AxiosResponse <StartJob> =  await axios.post(endpoint, data, axiosConfig);
-
 			if (storeLocation === 'context') {
 				api.addToContext(contextKey, result.data.value[0] , 'simple');
 			} else {

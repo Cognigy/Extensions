@@ -1,3 +1,5 @@
+// Initial implementation, not included in release
+
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AccessToken } from "../../types/uipath";

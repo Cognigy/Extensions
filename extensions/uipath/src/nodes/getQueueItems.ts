@@ -60,7 +60,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 		{
 			key: 'storeLocation',
 			type: 'select',
-			label: 'Where to store the result',
+			label: 'Where to Store the Result',
 			params: {
 				options: [
 					{
@@ -79,7 +79,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 		{
 			key: 'inputKey',
 			type: 'cognigyText',
-			label: 'Input Key to store Result',
+			label: 'Input Key to Store Result',
 			defaultValue: 'outputInformation',
 			condition: {
 				key: 'storeLocation',
@@ -89,7 +89,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 		{
 			key: 'contextKey',
 			type: 'cognigyText',
-			label: 'Context Key to store Result',
+			label: 'Context Key to Store Result',
 			defaultValue: 'outputInformation',
 			condition: {
 				key: 'storeLocation',

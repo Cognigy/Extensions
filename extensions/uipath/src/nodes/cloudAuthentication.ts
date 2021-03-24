@@ -6,7 +6,7 @@ export interface ICloudAuthenticationParams extends INodeFunctionBaseParams {
 	config: {
 		accessInfo: {
 			clientId: string;
-			refreshToken: string;
+			userKey: string;
         };
         storeLocation: string;
 		inputKey: string;
@@ -30,7 +30,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: "Where to Store the Result",
 			params: {
 				options: [
 					{
@@ -49,7 +49,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: "Input Key to Store Result",
 			defaultValue: "uiPathAccessToken",
 			condition: {
 				key: "storeLocation",
@@ -59,7 +59,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: "Context Key to Store Result",
 			defaultValue: "uiPathAccessToken",
 			condition: {
 				key: "storeLocation",
@@ -89,7 +89,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: ICloudAuthenticationParams) => {
         const { api } = cognigy;
 		const { accessInfo, storeLocation, inputKey, contextKey } = config;
-		const { clientId, refreshToken } = accessInfo;
+		const { clientId, userKey } = accessInfo;
 
         const endpoint = 'https://account.uipath.com/oauth/token';
         const axiosConfig: AxiosRequestConfig = {
@@ -102,7 +102,7 @@ export const cloudAuthenticationNode = createNodeDescriptor({
         const data = {
             'grant_type': "refresh_token",
             'client_id': clientId,
-            'refresh_token': refreshToken
+            'refresh_token': userKey
         };
 		try {
 			const response: AxiosResponse <AccessToken> = await axios.post(endpoint, data, axiosConfig);

@@ -22,7 +22,7 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 
 export const addQueueItemNode = createNodeDescriptor({
 	type: "addQueueItem",
-	defaultLabel: "Add a queue item",
+	defaultLabel: "Add a Queue Item",
 	fields: [
 		{
 			key: "instanceInfo",
@@ -59,14 +59,14 @@ export const addQueueItemNode = createNodeDescriptor({
         },
         {
 			key: "reference",
-			label: "Queue Refrence",
+			label: "Queue Reference",
 			type: "cognigyText",
 			params: {
 				required: false
 			}
 		},        {
 			key: "priority",
-			label: "Transcation Item Priority",
+			label: "Transaction Item Priority",
 			type: "select",
 			params: {
                 options: [
@@ -87,7 +87,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			label: "Transaction Item Specific Content",
 			type: "json",
 			params: {
-				required: false
+				required: true // Used to be false, should this be true?
 			}
 		},
 		{
@@ -161,7 +161,7 @@ export const addQueueItemNode = createNodeDescriptor({
 				specificContent, storeLocation, inputKey, contextKey } = config;
 		const { accountLogicalName, tenantLogicalName } = instanceInfo;
 
-        const endpoint = `https://cloud.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
@@ -176,9 +176,9 @@ export const addQueueItemNode = createNodeDescriptor({
 				Name: queueName,
 				Reference: reference,
 				Priority: priority.charAt(0).toUpperCase() + priority.slice(1),
-				"SpecificContent": specificContent.data,
-				"DeferDate": null,
-				"DueDate": null
+				SpecificContent: specificContent,
+				DeferDate: null,
+				DueDate: null
 			}
 		};
 		try {

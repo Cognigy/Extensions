@@ -5,9 +5,7 @@ import { uiPathInstanceData } from './connections/uiPathInstance';
 import { addQueueItemNode } from './nodes/addQueueItem';
 import { cloudAuthenticationNode } from './nodes/cloudAuthentication';
 import { startJobNode } from './nodes/startJob';
-import { getQueueItemByIdNode } from './nodes/getQueueItemById';
 import { getReleasesNode } from "./nodes/getReleases";
-import { getQueueItemsNode } from "./nodes/getQueueItems";
 
 
 export default createExtension({
@@ -15,9 +13,7 @@ export default createExtension({
 		cloudAuthenticationNode,
 		addQueueItemNode,
 		startJobNode,
-		getQueueItemByIdNode,
-		getReleasesNode,
-		getQueueItemsNode
+		getReleasesNode
 	],
 
 	connections: [

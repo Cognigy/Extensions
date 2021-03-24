@@ -38,7 +38,7 @@ export const getReleasesNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: "Where to Store the Result",
 			params: {
 				options: [
 					{
@@ -57,7 +57,7 @@ export const getReleasesNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: "Input Key to Store Result",
 			defaultValue: "uipath.releases",
 			condition: {
 				key: "storeLocation",

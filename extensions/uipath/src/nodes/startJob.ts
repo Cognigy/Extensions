@@ -21,7 +21,7 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 
 export const startJobNode = createNodeDescriptor({
 	type: "startJobNode",
-	defaultLabel: "Start a specific job",
+	defaultLabel: "Start a Job",
 	fields: [
 		{
 			key: "instanceInfo",
@@ -96,7 +96,7 @@ export const startJobNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: "Input Key to Store Result",
 			defaultValue: "uiPathProcessState",
 			condition: {
 				key: "storeLocation",
@@ -106,7 +106,7 @@ export const startJobNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: "Context Key to Store Result",
 			defaultValue: "uiPathProcessState",
 			condition: {
 				key: "storeLocation",

@@ -15,7 +15,8 @@ The following keys need to be included:
   - The ID of your live chat button
 - liveAgentUrl
   - The URL of your live agent
-  - e.g. https://d.foo-bar-ord.salesforceliveagent.com/
+  - e.g. https://d.foo-bar-ord.salesforceliveagent.com
+  	- **Please make sure that you remove the last "/" from the URL -- if not already. Otherwise it will not work.**
 
 Please have a look at this tutorial in order to get all required values: [Get Chat Settings from Your Org](https://developer.salesforce.com/docs/atlas.en-us.noversion.service_sdk_ios.meta/service_sdk_ios/live_agent_cloud_setup_get_settings.htm)
 

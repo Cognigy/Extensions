@@ -4,10 +4,17 @@ import { AddTransactionItem } from "../../types/uipath";
 
 export interface IAddQueueItem extends INodeFunctionBaseParams {
 	config: {
+		authType: string;
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
         };
+		onPremAuthConnection: {
+			orchestratorUrl: string;
+			tenancyName: string;
+			usernameOrEmailAddress: string;
+			password: string;
+		};
         accessToken: string;
 		orgUnitId: string;
         queueName: string;
@@ -25,12 +32,49 @@ export const addQueueItemNode = createNodeDescriptor({
 	defaultLabel: "Add a Queue Item",
 	fields: [
 		{
+			key: "authType",
+			label: "Connection Type",
+			type: "select",
+			description: "Please choose the type of connection",
+			params: {
+				options: [
+					{
+						label: "On-premise",
+						value: "onPrem"
+					},
+					{
+						label: "Cloud",
+						value: "cloud"
+					}
+				],
+				required: true
+			},
+			defaultValue: "cloud"
+		},
+		{
 			key: "instanceInfo",
 			label: "Orchestrator Instance Information",
 			type: "connection",
 			params: {
 				connectionType: 'instanceData',
-				required: true
+				required: false
+			},
+			condition: {
+			 	key: "authType",
+			 	value: "cloud"
+			}
+		},
+		{
+            key: "onPremAuthConnection",
+            label: "UiPath On-Prem Connection",
+            type: "connection",
+            params: {
+                 connectionType: "onPremAuth",
+                 required: false
+            },
+			 condition: {
+			 	key: "authType",
+			 	value: "onPrem"
 			}
         },
 		{
@@ -87,7 +131,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			label: "Transaction Item Specific Content",
 			type: "json",
 			params: {
-				required: true // Used to be false, should this be true?
+				required: true
 			}
 		},
 		{
@@ -143,6 +187,8 @@ export const addQueueItemNode = createNodeDescriptor({
 		}
 	],
 	form: [
+		{ type: "field", key: "authType" },
+		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
 		{ type: "field", key: "orgUnitId"},
@@ -158,19 +204,27 @@ export const addQueueItemNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IAddQueueItem) => {
 		const { api } = cognigy;
 		const { instanceInfo, accessToken, orgUnitId, queueName, reference, priority,
-				specificContent, storeLocation, inputKey, contextKey } = config;
-		const { accountLogicalName, tenantLogicalName } = instanceInfo;
+				specificContent, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
-        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+		let endpoint;
+		let tenantInfo;
+		if (authType === 'cloud') {
+			const { accountLogicalName, tenantLogicalName } = instanceInfo;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+			tenantInfo = tenantLogicalName;
+		} else { // onPrem
+			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
+			endpoint = `https://${orchestratorUrl}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+			tenantInfo = tenancyName;
+		}
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantLogicalName,
+				'X-UIPATH-TenantName': tenantInfo,
 				'X-UIPATH-OrganizationUnitId': orgUnitId
             }
 		};
-
 		const data = {
 			itemData: {
 				Name: queueName,

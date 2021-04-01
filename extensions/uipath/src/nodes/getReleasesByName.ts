@@ -1,7 +1,9 @@
+// Implementation not complete. Needs some work
+
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export interface IGetReleasesParams extends INodeFunctionBaseParams {
+export interface IGetReleasesByNameParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -14,6 +16,7 @@ export interface IGetReleasesParams extends INodeFunctionBaseParams {
 			usernameOrEmailAddress: string;
 			password: string;
 		};
+		releaseName: string;
 		accessToken: string;
 		storeLocation: string;
 		inputKey: string;
@@ -21,9 +24,9 @@ export interface IGetReleasesParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const getReleasesNode = createNodeDescriptor({
-	type: "getReleases",
-	defaultLabel: "Get Releases",
+export const getReleasesByNameNode = createNodeDescriptor({
+	type: "getReleasesByName",
+	defaultLabel: "Get Releases By Name",
 	fields: [
 		{
 			key: "authType",
@@ -71,6 +74,14 @@ export const getReleasesNode = createNodeDescriptor({
 			 	value: "onPrem"
 			}
         },
+		{
+			key: "releaseName",
+			label: "Name of Release",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+		},
 		{
 			key: "accessToken",
 			label: "Access Token",
@@ -135,38 +146,40 @@ export const getReleasesNode = createNodeDescriptor({
 		{ type: "field", key: "authType" },
 		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
+		{ type: "field", key: "releaseName" },
 		{ type: "field", key: "accessToken" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IGetReleasesParams) => {
+	function: async ({ cognigy, config }: IGetReleasesByNameParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, accessToken, storeLocation, inputKey, contextKey, authType, onPremAuthConnection, releaseName } = config;
 
 		let endpoint;
 		let tenantInfo;
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
-			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Releases`;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Releases/`;
 			tenantInfo = tenantLogicalName;
 	 	} else { // onPrem
 			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Releases`;
+			endpoint = `https://${orchestratorUrl}/odata/Releases/`;
 			tenantInfo = tenancyName;
 		}
 		const axiosConfig: AxiosRequestConfig = {
+			params: {
+				$filter: `Name eq '${releaseName}'`
+			},
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
 				'X-UIPATH-TenantName': tenantInfo
 			}
 		};
-
 		try {
 			const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
-
 			if (storeLocation === 'context') {
 				api.addToContext(contextKey, result.data, 'simple');
 			} else {

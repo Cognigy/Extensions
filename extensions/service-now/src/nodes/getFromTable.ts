@@ -11,6 +11,9 @@ export interface IGetFromTableParams extends INodeFunctionBaseParams {
 		};
 		tableName: string;
 		limit: number;
+		incidentNumber: string;
+		caller: string;
+		category: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -45,6 +48,36 @@ export const getFromTableNode = createNodeDescriptor({
 			description: "The limit of the shown results.",
 			type: "number",
 			defaultValue: 1,
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "incidentNumber",
+			label: "Incident Number",
+			description: "The number of the incident; e.g. INC012345",
+			type: "cognigyText",
+			defaultValue: "",
+			params: {
+				required: false
+			}
+		},
+		{
+			key: "caller",
+			label: "The user that submitted the incident",
+			description: "The user that submitted the incident; e.g. David.Miller ",
+			type: "cognigyText",
+			defaultValue: "",
+			params: {
+				required: false
+			}
+		},
+		{
+			key: "category",
+			label: "Incident Category",
+			description: "The category of the incident; e.g. Software",
+			type: "cognigyText",
+			defaultValue: "",
 			params: {
 				required: false
 			}
@@ -96,6 +129,9 @@ export const getFromTableNode = createNodeDescriptor({
 			defaultCollapsed: true,
 			fields: [
 				"limit",
+				"incidentNumber",
+				"caller",
+				"category"
 			]
 		},
 		{
@@ -120,20 +156,26 @@ export const getFromTableNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetFromTableParams) => {
 		const { api } = cognigy;
-		const { connection, tableName, limit, storeLocation, inputKey, contextKey } = config;
+		const { connection, tableName, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
 		const { username, password, instance } = connection;
 
 		try {
-			const response = await axios.get(`${instance}/api/now/table/${tableName}`, {
+
+			let query = "";
+
+			query = incidentNumber ? `number=${incidentNumber}` : "";
+			query = category ? query + `category=${category}` : query;
+			query = caller ? query + `caller=${caller}` : query;
+
+			let url = `${instance}/api/now/table/${tableName}?sysparm_query=${query}&sysparm_limit=${limit}`;
+
+			const response = await axios.get(url, {
 				headers: {
 					'Accept': 'application/json'
 				},
 				auth: {
 					username,
 					password
-				},
-				params: {
-					sysparm_limit: limit
 				}
 			});
 

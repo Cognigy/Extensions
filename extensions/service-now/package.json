@@ -1,7 +1,7 @@
 {
   "name": "service-now",
-  "version": "4.0.0",
-  "description": "Integrates with Service Now",
+  "version": "4.1.0",
+  "description": "Integrates with ServiceNow",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

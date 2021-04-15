@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios from 'axios';
 
 
-export interface IGetFromTableParams extends INodeFunctionBaseParams {
+export interface IGetFromTableByIdParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
@@ -10,19 +10,17 @@ export interface IGetFromTableParams extends INodeFunctionBaseParams {
 			instance: string;
 		};
 		tableName: string;
+		sysId: string;
 		limit: number;
-		incidentNumber: string;
-		caller: string;
-		category: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const getFromTableNode = createNodeDescriptor({
-	type: "getFromTable",
-	defaultLabel: "Get From Table",
+export const getFromTableByIdNode = createNodeDescriptor({
+	type: "getFromTableById",
+	defaultLabel: "Get From Table by Id",
 	fields: [
 		{
 			key: "connection",
@@ -43,41 +41,20 @@ export const getFromTableNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "limit",
-			label: "Result Limit",
-			description: "The limit of the shown results.",
-			type: "number",
-			defaultValue: 1,
+			key: "sysId",
+			label: "Sys Id",
+			description: "The sys_id value for the particular record.",
+			type: "cognigyText",
 			params: {
 				required: true
 			}
 		},
 		{
-			key: "incidentNumber",
-			label: "Incident Number",
-			description: "The number of the incident; e.g. INC012345",
-			type: "cognigyText",
-			defaultValue: "",
-			params: {
-				required: false
-			}
-		},
-		{
-			key: "caller",
-			label: "The user that submitted the incident",
-			description: "The user that submitted the incident; e.g. David.Miller ",
-			type: "cognigyText",
-			defaultValue: "",
-			params: {
-				required: false
-			}
-		},
-		{
-			key: "category",
-			label: "Incident Category",
-			description: "The category of the incident; e.g. Software",
-			type: "cognigyText",
-			defaultValue: "",
+			key: "limit",
+			label: "Result Limit",
+			description: "The limit of the shown results.",
+			type: "number",
+			defaultValue: 1,
 			params: {
 				required: false
 			}
@@ -129,9 +106,6 @@ export const getFromTableNode = createNodeDescriptor({
 			defaultCollapsed: true,
 			fields: [
 				"limit",
-				"incidentNumber",
-				"caller",
-				"category"
 			]
 		},
 		{
@@ -148,71 +122,29 @@ export const getFromTableNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "tableName" },
+		{ type: "field", key: "sysId" },
 		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" },
-	],
-	tokens: [
-		{
-			label: "Incident Number",
-			script: "ci.snow[0].number",
-			type: "answer"
-		},
-		{
-			label: "Incident Caller",
-			script: "ci.snow[0].caller_id.value",
-			type: "answer"
-		},
-		{
-			label: "Incident Short Description",
-			script: "ci.snow[0].short_description",
-			type: "answer"
-		},
-		{
-			label: "Incident Severity",
-			script: "ci.snow[0].severity",
-			type: "answer"
-		},
-		{
-			label: "Incident Category",
-			script: "ci.snow[0].category",
-			type: "answer"
-		},
-		{
-			label: "Incident Opened At",
-			script: "ci.snow[0].opened_at",
-			type: "answer"
-		},
-		{
-			label: "Incident Updated On",
-			script: "ci.snow[0].sys_updated_on",
-			type: "answer"
-		}
 	],
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: IGetFromTableParams) => {
+	function: async ({ cognigy, config }: IGetFromTableByIdParams) => {
 		const { api } = cognigy;
-		const { connection, tableName, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
+		const { connection, tableName, sysId, limit, storeLocation, inputKey, contextKey } = config;
 		const { username, password, instance } = connection;
 
 		try {
-
-			let query = "";
-
-			query = incidentNumber ? `number=${incidentNumber}` : "";
-			query = category ? query + `category=${category}` : query;
-			query = caller ? query + `caller=${caller}` : query;
-
-			let url = `${instance}/api/now/table/${tableName}?sysparm_query=${query}&sysparm_limit=${limit}`;
-
-			const response = await axios.get(url, {
+			const response = await axios.get(`${instance}/api/now/table/${tableName}/${sysId}`, {
 				headers: {
 					'Accept': 'application/json'
 				},
 				auth: {
 					username,
 					password
+				},
+				params: {
+					sysparm_limit: limit
 				}
 			});
 

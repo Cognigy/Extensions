@@ -2,14 +2,13 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios from 'axios';
 
 
-export interface IGetFromTableParams extends INodeFunctionBaseParams {
+export interface IGetIncidentParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
 			password: string;
 			instance: string;
 		};
-		tableName: string;
 		limit: number;
 		incidentNumber: string;
 		caller: string;
@@ -20,9 +19,9 @@ export interface IGetFromTableParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const getFromTableNode = createNodeDescriptor({
-	type: "getFromTable",
-	defaultLabel: "Get From Table",
+export const getIncidentNode = createNodeDescriptor({
+	type: "getIncident",
+	defaultLabel: "Get Incident",
 	fields: [
 		{
 			key: "connection",
@@ -31,15 +30,6 @@ export const getFromTableNode = createNodeDescriptor({
 			params: {
 				connectionType: "snow",
 				required: false
-			}
-		},
-		{
-			key: "tableName",
-			label: "Table Name",
-			description: "The name of the Service Now table you want to use for this request.",
-			type: "cognigyText",
-			params: {
-				required: true
 			}
 		},
 		{
@@ -105,7 +95,7 @@ export const getFromTableNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "snow",
+			defaultValue: "snow.incident",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -115,7 +105,7 @@ export const getFromTableNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "snow",
+			defaultValue: "snow.incident",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -123,17 +113,6 @@ export const getFromTableNode = createNodeDescriptor({
 		}
 	],
 	sections: [
-		{
-			key: "advanced",
-			label: "Advanced",
-			defaultCollapsed: true,
-			fields: [
-				"limit",
-				"incidentNumber",
-				"caller",
-				"category"
-			]
-		},
 		{
 			key: "storageOption",
 			label: "Storage Option",
@@ -147,53 +126,60 @@ export const getFromTableNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "tableName" },
-		{ type: "section", key: "advanced" },
-		{ type: "section", key: "storageOption" },
+		{ type: "field", key: "limit" },
+		{ type: "field", key: "incidentNumber" },
+		{ type: "field", key: "caller" },
+		{ type: "field", key: "category" },
+		{ type: "section", key: "storageOption" }
 	],
 	tokens: [
 		{
 			label: "Incident Number",
-			script: "ci.snow[0].number",
+			script: "ci.snow.incident[0].number",
 			type: "answer"
 		},
 		{
 			label: "Incident Caller",
-			script: "ci.snow[0].caller_id.value",
+			script: "ci.snow.incident[0].caller_id.value",
+			type: "answer"
+		},
+		{
+			label: "Incident Status",
+			script: "ci.snow.incident[0].state",
 			type: "answer"
 		},
 		{
 			label: "Incident Short Description",
-			script: "ci.snow[0].short_description",
+			script: "ci.snow.incident[0].short_description",
 			type: "answer"
 		},
 		{
 			label: "Incident Severity",
-			script: "ci.snow[0].severity",
+			script: "ci.snow.incident[0].severity",
 			type: "answer"
 		},
 		{
 			label: "Incident Category",
-			script: "ci.snow[0].category",
+			script: "ci.snow.incident[0].category",
 			type: "answer"
 		},
 		{
 			label: "Incident Opened At",
-			script: "ci.snow[0].opened_at",
+			script: "ci.snow.incident[0].opened_at",
 			type: "answer"
 		},
 		{
 			label: "Incident Updated On",
-			script: "ci.snow[0].sys_updated_on",
+			script: "ci.snow.incident[0].sys_updated_on",
 			type: "answer"
 		}
 	],
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: IGetFromTableParams) => {
+	function: async ({ cognigy, config }: IGetIncidentParams) => {
 		const { api } = cognigy;
-		const { connection, tableName, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
+		const { connection, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
 		const { username, password, instance } = connection;
 
 		try {
@@ -204,7 +190,7 @@ export const getFromTableNode = createNodeDescriptor({
 			query = category ? query + `category=${category}` : query;
 			query = caller ? query + `caller=${caller}` : query;
 
-			let url = `${instance}/api/now/table/${tableName}?sysparm_query=${query}&sysparm_limit=${limit}`;
+			let url = `${instance}/api/now/table/incident?sysparm_query=${query}&sysparm_limit=${limit}`;
 
 			const response = await axios.get(url, {
 				headers: {

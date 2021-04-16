@@ -31,6 +31,7 @@ interface IIncidentData {
 export const createIncidentNode = createNodeDescriptor({
 	type: "createIncident",
 	defaultLabel: "Create Incident",
+	summary: "Create a new incident in Service Now",
 	fields: [
 		{
 			key: "connection",

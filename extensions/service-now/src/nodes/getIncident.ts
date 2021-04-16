@@ -22,6 +22,7 @@ export interface IGetIncidentParams extends INodeFunctionBaseParams {
 export const getIncidentNode = createNodeDescriptor({
 	type: "getIncident",
 	defaultLabel: "Get Incident",
+	summary: "Get an incident from Service Now",
 	fields: [
 		{
 			key: "connection",
@@ -35,19 +36,15 @@ export const getIncidentNode = createNodeDescriptor({
 		{
 			key: "limit",
 			label: "Result Limit",
-			description: "The limit of the shown results.",
+			description: "The limit of the shown results",
 			type: "number",
-			defaultValue: 1,
-			params: {
-				required: true
-			}
+			defaultValue: 1
 		},
 		{
 			key: "incidentNumber",
 			label: "Incident Number",
 			description: "The number of the incident; e.g. INC012345",
 			type: "cognigyText",
-			defaultValue: "",
 			params: {
 				required: false
 			}
@@ -57,7 +54,6 @@ export const getIncidentNode = createNodeDescriptor({
 			label: "The user that submitted the incident",
 			description: "The user that submitted the incident; e.g. David.Miller ",
 			type: "cognigyText",
-			defaultValue: "",
 			params: {
 				required: false
 			}
@@ -67,7 +63,6 @@ export const getIncidentNode = createNodeDescriptor({
 			label: "Incident Category",
 			description: "The category of the incident; e.g. Software",
 			type: "cognigyText",
-			defaultValue: "",
 			params: {
 				required: false
 			}
@@ -122,14 +117,22 @@ export const getIncidentNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"limit"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "limit" },
 		{ type: "field", key: "incidentNumber" },
 		{ type: "field", key: "caller" },
 		{ type: "field", key: "category" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" }
 	],
 	tokens: [
@@ -177,20 +180,20 @@ export const getIncidentNode = createNodeDescriptor({
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: IGetIncidentParams) => {
+	function: async ({ cognigy, config, childConfigs }: IGetIncidentParams) => {
 		const { api } = cognigy;
 		const { connection, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
 		const { username, password, instance } = connection;
 
 		try {
 
-			let query = "";
+			let query: string = "";
 
 			query = incidentNumber ? `number=${incidentNumber}` : "";
 			query = category ? query + `category=${category}` : query;
 			query = caller ? query + `caller=${caller}` : query;
 
-			let url = `${instance}/api/now/table/incident?sysparm_query=${query}&sysparm_limit=${limit}`;
+			let url: string = `${instance}/api/now/table/incident?sysparm_query=${query}&sysparm_limit=${limit}`;
 
 			const response = await axios.get(url, {
 				headers: {
@@ -202,6 +205,9 @@ export const getIncidentNode = createNodeDescriptor({
 				}
 			});
 
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccesGetIncident");
+			api.setNextNode(onSuccessChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data.result, "simple");
 			} else {
@@ -209,6 +215,10 @@ export const getIncidentNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data.result);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onErrorGetIncident");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, { error: error.message }, "simple");
 			} else {
@@ -216,5 +226,27 @@ export const getIncidentNode = createNodeDescriptor({
 				api.addToInput(inputKey, { error: error.message });
 			}
 		}
+	}
+});
+
+export const onSuccesGetIncident = createNodeDescriptor({
+	type: "onSuccesGetIncident",
+	parentType: "getIncident",
+	defaultLabel: "On Success",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onErrorGetIncident = createNodeDescriptor({
+	type: "onErrorGetIncident",
+	parentType: "getIncident",
+	defaultLabel: "On Error",
+	appearance: {
+		color: "#cf142b",
+		textColor: "white",
+		variant: "mini"
 	}
 });

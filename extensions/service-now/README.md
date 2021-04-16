@@ -2,199 +2,78 @@
 
 Integrates the Service Now Software with Cognigy.AI.
 
-Table Node Source: https://developer.servicenow.com/app.do#!/rest_api_doc?v=madrid&id=c_TableAPI
+## Connection
 
-**Connection:**
+Before the Extension can be used in order to work with *Incidents* or the *Service Catalog*, for example, a so-called Connection needs to be created in Cognigy.AI. The following values can be found in the Service Now login screen:
 
-- Service Now
-  - username
-  - password
-  - instance (e.g. https://dev12345.service-now.com)
+  - **username**
+    - The username of the Service Now account that should be used in Cognigy.AI.
+  - **password**
+    - The password of this Service Now user.
+  - **instance**
+    - This is the URL of the Service Now installation, the organization uses. For example, https://dev12345.service-now.com or https://mycompany.service-now.com
 
-## Node: Get From Table
-
-Returns the data from a requested [Table](https://docs.servicenow.com/bundle/jakarta-servicenow-platform/page/administer/reference-pages/reference/r_TablesAndClasses.html?title=Tables_and_Classes) and stores it into the Cognigy Context. You have to specify the columns (Fields) you want to show in the results.
+<img src="./docs/serviceNowCredentialsScreenshot.PNG">
 
 
-## Node: Post To Table
+## Node: Create Incident
 
-This Node will post the given **data** to the chosen **table**. The data could look like this: 
+One common use-case for Service Now is to crete a new incident in the [Incidents Table](https://www.servicenow.com/products/incident-management.html):
+
+<img src="./docs/snow-create-incident-edit-menu.PNG">
+
+From default, the result will be stored in the [Input Object](https://docs.cognigy.com/docs/input). It consists of the detailed information about the successfully created incident:
 
 ```json
 {
-  "short_description": "I lost my keys"
-}
-```
+  "snow": {
+    "createdIncident": {
+      "sys_updated_on": "2021-04-16 09:22:30",
+      "number": "INC0010086",
+      "state": "1",
+      "impact": "3",
+      "priority": "5",
+      "short_description": "Forgot my password",
 
-The result will be a json object including the new table entry:
-
-```json
-"posted": {
-    "first_reported_by_task": "",
-    "parent": "",
-    "made_sla": "true",
-    "watch_list": "",
-    "fix_communicated_by": "",
-    "upon_reject": "cancel",
-    "sys_updated_on": "2019-04-12 12:54:09",
-    "cause_notes": "",
-    "approval_history": "",
-    "number": "PRB0040026",
-    "resolved_by": "",
-    "sys_updated_by": "blub",
-    "opened_by": {
-      "link": "https://23456789.service-now.com/api/now/table/sys_user/123456789098765432",
-      "value": "123456789098765432"
+      "description": "I can not login to my Salesforce account anymore. ",
+      "category": "inquiry"
     },
-```
-
-
-
-## Node: Delete From Table
-
-This Node deletes the entry with the given **sysId** and returns a success message if nothing gone wrong: 
-
-```json
-{
-  "deleted": "succefully deleted entry with id da4fe285dbbc330045da2bfa4b9619d6"
-}
-```
-
-
-
-## Node: Patch Record In Table
-
-This node updates an entry in your chosen Service Now table. You have to define the **sysId** and the **data** to update. If you don't know the sysId of your entry, just execute the **GetFromTable** Node of this Custom Module and take a look into the **CognigyContext**. 
-
-To define the data to update, you have to use a JSON format such as: 
-
-```json
-{
-  "short_description": "I updated the short description of this entry"
-}
-```
-
-As response you will get a JSON object, which looks like: 
-
-```json
-"patched": {
-    "first_reported_by_task": "",
-    "parent": "",
-    "made_sla": "true",
-    "watch_list": "",
-    "fix_communicated_by": "",
-    "upon_reject": "cancel",
-    "sys_updated_on": "2019-04-13 08:16:38",
-    "cause_notes": "",
-    "approval_history": "",
-    "number": "PRB0040027",
-    "resolved_by": "",
-    "sys_updated_by": "blub",
-    "opened_by": {
-      "link": "https://123456.service-now.com/api/now/table/sys_user/6816f79cc0a8016401c5a33be04be441",
-      "value": "6816f79cc0a8016401c5a33be04be441"
-    },
-```
-
-If you now open your updated table in your **Service Now Instance** you will see the difference. 
-
-
-
-## Node: Get Attachments
-
-With this node you can reach your Service Now Attachments and store them to your CognigyContext. For this, there are two parameters you can use: 
-
-- limit
-  - How many results you want to store, e.g. 1
-- query
-  - A query to filter your attachments, e.g. file_name=document.doc
-  - [Read more here](<https://developer.servicenow.com/app.do#!/rest_api_doc?v=madrid&id=r_AttachmentAPI-GET>)
-
-The result will look like the following: 
-
-```json
-"attachments": [
-    {
-      "size_bytes": "3549",
-      "file_name": "image",
-      "sys_mod_count": "0",
-      "average_image_color": "",
-      "image_width": "",
-      "sys_updated_on": "2092-01-24 02:00:31",
-      "sys_tags": "",
-      "table_name": "ZZ_YYdb_image",
-      "sys_id": "0987654321234567890o987654323456789",
-      "image_height": "",
-      "sys_updated_by": "mark.odonnell",
-      "download_link": "https://12345678.service-now.com/api/now/attachment/0987654321234567890o987654323456789/file",
-      "content_type": "image/png",
-      "sys_created_on": "2019-01-24 02:00:31",
-      "size_compressed": "3215",
-      "compressed": "true",
-      "state": "",
-      "table_sys_id": "0987654321234567890o987654323456789",
-      "chunk_size_bytes": "",
-      "sys_created_by": "max.mustermann"
-    }
-  ]
-```
-
-
-
-## Node: Get Attachment By Id
-
-If you don't want to get all attachments, you can reach one by it's specifiy **sysId** by using this node here. You can get the sysId by executing the **GETAttachments** node. The result will look like the above one.
-
-
-
-## Node: Delete Attachment
-
-With this node you can easily delete an attachment. You have to type in the attachment's **sysId** to get the success message: 
-
-```json
-{
-  "deleted": "succefully deleted attachment with id 1894eef4ef331000914304167b2256c2",
-}
-```
-
-## Node: Post Attachment
-
-Post an attachment to a specific table entry, such as entry X in table `problem`, where you need the following: 
-
-- table entry `sys_id`
-- location of the attacchment, e.g. AWS S3 url 
-- the file name
-
-If you now open your Service Now instance, you will see the attachment in the history of your entry.
-
-The response will look like the following:
-
-The `table_sys_id` is the entrie's id and the `sys_id` is the id of the new attachment.
-
-```json
-{
-  "posted": {
-    "size_bytes": "21",
-    "file_name": "lol.py",
-    "sys_mod_count": "0",
-    "average_image_color": "",
-    "image_width": "",
-    "sys_updated_on": "2019-04-25 08:49:32",
-    "sys_tags": "",
-    "table_name": "problem",
-    "sys_id": "71f37451db01330045da2bfa4b961968",
-    "image_height": "",
-    "sys_updated_by": "admin",
-    "download_link": "https://123456.service-now.com/api/now/attachment/71f37451db01330045da2bfa4b961968/file",
-    "content_type": "multipart/form-data",
-    "sys_created_on": "2019-04-25 08:49:32",
-    "size_compressed": "41",
-    "compressed": "true",
-    "state": "",
-    "table_sys_id": "3fd37451db01330045da2bfa4b96198e",
-    "chunk_size_bytes": "734003",
-    "sys_created_by": "admin"
+    "...": "..."
   }
 }
 ```
 
+This information can be used dynamically in the further Flow, such as in a confirmation Say Node:
+
+<img src="./docs/snow-create-incident-confirmation-say-node-edit-menu.PNG">
+
+## Node: Get Incident
+
+If the virtual agent should provide the same detailed information about an older incident, the **Get Incident** Node could be used. It takes the **Incident Number** and stores the result in Cognigy.AI:
+
+<img src="./docs/snow-get-incident-edit-menu.PNG">
+
+In this case, the result looks similar to the one mentioned above:
+
+```json
+{
+  "snow": {
+    "createdIncident": {
+      "sys_updated_on": "2020-12-24 11:00:20",
+      "number": "INC0010084",
+      "state": "1",
+      "impact": "1",
+      "priority": "5",
+      "short_description": "Computer Monitor is broken",
+
+      "description": "I am not able to use the monitor of my computer anymore. It keeps showing screen",
+      "category": "hardware"
+    },
+    "...": "..."
+  }
+}
+```
+
+This information can be used dynamically in the further Flow, such as in a confirmation Say Node:
+
+<img src="./docs/snow-get-incident-confirmation-say-node-edit-menu.PNG">

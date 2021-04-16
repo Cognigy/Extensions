@@ -9,7 +9,6 @@ export interface IGetCatalogRequestParams extends INodeFunctionBaseParams {
 			password: string;
 			instance: string;
 		};
-		limit: number;
 		requestNumber: string;
 		storeLocation: string;
 		inputKey: string;
@@ -28,16 +27,6 @@ export const getCatalogRequestNode = createNodeDescriptor({
 			params: {
 				connectionType: "snow",
 				required: false
-			}
-		},
-		{
-			key: "limit",
-			label: "Result Limit",
-			description: "The limit of the shown results.",
-			type: "number",
-			defaultValue: 1,
-			params: {
-				required: true
 			}
 		},
 		{
@@ -104,7 +93,6 @@ export const getCatalogRequestNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "limit" },
 		{ type: "field", key: "requestNumber" },
 		{ type: "section", key: "storageOption" }
 	],
@@ -125,7 +113,7 @@ export const getCatalogRequestNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetCatalogRequestParams) => {
 		const { api } = cognigy;
-		const { connection, limit, storeLocation, inputKey, contextKey, requestNumber } = config;
+		const { connection, storeLocation, inputKey, contextKey, requestNumber } = config;
 		const { username, password, instance } = connection;
 
 		try {
@@ -134,7 +122,7 @@ export const getCatalogRequestNode = createNodeDescriptor({
 
 			query = requestNumber ? `number=${requestNumber}` : "";
 
-			let url = `${instance}/api/now/table/sc_request?sysparm_query=${query}&sysparm_limit=${limit}`;
+			let url = `${instance}/api/now/table/sc_request?sysparm_query=${query}`;
 
 			const response = await axios.get(url, {
 				headers: {

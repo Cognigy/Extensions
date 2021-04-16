@@ -1,7 +1,7 @@
 import { createExtension } from "@cognigy/extension-tools";
 
 // Import Flow Nodes
-import { getIncidentNode } from "./nodes/getIncident";
+import { getIncidentNode, onErrorGetIncident, onSuccesGetIncident } from "./nodes/getIncident";
 import { findTicketInTextNode } from "./nodes/findTicketInText";
 import { createIncidentNode, onErrorCreatedIncident, onSuccesCreatedIncident } from "./nodes/createIncident";
 import { getCatalogRequestNode } from "./nodes/getCatalogRequest";
@@ -24,7 +24,10 @@ export default createExtension({
 		createIncidentNode,
 
 		onSuccesCreatedIncident,
-		onErrorCreatedIncident
+		onErrorCreatedIncident,
+
+		onSuccesGetIncident,
+		onErrorGetIncident
 	],
 
 	connections: [

@@ -26,7 +26,7 @@ interface IIncidentData {
 	impact: string;
 	caller_id: string;
 	description: string;
-};
+}
 
 export const createIncidentNode = createNodeDescriptor({
 	type: "createIncident",

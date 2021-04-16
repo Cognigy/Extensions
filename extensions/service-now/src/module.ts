@@ -5,7 +5,7 @@ import { getIncidentNode, onErrorGetIncident, onSuccesGetIncident } from "./node
 import { findTicketInTextNode } from "./nodes/findTicketInText";
 import { createIncidentNode, onErrorCreatedIncident, onSuccesCreatedIncident } from "./nodes/createIncident";
 import { getCatalogRequestNode } from "./nodes/getCatalogRequest";
-import { getCatalogTaskNode } from "./nodes/getCatalogTask";
+import { getCatalogTaskNode, onErrorGetCatalogTask, onSuccesGetCatalogTask } from "./nodes/getCatalogTask";
 import { getServiceCatalogsNode } from "./nodes/getServiceCatalogs";
 import { getServiceCatalogDetailsNode } from "./nodes/getServiceCatalogDetails";
 
@@ -27,7 +27,10 @@ export default createExtension({
 		onErrorCreatedIncident,
 
 		onSuccesGetIncident,
-		onErrorGetIncident
+		onErrorGetIncident,
+
+		onSuccesGetCatalogTask,
+		onErrorGetCatalogTask
 	],
 
 	connections: [

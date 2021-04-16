@@ -19,6 +19,7 @@ export interface IGetCatalogTaskParams extends INodeFunctionBaseParams {
 export const getCatalogTaskNode = createNodeDescriptor({
 	type: "getCatalogTask",
 	defaultLabel: "Get Catalog Task",
+	summary: "Get a Service Catalog Task with a given number",
 	fields: [
 		{
 			key: "connection",
@@ -93,7 +94,7 @@ export const getCatalogTaskNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "requestNumber" },
+		{ type: "field", key: "taskNumber" },
 		{ type: "section", key: "storageOption" }
 	],
 	tokens: [
@@ -116,7 +117,13 @@ export const getCatalogTaskNode = createNodeDescriptor({
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: IGetCatalogTaskParams) => {
+	dependencies: {
+		children: [
+			"onSuccesGetCatalogTask",
+			"onErrorGetCatalogTask"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: IGetCatalogTaskParams) => {
 		const { api } = cognigy;
 		const { connection, storeLocation, inputKey, contextKey, taskNumber } = config;
 		const { username, password, instance } = connection;
@@ -139,6 +146,9 @@ export const getCatalogTaskNode = createNodeDescriptor({
 				}
 			});
 
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccesGetCatalogTask");
+			api.setNextNode(onSuccessChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data.result, "simple");
 			} else {
@@ -146,6 +156,10 @@ export const getCatalogTaskNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data.result);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onErrorGetCatalogTask");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, { error: error.message }, "simple");
 			} else {
@@ -153,5 +167,27 @@ export const getCatalogTaskNode = createNodeDescriptor({
 				api.addToInput(inputKey, { error: error.message });
 			}
 		}
+	}
+});
+
+export const onSuccesGetCatalogTask = createNodeDescriptor({
+	type: "onSuccesGetCatalogTask",
+	parentType: "getCatalogTask",
+	defaultLabel: "On Success",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onErrorGetCatalogTask = createNodeDescriptor({
+	type: "onErrorGetCatalogTask",
+	parentType: "getCatalogTask",
+	defaultLabel: "On Error",
+	appearance: {
+		color: "#cf142b",
+		textColor: "white",
+		variant: "mini"
 	}
 });

@@ -9,7 +9,6 @@ export interface IGetIncidentParams extends INodeFunctionBaseParams {
 			password: string;
 			instance: string;
 		};
-		limit: number;
 		incidentNumber: string;
 		caller: string;
 		category: string;
@@ -32,13 +31,6 @@ export const getIncidentNode = createNodeDescriptor({
 				connectionType: "snow",
 				required: false
 			}
-		},
-		{
-			key: "limit",
-			label: "Result Limit",
-			description: "The limit of the shown results",
-			type: "number",
-			defaultValue: 1
 		},
 		{
 			key: "incidentNumber",
@@ -119,7 +111,6 @@ export const getIncidentNode = createNodeDescriptor({
 			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
-				"limit",
 				"category",
 				"caller"
 			]
@@ -184,7 +175,7 @@ export const getIncidentNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IGetIncidentParams) => {
 		const { api } = cognigy;
-		const { connection, limit, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
+		const { connection, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
 		const { username, password, instance } = connection;
 
 		try {
@@ -195,7 +186,7 @@ export const getIncidentNode = createNodeDescriptor({
 			query = category ? query + `category=${category}` : query;
 			query = caller ? query + `caller=${caller}` : query;
 
-			let url: string = `${instance}/api/now/table/incident?sysparm_query=${query}&sysparm_limit=${limit}`;
+			let url: string = `${instance}/api/now/table/incident?sysparm_query=${query}`;
 
 			const response = await axios.get(url, {
 				headers: {

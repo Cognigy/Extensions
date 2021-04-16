@@ -20,6 +20,14 @@ export interface ICreateIncidentParams extends INodeFunctionBaseParams {
 	};
 }
 
+interface IIncidentData {
+	short_description: string;
+	urgency: string;
+	impact: string;
+	caller_id: string;
+	description: string;
+};
+
 export const createIncidentNode = createNodeDescriptor({
 	type: "createIncident",
 	defaultLabel: "Create Incident",
@@ -47,6 +55,7 @@ export const createIncidentNode = createNodeDescriptor({
 			label: "Urgency",
 			description: "The urgency of the incident. E.g. 4.",
 			type: "cognigyText",
+			defaultValue: "4",
 			params: {
 				required: true
 			}
@@ -56,6 +65,7 @@ export const createIncidentNode = createNodeDescriptor({
 			label: "Impact",
 			description: "The impact of the incident. E.g. 4.",
 			type: "cognigyText",
+			defaultValue: "4",
 			params: {
 				required: true
 			}
@@ -65,6 +75,7 @@ export const createIncidentNode = createNodeDescriptor({
 			label: "Caller ID",
 			description: "The ID of the person on behalf of which the incident is raised. E.g. David.Miller",
 			type: "cognigyText",
+			defaultValue: "David.Miller",
 			params: {
 				required: true
 			}
@@ -75,7 +86,8 @@ export const createIncidentNode = createNodeDescriptor({
 			description: "The full description of the incident.",
 			type: "cognigyText",
 			params: {
-				required: true
+				required: true,
+				multiline: true
 			}
 		},
 		{
@@ -154,20 +166,27 @@ export const createIncidentNode = createNodeDescriptor({
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: ICreateIncidentParams) => {
+	dependencies: {
+		children: [
+			"onSuccesCreatedIncident",
+			"onErrorCreatedIncident"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: ICreateIncidentParams) => {
 		const { api } = cognigy;
 		const { connection, shortDescription, urgency, impact, callerId, description, storeLocation, inputKey, contextKey } = config;
 		const { username, password, instance } = connection;
 
-		let data = {
-			"short_description": shortDescription,
-			"urgency": urgency,
-			"impact": impact,
-			"caller_id": callerId,
-			"description": description
-		};
-
 		try {
+
+			const data: IIncidentData = {
+				"short_description": shortDescription,
+				"urgency": urgency,
+				"impact": impact,
+				"caller_id": callerId,
+				"description": description
+			};
+
 			const response = await axios.post(`${instance}/api/now/table/incident`,
 				data, {
 				headers: {
@@ -180,6 +199,9 @@ export const createIncidentNode = createNodeDescriptor({
 				},
 			});
 
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccesCreatedIncident");
+			api.setNextNode(onSuccessChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data.result, "simple");
 			} else {
@@ -187,6 +209,10 @@ export const createIncidentNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data.result);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onErrorCreatedIncident");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, { error: error.message }, "simple");
 			} else {
@@ -194,5 +220,27 @@ export const createIncidentNode = createNodeDescriptor({
 				api.addToInput(inputKey, { error: error.message });
 			}
 		}
+	}
+});
+
+export const onSuccesCreatedIncident = createNodeDescriptor({
+	type: "onSuccesCreatedIncident",
+	parentType: "createIncident",
+	defaultLabel: "On Success",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onErrorCreatedIncident = createNodeDescriptor({
+	type: "onErrorCreatedIncident",
+	parentType: "createIncident",
+	defaultLabel: "On Error",
+	appearance: {
+		color: "#cf142b",
+		textColor: "white",
+		variant: "mini"
 	}
 });

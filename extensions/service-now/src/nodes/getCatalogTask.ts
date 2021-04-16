@@ -9,7 +9,6 @@ export interface IGetCatalogTaskParams extends INodeFunctionBaseParams {
 			password: string;
 			instance: string;
 		};
-		limit: number;
 		taskNumber: string;
 		storeLocation: string;
 		inputKey: string;
@@ -28,16 +27,6 @@ export const getCatalogTaskNode = createNodeDescriptor({
 			params: {
 				connectionType: "snow",
 				required: false
-			}
-		},
-		{
-			key: "limit",
-			label: "Result Limit",
-			description: "The limit of the shown results.",
-			type: "number",
-			defaultValue: 1,
-			params: {
-				required: true
 			}
 		},
 		{
@@ -104,7 +93,6 @@ export const getCatalogTaskNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "limit" },
 		{ type: "field", key: "requestNumber" },
 		{ type: "section", key: "storageOption" }
 	],
@@ -130,7 +118,7 @@ export const getCatalogTaskNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetCatalogTaskParams) => {
 		const { api } = cognigy;
-		const { connection, limit, storeLocation, inputKey, contextKey, taskNumber } = config;
+		const { connection, storeLocation, inputKey, contextKey, taskNumber } = config;
 		const { username, password, instance } = connection;
 
 		try {
@@ -139,7 +127,7 @@ export const getCatalogTaskNode = createNodeDescriptor({
 
 			query = taskNumber ? `number=${taskNumber}` : "";
 
-			let url = `${instance}/api/now/table/sc_task?sysparm_query=${query}&sysparm_limit=${limit}`;
+			let url = `${instance}/api/now/table/sc_task?sysparm_query=${query}`;
 
 			const response = await axios.get(url, {
 				headers: {

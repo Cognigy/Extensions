@@ -54,18 +54,14 @@ export const getIncidentNode = createNodeDescriptor({
 			label: "The user that submitted the incident",
 			description: "The user that submitted the incident; e.g. David.Miller ",
 			type: "cognigyText",
-			params: {
-				required: false
-			}
+			defaultValue: ""
 		},
 		{
 			key: "category",
 			label: "Incident Category",
 			description: "The category of the incident; e.g. Software",
 			type: "cognigyText",
-			params: {
-				required: false
-			}
+			defaultValue: ""
 		},
 		{
 			key: "storeLocation",
@@ -123,15 +119,15 @@ export const getIncidentNode = createNodeDescriptor({
 			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
-				"limit"
+				"limit",
+				"category",
+				"caller"
 			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "incidentNumber" },
-		{ type: "field", key: "caller" },
-		{ type: "field", key: "category" },
 		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" }
 	],
@@ -179,6 +175,12 @@ export const getIncidentNode = createNodeDescriptor({
 	],
 	appearance: {
 		color: "#80b6a1"
+	},
+	dependencies: {
+		children: [
+			"onSuccesGetIncident",
+			"onErrorGetIncident"
+		]
 	},
 	function: async ({ cognigy, config, childConfigs }: IGetIncidentParams) => {
 		const { api } = cognigy;

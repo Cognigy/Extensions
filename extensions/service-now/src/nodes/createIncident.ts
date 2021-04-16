@@ -55,20 +55,48 @@ export const createIncidentNode = createNodeDescriptor({
 			key: "urgency",
 			label: "Urgency",
 			description: "The urgency of the incident. E.g. 4.",
-			type: "cognigyText",
-			defaultValue: "4",
+			type: "select",
+			defaultValue: "3",
 			params: {
-				required: true
+				required: true,
+				options: [
+					{
+						label: "3 - Low",
+						value: "3"
+					},
+					{
+						label: "2 - Medium",
+						value: "2"
+					},
+					{
+						label: "1 - High",
+						value: "1"
+					}
+				]
 			}
 		},
 		{
 			key: "impact",
 			label: "Impact",
 			description: "The impact of the incident. E.g. 4.",
-			type: "cognigyText",
-			defaultValue: "4",
+			type: "select",
+			defaultValue: "3",
 			params: {
-				required: true
+				required: true,
+				options: [
+					{
+						label: "3 - Low",
+						value: "3"
+					},
+					{
+						label: "2 - Medium",
+						value: "2"
+					},
+					{
+						label: "1 - High",
+						value: "1"
+					}
+				]
 			}
 		},
 		{
@@ -141,15 +169,23 @@ export const createIncidentNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "priority",
+			label: "Priority",
+			defaultCollapsed: true,
+			fields: [
+				"urgency",
+				"impact"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "shortDescription" },
-		{ type: "field", key: "urgency" },
-		{ type: "field", key: "impact" },
 		{ type: "field", key: "callerId" },
 		{ type: "field", key: "description" },
+		{ type: "section", key: "priority" },
 		{ type: "section", key: "storageOption" }
 	],
 	tokens: [

@@ -10,6 +10,7 @@ export interface IGetIncidentParams extends INodeFunctionBaseParams {
 			instance: string;
 		};
 		incidentNumber: string;
+		getDisplayValues: boolean;
 		caller: string;
 		category: string;
 		storeLocation: string;
@@ -40,6 +41,13 @@ export const getIncidentNode = createNodeDescriptor({
 			params: {
 				required: false
 			}
+		},
+		{
+
+			key: "getDisplayValues",
+			label: "Display Values",
+			type: "checkbox",
+			defaultValue: false
 		},
 		{
 			key: "caller",
@@ -119,6 +127,7 @@ export const getIncidentNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "incidentNumber" },
+		{ type: "field", key: "getDisplayValues" },
 		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" }
 	],
@@ -175,7 +184,7 @@ export const getIncidentNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IGetIncidentParams) => {
 		const { api } = cognigy;
-		const { connection, storeLocation, inputKey, contextKey, incidentNumber, caller, category } = config;
+		const { connection, storeLocation, inputKey, contextKey, incidentNumber, caller, category, getDisplayValues } = config;
 		const { username, password, instance } = connection;
 
 		try {
@@ -185,6 +194,7 @@ export const getIncidentNode = createNodeDescriptor({
 			query = incidentNumber ? `number=${incidentNumber}` : "";
 			query = category ? query + `category=${category}` : query;
 			query = caller ? query + `caller=${caller}` : query;
+			query = getDisplayValues ? query + `&sysparm_display_value=${getDisplayValues}` : query;
 
 			let url: string = `${instance}/api/now/table/incident?sysparm_query=${query}`;
 

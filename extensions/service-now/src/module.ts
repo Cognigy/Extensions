@@ -1,13 +1,16 @@
 import { createExtension } from "@cognigy/extension-tools";
 
 // Import Flow Nodes
-import { getIncidentNode, onErrorGetIncident, onSuccesGetIncident } from "./nodes/getIncident";
-import { findTicketInTextNode } from "./nodes/findTicketInText";
-import { createIncidentNode, onErrorCreatedIncident, onSuccesCreatedIncident } from "./nodes/createIncident";
-import { getCatalogRequestNode } from "./nodes/getCatalogRequest";
-import { getCatalogTaskNode, onErrorGetCatalogTask, onSuccesGetCatalogTask } from "./nodes/getCatalogTask";
-import { getServiceCatalogsNode } from "./nodes/getServiceCatalogs";
-import { getServiceCatalogDetailsNode } from "./nodes/getServiceCatalogDetails";
+import { getIncidentNode, onErrorGetIncident, onSuccesGetIncident } from "./nodes/incident/getIncident";
+import { findTicketInTextNode } from "./nodes/incident/findTicketInText";
+import { createIncidentNode, onErrorCreatedIncident, onSuccesCreatedIncident } from "./nodes/incident/createIncident";
+import { getCatalogRequestNode } from "./nodes/catalog/getCatalogRequest";
+import { getCatalogTaskNode, onErrorGetCatalogTask, onSuccesGetCatalogTask } from "./nodes/catalog/getCatalogTask";
+import { getServiceCatalogsNode } from "./nodes/catalog/getServiceCatalogs";
+import { getServiceCatalogDetailsNode } from "./nodes/catalog/getServiceCatalogDetails";
+import { addToServiceCatalogCartNode, onErrorAddToServiceCatalogCart, onSuccesAddToServiceCatalogCart } from "./nodes/catalog/addToServiceCatalogCart";
+import { orderServiceCatalogItemNode, onSuccessServiceCatalogOrderNow, onErrorServiceCatalogOrderNow } from "./nodes/catalog/orderServiceCatalogItem";
+
 
 // Import Connections
 import { snowConnection } from "./connections/snowConnection";
@@ -22,6 +25,8 @@ export default createExtension({
 		getServiceCatalogsNode,
 		findTicketInTextNode,
 		createIncidentNode,
+		addToServiceCatalogCartNode,
+		orderServiceCatalogItemNode,
 
 		onSuccesCreatedIncident,
 		onErrorCreatedIncident,
@@ -30,7 +35,13 @@ export default createExtension({
 		onErrorGetIncident,
 
 		onSuccesGetCatalogTask,
-		onErrorGetCatalogTask
+		onErrorGetCatalogTask,
+
+		onSuccesAddToServiceCatalogCart,
+		onErrorAddToServiceCatalogCart,
+
+		onSuccessServiceCatalogOrderNow,
+		onErrorServiceCatalogOrderNow
 	],
 
 	connections: [

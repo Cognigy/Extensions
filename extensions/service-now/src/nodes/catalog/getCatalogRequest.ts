@@ -18,7 +18,7 @@ export interface IGetCatalogRequestParams extends INodeFunctionBaseParams {
 
 export const getCatalogRequestNode = createNodeDescriptor({
 	type: "getCatalogRequest",
-	defaultLabel: "Get Catalog Request",
+	defaultLabel: "Get Request (Service Catalog)",
 	fields: [
 		{
 			key: "connection",

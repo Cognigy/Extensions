@@ -18,7 +18,7 @@ export interface IGetCatalogTaskParams extends INodeFunctionBaseParams {
 
 export const getCatalogTaskNode = createNodeDescriptor({
 	type: "getCatalogTask",
-	defaultLabel: "Get Catalog Task",
+	defaultLabel: "Get Task (Service Catalog)",
 	summary: "Get a Service Catalog Task with a given number",
 	fields: [
 		{

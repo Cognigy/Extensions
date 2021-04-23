@@ -24,7 +24,7 @@ export interface IGetArticlesParams extends INodeFunctionBaseParams {
 
 export const getArticlesNode = createNodeDescriptor({
 	type: "getArticles",
-	defaultLabel: "Get Articles",
+	defaultLabel: "Search Articles (Knowledge)",
 	fields: [
 		{
 			key: "connection",

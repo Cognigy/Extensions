@@ -21,7 +21,7 @@ export interface IGetIncidentParams extends INodeFunctionBaseParams {
 
 export const getIncidentNode = createNodeDescriptor({
 	type: "getIncident",
-	defaultLabel: "Get Incident",
+	defaultLabel: "Get Incident (Support)",
 	summary: "Get an incident from Service Now",
 	fields: [
 		{

@@ -18,7 +18,8 @@ export interface IGetServiceCatalogDetailsParams extends INodeFunctionBaseParams
 
 export const getServiceCatalogDetailsNode = createNodeDescriptor({
 	type: "getServiceCatalogDetails",
-	defaultLabel: "Get Service Catalog Details",
+	defaultLabel: "Get Details (Service Catalog)",
+	summary: "Get detailed information about a given catalog",
 	fields: [
 		{
 			key: "connection",

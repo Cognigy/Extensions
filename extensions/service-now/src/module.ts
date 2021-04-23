@@ -15,6 +15,7 @@ import { orderServiceCatalogItemNode, onSuccessServiceCatalogOrderNow, onErrorSe
 // Import Connections
 import { snowConnection } from "./connections/snowConnection";
 import { getServiceCatalogItemsNode } from "./nodes/catalog/getServiceCatalogItems";
+import { getArticlesNode } from "./nodes/knowledge/getArticles";
 
 
 export default createExtension({
@@ -29,6 +30,7 @@ export default createExtension({
 		addToServiceCatalogCartNode,
 		orderServiceCatalogItemNode,
 		getServiceCatalogItemsNode,
+		getArticlesNode,
 
 		onSuccesCreatedIncident,
 		onErrorCreatedIncident,

@@ -996,22 +996,10 @@
             "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAFFmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDggNzkuMTY0MDM2LCAyMDE5LzA4LzEzLTAxOjA2OjU3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjEuMCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDIwLTEyLTE0VDIxOjE0OjA0KzAxOjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyMC0xMi0xNFQyMTo0MTo0OCswMTowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyMC0xMi0xNFQyMTo0MTo0OCswMTowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpiNjM2YWE5ZS01NWUyLTJi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",
             "nodes": [
                 {
-                    "type": "addTransaction",
-	                "defaultLabel": "Add a new transaction",
-                    "description": "This node adds a new transaction item to the specified queue wihtin the UiPath Orchestrator Instance",
-                    "tags": ["transaction"]
-                },
-                {
-                    "type": "cloudAuthentication",
-	                "defaultLabel": "Cloud Authentication",
-                    "description": "Authenticate Cognigy.AI using the UIPath Orchestrator cloud",
-                    "tags": ["cloud", "authentication"]
-                },
-                {
-                    "type": "getOutputInformationSynch",
-	                "defaultLabel": "Get the output information (Synch)",
-                    "description": "Get the output information for a specified transaction item",
-                    "tags": ["transaction"]
+                    "type": "Authentication",
+	                "defaultLabel": "Authentication",
+                    "description": "Authenticate Cognigy.AI using the UIPath Orchestrator",
+                    "tags": ["cloud", "authentication", "on prem"]
                 },
                 {
                     "type": "getReleases",
@@ -1019,17 +1007,23 @@
                     "description": "Get all available releases from an UIPath instance",
                     "tags": ["releases"]
                 },
-                {
-                    "type": "onPremAuthentication",
-	                "defaultLabel": "On-Premise Authentication",
-                    "description": "Authenticate Cognigy.AI using an On-Premise UIPath Orchestrator intance",
-                    "tags": ["on-premise", "authentication", "onprem"]
+		{
+                    "type": "getReleasesByName",
+	                "defaultLabel": "Get Releases By Name",
+                    "description": "Get a release from an UIPath instance by name",
+                    "tags": ["releases"]
                 },
                 {
-                    "type": "startJobNode",
+                    "type": "startJob",
 	                "defaultLabel": "Start a specific job",
                     "description": "Start a new job",
                     "tags": ["start", "robot", "job"]
+                },
+		{
+                    "type": "addQueueItem",
+	                "defaultLabel": "Add a Queue Item",
+                    "description": "Add a new item to the queue",
+                    "tags": ["queue"]
                 }
             ]
         },

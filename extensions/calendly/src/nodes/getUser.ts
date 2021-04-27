@@ -117,6 +117,23 @@ export const getUserNode = createNodeDescriptor({
 	appearance: {
 		color: "#676B74"
 	},
+	tokens: [
+		{
+			label: "User Name",
+			script: "input.calendly.name",
+			type: "answer"
+		},
+		{
+			label: "User Email",
+			script: "input.calendly.email",
+			type: "answer"
+		},
+		{
+			label: "User Scheduling Link",
+			script: "input.calendly.scheduling_url",
+			type: "answer"
+		},
+	],
 	function: async ({ cognigy, config }: IGetUserParams) => {
 		const { api } = cognigy;
 		const { connection, userOption, userId, storeLocation, inputKey, contextKey } = config;

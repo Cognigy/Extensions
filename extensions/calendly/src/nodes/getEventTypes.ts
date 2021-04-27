@@ -1,24 +1,21 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IGetEventInviteesParams extends INodeFunctionBaseParams {
+export interface IGetEventTypesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			personalAccessToken: string;
 		};
-		eventId: string;
-		inviteeEmail: string;
-        status: string;
-        count: number
+		userId: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const getEventInviteesNode = createNodeDescriptor({
-	type: "getEventInviteees",
-	defaultLabel: "Get Event Invitees",
+export const getEventTypesNode = createNodeDescriptor({
+	type: "getEventTypes",
+	defaultLabel: "Get Event Types",
 	fields: [
 		{
 			key: "connection",
@@ -30,33 +27,14 @@ export const getEventInviteesNode = createNodeDescriptor({
 			}
 		},
         {
-			key: "eventId",
+			key: "userId",
 			type: "cognigyText",
-			label: "Event ID",
-			description: "The ID of the event which invitees should be returned",
+			label: "User URI",
+			description: "Return events that are scheduled with the user associated with this URI",
+            defaultValue: "https://api.calendly.com/users/EBHAAFHDCAEQTSEZ",
             params: {
                 required: true
             }
-		},
-		{
-			key: "inviteeEmail",
-			label: "Invitee Email",
-			type: "cognigyText",
-			description: "Indicates if the results should be filtered by email address"
-		},
-        {
-			key: "status",
-			label: "Status",
-			type: "cognigyText",
-            defaultValue: "active",
-			description: "Whether the scheduled event is active or canceled"
-		},
-        {
-			key: "count",
-			label: "Limit",
-			type: "number",
-			description: "The number of events to return",
-            defaultValue: 20
 		},
 		{
 			key: "storeLocation",
@@ -108,46 +86,30 @@ export const getEventInviteesNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-        {
-			key: "eventOptions",
-			label: "Event Options",
-			defaultCollapsed: true,
-			fields: [
-                "count",
-				"inviteeEmail",
-                "status"
-			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-        { type: "field", key: "eventId" },
-		{ type: "section", key: "eventOptions" },
+        { type: "field", key: "userId" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#676B74"
 	},
-	function: async ({ cognigy, config }: IGetEventInviteesParams) => {
+	function: async ({ cognigy, config }: IGetEventTypesParams) => {
 		const { api } = cognigy;
-		const { connection, eventId, count, inviteeEmail, status, storeLocation, inputKey, contextKey } = config;
+		const { connection, userId, storeLocation, inputKey, contextKey } = config;
 		const { personalAccessToken } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://api.calendly.com/scheduled_events/${eventId}/invitees`,
+				url: `https://api.calendly.com/event_types?user=${userId}`,
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${personalAccessToken}`
 				},
-                params: {
-                    email: inviteeEmail ? inviteeEmail : null,
-                    status: status ? status : null,
-                    count: count ? count : null
-                }
 			});
 
 			if (storeLocation === "context") {

@@ -1,16 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IListEventsParams extends INodeFunctionBaseParams {
+export interface IGetEventInviteesParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			personalAccessToken: string;
 		};
-		userId: string;
+		eventId: string;
 		inviteeEmail: string;
         status: string;
-        minStartTime: string;
-        maxStartTime: string;
         count: number
 		storeLocation: string;
 		inputKey: string;
@@ -18,9 +16,9 @@ export interface IListEventsParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const listEventsNode = createNodeDescriptor({
-	type: "listEvents",
-	defaultLabel: "List Events",
+export const getEventInviteesNode = createNodeDescriptor({
+	type: "getEventInviteees",
+	defaultLabel: "Get Event Invitees",
 	fields: [
 		{
 			key: "connection",
@@ -32,11 +30,10 @@ export const listEventsNode = createNodeDescriptor({
 			}
 		},
         {
-			key: "userId",
+			key: "eventId",
 			type: "cognigyText",
-			label: "User URI",
-			description: "Return events that are scheduled with the user associated with this URI",
-            defaultValue: "https://api.calendly.com/users/EBHAAFHDCAEQTSEZ",
+			label: "Event ID",
+			description: "The ID of the event which invitees should be returned",
             params: {
                 required: true
             }
@@ -45,7 +42,7 @@ export const listEventsNode = createNodeDescriptor({
 			key: "inviteeEmail",
 			label: "Invitee Email",
 			type: "cognigyText",
-			description: "Return events that are scheduled with the invitee associated with this email address"
+			description: "Indicates if the results should be filtered by email address"
 		},
         {
 			key: "status",
@@ -53,19 +50,6 @@ export const listEventsNode = createNodeDescriptor({
 			type: "cognigyText",
             defaultValue: "active",
 			description: "Whether the scheduled event is active or canceled"
-		},
-        {
-			key: "minStartTime",
-			label: "Minimum Start Time",
-			type: "cognigyText",
-            defaultValue: "{{input.currentTime.ISODate}}",
-			description: "Include events with start times after this time where this time should use the UTC timezone and ISO Format"
-		},
-        {
-			key: "maxStartTime",
-			label: "Maximum Start Time",
-			type: "cognigyText",
-			description: "Include events with start times prior to this time where this time should use the UTC timezone and ISO Format"
 		},
         {
 			key: "count",
@@ -132,41 +116,37 @@ export const listEventsNode = createNodeDescriptor({
 			fields: [
                 "count",
 				"inviteeEmail",
-				"minStartTime",
-                "maxStartTime",
                 "status"
 			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-        { type: "field", key: "userId" },
+        { type: "field", key: "eventId" },
 		{ type: "section", key: "eventOptions" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#676B74"
 	},
-	function: async ({ cognigy, config }: IListEventsParams) => {
+	function: async ({ cognigy, config }: IGetEventInviteesParams) => {
 		const { api } = cognigy;
-		const { connection, userId, count, inviteeEmail, maxStartTime, minStartTime, status, storeLocation, inputKey, contextKey } = config;
+		const { connection, eventId, count, inviteeEmail, status, storeLocation, inputKey, contextKey } = config;
 		const { personalAccessToken } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `https://api.calendly.com/scheduled_events?user=${userId}`,
+				url: `https://api.calendly.com/scheduled_events/${eventId}/invitees`,
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${personalAccessToken}`
 				},
                 params: {
-                    invitee_email: inviteeEmail ? inviteeEmail : null,
+                    email: inviteeEmail ? inviteeEmail : null,
                     status: status ? status : null,
-                    count: count ? count : null,
-                    min_start_time: minStartTime ? minStartTime : null,
-                    max_start_time: maxStartTime ? maxStartTime : null
+                    count: count ? count : null
                 }
 			});
 

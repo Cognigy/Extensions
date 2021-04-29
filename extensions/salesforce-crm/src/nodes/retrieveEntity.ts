@@ -30,28 +30,10 @@ export const retrieveEntityNode = createNodeDescriptor({
         },
         {
             key: "entityType",
-            type: "select",
+            type: "cognigyText",
             label: "Entity Type",
             defaultValue: "Contact",
             params: {
-                options: [
-                    {
-                        label: "Account",
-                        value: "Account"
-                    },
-                    {
-                        label: "Contact",
-                        value: "Contact"
-                    },
-                    {
-                        label: "Event",
-                        value: "Event"
-                    },
-                    {
-                        label: "Case",
-                        value: "Case"
-                    }
-                ],
                 required: true
             },
         },

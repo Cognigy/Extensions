@@ -118,6 +118,49 @@
             ]
         },
         {
+            "name": "calendly",
+            "label": "Calendly",
+            "description": "Connects Calendly in order to use meeting information",
+            "tags": [
+                "calendar",
+                "events",
+                "meetings"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAASdSURBVHgB7ZvPTxtHFMffm7EjUvXgY291/4ImIqWIS52/oOTYU4lEwDGR4gRz6MnxrVINGBUTx1TCHHsCjj3hXtJISRT/Ce5/YKSo0Hh3X99bs9HioOJkmbXx7kfCu4w9tuc7PzzvOzMaApLNFYqTUzNN/ku9fvn8DwiBxaXC4a2pmcbkrZmj16+ev4AAKAgIITyRKwLkmRQYJpstZPiScT9TwfcQEDwvUQry9iRxAwZAazj07i2H7iBhBwyCCr9WSBW5J4CWY8OjQfJ9PmG1KpXKB9/tjADzrC4XqAinCo8f2HLI3tjeWmu8T/FuFpdWdljTOYgA3HIq9WrZbTlaHnhQWedLFiIC1/q0N2ijDCrk68cCAXWQYJfg4v6M6HaZ04y4IXnBIIj0JT/OnX5gmwh3L8wDlOIHHjAx7U+3EW7jYm55j9911kvkN9z/7Fr37nkDxnlw6yHvPgGUrlZX/waD9FVY81m1fHvQvAu5lT0W8H1ZuaYPFP+MZfwvUk730aCFv2q844o9k4DwnUJA/293p1artGFMabgVi21fUqpvIoRjWfP/R/CZoG/QSybtIzCMUtalVlJgATRQiS8tHglDGTu2tiotQNqQpqzcazASEJCn1TWZllYgRJ5trub5kodLIHALuOrEAkDEiQWAiBMLABEnFgAiTuCZ4Kcixus//+qMA5jmkNSNSB2CDgcXrd9q5SaEROgCeMbrcZd9CEUdNiSaiE6HSKW0IhFinf3JNsvRRNsumQ7PQxNAavy4m9jj6PEGIkoQU+I5ffO81y48WJ5le/0h6cSbhVyhUt8ql8AQoQiQzebTx93koXh4yrZvXlSr9c3Vfb7sZ3OP59iuKy7cLxzVn5aNBFzGBZDCk04ecs3/yVb03MfkrbF/z/mb1yfAWJhtXABuxrLe0P7Ywntc6THgnjRhXmVC2/oKRhSj8wCF6keu/cYoG63GWoDb97n2nXfqJowwxlqAk9CyutzZ3v6lBSOMuS7goAgw0oUX4mAITCHzesA0jDjGBFBamj+lw9g2EwRjApwkrJasGr21BttqMyyMCSALkbLHQJNv/8AIYnQQRMeuSPTHwcylrOKYwKgAMgOUtUNUULyXWxnJrmD8Z9BdO0TaZddn71NEWMytPDTZgkKZB8hiJroikBgcRZkmX5RHnCPZEcr9KE9oNcEQoTlCtc3yEzY42mJwODqRX1xa3icHDshSba27brxv28kUJSijeztAMxJIXU/ad0wuu4fqCdZ6GxQbYnkRwSyPDet4jTho6n0Npd39Vi1EOADLuhtGFDkUV9izvOReJkonJz1XeBhh89BscY/T5j20vUlxMAQRJxYAIk4sAEScWACIOLEAEHH6BKCRNjAvAwLnTBlV/wGC+QfuwcSxRI7b+A+IyLlDBeQc+F+kCXcGMSyuGvPuWSPc8achUAulsI7Wb/qOzsjT4uuPyQkSKRt9YMfJsr17cPL+0uO8A2odIgQhlOrsUrkHJ1+9/OvF1NT0kQMwzS1hAsaY3hEf/KleLf8s/2vvCRHhm8lvf2fPjjVwRfgCxgpsc8k22GP8ofrrWtNL/Q96AbmTZc+M+AAAAABJRU5ErkJggg==",
+            "nodes": [
+                {
+                    "type": "getUser",
+	                "defaultLabel": "Get User",
+                    "description": "Get information about a Calendly user",
+                    "tags": ["user"]
+                },
+                {
+                    "type": "getEvent",
+	                "defaultLabel": "Get Event",
+                    "description": "Get information about a Calendly event",
+                    "tags": ["event"]
+                },
+                {
+                    "type": "getEventInviteees",
+	                "defaultLabel": "Get Event Invitees",
+                    "description": "Get a list of invitees of a given event",
+                    "tags": ["event", "attendees", "invitees"]
+                },
+                {
+                    "type": "getEventTypes",
+	                "defaultLabel": "Get Event Types",
+                    "description": "Get a list of available events of this user that can be booked",
+                    "tags": ["event", "meetings", "event types"]
+                },
+                {
+                    "type": "listEvents",
+	                "defaultLabel": "List Events",
+                    "description": "List all scheduled events of a user",
+                    "tags": ["events", "meetings"]
+                }
+            ]
+        },
+        {
             "name": "cognigy",
             "label": "Cognigy Extensions",
             "description": "Contains various Cognigy Flow Node extensions",

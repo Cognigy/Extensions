@@ -175,7 +175,7 @@ export const s3GetObjectNode = createNodeDescriptor({
 		if (storeLocation === 'input' && inputKey) {
 			cognigy.input[inputKey] = result;
 		} else if (storeLocation === 'context' && contextKey) {
-			cognigy.api.setContext(contextKey, result);
+			cognigy.api.addToContext(contextKey, result, 'simple');
 		}
 	}
 });

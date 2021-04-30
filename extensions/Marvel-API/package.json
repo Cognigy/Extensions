@@ -1,0 +1,32 @@
+{
+  "name": "marvel-api",
+  "version": "4.0.0",
+  "description": "A Cognigy.ai extension for to the Marvel Comics API.",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz Marvel-API.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "Marvel-API",
+    "extensions",
+    "documentation"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.21.1",
+    "crypto": "^1.0.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "@types/node-fetch": "^2.5.7",
+    "tslint": "^6.1.3",
+    "typescript": "^3.9.9"
+  }
+}

@@ -2,7 +2,7 @@
 
 This extensions allows you to integrate calls data from the [Marvel Developer API](https://developer.marvel.com/) into a cognigy flow. In order to use this API you must receive am public and private API key by signing up for a valid Marvel API account.
 
-**Connection: Your API Keys**
+## Connection: Your API Keys
 
 The connection information for the Marvel API can be found in your [Marvel Developer Account](https://developer.marvel.com/account). Every node needs this information but you only need to add it once. 
 
@@ -10,7 +10,7 @@ The connection information for the Marvel API can be found in your [Marvel Devel
 - privateKey: The private key of your Marvel API account.  
 
 ----
-## Node: Get List of Characters
+### Node: Get List of Characters
 
 This node will retrieve a list of characters who share a name with no further details. This is useful if a name is shared by many characters (for example "Spider-Man") and the detailed results would be too long to add to the context.
 
@@ -28,7 +28,7 @@ This call uses a search which looks for all characters whose name begins with a 
 
 
 ----
-## Node: Get Character
+### Node: Get Character
 
 This node gets detailed information about a character. As apposed to the "Get List of Characters" Node, this node uses a specific search. This means if you search for "Spider-Man" you will only receive the results with characters sharing that exact name. As another example if you look for "Captain Marvel" you will get no results because all characters with that name in the Marvel API have their real names in parenthesis afterwards in the string. 
 
@@ -42,7 +42,7 @@ You can use the afforementioned "Get List of Characters" in connection with a sa
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
 ----
-## Node: Get Comic by UPC
+### Node: Get Comic by UPC
 
 This node retrieves detailed information on a comic issue using a 17 digit comic UPC search. 
 
@@ -53,7 +53,7 @@ This node retrieves detailed information on a comic issue using a 17 digit comic
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
-## Node: Get Comic by Name and Issue Number
+### Node: Get Comic by Name and Issue Number
 
 This node retrieves detailed comic information based on the name of the comic, the issue number, and the year the first issue of the series was published (for example, X-Men (2099) ran for many years but the first issue of the series was published in 1993). If more than one comic shares these criteria (might be the case) mdetails for multiple comics will be returned.
 
@@ -66,7 +66,7 @@ This node retrieves detailed comic information based on the name of the comic, t
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
-## Node: Get Comic by Comic ID
+### Node: Get Comic by Comic ID
 
 This node retrieves detailed comic information based on the comic ID from the Marvel comics API. Can best be used in connection with the "Get Comic by Name and Issue" Node if the previous node returns too many results and you only want the results for one comic. 
 
@@ -77,7 +77,7 @@ This node retrieves detailed comic information based on the comic ID from the Ma
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
-## Node: Get Creator
+### Node: Get Creator
 
 This node retrieves detailed information about specific comic creators by name. 
 
@@ -88,7 +88,7 @@ This node retrieves detailed information about specific comic creators by name.
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
 
-## Node: Get Series by Creator ID
+### Node: Get Series by Creator ID
 
 This node retrieves detailed information about series in which a creator was involved. Can only search based on creator ID as the Marvel API does not allow series searches be creator name. Because it would retrieve too much data if everything was retrieved, only certain information is returned:
 

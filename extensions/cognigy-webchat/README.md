@@ -18,4 +18,13 @@ Takes a public **direct URL** to the new user avatar image and changed the avata
 
 ## Node: Reset User Avatar
 
-This node resets the changed user avatar image. Use this, if you want to use the default avata
+This node resets the changed user avatar image.
+## Node: Change Agent Avatar
+
+Takes a public **direct URL** to the new agent avatar image and changed the avatar in the webchat. 
+
+
+## Node: Reset Agent Avatar
+
+This node resets the changed agent avatar image.
+

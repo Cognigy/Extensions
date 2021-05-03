@@ -4,6 +4,8 @@ import { changeBotAvatar } from "./nodes/changeBotAvatar";
 import { resetBotAvatar } from "./nodes/resetBotAvatar";
 import { changeUserAvatar } from "./nodes/changeUserAvatar";
 import { resetUserAvatar } from "./nodes/resetUserAvatar";
+import { changeAgentAvatar } from "./nodes/changeAgentAvatar";
+import { resetAgentAvatar } from "./nodes/resetAgentAvatar";
 
 
 export default createExtension({
@@ -11,6 +13,8 @@ export default createExtension({
 		changeBotAvatar,
 		resetBotAvatar,
 		changeUserAvatar,
-		resetUserAvatar
+		resetUserAvatar,
+		changeAgentAvatar,
+		resetAgentAvatar
 	],
 });

@@ -218,6 +218,12 @@
                     "tags": ["avatar", "user", "webchat", "change"]
                 },
                 {
+                    "type": "changeAgentAvatar",
+	                "defaultLabel": "Change Agent Avatar",
+                    "description": "Changes the Agent Avatar in the Webchat window",
+                    "tags": ["avatar", "agent", "livechat", "webchat", "change"]
+                },
+                {
                     "type": "resetBotAvatar",
 	                "defaultLabel": "Reset Bot Avatar",
                     "description": "Reset the Bot Avatar to the default one",
@@ -228,7 +234,14 @@
 	                "defaultLabel": "Reset Bot Avatar",
                     "description": "Reset the User Avatar to the default one",
                     "tags": ["avatar", "user", "webchat", "reset"]
+                },
+                {
+                    "type": "resetAgentAvatar",
+	                "defaultLabel": "Reset Agent Avatar",
+                    "description": "Reset the User Agent to the default one",
+                    "tags": ["avatar", "agent", "livechat", "webchat", "reset"]
                 }
+                
             ]
         },
         {

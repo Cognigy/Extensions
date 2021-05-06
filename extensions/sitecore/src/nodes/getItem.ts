@@ -34,7 +34,7 @@ export const getItem = createNodeDescriptor({
 			key: "contentPath",
 			label: "Sitecore Content Path",
 			type: "cognigyText",
-			defaultValue: "",
+			defaultValue: "/sitecore/content/Home",
 			params: {
 				required: true
 			}

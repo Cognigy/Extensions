@@ -34,6 +34,8 @@ export const search = createNodeDescriptor({
 			key: "term",
 			label: "Search Term",
 			type: "cognigyText",
+			description: "The search term such as Stagg",
+			defaultValue: "{{input.text}}",
 			params: {
 				required: true
 			}
@@ -42,6 +44,7 @@ export const search = createNodeDescriptor({
 			key: "fields",
 			label: "Fields",
 			description: "Need to be comma seperated",
+			defaultValue: "ItemName,ProductDescription",
 			type: "cognigyText",
 			params: {
 				required: true

@@ -1,0 +1,28 @@
+{
+  "name": "sitecore",
+  "version": "4.0.0",
+  "description": "Content access for Sitecore.",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz sitecore.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Knowledge",
+    "HR",
+    "CMS"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.11.0",
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.4",
+    "tslint": "^6.1.2",
+    "typescript": "^3.8.3"
+  }
+}

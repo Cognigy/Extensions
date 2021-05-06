@@ -104,7 +104,7 @@ export const stockNode = createNodeDescriptor({
           },
           {
             "type": "TextBlock",
-            "text": `Latest update: ${new Date(stock.latestUpdate).toLocaleString()}, source: IEX Cloud API`,
+            "text": `Last update: ${new Date(stock.latestUpdate).toLocaleString()}, source: IEX Cloud`,
             "size": "small",
             "isSubtle": true,
             "wrap": true
@@ -124,8 +124,8 @@ function abbreviateNumber(n: number): any {
   if (tier === 0) {
     return n;
   }
-  const SUFFIXES = ['', 'k', 'M', 'B', 'T', 'P', 'E'];
-  const suffix = SUFFIXES[tier];
+  const suffixes = ['', 'k', 'M', 'B', 'T', 'P', 'E'];
+  const suffix = suffixes[tier];
   const scale = Math.pow(10, tier * 3);
   const scaled = n / scale;
   return scaled.toFixed(1) + suffix;

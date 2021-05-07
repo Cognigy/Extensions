@@ -10,7 +10,3 @@ In order to use the nodes below, one needs to sign up for the [Vonage API Accoun
 ## Node: Send SMS
 
 This nodes sends an SMS message **to** a specified number, with a given **text**.
-
-```json
-{}
-```

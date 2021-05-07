@@ -1,25 +1,25 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface ISendSMSParams extends INodeFunctionBaseParams {
+export interface ISendVerifyPinParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			apiKey: string;
 			apiSecret: string;
 		};
-		from: string;
-		to: string;
-		text: string;
+		brandName: string;
+		pinExpiry: number;
+		receiverNumber: number;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const sendSMSNode = createNodeDescriptor({
-	type: "sendSMS",
-	defaultLabel: "Send SMS",
-	summary: "Sends SMS messages to a given mobile number",
+export const sendVerifyPinNode = createNodeDescriptor({
+	type: "sendVerifyPin",
+	defaultLabel: "Send Verify Pin",
+	summary: "Sends a verify pin message",
 	fields: [
 		{
 			key: "connection",
@@ -31,9 +31,9 @@ export const sendSMSNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "from",
-			label: "From",
-			description: "The sender name of the SMS",
+			key: "brandName",
+			label: "Brand Name",
+			description: "The name of the brand that sends the verification pin",
 			type: "cognigyText",
 			defaultValue: "Cognigy",
 			params: {
@@ -41,8 +41,8 @@ export const sendSMSNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "to",
-			label: "To",
+			key: "receiverNumber",
+			label: "Receiver Number",
 			description: "The receiver telephone number, starting with the country code such as 49 or 43",
 			type: "cognigyText",
 			defaultValue: "49123456789",
@@ -51,12 +51,11 @@ export const sendSMSNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "text",
-			label: "Text",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
+			key: "pinExpiry",
+			label: "Pin Expiry",
+			description: "The time after which the code expires while it must be an integer between 60 and 3600 seconds",
+			type: "number",
+			defaultValue: 300
 		},
 		{
 			key: "storeLocation",
@@ -81,7 +80,7 @@ export const sendSMSNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "vonage.sms",
+			defaultValue: "vonage.pin",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -91,7 +90,7 @@ export const sendSMSNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "vonage.sms",
+			defaultValue: "vonage.pin",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -108,48 +107,40 @@ export const sendSMSNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		}
+		},
+		{
+			key: "advanced",
+			label: "Advanced",
+			defaultCollapsed: true,
+			fields: [
+				"pinExpiry"
+			]
+		},
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "from" },
-		{ type: "field", key: "to" },
-		{ type: "field", key: "text" },
+		{ type: "field", key: "brandName" },
+		{ type: "field", key: "receiverNumber" },
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#fff"
 	},
-	dependencies: {
-		children: [
-			"onSuccess",
-			"onError"
-		]
-	},
-	function: async ({ cognigy, config, childConfigs }: ISendSMSParams) => {
+	function: async ({ cognigy, config }: ISendVerifyPinParams) => {
 		const { api } = cognigy;
-		const { connection, text, from, to, storeLocation, inputKey, contextKey } = config;
+		const { connection, pinExpiry, brandName, receiverNumber, storeLocation, inputKey, contextKey } = config;
 		const { apiKey, apiSecret } = connection;
 
 		try {
 			const response = await axios({
-				method: "post",
-				url: "https://rest.nexmo.com/sms/json",
+				method: "get",
+				url: `https://api.nexmo.com/verify/json?&api_key=${apiKey}&api_secret=${apiSecret}&number=${receiverNumber}&brand=${brandName}&pin_expiry=${pinExpiry}`,
 				headers: {
 					"Accept": "application/json",
 					"Content-Type": "application/json"
-				},
-				data: {
-					api_key: apiKey,
-					api_secret: apiSecret,
-					from,
-					to,
-					text
 				}
 			});
-
-			const onSuccessChild = childConfigs.find(child => child.type === "onSuccess");
-			api.setNextNode(onSuccessChild.id);
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
@@ -159,9 +150,6 @@ export const sendSMSNode = createNodeDescriptor({
 			}
 		} catch (error) {
 
-			const onErrorChild = childConfigs.find(child => child.type === "onError");
-			api.setNextNode(onErrorChild.id);
-
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
@@ -169,27 +157,5 @@ export const sendSMSNode = createNodeDescriptor({
 				api.addToInput(inputKey, error.message);
 			}
 		}
-	}
-});
-
-export const onSucces = createNodeDescriptor({
-	type: "onSuccess",
-	parentType: "sendSMS",
-	defaultLabel: "On Success",
-	appearance: {
-		color: "#61d188",
-		textColor: "white",
-		variant: "mini"
-	}
-});
-
-export const onError = createNodeDescriptor({
-	type: "onError",
-	parentType: "sendSMS",
-	defaultLabel: "On Error",
-	appearance: {
-		color: "#cf142b",
-		textColor: "white",
-		variant: "mini"
 	}
 });

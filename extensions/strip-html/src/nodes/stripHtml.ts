@@ -3,7 +3,7 @@ import { stripHtml } from "string-strip-html";
 
 export interface IStripHtmlParams extends INodeFunctionBaseParams {
   config: {
-    text: string;
+    textWithHtml: string;
     storeLocation: string;
     contextKey: string;
     inputKey: string;
@@ -15,7 +15,7 @@ export const stripHtmlNode = createNodeDescriptor({
   defaultLabel: "Strip HTML",
   fields: [
     {
-      key: "incoming",
+      key: "textWithHtml",
       label: "Text with HTML",
       type: "cognigyText",
       defaultValue: "",
@@ -57,7 +57,7 @@ export const stripHtmlNode = createNodeDescriptor({
       key: "stripHtml",
       label: "Strip HTML properties",
       defaultCollapsed: false,
-      fields: ["text"]
+      fields: ["textWithHtml"]
     },
     {
       key: "storageOption",
@@ -71,18 +71,18 @@ export const stripHtmlNode = createNodeDescriptor({
     { type: "section", key: "storageOption" }],
   function: async ({ cognigy, config }: IStripHtmlParams) => {
     const { api } = cognigy;
-    const { text, storeLocation, contextKey, inputKey } = config;
+    const { textWithHtml, storeLocation, contextKey, inputKey } = config;
 
-    function store(result: any): void {
+    function store(storeObject: any): void {
       if (storeLocation === "context") {
-        api.addToContext(contextKey, result, "simple");
+        api.addToContext(contextKey, storeObject, "simple");
       } else { // @ts-ignore
-        api.addToInput(inputKey, result);
+        api.addToInput(inputKey, storeObject);
       }
     }
 
-    if (text) {
-      store(stripHtml(text).result);
+    if (textWithHtml) {
+      store(stripHtml(textWithHtml).result);
     }
   }
 });

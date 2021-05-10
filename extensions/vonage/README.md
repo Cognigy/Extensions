@@ -30,7 +30,7 @@ In the advanced section, the **pin expiration time** and **code length** can be 
 }
 ```
 
-## Node: Check Verifiy Pin
+## Node: Check Verify Pin
 
 After sending the verification pin with the Flow Node above, this code can be checked directly. In this case, a [Question Node](https://docs.cognigy.com/docs/question) could be used in order to ask the user for the received value. Last but not least, the Flow will follow the *On Valid* or *On Invalid* path -- based on the validation:
 

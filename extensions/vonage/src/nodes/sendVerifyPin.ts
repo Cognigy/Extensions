@@ -10,6 +10,7 @@ export interface ISendVerifyPinParams extends INodeFunctionBaseParams {
 		brandName: string;
 		pinExpiry: number;
 		receiverNumber: number;
+		codeLength: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -56,6 +57,25 @@ export const sendVerifyPinNode = createNodeDescriptor({
 			description: "The time after which the code expires while it must be an integer between 60 and 3600 seconds",
 			type: "number",
 			defaultValue: 300
+		},
+		{
+			key: "codeLength",
+			label: "Code Length",
+			description: "How many numbers the code should contain",
+			type: "select",
+			defaultValue: "4",
+			params: {
+				options: [
+					{
+						label: "4",
+						value: "4"
+					},
+					{
+						label: "6",
+						value: "6"
+					}
+				]
+			}
 		},
 		{
 			key: "storeLocation",
@@ -113,9 +133,17 @@ export const sendVerifyPinNode = createNodeDescriptor({
 			label: "Advanced",
 			defaultCollapsed: true,
 			fields: [
-				"pinExpiry"
+				"pinExpiry",
+				"codeLength"
 			]
 		},
+	],
+	tokens: [
+		{
+			label: "Verify Request Id",
+			type: "input",
+			script: "input.vonage.pin.request_id"
+		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
@@ -129,16 +157,16 @@ export const sendVerifyPinNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISendVerifyPinParams) => {
 		const { api } = cognigy;
-		const { connection, pinExpiry, brandName, receiverNumber, storeLocation, inputKey, contextKey } = config;
+		const { connection, pinExpiry, codeLength, brandName, receiverNumber, storeLocation, inputKey, contextKey } = config;
 		const { apiKey, apiSecret } = connection;
 
 		try {
 			const response = await axios({
 				method: "get",
-				url: `https://api.nexmo.com/verify/json?&api_key=${apiKey}&api_secret=${apiSecret}&number=${receiverNumber}&brand=${brandName}&pin_expiry=${pinExpiry}`,
+				url: `https://api.nexmo.com/verify/json?&api_key=${apiKey}&api_secret=${apiSecret}&number=${receiverNumber}&brand=${brandName}&pin_expiry=${pinExpiry}&code_length=${codeLength}`,
 				headers: {
 					"Accept": "application/json",
-					"Content-Type": "application/json"
+					"Content-Type": "application/x-www-form-urlencoded"
 				}
 			});
 

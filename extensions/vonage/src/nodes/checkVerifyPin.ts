@@ -109,7 +109,13 @@ export const checkVerifyPinNode = createNodeDescriptor({
     appearance: {
         color: "#fff"
     },
-    function: async ({ cognigy, config }: ICheckVerifyPinParams) => {
+    dependencies: {
+        children: [
+            "onValid",
+            "onInvalid"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: ICheckVerifyPinParams) => {
         const { api } = cognigy;
         const { connection, requestId, code, storeLocation, inputKey, contextKey } = config;
         const { apiKey, apiSecret } = connection;
@@ -120,9 +126,17 @@ export const checkVerifyPinNode = createNodeDescriptor({
                 url: `https://api.nexmo.com/verify/check/json?&api_key=${apiKey}&api_secret=${apiSecret}&request_id=${requestId}&code=${code}`,
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/x-www-form-urlencoded"
                 }
             });
+
+            if (response.data.error_text) {
+                const onInvalidChild = childConfigs.find(child => child.type === "onInvalid");
+                api.setNextNode(onInvalidChild.id);
+            } else {
+                const onValidChild = childConfigs.find(child => child.type === "onValid");
+                api.setNextNode(onValidChild.id);
+            }
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, response.data, "simple");
@@ -132,6 +146,9 @@ export const checkVerifyPinNode = createNodeDescriptor({
             }
         } catch (error) {
 
+            const onInvalidChild = childConfigs.find(child => child.type === "onInvalid");
+            api.setNextNode(onInvalidChild.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");
             } else {
@@ -139,5 +156,27 @@ export const checkVerifyPinNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
+    }
+});
+
+export const onValid = createNodeDescriptor({
+    type: "onValid",
+    parentType: "checkVerifyPin",
+    defaultLabel: "On Valid",
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onInvalid = createNodeDescriptor({
+    type: "onInvalid",
+    parentType: "checkVerifyPin",
+    defaultLabel: "On Invalid",
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini"
     }
 });

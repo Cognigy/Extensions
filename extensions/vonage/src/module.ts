@@ -1,6 +1,6 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { vonageConnection } from "./connections/vonageConnection";
-import { checkVerifyPinNode } from "./nodes/checkVerifyPin";
+import { checkVerifyPinNode, onInvalid, onValid } from "./nodes/checkVerifyPin";
 import { onError, onSucces, sendSMSNode } from "./nodes/sendSMS";
 import { sendVerifyPinNode } from "./nodes/sendVerifyPin";
 
@@ -10,7 +10,9 @@ export default createExtension({
 		onSucces,
 		onError,
 		sendVerifyPinNode,
-		checkVerifyPinNode
+		checkVerifyPinNode,
+		onValid,
+		onInvalid
 	],
 
 	connections: [

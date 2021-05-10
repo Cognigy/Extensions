@@ -1,6 +1,6 @@
 # Vonage
 
-This Extension provides [Vonage][https://vonage.com] functions.
+This Extension provides [Vonage](https://vonage.com) functions.
 
 ## Connection
 

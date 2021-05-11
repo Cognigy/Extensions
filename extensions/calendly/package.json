@@ -1,23 +1,23 @@
 {
-  "name": "cognigy-webchat",
-  "version": "4.1.0",
-  "description": "Change the Webachat avatars",
+  "name": "calendly",
+  "version": "4.0.0",
+  "description": "Integrates with Calendly",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz cognigy-webchat.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz calendly.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Cognigy",
-    "Webchat",
-    "Avatar"
+    "Calender",
+    "Events"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.21.1",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

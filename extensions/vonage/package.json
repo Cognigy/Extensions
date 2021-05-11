@@ -1,26 +1,27 @@
 {
-  "name": "cognigy-webchat",
-  "version": "4.1.0",
-  "description": "Change the Webachat avatars",
+  "name": "vonage",
+  "version": "4.0.0",
+  "description": "Integrates with Vonage",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz cognigy-webchat.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz vonage.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Cognigy",
-    "Webchat",
-    "Avatar"
+    "SMS",
+    "Messaging"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.21.1",
     "tslint": "^6.1.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^13.13.15",
     "typescript": "^3.8.3"
   }

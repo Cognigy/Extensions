@@ -1,0 +1,38 @@
+{
+	"name": "microsoft-graph",
+	"version": "4.2.0",
+	"description": "Integrates with Microsoft Graph",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz microsoft-graph.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"keywords": [
+		"Microsoft",
+		"ADAL",
+		"Authentication",
+		"Azure",
+		"Graph API"
+	],
+	"author": "Cognigy GmbH",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/axios": "^0.14.0",
+		"@types/node": "^10.17.28",
+		"tslint": "^5.16.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.10.0",
+		"@microsoft/microsoft-graph-client": "^1.7.0",
+		"axios": "^0.20.0",
+		"request": "^2.88.2",
+		"request-promise": "^4.2.6"
+	}
+}

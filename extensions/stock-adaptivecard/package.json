@@ -1,7 +1,7 @@
 {
   "name": "stock-adaptivecard",
-  "version": "1.0.0",
-  "description": "Shows stock ticker quote using Microsoft Adaptive Cards",
+  "version": "4.0.0",
+  "description": "Shows stock ticker quote from IEX Cloud using Microsoft Adaptive Cards",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -10,22 +10,18 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Cognigy.AI",
-    "stock",
-    "ticker",
-    "extensions"
+    "stocks",
+    "shares",
+    "ticker"
   ],
   "author": "Cognigy GmbH",
   "license": "ISC",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
-    "node-fetch": "^2.6.1",
+    "@cognigy/extension-tools": "^0.11.0",
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/node": "^13.13.15",
-    "@types/node-fetch": "^2.5.7",
+    "@types/node": "^15.0.2",
     "tslint": "^6.1.3",
     "typescript": "^3.9.7"
   }

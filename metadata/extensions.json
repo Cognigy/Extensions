@@ -1084,6 +1084,37 @@
             ]
         },
         {
+            "name": "vonage",
+            "label": "Vonage",
+            "description": "Integrates with Vonage Conversation API",
+            "tags": [
+                "sms",
+                "pin",
+                "verification"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "sendSMS",
+	                "defaultLabel": "Send SMS",
+                    "description": "Sends SMS messages to a mobile phone number",
+                    "tags": ["sms"]
+                },
+                {
+                    "type": "sendVerifyPin",
+	                "defaultLabel": "Send Verify PIN",
+                    "description": "Sends a verification PIN messages to a mobile phone number",
+                    "tags": ["pin"]
+                },
+                {
+                    "type": "checkVerifyPin",
+	                "defaultLabel": "Check Verify PIN",
+                    "description": "Checks a verification PIN sent by the user",
+                    "tags": ["pin", "verify"]
+                }
+            ]
+        },
+        {
             "name": "yext",
             "label": "Yext",
             "description": "Use Yext for store information",

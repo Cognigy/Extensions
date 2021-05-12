@@ -4,6 +4,7 @@ export interface AccessToken {
     scope:        string;
     expires_in:   number;
     token_type:   string;
+    result:       string;    
 }
 
 export interface AddTransactionItem {

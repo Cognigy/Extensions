@@ -153,6 +153,8 @@ Creates a new **case** in the **Cases** Salesforce table. The JSON in *Case JSON
 }
 ```
 
+**IMPORTANT: The Description field is required and can not be empty!**
+
 ## Node: Retrieve Entity
 
 Retrieves the entity by searching for the given ID.

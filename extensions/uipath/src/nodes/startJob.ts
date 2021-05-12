@@ -4,13 +4,22 @@ import { StartJob } from "../../types/uipath";
 
 export interface ICreateTokenParams extends INodeFunctionBaseParams {
 	config: {
+		authType: string;
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
 		};
+		onPremAuthConnection: {
+			orchestratorUrl: string;
+			tenancyName: string;
+			usernameOrEmailAddress: string;
+			password: string;
+		};
 		accessToken: string;
         releaseKey: string;
+		orgUnitId: string;
         robotIds: {ids: string []};
+		inputArguments: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -19,15 +28,52 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 
 export const startJobNode = createNodeDescriptor({
 	type: "startJobNode",
-	defaultLabel: "Start a specific job",
+	defaultLabel: "Start a Job",
 	fields: [
+		{
+			key: "authType",
+			label: "Connection Type",
+			type: "select",
+			description: "Please choose the type of connection",
+			params: {
+				options: [
+					{
+						label: "On-premise",
+						value: "onPrem"
+					},
+					{
+						label: "Cloud",
+						value: "cloud"
+					}
+				],
+				required: true
+			},
+			defaultValue: "cloud"
+		},
 		{
 			key: "instanceInfo",
 			label: "Orchestrator Instance Information",
 			type: "connection",
 			params: {
 				connectionType: 'instanceData',
-				required: true
+				required: false
+			},
+			condition: {
+			 	key: "authType",
+			 	value: "cloud"
+			}
+		},
+		{
+            key: "onPremAuthConnection",
+            label: "UiPath On-Prem Connection",
+            type: "connection",
+            params: {
+                 connectionType: "onPremAuth",
+                 required: false
+            },
+			 condition: {
+			 	key: "authType",
+			 	value: "onPrem"
 			}
         },
 		{
@@ -46,6 +92,14 @@ export const startJobNode = createNodeDescriptor({
 				required: true
 			}
         },
+		{
+			key: "orgUnitId",
+			label: "Organization Unit ID",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
         {
 			key: "robotIds",
 			label: "Robot IDs",
@@ -55,6 +109,15 @@ export const startJobNode = createNodeDescriptor({
 				required: true
 			}
         },
+		{
+			key: "inputArguments",
+			label: "Input Arguments",
+			type: "json",
+			defaultValue: {},
+			params: {
+				required: true
+			}
+		},
 		{
 			key: "storeLocation",
 			type: "select",
@@ -77,7 +140,7 @@ export const startJobNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: "Input Key to Store Result",
 			defaultValue: "uiPathProcessState",
 			condition: {
 				key: "storeLocation",
@@ -87,7 +150,7 @@ export const startJobNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: "Context Key to Store Result",
 			defaultValue: "uiPathProcessState",
 			condition: {
 				key: "storeLocation",
@@ -108,10 +171,14 @@ export const startJobNode = createNodeDescriptor({
 		}
 	],
 	form: [
+		{ type: "field", key: "authType" },
+		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
 		{ type: "field", key: "releaseKey" },
+		{ type: "field", key: "orgUnitId" },
 		{ type: "field", key: "robotIds" },
+		{ type: "field", key: "inputArguments" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -119,29 +186,37 @@ export const startJobNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ICreateTokenParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, releaseKey, robotIds, storeLocation, inputKey, contextKey } = config;
-		const { accountLogicalName, tenantLogicalName } = instanceInfo;
+		const { instanceInfo, accessToken, releaseKey, orgUnitId, robotIds, inputArguments, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
-        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
+		let endpoint;
+		let tenantInfo;
+		if (authType === 'cloud') {
+			const { accountLogicalName, tenantLogicalName } = instanceInfo;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
+			tenantInfo = tenantLogicalName;
+		} else { // onPrem
+			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
+			endpoint = `https://${orchestratorUrl}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
+			tenantInfo = tenancyName;
+		}
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantLogicalName
+				'X-UIPATH-TenantName': tenantInfo,
+				'X-UIPATH-OrganizationUnitId': orgUnitId
             }
         };
-
         const data = {
             startInfo: {
                 ReleaseKey: releaseKey,
                 RobotIds: robotIds.ids,
-                Strategy: "Specific"
+                Strategy: "Specific",
+				InputArguments: JSON.stringify(inputArguments)
               }
 		};
-
 		try {
             const result: AxiosResponse <StartJob> =  await axios.post(endpoint, data, axiosConfig);
-
 			if (storeLocation === 'context') {
 				api.addToContext(contextKey, result.data.value[0] , 'simple');
 			} else {

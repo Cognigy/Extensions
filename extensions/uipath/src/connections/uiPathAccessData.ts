@@ -5,6 +5,6 @@ export const uiPathAccessData: IConnectionSchema = {
 	label: "UiPath Connection",
 	fields: [
 		{ fieldName: "clientId" },
-		{ fieldName: "refreshToken"}
+		{ fieldName: "userKey"}
 	]
 };

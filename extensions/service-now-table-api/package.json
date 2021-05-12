@@ -1,22 +1,23 @@
 {
-  "name": "service-now",
-  "version": "4.1.0",
-  "description": "Integrates with ServiceNow",
+  "name": "service-now-table-api",
+  "version": "4.0.0",
+  "description": "Integrates with Service Now Table API",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz service-now.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz service-now-table-api.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Service Now"
+    "Service Now",
+    "Table API"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.21.1",
+    "axios": "^0.20.0",
     "https": "^1.0.0",
     "tslint": "^6.1.2"
   },

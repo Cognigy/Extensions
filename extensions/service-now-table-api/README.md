@@ -1,4 +1,4 @@
-# Service Now Extension
+# Service Now Table API
 
 Integrates the Service Now Software with Cognigy.AI.
 

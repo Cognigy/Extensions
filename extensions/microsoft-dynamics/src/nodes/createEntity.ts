@@ -142,9 +142,6 @@ export const createEntityNode = createNodeDescriptor({
 			}
 		} catch (error) {
 
-			const onErrorChild = childConfigs.find(child => child.type === "onError");
-			api.setNextNode(onErrorChild.id);
-
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {

@@ -5,9 +5,11 @@ export interface IRetrieveEntityParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			organizationUri: string;
+			clientId: string;
+			redirectUrl: string;
 		};
 		entityType: string;
-		entityPrimaryKey: object;
+		entityPrimaryKey: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -140,9 +142,6 @@ export const retrieveEntityNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
-
-			const onErrorChild = childConfigs.find(child => child.type === "onError");
-			api.setNextNode(onErrorChild.id);
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");

@@ -7,6 +7,7 @@ export interface ICreateEntityParams extends INodeFunctionBaseParams {
 			organizationUri: string;
 		};
 		entityType: string;
+		accessToken: string;
 		entityData: object;
 		storeLocation: string;
 		inputKey: string;
@@ -47,10 +48,22 @@ export const createEntityNode = createNodeDescriptor({
 			}
 		},
 		{
+			key: "accessToken",
+			label: "Access Token",
+			type: "cognigyText",
+			defaultValue: "{{context.microsoft.auth.access_token}}"
+		},
+		{
 			key: "entityData",
 			label: "Entity Data",
 			type: "json",
-			defaultValue: "{}",
+			defaultValue: `
+{
+	"firstname": "Laura",
+	"lastname": "Wilson",
+	"mobilephone": "15112345678",
+	"emailaddress1": "l.wilson@cognigy.com"
+}`,
 			params: {
 				required: true
 			}
@@ -97,6 +110,14 @@ export const createEntityNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "auth",
+			label: "Authentication",
+			defaultCollapsed: true,
+			fields: [
+				"accessToken"
+			]
+		},
+		{
 			key: "storageOption",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -111,14 +132,15 @@ export const createEntityNode = createNodeDescriptor({
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "entityType" },
 		{ type: "field", key: "entityData" },
+		{ type: "section", key: "auth" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#002050"
 	},
-	function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
+	function: async ({ cognigy, config }: ICreateEntityParams) => {
 		const { api } = cognigy;
-		const { connection, entityType, entityData, storeLocation, inputKey, contextKey } = config;
+		const { connection, entityType, accessToken, entityData, storeLocation, inputKey, contextKey } = config;
 		const { organizationUri } = connection;
 
 		try {
@@ -129,7 +151,8 @@ export const createEntityNode = createNodeDescriptor({
 					'Accept': 'application/json',
 					'OData-Version': '4.0',
 					'OData-MaxVersion': '4.0',
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${accessToken}`
 				},
 				data: entityData
 			});

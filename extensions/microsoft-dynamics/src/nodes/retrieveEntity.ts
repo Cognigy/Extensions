@@ -5,10 +5,9 @@ export interface IRetrieveEntityParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			organizationUri: string;
-			clientId: string;
-			redirectUrl: string;
 		};
 		entityType: string;
+		accessToken: string;
 		entityPrimaryKey: string;
 		storeLocation: string;
 		inputKey: string;
@@ -47,6 +46,12 @@ export const retrieveEntityNode = createNodeDescriptor({
 					}
 				]
 			}
+		},
+		{
+			key: "accessToken",
+			label: "Access Token",
+			type: "cognigyText",
+			defaultValue: "{{context.microsoft.auth.access_token}}"
 		},
 		{
 			key: "entityPrimaryKey",
@@ -99,6 +104,14 @@ export const retrieveEntityNode = createNodeDescriptor({
 	],
 	sections: [
 		{
+			key: "auth",
+			label: "Authentication",
+			defaultCollapsed: true,
+			fields: [
+				"accessToken"
+			]
+		},
+		{
 			key: "storageOption",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -113,14 +126,15 @@ export const retrieveEntityNode = createNodeDescriptor({
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "entityType" },
 		{ type: "field", key: "entityPrimaryKey" },
+		{ type: "section", key: "auth" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#002050"
 	},
-	function: async ({ cognigy, config, childConfigs }: IRetrieveEntityParams) => {
+	function: async ({ cognigy, config }: IRetrieveEntityParams) => {
 		const { api } = cognigy;
-		const { connection, entityType, entityPrimaryKey, storeLocation, inputKey, contextKey } = config;
+		const { connection, entityType, accessToken, entityPrimaryKey, storeLocation, inputKey, contextKey } = config;
 		const { organizationUri } = connection;
 
 		try {
@@ -131,7 +145,8 @@ export const retrieveEntityNode = createNodeDescriptor({
 					'Accept': 'application/json',
 					'OData-Version': '4.0',
 					'OData-MaxVersion': '4.0',
-					'Content-Type': 'application/json; charset=utf-8'
+					'Content-Type': 'application/json; charset=utf-8',
+					'Authorization': `Bearer ${accessToken}`
 				}
 			});
 

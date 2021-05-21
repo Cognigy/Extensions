@@ -5,13 +5,15 @@ import { microsoftOnlineConnection } from "./connections/microsoftOnlineConnecti
 import { createEntityNode } from "./nodes/createEntity";
 import { getAccessTokenNode } from "./nodes/getAccessToken";
 import { retrieveEntityNode } from "./nodes/retrieveEntity";
+import { searchEntityNode } from "./nodes/searchEntity";
 
 
 export default createExtension({
 	nodes: [
 		createEntityNode,
 		retrieveEntityNode,
-		getAccessTokenNode
+		getAccessTokenNode,
+		searchEntityNode
 	],
 
 	connections: [

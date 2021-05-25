@@ -166,7 +166,7 @@ export const getRobotIdbyUserNode = createNodeDescriptor({
 		{
 			label: "Unattended Robot ID Input",
 			script: "ci.uipath.robotIds.value[0].UnattendedRobot.RobotId",
-			type: "context"
+			type: "input"
 		},
 		{
 			label: "Attended Robot ID Input",

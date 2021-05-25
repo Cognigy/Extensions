@@ -133,12 +133,12 @@ export const AuthenticationNode = createNodeDescriptor({
 	],
 	tokens: [
 		{
-			label: "UiPath AccessToken",
+			label: "UiPath AccessToken Input",
 			script: "ci.uiPathAccessToken",
 			type: "input"
 		},
 		{
-			label: "UiPath AccessToken",
+			label: "UiPath AccessToken Context",
 			script: "cc.uiPathAccessToken",
 			type: "context"
 		}

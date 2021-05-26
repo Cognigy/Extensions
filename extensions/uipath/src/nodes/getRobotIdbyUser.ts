@@ -78,8 +78,9 @@ export const getRobotIdbyUserNode = createNodeDescriptor({
         },
 		{
 			key: "userName",
-			label: "Username in Orchestrator",
+			label: "Username of robot in UiPath",
 			type: "cognigyText",
+			description: "Please give the username of the unattended or attended robot which should be run.",
 			params: {
 				required: true
 			}

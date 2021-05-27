@@ -5,7 +5,9 @@ import { AccessToken } from "../../types/uipath";
 export interface IAuthenticationParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
-		accessInfo: {
+		instanceInfo: {
+			accountLogicalName: string;
+			tenantLogicalName: string;
 			clientId: string;
 			userKey: string;
         };
@@ -27,17 +29,17 @@ export const AuthenticationNode = createNodeDescriptor({
 	fields: [
 		{
 			key: "authType",
-			label: "Authentication Type",
+			label: "Connection Type",
 			type: "select",
-			description: "Please choose the type of authentication",
+			description: "Please choose the type of connection",
 			params: {
 				options: [
 					{
-						label: "On-premise Authentication",
+						label: "On-premise",
 						value: "onPrem"
 					},
 					{
-						label: "Cloud Authentication",
+						label: "Cloud",
 						value: "cloud"
 					}
 				],
@@ -46,11 +48,11 @@ export const AuthenticationNode = createNodeDescriptor({
 			defaultValue: "cloud"
 		},
 		{
-			key: "accessInfo",
-			label: "UiPath Cloud Connection",
+			key: "instanceInfo",
+			label: "Orchestrator Instance Information",
 			type: "connection",
 			params: {
-				connectionType: "accessData",
+				connectionType: "instanceData",
 				required: false
 			},
 			condition: {
@@ -125,21 +127,33 @@ export const AuthenticationNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "authType" },
-		{ type: "field", key: "accessInfo" },
+		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "section", key: "storageOption" },
+	],
+	tokens: [
+		{
+			label: "UiPath AccessToken Input",
+			script: "ci.uiPathAccessToken",
+			type: "input"
+		},
+		{
+			label: "UiPath AccessToken Context",
+			script: "cc.uiPathAccessToken",
+			type: "context"
+		}
 	],
 	appearance: {
 		color: "#fa4514"
 	},
 	function: async ({ cognigy, config }: IAuthenticationParams) => {
         const { api } = cognigy;
-		const { accessInfo, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
         let endpoint;
 		let data;
 		if (authType === 'cloud') {
-			const { clientId, userKey } = accessInfo;
+			const { clientId, userKey } = instanceInfo;
 			endpoint = 'https://account.uipath.com/oauth/token';
 			data = {
 				'grant_type': "refresh_token",

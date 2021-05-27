@@ -1,8 +1,9 @@
+// Implementation not complete. Needs some work
+
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AddTransactionItem } from "../../types/uipath";
 
-export interface IAddQueueItem extends INodeFunctionBaseParams {
+export interface IGetRobotsIdsbyUserParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -10,28 +11,24 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 			tenantLogicalName: string;
 			clientId: string;
 			userKey: string;
-        };
+		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
 			tenancyName: string;
 			usernameOrEmailAddress: string;
 			password: string;
 		};
-        accessToken: string;
-		orgUnitId: string;
-        queueName: string;
-        reference: string;
-        priority: string;
-        specificContent: any;
-        storeLocation: string;
+		userName: string;
+		accessToken: string;
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const addQueueItemNode = createNodeDescriptor({
-	type: "addQueueItem",
-	defaultLabel: "Add a Queue Item",
+export const getRobotIdbyUserNode = createNodeDescriptor({
+	type: "getRobotIdbyUser",
+	defaultLabel: "Get Robots By Username",
 	fields: [
 		{
 			key: "authType",
@@ -80,58 +77,18 @@ export const addQueueItemNode = createNodeDescriptor({
 			}
         },
 		{
-			key: "accessToken",
-			label: "Access Token",
+			key: "userName",
+			label: "Username of robot in UiPath",
 			type: "cognigyText",
+			description: "Please give the username of the unattended or attended robot which should be run.",
 			params: {
-				required: true
-			}
-        },
-		{
-			key: "orgUnitId",
-			label: "Organization Unit ID",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
-        },
-        {
-			key: "queueName",
-			label: "Queue Name",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
-        },
-        {
-			key: "reference",
-			label: "Queue Reference",
-			type: "cognigyText",
-			params: {
-				required: false
-			}
-		},        {
-			key: "priority",
-			label: "Transaction Item Priority",
-			type: "select",
-			params: {
-                options: [
-                    {
-                        label: "Low",
-                        value: "Low"
-                    },
-                    {
-                        label: "High",
-                        value: "High"
-                    }
-                ],
 				required: true
 			}
 		},
-        {
-			key: "specificContent",
-			label: "Transaction Item Specific Content",
-			type: "json",
+		{
+			key: "accessToken",
+			label: "Access Token",
+			type: "cognigyText",
 			params: {
 				required: true
 			}
@@ -139,7 +96,7 @@ export const addQueueItemNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: "Where to Store the Result",
 			params: {
 				options: [
 					{
@@ -158,8 +115,8 @@ export const addQueueItemNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
-			defaultValue: "queueItemId",
+			label: "Input Key to Store Result",
+			defaultValue: "uipath.robotIds",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -169,7 +126,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "queueItemId",
+			defaultValue: "uipath.robotIds",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -192,59 +149,67 @@ export const addQueueItemNode = createNodeDescriptor({
 		{ type: "field", key: "authType" },
 		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
+		{ type: "field", key: "userName" },
 		{ type: "field", key: "accessToken" },
-		{ type: "field", key: "orgUnitId"},
-		{ type: "field", key: "queueName" },
-		{ type: "field", key: "reference" },
-		{ type: "field", key: "priority" },
-		{ type: "field", key: "specificContent" },
-		{ type: "section", key: "storageOption" },
+		{ type: "section", key: "storageOption" }
+	],
+	tokens: [
+		{
+			label: "Unattended Robot ID Context",
+			script: "cc.uipath.robotIds.value[0].UnattendedRobot.RobotId",
+			type: "context"
+		},
+		{
+			label: "Attended Robot ID Context",
+			script: "cc.uipath.robotIds.value[0].RobotProvision.RobotId",
+			type: "context"
+		},
+		{
+			label: "Unattended Robot ID Input",
+			script: "ci.uipath.robotIds.value[0].UnattendedRobot.RobotId",
+			type: "input"
+		},
+		{
+			label: "Attended Robot ID Input",
+			script: "ci.uipath.robotIds.value[0].RobotProvision.RobotId",
+			type: "input"
+		}
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IAddQueueItem) => {
+	function: async ({ cognigy, config }: IGetRobotsIdsbyUserParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, orgUnitId, queueName, reference, priority,
-				specificContent, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, accessToken, storeLocation, inputKey, contextKey, authType, onPremAuthConnection, userName } = config;
 
 		let endpoint;
 		let tenantInfo;
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
-			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/users/`;
 			tenantInfo = tenantLogicalName;
-		} else { // onPrem
+	 	} else { // onPrem
 			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Queues/UiPathODataSvc.AddQueueItem`;
+			endpoint = `https://${orchestratorUrl}/odata/Releases/`;
 			tenantInfo = tenancyName;
 		}
-        const axiosConfig: AxiosRequestConfig = {
-            headers: {
-                'Content-Type': 'application/json',
+		const axiosConfig: AxiosRequestConfig = {
+			params: {
+				$filter: `username eq '${userName}'`
+			},
+			headers: {
+				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantInfo,
-				'X-UIPATH-OrganizationUnitId': orgUnitId
-            }
-		};
-		const data = {
-			itemData: {
-				Name: queueName,
-				Reference: reference,
-				Priority: priority.charAt(0).toUpperCase() + priority.slice(1),
-				SpecificContent: specificContent,
-				DeferDate: null,
-				DueDate: null
+				'X-UIPATH-TenantName': tenantInfo
 			}
 		};
 		try {
-            const result: AxiosResponse <AddTransactionItem> =  await axios.post(endpoint, data, axiosConfig);
-
+			const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, result.data.Id , 'simple');
+				api.addToContext(contextKey, result.data, 'simple');
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, result.data.Id);
+				api.addToInput(inputKey, result.data);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

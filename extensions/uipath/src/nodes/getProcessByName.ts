@@ -1,14 +1,14 @@
-// Implementation not complete. Needs some work
-
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export interface IGetReleasesByNameParams extends INodeFunctionBaseParams {
+export interface IGetProcessByNameParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
+			clientId: string;
+			userKey: string;
 		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
@@ -24,9 +24,9 @@ export interface IGetReleasesByNameParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const getReleasesByNameNode = createNodeDescriptor({
-	type: "getReleasesByName",
-	defaultLabel: "Get Releases By Name",
+export const getProcessByNameNode = createNodeDescriptor({
+	type: "getProcessByName",
+	defaultLabel: "Get Process By Name",
 	fields: [
 		{
 			key: "authType",
@@ -150,10 +150,32 @@ export const getReleasesByNameNode = createNodeDescriptor({
 		{ type: "field", key: "accessToken" },
 		{ type: "section", key: "storageOption" }
 	],
+	tokens: [
+		{
+			label: "Process Release Key Context",
+			script: "cc.uipath.releases.value[0].Key",
+			type: "context"
+		},
+		{
+			label: "Process Release Key Input",
+			script: "ci.uipath.releases.value[0].Key",
+			type: "input"
+		},
+		{
+			label: "Organization Unit ID Context",
+			script: "cc.uipath.releases.value[0].OrganizationUnitId",
+			type: "context"
+		},
+		{
+			label: "Organization Unit ID Input",
+			script: "ci.uipath.releases.value[0].OrganizationUnitId",
+			type: "input"
+		}
+	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IGetReleasesByNameParams) => {
+	function: async ({ cognigy, config }: IGetProcessByNameParams) => {
 		const { api } = cognigy;
 		const { instanceInfo, accessToken, storeLocation, inputKey, contextKey, authType, onPremAuthConnection, releaseName } = config;
 

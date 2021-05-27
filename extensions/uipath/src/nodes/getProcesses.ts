@@ -1,12 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export interface IGetReleasesParams extends INodeFunctionBaseParams {
+export interface IGetProcessesParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
+			clientId: string;
+			userKey: string;
 		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
@@ -21,9 +23,9 @@ export interface IGetReleasesParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const getReleasesNode = createNodeDescriptor({
+export const getProcessesNode = createNodeDescriptor({
 	type: "getReleases",
-	defaultLabel: "Get Releases",
+	defaultLabel: "Get Processes",
 	fields: [
 		{
 			key: "authType",
@@ -141,7 +143,7 @@ export const getReleasesNode = createNodeDescriptor({
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IGetReleasesParams) => {
+	function: async ({ cognigy, config }: IGetProcessesParams) => {
 		const { api } = cognigy;
 		const { instanceInfo, accessToken, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
@@ -163,10 +165,8 @@ export const getReleasesNode = createNodeDescriptor({
 				'X-UIPATH-TenantName': tenantInfo
 			}
 		};
-
 		try {
 			const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
-
 			if (storeLocation === 'context') {
 				api.addToContext(contextKey, result.data, 'simple');
 			} else {

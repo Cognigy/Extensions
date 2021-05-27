@@ -4,6 +4,8 @@ export const uiPathInstanceData: IConnectionSchema = {
 	type: "instanceData",
 	label: "UiPath Instance",
 	fields: [
+		{ fieldName: "clientId" },
+		{ fieldName: "userKey" },
 		{ fieldName: "accountLogicalName" },
 		{ fieldName: "tenantLogicalName"}
 	]

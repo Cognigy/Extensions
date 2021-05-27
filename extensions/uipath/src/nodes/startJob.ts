@@ -8,6 +8,8 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
+			clientId: string;
+			userKey: string;
 		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
@@ -18,7 +20,7 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 		accessToken: string;
         releaseKey: string;
 		orgUnitId: string;
-        robotIds: {ids: string []};
+        robotIds: string;
 		inputArguments: string;
         storeLocation: string;
 		inputKey: string;
@@ -103,8 +105,7 @@ export const startJobNode = createNodeDescriptor({
         {
 			key: "robotIds",
 			label: "Robot IDs",
-			type: "json",
-			defaultValue: `{ "ids": [] }`,
+			type: "cognigyText",
 			params: {
 				required: true
 			}
@@ -190,6 +191,8 @@ export const startJobNode = createNodeDescriptor({
 
 		let endpoint;
 		let tenantInfo;
+		let ids = [];
+		ids.push(robotIds);
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
 			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
@@ -210,7 +213,7 @@ export const startJobNode = createNodeDescriptor({
         const data = {
             startInfo: {
                 ReleaseKey: releaseKey,
-                RobotIds: robotIds.ids,
+                RobotIds: ids,
                 Strategy: "Specific",
 				InputArguments: JSON.stringify(inputArguments)
               }

@@ -8,6 +8,8 @@ export interface IGetQueueItems extends INodeFunctionBaseParams {
 		instanceInfo: {
 			accountLogicalName: string;
 			tenantLogicalName: string;
+			clientId: string;
+			userKey: string;
         };
         accessToken: string;
 		orgUnitId: string;

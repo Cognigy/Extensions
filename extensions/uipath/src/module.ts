@@ -1,11 +1,11 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { uiPathAccessData } from './connections/uiPathAccessData';
 import { uiPathOnPremAccessData } from './connections/uiPathOnPrem';
 import { uiPathInstanceData } from './connections/uiPathInstance';
 import { addQueueItemNode } from './nodes/addQueueItem';
 import { startJobNode } from './nodes/startJob';
-import { getReleasesNode } from "./nodes/getReleases";
-import { getReleasesByNameNode } from "./nodes/getReleasesByName";
+import { getProcessesNode } from "./nodes/getProcesses";
+import { getProcessByNameNode } from "./nodes/getProcessByName";
+import { getRobotIdbyUserNode } from "./nodes/getRobotIdbyUser";
 
 import { AuthenticationNode } from "./nodes/Authentication";
 
@@ -14,13 +14,13 @@ export default createExtension({
 	nodes: [
 		addQueueItemNode,
 		startJobNode,
-		getReleasesNode,
+		getProcessesNode,
 		AuthenticationNode,
-		getReleasesByNameNode
+		getProcessByNameNode,
+		getRobotIdbyUserNode
 	],
 
 	connections: [
-		uiPathAccessData,
 		uiPathOnPremAccessData,
 		uiPathInstanceData,
 	]

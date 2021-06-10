@@ -6,7 +6,7 @@ import { createOrderNode, onErrorCreateOrder, onSuccesCreateOrder } from "./node
 import { createSKUNode, onSuccesCreateSKU, onErrorCreateSKU } from "./nodes/createSKU";
 import { createCustomerNode } from "./nodes/customers/createCustomer";
 import { getCustomerNode, onFoundCustomer, onNotFoundCustomer } from "./nodes/customers/getCustomer";
-import { getCustomerCardsNode, onFoundCustomerCards, onNotFoundCustomerCards } from "./nodes/customers/getCustomerCards";
+import { getCustomerPaymentMethodsNode, onFoundCustomerPaymentMethods, onNotFoundCustomerPaymentMethods } from "./nodes/customers/getCustomerPaymentMethods";
 import { onErrorPayOrder, onSuccessPayOrder, payOrderNode } from "./nodes/payOrder";
 import { getProductsNode } from "./nodes/products/getProducts";
 
@@ -37,9 +37,9 @@ export default createExtension({
 
 		createCustomerNode,
 
-		getCustomerCardsNode,
-		onFoundCustomerCards,
-		onNotFoundCustomerCards
+		getCustomerPaymentMethodsNode,
+		onFoundCustomerPaymentMethods,
+		onNotFoundCustomerPaymentMethods
 	],
 
 	connections: [

@@ -1,22 +1,23 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Stripe from "stripe";
 
-export interface IGetCustomerCardsParams extends INodeFunctionBaseParams {
+export interface IGetCustomerPaymentMethodsParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             secretKey: string;
         };
         customerId: string;
+        paymentMethod: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
     };
 }
 
-export const getCustomerCardsNode = createNodeDescriptor({
-    type: "getCustomerCards",
-    defaultLabel: "Get Customer Cards",
-    summary: "Retrieves customer cards for payment",
+export const getCustomerPaymentMethodsNode = createNodeDescriptor({
+    type: "getCustomerPaymentMethods",
+    defaultLabel: "Get Payment Methods",
+    summary: "Retrieves customer payment methods for payment",
     fields: [
         {
             key: "connection",
@@ -35,6 +36,26 @@ export const getCustomerCardsNode = createNodeDescriptor({
             description: "The ID of the customer in stripe",
             params: {
                 required: true
+            }
+        },
+        {
+            key: "paymentMethod",
+            label: "Payment Method",
+            type: "select",
+            defaultValue: "card",
+            description: "Which payment method should be retrieved for the customer",
+            params: {
+                required: true,
+                options: [
+                    {
+                        label: "Credit Card",
+                        value: "card"
+                    },
+                    {
+                        label: "Bank Account",
+                        value: "bank_account"
+                    }
+                ]
             }
         },
         {
@@ -60,7 +81,7 @@ export const getCustomerCardsNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "stripe.customer.cards",
+            defaultValue: "stripe.customer.paymentMethods",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -70,7 +91,7 @@ export const getCustomerCardsNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "stripe.customer.cards",
+            defaultValue: "stripe.customer.paymentMethods",
             condition: {
                 key: "storeLocation",
                 value: "context"
@@ -92,6 +113,7 @@ export const getCustomerCardsNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "customerId" },
+        { type: "field", key: "paymentMethod" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -99,13 +121,13 @@ export const getCustomerCardsNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onFoundCustomerCards",
-            "onNotFoundCustomerCards"
+            "onFoundCustomerPaymentMethods",
+            "onNotFoundCustomerPaymentMethods"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IGetCustomerCardsParams) => {
+    function: async ({ cognigy, config, childConfigs }: IGetCustomerPaymentMethodsParams) => {
         const { api } = cognigy;
-        const { connection, customerId, storeLocation, inputKey, contextKey } = config;
+        const { connection, customerId, paymentMethod, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
         const stripe = new Stripe(secretKey, {
@@ -114,15 +136,15 @@ export const getCustomerCardsNode = createNodeDescriptor({
 
         try {
 
-            const customersCards = await stripe.customers.listSources(customerId,
+            const customersPaymentMethods = await stripe.customers.listSources(customerId,
                 {
 
-                    object: "card"
+                    object: paymentMethod
                 }
             );
 
-            if (customersCards.data.length === 0) {
-                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomerCards");
+            if (customersPaymentMethods.data.length === 0) {
+                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomerPaymentMethods");
                 api.setNextNode(onErrorChild.id);
 
                 if (storeLocation === "context") {
@@ -133,19 +155,19 @@ export const getCustomerCardsNode = createNodeDescriptor({
                 }
             }
 
-            const onSuccessChild = childConfigs.find(child => child.type === "onFoundCustomerCards");
+            const onSuccessChild = childConfigs.find(child => child.type === "onFoundCustomerPaymentMethods");
             api.setNextNode(onSuccessChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, customersCards.data, "simple");
+                api.addToContext(contextKey, customersPaymentMethods.data, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, customersCards.data);
+                api.addToInput(inputKey, customersPaymentMethods.data);
             }
 
         } catch (error) {
 
-            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomerCards");
+            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomerPaymentMethods");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
@@ -158,10 +180,10 @@ export const getCustomerCardsNode = createNodeDescriptor({
     }
 });
 
-export const onFoundCustomerCards = createNodeDescriptor({
-    type: "onFoundCustomerCards",
-    parentType: "getCustomerCards",
-    defaultLabel: "On Cards",
+export const onFoundCustomerPaymentMethods = createNodeDescriptor({
+    type: "onFoundCustomerPaymentMethods",
+    parentType: "getCustomerPaymentMethods",
+    defaultLabel: "On Payment Methods",
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -169,10 +191,10 @@ export const onFoundCustomerCards = createNodeDescriptor({
     }
 });
 
-export const onNotFoundCustomerCards = createNodeDescriptor({
-    type: "onNotFoundCustomerCards",
-    parentType: "getCustomerCards",
-    defaultLabel: "On No Cards",
+export const onNotFoundCustomerPaymentMethods = createNodeDescriptor({
+    type: "onNotFoundCustomerPaymentMethods",
+    parentType: "getCustomerPaymentMethods",
+    defaultLabel: "On No Payment Methods",
     appearance: {
         color: "#61d188",
         textColor: "white",

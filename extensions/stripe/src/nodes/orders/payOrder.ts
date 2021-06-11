@@ -7,6 +7,8 @@ export interface ICreateCardTokenParams extends INodeFunctionBaseParams {
 			secretKey: string;
 		};
 		orderId: string;
+		paymentOption: string;
+		customerId: string;
 		source: string;
 		storeLocation: string;
 		inputKey: string;
@@ -33,9 +35,29 @@ export const payOrderNode = createNodeDescriptor({
 			label: "Order ID",
 			type: "cognigyText",
 			defaultValue: "{{context.stripe.order.id}}",
-            description: "The ID of the order that should be paid in stripe",
+			description: "The ID of the order that should be paid in stripe",
 			params: {
 				required: true
+			}
+		},
+		{
+			key: "paymentOption",
+			label: "Payment Option",
+			type: "select",
+			defaultValue: "customer",
+			description: "How to pay the order, with a customer account or a credit card",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "Customer Account",
+						value: "customer"
+					},
+					{
+						label: "Credit Card",
+						value: "card"
+					}
+				]
 			}
 		},
 		{
@@ -46,6 +68,24 @@ export const payOrderNode = createNodeDescriptor({
 			description: "The token ID of the credit card that should be used in stripe",
 			params: {
 				required: true
+			},
+			condition: {
+				key: "paymentOption",
+				value: "card"
+			}
+		},
+		{
+			key: "customerId",
+			label: "Customer ID",
+			type: "cognigyText",
+			defaultValue: "{{context.stripe.customer.id}}",
+			description: "The token ID of the customer that should be used for the payment",
+			params: {
+				required: true
+			},
+			condition: {
+				key: "paymentOption",
+				value: "customer"
 			}
 		},
 		{
@@ -103,6 +143,8 @@ export const payOrderNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "orderId" },
+		{ type: "field", key: "paymentOption" },
+		{ type: "field", key: "customerId" },
 		{ type: "field", key: "source" },
 		{ type: "section", key: "storageOption" },
 	],
@@ -117,7 +159,7 @@ export const payOrderNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: ICreateCardTokenParams) => {
 		const { api } = cognigy;
-		const { connection, orderId, source, storeLocation, inputKey, contextKey } = config;
+		const { connection, orderId, source, paymentOption, customerId, storeLocation, inputKey, contextKey } = config;
 		const { secretKey } = connection;
 
 		const stripe = new Stripe(secretKey, {
@@ -125,12 +167,24 @@ export const payOrderNode = createNodeDescriptor({
 		});
 
 		try {
-            const order = await stripe.orders.pay(
-                orderId,
-                {
-                    source
-                }
-              );
+
+			let order: Stripe.Response<Stripe.Order>;
+
+			if (paymentOption === "customer") {
+				order = await stripe.orders.pay(
+					orderId,
+					{
+						customer: customerId
+					}
+				);
+			} else {
+				order = await stripe.orders.pay(
+					orderId,
+					{
+						source
+					}
+				);
+			}
 
 			const onSuccessChild = childConfigs.find(child => child.type === "onSuccessPayOrder");
 			api.setNextNode(onSuccessChild.id);

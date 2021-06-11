@@ -1,7 +1,7 @@
 {
   "name": "stripe",
   "version": "4.0.0",
-  "description": "Provide payments",
+  "description": "Integrates with Stripe and provices customer, order, invoice, product, and refund actions",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -11,7 +11,11 @@
   },
   "keywords": [
     "Stripe",
-    "Payments"
+    "Payments",
+    "Invoices",
+    "Orders",
+    "Customer",
+    "Shopping"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",

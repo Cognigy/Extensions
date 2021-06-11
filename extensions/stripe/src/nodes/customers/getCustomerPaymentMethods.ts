@@ -183,7 +183,7 @@ export const getCustomerPaymentMethodsNode = createNodeDescriptor({
 export const onFoundCustomerPaymentMethods = createNodeDescriptor({
     type: "onFoundCustomerPaymentMethods",
     parentType: "getCustomerPaymentMethods",
-    defaultLabel: "On Payment Methods",
+    defaultLabel: "On Found",
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -194,7 +194,7 @@ export const onFoundCustomerPaymentMethods = createNodeDescriptor({
 export const onNotFoundCustomerPaymentMethods = createNodeDescriptor({
     type: "onNotFoundCustomerPaymentMethods",
     parentType: "getCustomerPaymentMethods",
-    defaultLabel: "On No Payment Methods",
+    defaultLabel: "On Not Found",
     appearance: {
         color: "#61d188",
         textColor: "white",

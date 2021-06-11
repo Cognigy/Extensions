@@ -1,24 +1,24 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Stripe from "stripe";
 
-export interface IPayInvoiceParams extends INodeFunctionBaseParams {
+export interface ICreateRefundParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             secretKey: string;
         };
-        invoiceId: string;
-        usePaymentMethod: boolean;
-        paymentMethodId: string;
+        chargeId: string;
+        refundEntireCharge: boolean;
+        amount: number;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
     };
 }
 
-export const payInvoiceNode = createNodeDescriptor({
-    type: "payInvoice",
-    defaultLabel: "Pay Invoice",
-    summary: "Pay a given invoice",
+export const createRefundNode = createNodeDescriptor({
+    type: "createRefund",
+    defaultLabel: "Create Refund",
+    summary: "Creates a refund for a given charge in stripe",
     fields: [
         {
             key: "connection",
@@ -30,37 +30,37 @@ export const payInvoiceNode = createNodeDescriptor({
             }
         },
         {
-            key: "invoiceId",
-            label: "Invoice ID",
+            key: "chargeId",
+            label: "Charge ID",
             type: "cognigyText",
-            defaultValue: "{{context.stripe.customer.invoices[0].id}}",
-            description: "The ID of the invoice in stripe",
+            defaultValue: "{{context.stripe.customer.charges[0].id}}",
+            description: "The ID of the charge that should be refunded in stripe",
             params: {
                 required: true
             }
         },
         {
-            key: "usePaymentMethod",
-            label: "Add Payment Method",
+            key: "refundEntireCharge",
+            label: "Refund Entire Charge",
             type: "toggle",
-            defaultValue: false,
-            description: "Whether to add a payment method for this invoice or not",
+            defaultValue: true,
+            description: "Whether to refund the entire price of the charge or not",
             params: {
                 required: true
             }
         },
         {
-            key: "paymentMethodId",
-            label: "Payment Method ID",
-            type: "cognigyText",
-            defaultValue: "{{context.stripe.customer.paymentMethods[0].id}}",
-            description: "The ID of the payment method the user wants to use",
+            key: "amount",
+            label: "Amount",
+            type: "number",
+            defaultValue: 0,
+            description: "The price of the refund while 100 is 1 euro or dollar",
             params: {
                 required: true
             },
             condition: {
-                key: "usePaymentMethod",
-                value: true
+                key: "refundEntireCharge",
+                value: false
             }
         },
         {
@@ -86,7 +86,7 @@ export const payInvoiceNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "stripe.payment",
+            defaultValue: "stripe.customer.charges",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -96,7 +96,7 @@ export const payInvoiceNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "stripe.payment",
+            defaultValue: "stripe.customer.charges",
             condition: {
                 key: "storeLocation",
                 value: "context"
@@ -117,9 +117,9 @@ export const payInvoiceNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "invoiceId" },
-        { type: "field", key: "usePaymentMethod" },
-        { type: "field", key: "paymentMethodId" },
+        { type: "field", key: "chargeId" },
+        { type: "field", key: "refundEntireCharge" },
+        { type: "field", key: "amount" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -127,13 +127,13 @@ export const payInvoiceNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onSuccessPayInvoice",
-            "onErrorPayInvoice"
+            "onSuccessRefund",
+            "onErrorRefund"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IPayInvoiceParams) => {
+    function: async ({ cognigy, config, childConfigs }: ICreateRefundParams) => {
         const { api } = cognigy;
-        const { connection, invoiceId, usePaymentMethod, paymentMethodId, storeLocation, inputKey, contextKey } = config;
+        const { connection, chargeId, refundEntireCharge, amount, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
         const stripe = new Stripe(secretKey, {
@@ -142,29 +142,32 @@ export const payInvoiceNode = createNodeDescriptor({
 
         try {
 
-            let invoice: Stripe.Response<Stripe.Invoice>;
+            let refund: Stripe.Response<Stripe.Refund>;
 
-            if (usePaymentMethod) {
-                invoice = await stripe.invoices.pay(invoiceId, {
-                    payment_method: paymentMethodId
+            if (refundEntireCharge) {
+                refund = await stripe.refunds.create({
+                    charge: chargeId
                 });
             } else {
-                invoice = await stripe.invoices.pay(invoiceId);
+                refund = await stripe.refunds.create({
+                    charge: chargeId,
+                    amount
+                });
             }
 
-            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessPayInvoice");
+            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessRefund");
             api.setNextNode(onSuccessChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, invoice, "simple");
+                api.addToContext(contextKey, refund, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, invoice);
+                api.addToInput(inputKey, refund);
             }
 
         } catch (error) {
 
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorPayInvoice");
+            const onErrorChild = childConfigs.find(child => child.type === "onErrorRefund");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
@@ -177,10 +180,10 @@ export const payInvoiceNode = createNodeDescriptor({
     }
 });
 
-export const onSuccessPayInvoice = createNodeDescriptor({
-    type: "onSuccessPayInvoice",
-    parentType: "payInvoice",
-    defaultLabel: "Paid",
+export const onSuccessRefund = createNodeDescriptor({
+    type: "onSuccessRefund",
+    parentType: "createRefund",
+    defaultLabel: "On Success",
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -188,12 +191,12 @@ export const onSuccessPayInvoice = createNodeDescriptor({
     }
 });
 
-export const onErrorPayInvoice = createNodeDescriptor({
-    type: "onErrorPayInvoice",
-    parentType: "payInvoice",
-    defaultLabel: "Failed",
+export const onErrorRefund = createNodeDescriptor({
+    type: "onErrorRefund",
+    parentType: "createRefund",
+    defaultLabel: "On Error",
     appearance: {
-        color: "#61d188",
+        color: "#cf142b",
         textColor: "white",
         variant: "mini"
     }

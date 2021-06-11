@@ -1,23 +1,22 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Stripe from "stripe";
 
-export interface IGetInvoicesParams extends INodeFunctionBaseParams {
+export interface IGetChargesParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             secretKey: string;
         };
         customerId: string;
-        status: Stripe.InvoiceListParams.Status;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
     };
 }
 
-export const getCustomerInvoicesNode = createNodeDescriptor({
-    type: "getCustomerInvoices",
-    defaultLabel: "Get Invoices",
-    summary: "Retrieves invoices of a given customer in stripe",
+export const getChargesNode = createNodeDescriptor({
+    type: "getCharges",
+    defaultLabel: "Get Charges",
+    summary: "Retrieves charges of a given customer in stripe",
     fields: [
         {
             key: "connection",
@@ -36,38 +35,6 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
             description: "The ID of the customer in stripe",
             params: {
                 required: true
-            }
-        },
-        {
-            key: "status",
-            label: "Status",
-            type: "select",
-            defaultValue: "open",
-            description: "Which type of invoices should be retrieved",
-            params: {
-                required: true,
-                options: [
-                    {
-                        label: "Open",
-                        value: "open"
-                    },
-                    {
-                        label: "Paid",
-                        value: "paid"
-                    },
-                    {
-                        label: "Draft",
-                        value: "draft"
-                    },
-                    {
-                        label: "Void",
-                        value: "void"
-                    },
-                    {
-                        label: "Uncollectible",
-                        value: "uncollectible"
-                    }
-                ]
             }
         },
         {
@@ -93,7 +60,7 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "stripe.customer.invoices",
+            defaultValue: "stripe.customer.charges",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -103,7 +70,7 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "stripe.customer.invoices",
+            defaultValue: "stripe.customer.charges",
             condition: {
                 key: "storeLocation",
                 value: "context"
@@ -125,7 +92,6 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "customerId" },
-        { type: "field", key: "status" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -133,13 +99,13 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onFoundInvoices",
-            "OnNotFoundInvoices"
+            "onChargesFound",
+            "OnNoChargesFound"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IGetInvoicesParams) => {
+    function: async ({ cognigy, config, childConfigs }: IGetChargesParams) => {
         const { api } = cognigy;
-        const { connection, customerId, status, storeLocation, inputKey, contextKey } = config;
+        const { connection, customerId, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
         const stripe = new Stripe(secretKey, {
@@ -148,36 +114,36 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
 
         try {
 
-            const invoices = await stripe.invoices.list({
-                customer: customerId,
-                status
+            const charges = await stripe.charges.list({
+                customer: customerId
             });
 
-            if (invoices.data.length === 0) {
+            if (charges.data.length === 0) {
 
-                const onErrorChild = childConfigs.find(child => child.type === "OnNotFoundInvoices");
+                const onErrorChild = childConfigs.find(child => child.type === "OnNoChargesFound");
                 api.setNextNode(onErrorChild.id);
 
                 if (storeLocation === "context") {
-                    api.addToContext(contextKey, `No invoices found for the customer ${customerId}`, "simple");
+                    api.addToContext(contextKey, `No charges found for the customer ${customerId}`, "simple");
                 } else {
                     // @ts-ignore
-                    api.addToInput(inputKey, `No invoices found for the customer ${customerId}`);
+                    api.addToInput(inputKey, `No charges found for the customer ${customerId}`);
                 }
             } else {
-                const onSuccessChild = childConfigs.find(child => child.type === "onFoundInvoices");
+                const onSuccessChild = childConfigs.find(child => child.type === "onChargesFound");
                 api.setNextNode(onSuccessChild.id);
-
+    
                 if (storeLocation === "context") {
-                    api.addToContext(contextKey, invoices.data, "simple");
+                    api.addToContext(contextKey, charges.data, "simple");
                 } else {
                     // @ts-ignore
-                    api.addToInput(inputKey, invoices.data);
+                    api.addToInput(inputKey, charges.data);
                 }
             }
+
         } catch (error) {
 
-            const onErrorChild = childConfigs.find(child => child.type === "OnNotFoundInvoices");
+            const onErrorChild = childConfigs.find(child => child.type === "OnNoChargesFound");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
@@ -190,10 +156,10 @@ export const getCustomerInvoicesNode = createNodeDescriptor({
     }
 });
 
-export const onFoundInvoices = createNodeDescriptor({
-    type: "onFoundInvoices",
-    parentType: "getCustomerInvoices",
-    defaultLabel: "On Invoices",
+export const onChargesFound = createNodeDescriptor({
+    type: "onChargesFound",
+    parentType: "getCharges",
+    defaultLabel: "On Found",
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -201,10 +167,10 @@ export const onFoundInvoices = createNodeDescriptor({
     }
 });
 
-export const OnNotFoundInvoices = createNodeDescriptor({
-    type: "OnNotFoundInvoices",
-    parentType: "getCustomerInvoices",
-    defaultLabel: "On No Invoices",
+export const OnNoChargesFound = createNodeDescriptor({
+    type: "OnNoChargesFound",
+    parentType: "getCharges",
+    defaultLabel: "On Not Found",
     appearance: {
         color: "#61d188",
         textColor: "white",

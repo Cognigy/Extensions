@@ -86,7 +86,7 @@ export const createRefundNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "stripe.customer.charges",
+            defaultValue: "stripe.refund",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -96,7 +96,7 @@ export const createRefundNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "stripe.customer.charges",
+            defaultValue: "stripe.refund",
             condition: {
                 key: "storeLocation",
                 value: "context"

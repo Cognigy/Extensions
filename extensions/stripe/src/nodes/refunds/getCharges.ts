@@ -7,6 +7,7 @@ export interface IGetChargesParams extends INodeFunctionBaseParams {
             secretKey: string;
         };
         customerId: string;
+        onlyReturnNotRefunded: boolean;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -33,6 +34,16 @@ export const getChargesNode = createNodeDescriptor({
             type: "cognigyText",
             defaultValue: "{{context.stripe.customer.id}}",
             description: "The ID of the customer in stripe",
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "onlyReturnNotRefunded",
+            label: "Only Return Not Refunded",
+            type: "toggle",
+            defaultValue: true,
+            description: "Whether to return only charges that are not refunded or not",
             params: {
                 required: true
             }
@@ -92,6 +103,7 @@ export const getChargesNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "customerId" },
+        { type: "field", key: "onlyReturnNotRefunded" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -105,7 +117,7 @@ export const getChargesNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IGetChargesParams) => {
         const { api } = cognigy;
-        const { connection, customerId, storeLocation, inputKey, contextKey } = config;
+        const { connection, customerId, onlyReturnNotRefunded, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
         const stripe = new Stripe(secretKey, {
@@ -114,11 +126,24 @@ export const getChargesNode = createNodeDescriptor({
 
         try {
 
-            const charges = await stripe.charges.list({
+            const chargesResponse = await stripe.charges.list({
                 customer: customerId
             });
 
-            if (charges.data.length === 0) {
+            let charges: Stripe.Charge[];
+
+            if (onlyReturnNotRefunded) {
+                for (let charge of chargesResponse.data) {
+                    api.say(charge.refunded.toString())
+                    if (charge.refunded === false) {
+                        charges.push(charge);
+                    }
+                }
+            } else {
+                charges = chargesResponse.data;
+            }
+
+            if (charges.length === 0) {
 
                 const onErrorChild = childConfigs.find(child => child.type === "OnNoChargesFound");
                 api.setNextNode(onErrorChild.id);
@@ -130,14 +155,15 @@ export const getChargesNode = createNodeDescriptor({
                     api.addToInput(inputKey, `No charges found for the customer ${customerId}`);
                 }
             } else {
+
                 const onSuccessChild = childConfigs.find(child => child.type === "onChargesFound");
                 api.setNextNode(onSuccessChild.id);
-    
+
                 if (storeLocation === "context") {
-                    api.addToContext(contextKey, charges.data, "simple");
+                    api.addToContext(contextKey, charges, "simple");
                 } else {
                     // @ts-ignore
-                    api.addToInput(inputKey, charges.data);
+                    api.addToInput(inputKey, charges);
                 }
             }
 

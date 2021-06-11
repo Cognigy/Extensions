@@ -7,6 +7,8 @@ import { createSKUNode, onSuccesCreateSKU, onErrorCreateSKU } from "./nodes/crea
 import { createCustomerNode } from "./nodes/customers/createCustomer";
 import { getCustomerNode, onFoundCustomer, onNotFoundCustomer } from "./nodes/customers/getCustomer";
 import { getCustomerPaymentMethodsNode, onFoundCustomerPaymentMethods, onNotFoundCustomerPaymentMethods } from "./nodes/customers/getCustomerPaymentMethods";
+import { getCustomerInvoicesNode, onFoundInvoices, OnNotFoundInvoices } from "./nodes/invoices/getInvoices";
+import { onErrorPayInvoice, onSuccessPayInvoice, payInvoiceNode } from "./nodes/invoices/payInvoice";
 import { onErrorPayOrder, onSuccessPayOrder, payOrderNode } from "./nodes/payOrder";
 import { getProductsNode } from "./nodes/products/getProducts";
 
@@ -39,7 +41,15 @@ export default createExtension({
 
 		getCustomerPaymentMethodsNode,
 		onFoundCustomerPaymentMethods,
-		onNotFoundCustomerPaymentMethods
+		onNotFoundCustomerPaymentMethods,
+
+		getCustomerInvoicesNode,
+		onFoundInvoices,
+		OnNotFoundInvoices,
+
+		payInvoiceNode,
+		onSuccessPayInvoice,
+		onErrorPayInvoice
 	],
 
 	connections: [

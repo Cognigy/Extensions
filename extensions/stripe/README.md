@@ -8,18 +8,29 @@ Inside of Stripe, one can navigate to the *Developer* section and copy the **Sec
 
 - secureKey
 
-### Node: Create Card Token
+## Flow Nodes
 
-Create a new credit card for a payment and returns the token as ID.
+All exposed Flow Nodes of this Extension follow the [Stripe API](https://stripe.com/docs/api?lang=node) whereby the respective result returns `response.data` if there is a list of results -- e.g. invoices, charges, products, and more.
 
-### Node: Create SKU
+### Exposed Nodes
 
-Creates a new Stock Keeping Unit for a product that could be used for a payment of an order.
+- *Customer*
+  - [Get Customer](https://stripe.com/docs/api/customers/list?lang=node)
+  - [Create Customer](https://stripe.com/docs/api/customers/create?lang=node)
+  - [Get Payment Methods](https://stripe.com/docs/api/cards/list?lang=node)
+- *Invoices*
+  - [Get Invoices](https://stripe.com/docs/api/invoices/list?lang=node)
+  - [Pay Invoice](https://stripe.com/docs/api/invoices/pay)
+- *Orders*
+  - [Create Order](https://stripe.com/docs/api/orders/create)
+  - [Create Card Token](https://stripe.com/docs/api/tokens/create_card)
+  - [Create SKU](https://stripe.com/docs/api/skus/create)
+  - [Pay Order](https://stripe.com/docs/api/orders/pay?lang=node)
 
-### Node: Create Order
+- *Products*
+  - [Get Products](https://stripe.com/docs/api/products/list)
+- *Refunds*
+  - [Get Charges](https://stripe.com/docs/api/charges/list)
+  - [Create Refund](https://stripe.com/docs/api/refunds/create)
 
-Creates a new order with a list of items and shipping address.
-
-### Node: Pay Order
-
-Finally, the created order can be paid using the recently created **card token**, and **SKU**.
+Almost all of above mentioned Nodes contain so-called Child-Nodes in order to continue with the Flow in the case of a **successful** or **unsuccessful/empty** result. With this, the virtual agent can switch the conversation if, for example, open invoices were found or not.

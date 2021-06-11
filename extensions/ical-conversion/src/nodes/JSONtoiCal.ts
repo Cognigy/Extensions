@@ -1,4 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { v4 as uuidv4 } from 'uuid';
+const moment = require('moment');
+const ical2json = require('ical2json');
 
 export interface IJSONtoiCalParams extends INodeFunctionBaseParams {
 	config: {
@@ -8,7 +11,6 @@ export interface IJSONtoiCalParams extends INodeFunctionBaseParams {
 		location: string;
 		summary: string;
 		description: string;
-		sourceJSON: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -109,17 +111,48 @@ export const iJSONtoiCalNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "sourceJSON" },
+		{ type: "field", key: "dateStart" },
+		{ type: "field", key: "dateEnd" },
+		{ type: "field", key: "categories" },
+		{ type: "field", key: "location" },
+		{ type: "field", key: "summary" },
+		{ type: "field", key: "description" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
 		color: "#fa4514"
 	},
 	function: async ({ cognigy, config }: IJSONtoiCalParams) => {
-        const { api } = cognigy;
-		const { sourceJSON, storeLocation, inputKey, contextKey } = config;
-		let ical2json = require('ical2json');
+        const { input, api } = cognigy;
+		const { storeLocation, inputKey, contextKey, dateStart, dateEnd, summary, description, location, categories } = config;
+
+		let dateFormat = "YYYYMMDDTHHmmss";
+
+		let sourceJSON = {
+			VCALENDAR: [
+				{
+					CALSCALE: "GREGORIAN",
+					PRODID: "Cognigy.AI/CognigyAgent/EN",
+					VERSION: "2.0",
+					METHOD: "PUBLISH",
+					VEVENT: [
+						{
+							DTSTAMP: moment(input.currentTime.ISODATE).locale("en").format(dateFormat),
+							DTSTART: moment(dateStart).locale("en").format(dateFormat),
+							DTEND: moment(dateEnd).locale("en").format(dateFormat),
+							UID: uuidv4(),
+							TZID: input.currentTime.timezoneOffset,
+							DESCRIPTION: description,
+							SUMMARY: summary,
+							LOCATION: location,
+							CATEGORIES: categories
+						}
+					]
+				}
+			]
+		};
 		let output = ical2json.revert(sourceJSON);
-		sourceJSON
+
 		if (storeLocation === 'context') {
 			api.addToContext(contextKey, output, 'simple');
 		} else {

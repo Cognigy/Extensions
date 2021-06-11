@@ -130,11 +130,10 @@ export const getChargesNode = createNodeDescriptor({
                 customer: customerId
             });
 
-            let charges: Stripe.Charge[];
+            let charges: Stripe.Charge[] = [];
 
             if (onlyReturnNotRefunded) {
                 for (let charge of chargesResponse.data) {
-                    api.say(charge.refunded.toString())
                     if (charge.refunded === false) {
                         charges.push(charge);
                     }
@@ -143,7 +142,7 @@ export const getChargesNode = createNodeDescriptor({
                 charges = chargesResponse.data;
             }
 
-            if (charges.length === 0) {
+            if (charges.length === 0 || Object.keys(charges).length === 0) {
 
                 const onErrorChild = childConfigs.find(child => child.type === "OnNoChargesFound");
                 api.setNextNode(onErrorChild.id);

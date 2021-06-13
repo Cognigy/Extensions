@@ -74,7 +74,7 @@ export const createCustomerNode = createNodeDescriptor({
                 ],
                 required: true
             },
-            defaultValue: "input"
+            defaultValue: "context"
         },
         {
             key: "inputKey",
@@ -119,6 +119,13 @@ export const createCustomerNode = createNodeDescriptor({
     appearance: {
         color: "#556cd6"
     },
+    tokens: [
+        {
+            label: "Stripe Customer ID",
+            script: "context.stripe.customer.id",
+            type: "answer"
+        }
+    ],
     function: async ({ cognigy, config }: ICreateCustomerParams) => {
         const { api } = cognigy;
         const { connection, name, phone, email, storeLocation, inputKey, contextKey } = config;

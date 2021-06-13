@@ -54,7 +54,7 @@ export const getCustomerNode = createNodeDescriptor({
                 ],
                 required: true
             },
-            defaultValue: "input"
+            defaultValue: "context"
         },
         {
             key: "inputKey",
@@ -103,6 +103,18 @@ export const getCustomerNode = createNodeDescriptor({
             "onNotFoundCustomer"
         ]
     },
+    tokens: [
+		{
+			label: "Stripe Customer ID",
+			script: "context.stripe.customer.id",
+			type: "answer"
+		},
+		{
+			label: "Stripe Customer Name",
+			script: "context.stripe.customer.name",
+			type: "answer"
+		}
+	],
     function: async ({ cognigy, config, childConfigs }: IGetCustomerParams) => {
         const { api } = cognigy;
         const { connection, email, storeLocation, inputKey, contextKey } = config;

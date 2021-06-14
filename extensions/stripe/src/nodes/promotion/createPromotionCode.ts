@@ -73,6 +73,7 @@ export const createPromotionCodeNode = createNodeDescriptor({
             key: "customerId",
             label: "Customer ID",
             type: "cognigyText",
+            defaultValue: "{{context.stripe.customer.id}}",
             description: "The phone number of the customer",
             params: {
                 required: true

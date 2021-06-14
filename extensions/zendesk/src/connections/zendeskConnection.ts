@@ -6,6 +6,6 @@ export const zendeskConnection: IConnectionSchema = {
 	fields: [
 		{ fieldName: "username" },
 		{ fieldName: "token" },
-		{ fieldName: "remoteUri"}
+		{ fieldName: "baseUrl"}
 	]
 };

@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const zendesk = require('node-zendesk');
+import axios from "axios";
 
-export interface IQueryParams extends INodeFunctionBaseParams {
+export interface ISearchTicketsParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
@@ -14,13 +14,9 @@ export interface IQueryParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
-export const queryNode = createNodeDescriptor({
-	type: "query",
-	defaultLabel: "Query",
-	preview: {
-		key: "query",
-		type: "text"
-	},
+export const searchTicketsNode = createNodeDescriptor({
+	type: "searchTickets",
+	defaultLabel: "Search Tickets",
 	fields: [
 		{
 			key: "connection",
@@ -33,10 +29,10 @@ export const queryNode = createNodeDescriptor({
 		},
 		{
 			key: "query",
-			label: "Query",
+			label: "Search Query",
 			type: "cognigyText",
 			defaultValue: "{{input.text}}",
-			description: "The query to execute.",
+			description: "The search query that should be used in order to find tickets within Zendesk.",
 			params: {
 				required: true,
 			},
@@ -64,7 +60,7 @@ export const queryNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "zendesk.query",
+			defaultValue: "zendesk.support.tickets",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -74,7 +70,7 @@ export const queryNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "zendesk.query",
+			defaultValue: "zendesk.support.tickets",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -101,7 +97,7 @@ export const queryNode = createNodeDescriptor({
 	appearance: {
 		color: "#00363d"
 	},
-	function: async ({ cognigy, config }: IQueryParams) => {
+	function: async ({ cognigy, config }: ISearchTicketsParams) => {
 		const { api } = cognigy;
 		const { query, connection, storeLocation, contextKey, inputKey } = config;
 		const { username, token, remoteUri } = connection;
@@ -112,28 +108,22 @@ export const queryNode = createNodeDescriptor({
 			remoteUri
 		});
 
-		return new Promise((resolve, reject) => {
-			client.search.query(query, (err, statusCode, body, response, res) => {
+		try {
+			const response = client.search.query(query);
 
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { error: err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { error: err.message });
-					}
-
-				}
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, body, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, body);
-				}
-
-				resolve();
-			});
-		});
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { error: error }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { error: err });
+			}
+		}
 	}
 });

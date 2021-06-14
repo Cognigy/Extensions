@@ -1,25 +1,16 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const zendesk = require('node-zendesk');
+import axios from "axios";
 
 export interface ICreateTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
 			token: string;
-			remoteUri: string;
+			baseUrl: string;
 		};
-		ticketID: number;
-		ticket: {
-			ticket: {
-				subject: string;
-				description: string;
-				comment: {
-					body: string;
-				},
-				priority: string;
-				requester_id: number;
-			}
-		};
+		subject: string;
+		description: string;
+		priority: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -28,6 +19,7 @@ export interface ICreateTicketParams extends INodeFunctionBaseParams {
 export const createTicketNode = createNodeDescriptor({
 	type: "createTicket",
 	defaultLabel: "Create Ticket",
+	summary: "Creates a new support ticket",
 	fields: [
 		{
 			key: "connection",
@@ -39,13 +31,45 @@ export const createTicketNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "ticket",
-			label: "Ticket",
-			type: "json",
-			description: "JSON of the ticket to update.",
+			key: "subject",
+			label: "Subject",
+			type: "cognigyText",
+			description: "The subject of the new support ticket",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "description",
+			label: "Description",
+			type: "cognigyText",
+			description: "The description of the new support ticket",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "priority",
+			label: "Priority",
+			type: "select",
+			description: "The priority of the new support ticket",
 			params: {
 				required: true,
-			},
+				options: [
+					{
+						label: "Normal",
+						value: "normal"
+					},
+					{
+						label: "High",
+						value: "high"
+					},
+					{
+						label: "Urgent",
+						value: "urgent"
+					}
+				]
+			}
 		},
 		{
 			key: "storeLocation",
@@ -101,7 +125,9 @@ export const createTicketNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "ticket" },
+		{ type: "field", key: "subject" },
+		{ type: "field", key: "description" },
+		{ type: "field", key: "priority" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -109,38 +135,32 @@ export const createTicketNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ICreateTicketParams) => {
 		const { api } = cognigy;
-		const { ticket, connection, storeLocation, contextKey, inputKey } = config;
-		const { username, token, remoteUri } = connection;
+		const { connection, description, priority, subject, storeLocation, contextKey, inputKey } = config;
+		const { username, token, baseUrl } = connection;
 
-		const client = zendesk.createClient({
-			username,
-			token,
-			remoteUri
-		});
+		try {
 
-		if (!ticket?.ticket?.requester_id) return Promise.reject("No requester defined for ticket");
-
-		return new Promise((resolve, reject) => {
-			client.tickets.create(ticket, (err, statusCode, body, response, res) => {
-
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { error: err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { error: err.message });
-					}
+			const response = await axios({
+				method: "post",
+				url: `${baseUrl}/api/v2/tickets`,
+				data: {
+					
 				}
+			})
 
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, res, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, res);
-				}
-
-				resolve();
-			});
-		});
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { error: err.message }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { error: err.message });
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { error: error.message }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { error: error.message });
+			}
+		}
 	}
 });

@@ -1,5 +1,5 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { queryNode } from "./nodes/query";
+import { queryNode } from "./nodes/support/searchTickets";
 import { zendeskConnection } from "./connections/zendeskConnection";
 import { getTicketNode } from "./nodes/getTicket";
 import { createTicketNode } from "./nodes/createTicket";

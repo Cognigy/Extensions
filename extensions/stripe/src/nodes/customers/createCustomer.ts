@@ -123,7 +123,7 @@ export const createCustomerNode = createNodeDescriptor({
         {
             label: "Stripe Customer ID",
             script: "context.stripe.customer.id",
-            type: "answer"
+            type: "context"
         }
     ],
     function: async ({ cognigy, config }: ICreateCustomerParams) => {

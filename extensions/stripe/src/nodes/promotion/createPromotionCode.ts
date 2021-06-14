@@ -53,7 +53,7 @@ export const createPromotionCodeNode = createNodeDescriptor({
             }
         },
         {
-            key:  "active",
+            key: "active",
             label: "Activate",
             type: "toggle",
             defaultValue: true,
@@ -120,7 +120,7 @@ export const createPromotionCodeNode = createNodeDescriptor({
                 ],
                 required: true
             },
-            defaultValue: "context"
+            defaultValue: "input"
         },
         {
             key: "inputKey",
@@ -182,11 +182,6 @@ export const createPromotionCodeNode = createNodeDescriptor({
             label: "Stripe Promotion Code",
             script: "input.stripe.promotion.code",
             type: "input"
-        },
-        {
-            label: "Stripe Promotion Code",
-            script: "context.stripe.promotion.code",
-            type: "context"
         }
     ],
     function: async ({ cognigy, config }: ICreatePromotionCodeParams) => {
@@ -200,21 +195,21 @@ export const createPromotionCodeNode = createNodeDescriptor({
 
         try {
 
-            let promotionCode: Stripe.Response<Stripe.PromotionCode>;
-
-            if (configureMaxRedemptions) {
-                promotionCode = await stripe.promotionCodes.create({
-                    active,
-                    coupon,
-                    code,
-                    max_redemptions: maxRedemptions
-                });
-            }
-            promotionCode = await stripe.promotionCodes.create({
+            let promotionCodeOptions: Stripe.PromotionCodeCreateParams = {
                 active,
                 coupon,
-                code
-            });
+                code,
+            }
+
+            if (configureMaxRedemptions) {
+                promotionCodeOptions["max_redemptions"] = maxRedemptions;
+            }
+
+            if (assignToCustomer) {
+                promotionCodeOptions["customer"] = customerId;
+            }
+
+            const promotionCode = await stripe.promotionCodes.create(promotionCodeOptions);
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, promotionCode, "simple");

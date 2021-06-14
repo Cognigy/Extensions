@@ -16,7 +16,12 @@ All exposed Flow Nodes of this Extension follow the [Stripe API](https://stripe.
 
 - *Customer*
   - [Get Customer](https://stripe.com/docs/api/customers/list?lang=node)
+    - Tokens (Context):
+      - Stripe Customer ID
+      - Stripe Customer Name
   - [Create Customer](https://stripe.com/docs/api/customers/create?lang=node)
+    - Tokens (Context):
+      - Stripe Customer ID
   - [Get Payment Methods](https://stripe.com/docs/api/cards/list?lang=node)
 - *Invoices*
   - [Get Invoices](https://stripe.com/docs/api/invoices/list?lang=node)
@@ -32,5 +37,9 @@ All exposed Flow Nodes of this Extension follow the [Stripe API](https://stripe.
 - *Refunds*
   - [Get Charges](https://stripe.com/docs/api/charges/list)
   - [Create Refund](https://stripe.com/docs/api/refunds/create)
+- *Promotion*
+  - [Create Promotion Code](https://stripe.com/docs/api/promotion_codes/create)
+    - Tokens (Input):
+      - Stripe Promotion Code
 
 Almost all of above mentioned Nodes contain so-called Child-Nodes in order to continue with the Flow in the case of a **successful** or **unsuccessful/empty** result. With this, the virtual agent can switch the conversation if, for example, open invoices were found or not.

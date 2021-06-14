@@ -39,6 +39,7 @@ All exposed Flow Nodes of this Extension follow the [Stripe API](https://stripe.
   - [Create Refund](https://stripe.com/docs/api/refunds/create)
 - *Promotion*
   - [Create Promotion Code](https://stripe.com/docs/api/promotion_codes/create)
+    - **The promotion code will be added to an existing Stripe Coupon. Therefore, the `coupon` parameter needs to be the ID, e.g. TEST_COUPON, of the coupon which can be found in the Stripe Dashboard.**
     - Tokens (Input):
       - Stripe Promotion Code
 

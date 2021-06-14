@@ -1,6 +1,5 @@
 # Crypto
 
-Exposes Node.JS's crypto functions to Cognigy.AI
 
 This Extension exposes Node.JS's crypto functions to Cognigy.AI
 

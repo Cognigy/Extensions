@@ -199,7 +199,7 @@ export const createPromotionCodeNode = createNodeDescriptor({
                 active,
                 coupon,
                 code,
-            }
+            };
 
             if (configureMaxRedemptions) {
                 promotionCodeOptions["max_redemptions"] = maxRedemptions;

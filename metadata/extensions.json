@@ -5,6 +5,7 @@
             "name": "zendesk",
             "label": "Zendesk",
             "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk400/zendesk.tar.gz",
             "description": "Integrates Cognigy.AI with the Zendesk Ticketing System",
             "tags": [
                 "support",
@@ -48,6 +49,7 @@
             "name": "twilio",
             "label": "Twilio",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/twilio400/twilio.tar.gz",
             "description": "Integrates Cognigy.AI with Twilio",
             "tags": [
                 "sms",
@@ -67,6 +69,7 @@
             "name": "aws",
             "label": "Amazon Web Services",
             "version": "4.0.1",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/aws401/aws.tar.gz",
             "description": "This extension facilitates calls to a number of relevant AWS APIs. Now you can call the AWS SDK from Cognigy, without a single line of code.",
             "tags": [
                 "aws",
@@ -105,6 +108,7 @@
             "name": "bamboo-hr",
             "label": "Bamboo HR",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/bamboo-hr100/bamboohr.tar.gz",
             "description": "Connects the Bamboo Human Resources system to Cognigy.AI",
             "tags": [
                 "bamboo",
@@ -125,6 +129,7 @@
             "name": "calendly",
             "label": "Calendly",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/calendly400/calendly.tar.gz",
             "description": "Connects Calendly in order to use meeting information",
             "tags": [
                 "calendar",
@@ -169,6 +174,7 @@
             "name": "cognigy",
             "label": "Cognigy Extensions",
             "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy410/cognigy.tar.gz",
             "description": "Contains various Cognigy Flow Node extensions",
             "tags": [
                 "cognigy",
@@ -203,6 +209,7 @@
             "name": "cognigy-webchat",
             "label": "Cognigy Webchat",
             "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy-webchat410/cognigy-webchat.tar.gz",
             "description": "Change various Webchat settings within the conversation",
             "tags": [
                 "cognigy",
@@ -255,6 +262,7 @@
             "name": "confluence",
             "label": "Confluence",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/confluence400/confluence.tar.gz",
             "description": "Search for knowledge articles in Confluence",
             "tags": [
                 "knowledge",
@@ -281,6 +289,7 @@
             "name": "deepl",
             "label": "DeepL",
             "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/deepl400/deepl.tar.gz",
             "description": "Translate text with DeepL",
             "tags": [
                 "deepl",
@@ -301,6 +310,7 @@
             "name": "elastic-search",
             "label": "Elastic Search",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/elastic-search/elastic-search.tar.gz",
             "description": "With this Extension one can query Elastic Search to use these information within the conversation.",
             "tags": [
                 "elastic",
@@ -320,6 +330,7 @@
         {
             "name": "facebook-messenger",
             "label": "Facebook Messenger",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/facebook-messenger400/facebook-messenger.tar.gz",
             "version": "4.0.0",
             "description": "Custom Facebook Messenger functions",
             "tags": [
@@ -347,6 +358,7 @@
             "name": "file-upload",
             "label": "File Upload",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/file-upload400/file-upload.tar.gz",
             "description": "Triggers the file-upload Webchat Plugin",
             "tags": [
                 "file",
@@ -372,7 +384,8 @@
         {
             "name": "fuzzy-search",
             "label": "Fuzzy Search",
-            "version": "4.0.0",
+            "version": "4.0.1",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/fuzzy-search401/fuzzy-search.tar.gz",
             "description": "Adds a local lightweight fuzzy-search as Flow Node to Cognigy.AI",
             "tags": [
                 "fuzzy",
@@ -393,6 +406,7 @@
             "name": "google-firebase",
             "label": "Google Firebase",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-firebase400/google-firebase.tar.gz",
             "description": "Enables CRUD operations for the Firebase Realtime Database",
             "tags": [
                 "google",
@@ -425,6 +439,7 @@
         {
             "name": "google-maps",
             "label": "Google Maps",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-maps410/google-maps.tar.gz",
             "version": "4.1.0",
             "description": "Adds Google Maps functions",
             "tags": [
@@ -453,6 +468,7 @@
             "name": "google-sheets",
             "label": "Google Sheets",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-sheets400/google-sheets.tar.gz",
             "description": "Use external information from a Google Sheet",
             "tags": [
                 "google",
@@ -475,6 +491,7 @@
             "name": "google-translator",
             "label": "Google Translator",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-translator400/google-translator.tar.gz",
             "description": "Translate text or detect a language with Google Translate",
             "tags": [
                 "google",
@@ -502,6 +519,7 @@
             "name": "here",
             "label": "Here",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/here400/here.tar.gz",
             "description": "Adds Here specific features",
             "tags": [
                 "here",
@@ -522,6 +540,7 @@
             "name": "hubspot",
             "label": "Hubspot",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hubspot400/hubspot.tar.gz",
             "description": "Find and update contacts or companies in Hubspot",
             "tags": [
                 "hubspot",
@@ -573,6 +592,7 @@
             "name": "jira",
             "label": "Jira",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/jira400/jira.tar.gz",
             "description": "Perform ticket operations in Atlassian Jira",
             "tags": [
                 "atlassian",
@@ -605,6 +625,7 @@
             "name": "microsoft-graph",
             "label": "Microsoft Graph",
             "version": "4.2.1",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/microsoft-graph421/microsoft-graph.tar.gz",
             "description": "Login a user with Microsoft and use the Graph API",
             "tags": [
                 "microsoft",
@@ -676,6 +697,7 @@
             "name": "microsoft-azure",
             "label": "Microsoft Azure",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/azure400/microsoft-azure.tar.gz",
             "description": "Intrates with the Microsoft Azure Cognitive Services",
             "tags": [
                 "microsoft",
@@ -718,6 +740,7 @@
             "name": "microsoft-sharepoint",
             "label": "Microsoft Sharepoint",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/microsoft-sharepoint400/microsoft-sharepoint.tar.gz",
             "description": "Use Sharepoint Site information in a conversation",
             "tags": [
                 "microsoft",
@@ -744,6 +767,7 @@
             "name": "monday-com",
             "label": "Monday",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/monday-com400/monday-com.tar.gz",
             "description": "Create and retrieve board information from monday.com",
             "tags": [
                 "monday",
@@ -770,6 +794,7 @@
             "name": "news",
             "label": "News",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/news400/news.tar.gz",
             "description": "Get the latest news from various international newspapers",
             "tags": [
                 "news",
@@ -790,6 +815,7 @@
             "name": "open-weather-map",
             "label": "Open Weather Map",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/open-weather-map400/open-weather-map.tar.gz",
             "description": "Get the current weather information of a given city",
             "tags": [
                 "weather",
@@ -809,6 +835,7 @@
             "name": "parcellab",
             "label": "Parcel Lab",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/parcellab400/parcellab.tar.gz",
             "description": "Get parcel information from parcel lab",
             "tags": [
                 "parcel",
@@ -826,29 +853,10 @@
             ]
         },
         {
-            "name": "rating-webchat-plugin",
-            "label": "Rating Webchat Plugin",
-            "version": "1.0.0",
-            "description": "Displays a rating card by using the rating Webchat Plugin",
-            "tags": [
-                "rating",
-                "feedback",
-                "plugin"
-            ],
-            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAB3QAAAd0B1+bDhAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAUpSURBVHic7ZtNbBZFGMd/D6VWoLUglBAKoqWQiB+JJ6JgjIkI2sTEEI0mcpHEqCEatFQaDdGLF65KajxJCAesB2PwwkFD6lEORk1QMbUGU9FAvyulZTzMvGm7ndnuzu7Ovm/1SSbdzDyf/3lm35lntqKU4r9My8syLCLLgP2AAj5TJc3EsjKMGnoLOAN8CnSW5YSUAbyIbAZ+AW4xXVNAu1Lq99C+lJUB3cwGj3nuLsOR4BkgIq3AJaAhMnQd2KqUuhzSnzIy4CgLg8f0HQ3sS9gMEJGN6Nm/1cHyDzoL/gjlU+gM6MIdPGasK5AvQMAMEJENwK/AikVYJ4E2pdRg8V6FzYAj2IOPBrrC8IYhpVThDVgPjKN3fdF22NI3DqwP4VuoDDgCrHSM9QB/RvpWEioLAsx+CzCGffYrR4BOy9gY0LIUMuBNYNUiPCeAvyJ9q4xssVTw7K8FRnHMPiYDDG+XZXwUWFvLGfAG0JiQ9wTwd6Sv0egojgqc/TXACDGzz5wMMDLdFp4RYE0tZsBhoCmlzAfA1Uhfk9FVDBU0+6uBIRaZfSIZYGTftvANAasL8TXHoOuB7UAHcCpJ8A4AbkNnQZT3lNG9HajPy+9UZwERqQPuALYZR7bNed6CR41RKSUWO8eA92LEpoHfgJ+An02rPA8opWaS2l8AgIgI0Io9yDbmV3IykwOAZqAfvZTS0hT60GUD57KyzHgT8BLQC3wHTJAwffNoMUvq3QLsTZgYe03MTQDnQgacAoDEL9IM7ZygU20LJZFtCVRIRFqAu5ldipW/W4kvrCSlfgEOACdzUOZFcQC4yFyqbMb+nrqL5C/j5yvp9g5VtgQy/BwvN2B0oO8eXLY75+0D0OfvmgfAxCLAhzF2X7NuhIDXax0AdJnvY4e9m8Ar8/gtCl42jDUHgAn+E4etGeDgAhmHoheNQM0AgF77px12poEDVrkYhS8YwaoHAH0O6XXYuAE855RdRPGzRkHVAoDemn/u0D8F7I+VT2DgafTFZdUBgN4MfenQfR14alEdCQ11oO/tqgYAdOnctY2fBJ5IpCeFwccp4KDkGXwj8LVD5zjwWGJdKQ0/SkyNPwQAQDPwjUPfGPBIKn0eDuwmQbGzCACA24ELDl0jwK7U8Xim4E7gWgkA7HDouQbs9IrFR8g481AJANShX3BRPQ/6xpGlLD6eQdaLlK71/WAZmvDVmQWAezPIZqHvLX3evmQB4L4MslnIlgHevvyfARkcKQsAWwZ4++L1kZSINAHD6MpLJlJ+NcER5t87KqBZKTWaVpdvBtxDDsEDiMgz5jImDUWzQIxPqckXgDzT/wzwrYg8mUImt2VQDQAAPACcFZHzIrIrAf+SA6BCDwN9IvKFiNwfw5ffL4HnNniQnI/FljaDvhJvs9jfaOEfDHIWANYFCH5um0LX+DdE/LB9Q7AuxFkgr/Q/jz5a7zbPLqoHXgUuicj7IlK5Ms/nPeCRAYfINqMXgH0Wvftwn/Xntqvo/zc6aRk7FGIJ9HgGfhFdZZYY3WJ4Lnra6AkBQF9KpwaAg0BdCht1RmYgpa2+EAAk/WjhCvrztoa0NubYajA6riS0OVQoAMCmBE4MA8eARt/ALXYbjc7hBPY3FQnA3hjDk8BxCvy2F/3t8XHsZbFK21skAHssBm8AHwGtRQVu8aPV2LRd2+0pEoB2Zi9Mb6JvY9tDBe7w5zSz1/nTaf1JXQ8QkR3oC5KzSqn+VMIFkYjcib6++0op9WMq2bQALDX6FzJzuHZoGF0rAAAAAElFTkSuQmCC",
-            "nodes": [
-                {
-                    "type": "ratingCard",
-	                "defaultLabel": "Show Rating Card",
-                    "description": "Display a rating card by using the rating Webchat Plugin",
-                    "tags": ["rating", "feedback", "plugin"]
-                }
-            ]
-        },
-        {
             "name": "salesforce-crm",
             "label": "Salesforce CRM",
             "version": "4.2.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/salesforce-crm420/salesforce-crm.tar.gz",
             "description": "Perform Salesforce CRM operations",
             "tags": [
                 "salesforce",
@@ -905,6 +913,7 @@
             "name": "salesforce-service-cloud",
             "label": "Salesforce Service Cloud",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/salesforce-service-cloud-400/salesforce-service-cloud.tar.gz",
             "description": "Connects the Salesforce Service Cloud Agent Live Chat",
             "tags": [
                 "salesforce",
@@ -946,6 +955,7 @@
             "name": "service-now",
             "label": "Service Now",
             "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/service-now410/service-now.tar.gz",
             "description": "Perform various operations in Service Now",
             "tags": [
                 "service now",
@@ -1011,6 +1021,7 @@
             "name": "slack",
             "label": "Slack",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/slack400/slack.tar.gz",
             "description": "Send a message to Slack",
             "tags": [
                 "slack",
@@ -1031,6 +1042,7 @@
             "name": "sunshine-conversations",
             "label": "Sunshine Conversations",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/sunshine-conversations400/sunshine-conversations.tar.gz",
             "description": "Perform Sunshine conversations application switchboard actions",
             "tags": [
                 "sunco",
@@ -1057,6 +1069,7 @@
         {
             "name": "uipath-orchestrator",
             "label": "UIPath Orchestrator",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/uipath414/uipath-orchestrator.tar.gz",
             "version": "4.1.4",
             "description": "Provides functions for the interaction with UiPath Orchestraor",
             "tags": [
@@ -1103,6 +1116,7 @@
             "name": "vonage",
             "label": "Vonage",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vonage400/vonage.tar.gz",
             "description": "Integrates with Vonage Conversation API",
             "tags": [
                 "sms",
@@ -1135,6 +1149,7 @@
             "name": "yext",
             "label": "Yext",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/yext400/yext.tar.gz",
             "description": "Use Yext for store information",
             "tags": [
                 "yext",
@@ -1175,6 +1190,7 @@
             "label": "Crypto",
             "version": "4.0.0",
             "description": "Handle hashes",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/Cognigy%2FCrypto/crypto.tar.gz",
             "tags": [
                 "decrypt",
                 "encrypt"
@@ -1205,6 +1221,7 @@
             "name": "stripe",
             "label": "Stripe",
             "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/stripe400/stripe.tar.gz",
             "description": "Handle Payments and Customers",
             "tags": [
                 "customer",

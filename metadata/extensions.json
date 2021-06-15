@@ -4,6 +4,7 @@
         {
             "name": "zendesk",
             "label": "Zendesk",
+            "version": "4.1.0",
             "description": "Integrates Cognigy.AI with the Zendesk Ticketing System",
             "tags": [
                 "support",
@@ -30,22 +31,23 @@
                     "tags": []
                 },
                 {
-                    "type": "query",
-	                "defaultLabel": "Query",
-                    "description": "Queries the Zendesk Support System",
-                    "tags": ["search"]
-                },
-                {
                     "type": "updateTicket",
 	                "defaultLabel": "Update Ticket",
                     "description": "Updates a ticket in Zendesk",
                     "tags": []
+                },
+                {
+                    "type": "searchArticles",
+	                "defaultLabel": "Search Articles",
+                    "description": "Searches for Help Center Articles",
+                    "tags": ["search", "help"]
                 }
             ]
         },
         {
             "name": "twilio",
             "label": "Twilio",
+            "version": "4.0.0",
             "description": "Integrates Cognigy.AI with Twilio",
             "tags": [
                 "sms",
@@ -64,6 +66,7 @@
         {
             "name": "aws",
             "label": "Amazon Web Services",
+            "version": "4.0.1",
             "description": "This extension facilitates calls to a number of relevant AWS APIs. Now you can call the AWS SDK from Cognigy, without a single line of code.",
             "tags": [
                 "aws",
@@ -101,6 +104,7 @@
         {
             "name": "bamboo-hr",
             "label": "Bamboo HR",
+            "version": "4.0.0",
             "description": "Connects the Bamboo Human Resources system to Cognigy.AI",
             "tags": [
                 "bamboo",
@@ -120,6 +124,7 @@
         {
             "name": "calendly",
             "label": "Calendly",
+            "version": "4.0.0",
             "description": "Connects Calendly in order to use meeting information",
             "tags": [
                 "calendar",
@@ -163,6 +168,7 @@
         {
             "name": "cognigy",
             "label": "Cognigy Extensions",
+            "version": "4.1.0",
             "description": "Contains various Cognigy Flow Node extensions",
             "tags": [
                 "cognigy",
@@ -196,6 +202,7 @@
         {
             "name": "cognigy-webchat",
             "label": "Cognigy Webchat",
+            "version": "4.1.0",
             "description": "Change various Webchat settings within the conversation",
             "tags": [
                 "cognigy",
@@ -247,6 +254,7 @@
         {
             "name": "confluence",
             "label": "Confluence",
+            "version": "4.0.0",
             "description": "Search for knowledge articles in Confluence",
             "tags": [
                 "knowledge",
@@ -272,6 +280,7 @@
         {
             "name": "deepl",
             "label": "DeepL",
+            "version": "4.1.0",
             "description": "Translate text with DeepL",
             "tags": [
                 "deepl",
@@ -291,6 +300,7 @@
         {
             "name": "elastic-search",
             "label": "Elastic Search",
+            "version": "4.0.0",
             "description": "With this Extension one can query Elastic Search to use these information within the conversation.",
             "tags": [
                 "elastic",
@@ -310,6 +320,7 @@
         {
             "name": "facebook-messenger",
             "label": "Facebook Messenger",
+            "version": "4.0.0",
             "description": "Custom Facebook Messenger functions",
             "tags": [
                 "facbook",
@@ -335,6 +346,7 @@
         {
             "name": "file-upload",
             "label": "File Upload",
+            "version": "4.0.0",
             "description": "Triggers the file-upload Webchat Plugin",
             "tags": [
                 "file",
@@ -360,6 +372,7 @@
         {
             "name": "fuzzy-search",
             "label": "Fuzzy Search",
+            "version": "4.0.0",
             "description": "Adds a local lightweight fuzzy-search as Flow Node to Cognigy.AI",
             "tags": [
                 "fuzzy",
@@ -379,6 +392,7 @@
         {
             "name": "google-firebase",
             "label": "Google Firebase",
+            "version": "4.0.0",
             "description": "Enables CRUD operations for the Firebase Realtime Database",
             "tags": [
                 "google",
@@ -411,6 +425,7 @@
         {
             "name": "google-maps",
             "label": "Google Maps",
+            "version": "4.1.0",
             "description": "Adds Google Maps functions",
             "tags": [
                 "google",
@@ -437,6 +452,7 @@
         {
             "name": "google-sheets",
             "label": "Google Sheets",
+            "version": "4.0.0",
             "description": "Use external information from a Google Sheet",
             "tags": [
                 "google",
@@ -458,6 +474,7 @@
         {
             "name": "google-translator",
             "label": "Google Translator",
+            "version": "4.0.0",
             "description": "Translate text or detect a language with Google Translate",
             "tags": [
                 "google",
@@ -484,6 +501,7 @@
         {
             "name": "here",
             "label": "Here",
+            "version": "4.0.0",
             "description": "Adds Here specific features",
             "tags": [
                 "here",
@@ -503,6 +521,7 @@
         {
             "name": "hubspot",
             "label": "Hubspot",
+            "version": "4.0.0",
             "description": "Find and update contacts or companies in Hubspot",
             "tags": [
                 "hubspot",
@@ -553,6 +572,7 @@
         {
             "name": "jira",
             "label": "Jira",
+            "version": "4.0.0",
             "description": "Perform ticket operations in Atlassian Jira",
             "tags": [
                 "atlassian",
@@ -584,6 +604,7 @@
         {
             "name": "microsoft-graph",
             "label": "Microsoft Graph",
+            "version": "4.2.1",
             "description": "Login a user with Microsoft and use the Graph API",
             "tags": [
                 "microsoft",
@@ -654,6 +675,7 @@
         {
             "name": "microsoft-azure",
             "label": "Microsoft Azure",
+            "version": "4.0.0",
             "description": "Intrates with the Microsoft Azure Cognitive Services",
             "tags": [
                 "microsoft",
@@ -695,6 +717,7 @@
         {
             "name": "microsoft-sharepoint",
             "label": "Microsoft Sharepoint",
+            "version": "4.0.0",
             "description": "Use Sharepoint Site information in a conversation",
             "tags": [
                 "microsoft",
@@ -720,6 +743,7 @@
         {
             "name": "monday-com",
             "label": "Monday",
+            "version": "4.0.0",
             "description": "Create and retrieve board information from monday.com",
             "tags": [
                 "monday",
@@ -745,6 +769,7 @@
         {
             "name": "news",
             "label": "News",
+            "version": "4.0.0",
             "description": "Get the latest news from various international newspapers",
             "tags": [
                 "news",
@@ -764,6 +789,7 @@
         {
             "name": "open-weather-map",
             "label": "Open Weather Map",
+            "version": "4.0.0",
             "description": "Get the current weather information of a given city",
             "tags": [
                 "weather",
@@ -782,6 +808,7 @@
         {
             "name": "parcellab",
             "label": "Parcel Lab",
+            "version": "4.0.0",
             "description": "Get parcel information from parcel lab",
             "tags": [
                 "parcel",
@@ -799,26 +826,9 @@
             ]
         },
         {
-            "name": "random-cat-image",
-            "label": "Random Cat Image",
-            "description": "Displays a random cat image in the Webchat",
-            "tags": [
-                "random",
-                "cat"
-            ],
-            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAD10lEQVR4Xu2b35HUMAzGN21AJbxBD3RwA21w1MHQAdTAvVEJtLGMfVFG1kr2J/9Llmxedm7P61g/fZJlO1mu1+v1cuJreQBYFbAsS9TB2QSxKYAAnA1CAuDXj0+X9+/eXJa3X/87NVgOVgFQTiQQ96wKMjw4N1wfPn5LwlwH8P35lcHT6+e9KYJ7mwwPdpC6eZ7LA1AgHFkNOcO5qssAQmtSAYNwRDVYRpPHZYkT1KwCCA1ffn6O7YNUEgDUS2NI8MHW1F7JwNdpO/QjZZ7rOwsgDJBmAhWAogZZN5SMvP75UmN7kouk0Za3pYq1XJZUghAApgY+S9DXLQYiZMI9yeNRqfLiocv/9/Qck/mNw3gpnACQeUDeaA0HZNDD21hGnwIAaDwlcEgBSCIc7lXPDXIQmFKLIRApWYnwSJK34GggmgBQHrgH47WcJcbtV4BHhkdqG5SgOK0IgORvzqtHMtI5Fms9c7MfsBVCwA32qAOAYd00yS3mIgDueY/31cpqWS6jiyEPhNJKNuyDxU3RGs9b22cBaE8ImxHOMrpkfJz1AoBsaSlwQ53S/qJzwJpnZZihYLWEp/ZPANS6WvkF3HEHFUjY28YtABYeZw8AUfLieKE1DMysDaprGgBrO93jLSk00/MrZAQuEqpJDqgNgdx5AjJQK+61zQ/6Du0XgbAlwVoAuSkJHaimgB4AaAUYPs0Zq0cOUL3YkASzhUtFv7l84FYAp0qGW9ti6JSFhAG1qVFVFqhXAVbCkt+3GK9B3mADU6ALaCsAT1m6Z1tzWj0LAFLVTbieDYCcEaqS4J5Sbrm3unodqYDaVRw3skcfMqkmNcZIAEkh4szefBXYOqNY8V9VCtdKEPUk2s47DqsYmp4DtG00bkwPb99NHRC94gwNr+e3ClI5F0xCIPyBLohqB6FVkbsD4JuiewCI8/IEFZg5YE8AW3YeDCC7GpTb4nuoYLQCigCiJ9ZD0dm5YEYihAEE4z3nA55kWJr+rL56qAMCQCroAcEylj/MhMALDzXKqwYIDKBXKLz8/mvah+YYqw/093I9Ye4Jysfl5aOlNTdEvDurTWln2HxfoPbAdJZh6H1KByTZFyakGmbPEKiRVruS8THkS2+MIM/ftg609++TpXThjaAigCSZrOdyntPk3sbl+vMYTv24APCpkjqomZZGQCklOzNMSiGQJc4eWN4TRK3xUA5AvZW8kjJ4cbPJd321J/xd+7KXOwQQINYT471UUhPrQ0IAgbF5i4WL53dW21qPy/6GKKCHgbP6eABomQVmeWnkfR4KeCigVzodqdOBff8D0xggbrXLgUMAAAAASUVORK5CYII=",
-            "nodes": [
-                {
-                    "type": "getRandomCatImage",
-	                "defaultLabel": "Random Cat Image",
-                    "description": "Display a random cat image in the Webchat",
-                    "tags": ["random", "cat", "image"]
-                }
-            ]
-        },
-        {
             "name": "rating-webchat-plugin",
             "label": "Rating Webchat Plugin",
+            "version": "1.0.0",
             "description": "Displays a rating card by using the rating Webchat Plugin",
             "tags": [
                 "rating",
@@ -838,6 +848,7 @@
         {
             "name": "salesforce-crm",
             "label": "Salesforce CRM",
+            "version": "4.2.0",
             "description": "Perform Salesforce CRM operations",
             "tags": [
                 "salesforce",
@@ -893,6 +904,7 @@
         {
             "name": "salesforce-service-cloud",
             "label": "Salesforce Service Cloud",
+            "version": "4.0.0",
             "description": "Connects the Salesforce Service Cloud Agent Live Chat",
             "tags": [
                 "salesforce",
@@ -933,6 +945,7 @@
         {
             "name": "service-now",
             "label": "Service Now",
+            "version": "4.1.0",
             "description": "Perform various operations in Service Now",
             "tags": [
                 "service now",
@@ -997,6 +1010,7 @@
         {
             "name": "slack",
             "label": "Slack",
+            "version": "4.0.0",
             "description": "Send a message to Slack",
             "tags": [
                 "slack",
@@ -1016,6 +1030,7 @@
         {
             "name": "sunshine-conversations",
             "label": "Sunshine Conversations",
+            "version": "4.0.0",
             "description": "Perform Sunshine conversations application switchboard actions",
             "tags": [
                 "sunco",
@@ -1042,6 +1057,7 @@
         {
             "name": "uipath-orchestrator",
             "label": "UIPath Orchestrator",
+            "version": "4.1.4",
             "description": "Provides functions for the interaction with UiPath Orchestraor",
             "tags": [
                 "robot process automation",
@@ -1086,6 +1102,7 @@
         {
             "name": "vonage",
             "label": "Vonage",
+            "version": "4.0.0",
             "description": "Integrates with Vonage Conversation API",
             "tags": [
                 "sms",
@@ -1117,6 +1134,7 @@
         {
             "name": "yext",
             "label": "Yext",
+            "version": "4.0.0",
             "description": "Use Yext for store information",
             "tags": [
                 "yext",

@@ -119,6 +119,13 @@ export const iJSONtoiCalNode = createNodeDescriptor({
 		{ type: "field", key: "description" },
 		{ type: "section", key: "storageOption" },
 	],
+	tokens: [
+		{
+			label: "iCal Download",
+			script: "cc.convertediCal.download",
+			type: "context"
+		}
+	],
 	appearance: {
 		color: "#fa4514"
 	},
@@ -151,7 +158,11 @@ export const iJSONtoiCalNode = createNodeDescriptor({
 				}
 			]
 		};
-		let output = ical2json.revert(sourceJSON);
+		let rawOutput = ical2json.revert(sourceJSON);
+		let output = {
+			raw: rawOutput,
+			download: "data:text/calendar," + encodeURIComponent(rawOutput)
+		};
 
 		if (storeLocation === 'context') {
 			api.addToContext(contextKey, output, 'simple');

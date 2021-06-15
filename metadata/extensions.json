@@ -1169,6 +1169,37 @@
                     "tags": ["get", "location", "filter", "query"]
                 }
             ]
+        },
+        {
+            "name": "crypto",
+            "label": "Crypto",
+            "version": "4.0.0",
+            "description": "Handle hashes",
+            "tags": [
+                "decrypt",
+                "encrypt"
+            ],
+            "icon": "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",
+            "nodes": [
+                {
+                    "type": "createHash",
+	                "defaultLabel": "Create Hash",
+                    "description": "Create a new hash value",
+                    "tags": ["hash"]
+                },
+                {
+                    "type": "decrypt",
+	                "defaultLabel": "Decrypt",
+                    "description": "Decrypts a value",
+                    "tags": ["decrypt"]
+                },
+                {
+                    "type": "encrypt",
+	                "defaultLabel": "Encrypt",
+                    "description": "Encrypts a value",
+                    "tags": ["encrypt"]
+                }
+            ]
         }
     ]
 }

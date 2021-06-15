@@ -1,14 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const zendesk = require('node-zendesk');
+import axios from "axios";
 
 export interface IGetTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
-			token: string;
-			remoteUri: string;
+			password: string;
+			subdomain: string;
 		};
-		ticketID: number;
+		ticketId: number;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -17,10 +17,7 @@ export interface IGetTicketParams extends INodeFunctionBaseParams {
 export const getTicketNode = createNodeDescriptor({
 	type: "getTicket",
 	defaultLabel: "Get Ticket",
-	preview: {
-		key: "ticketID",
-		type: "text"
-	},
+	summary: "Retrieves the information about a given ticket from zendesk",
 	fields: [
 		{
 			key: "connection",
@@ -32,10 +29,10 @@ export const getTicketNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "ticketID",
+			key: "ticketId",
 			label: "Ticket ID",
 			type: "cognigyText",
-			description: "ID of the ticket to request.",
+			description: "The ID of the ticket to request.",
 			params: {
 				required: true,
 			},
@@ -63,7 +60,7 @@ export const getTicketNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "zendesk.query",
+			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -73,7 +70,7 @@ export const getTicketNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "zendesk.query",
+			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -94,45 +91,81 @@ export const getTicketNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "ticketID" },
+		{ type: "field", key: "ticketId" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
 		color: "#00363d"
 	},
-	function: async ({ cognigy, config }: IGetTicketParams) => {
+	dependencies: {
+		children: [
+			"onFoundTicket",
+			"onNotFoundTicket"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: IGetTicketParams) => {
 		const { api } = cognigy;
-		const { ticketID, connection, storeLocation, contextKey, inputKey } = config;
-		const { username, token, remoteUri } = connection;
+		const { ticketId, connection, storeLocation, contextKey, inputKey } = config;
+		const { username, password, subdomain } = connection;
 
-		const client = zendesk.createClient({
-			username,
-			token,
-			remoteUri
-		});
+		try {
 
-		return new Promise((resolve, reject) => {
-			client.tickets.show(ticketID, (err, statusCode, body, response, res) => {
-
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { error: err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { error: err.message });
-					}
-
+			const response = await axios({
+				method: "get",
+				url: `https://${subdomain}.zendesk.com/api/v2/tickets/${ticketId}`,
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json"
+				},
+				auth: {
+					username,
+					password
 				}
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, body, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, body);
-				}
-
-				resolve();
 			});
-		});
+
+			const onSuccessChild = childConfigs.find(child => child.type === "onFoundTicket");
+			api.setNextNode(onSuccessChild.id);
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data.ticket, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data.ticket);
+			}
+		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onNotFoundTicket");
+			api.setNextNode(onErrorChild.id);
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { error: error.message }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { error: error.message });
+			}
+		}
 	}
 });
+
+export const onFoundTicket = createNodeDescriptor({
+	type: "onFoundTicket",
+	parentType: "getTicket",
+	defaultLabel: "On Found",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onNotFoundTicket = createNodeDescriptor({
+	type: "onNotFoundTicket",
+	parentType: "getTicket",
+	defaultLabel: "On Not Found",
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+

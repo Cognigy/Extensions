@@ -5,8 +5,8 @@ export interface ICreateTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
-			token: string;
-			baseUrl: string;
+			password: string;
+			subdomain: string;
 		};
 		subject: string;
 		description: string;
@@ -136,23 +136,37 @@ export const createTicketNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: ICreateTicketParams) => {
 		const { api } = cognigy;
 		const { connection, description, priority, subject, storeLocation, contextKey, inputKey } = config;
-		const { username, token, baseUrl } = connection;
+		const { username, password, subdomain } = connection;
 
 		try {
 
 			const response = await axios({
 				method: "post",
-				url: `${baseUrl}/api/v2/tickets`,
+				url: `https://${subdomain}.zendesk.com/api/v2/tickets`,
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json"
+				},
 				data: {
-					
+					ticket: {
+						comment: {
+							body: description
+						},
+						priority,
+						subject
+					}
+				},
+				auth: {
+					username,
+					password
 				}
-			})
+			});
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, { error: err.message }, "simple");
+				api.addToContext(contextKey, response.data, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, { error: err.message });
+				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

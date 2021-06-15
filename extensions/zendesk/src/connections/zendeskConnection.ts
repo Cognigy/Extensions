@@ -5,7 +5,7 @@ export const zendeskConnection: IConnectionSchema = {
 	label: "Zendesk User",
 	fields: [
 		{ fieldName: "username" },
-		{ fieldName: "token" },
-		{ fieldName: "baseUrl"}
+		{ fieldName: "password" },
+		{ fieldName: "subdomain"}
 	]
 };

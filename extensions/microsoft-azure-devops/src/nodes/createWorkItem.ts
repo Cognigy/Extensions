@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import { getPersonalAccessTokenHandler, WebApi } from 'azure-devops-node-api';
 import { Operation } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
-export interface ITranslateTextParams extends INodeFunctionBaseParams {
+export interface ICreateWorkItemParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			token: string;
@@ -141,7 +141,7 @@ export const createWorkItemNode = createNodeDescriptor({
             type: "input"
         }
     ],
-	function: async ({ cognigy, config }: ITranslateTextParams) => {
+	function: async ({ cognigy, config }: ICreateWorkItemParams) => {
 		const { api } = cognigy;
 		const { connection, type, title, description, storeLocation, inputKey, contextKey } = config;
 		const { token, organizationUrl, projectId } = connection;

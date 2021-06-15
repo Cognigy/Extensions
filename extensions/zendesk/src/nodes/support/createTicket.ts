@@ -53,6 +53,7 @@ export const createTicketNode = createNodeDescriptor({
 			label: "Priority",
 			type: "select",
 			description: "The priority of the new support ticket",
+			defaultValue: "normal",
 			params: {
 				required: true,
 				options: [

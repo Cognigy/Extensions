@@ -2,12 +2,6 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import { getPersonalAccessTokenHandler, WebApi } from 'azure-devops-node-api';
 import { Operation } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 
-const WORK_ITEM_TYPE = {
-	BUG: 'Bug',
-	FEATURE: 'User Story',
-	TASK: 'Task'
-};
-
 export interface ITranslateTextParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
@@ -17,7 +11,7 @@ export interface ITranslateTextParams extends INodeFunctionBaseParams {
 		};
 		title: string;
 		description: string;
-		type: keyof typeof WORK_ITEM_TYPE;
+		type: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -27,13 +21,14 @@ export interface ITranslateTextParams extends INodeFunctionBaseParams {
 export const createWorkItemNode = createNodeDescriptor({
 	type: "createWorkItem",
 	defaultLabel: "Create Work Item",
+	summary: "Creates a new work item in an Azure DevOps project",
 	fields: [
 		{
 			key: "connection",
 			label: "Personal Access Token",
 			type: "connection",
 			params: {
-				connectionType: "azure-devops",
+				connectionType: "azuredevops",
 				required: true
 			}
 		},
@@ -49,6 +44,7 @@ export const createWorkItemNode = createNodeDescriptor({
 			key: "type",
 			label: "Type",
 			type: "select",
+			defaultValue: "BUG",
 			params: {
 				required: true,
 				options: [
@@ -138,6 +134,13 @@ export const createWorkItemNode = createNodeDescriptor({
 	appearance: {
 		color: "#0067b5"
 	},
+	tokens: [
+        {
+            label: "Work Item ID",
+            script: "input.devops.workItem.id",
+            type: "input"
+        }
+    ],
 	function: async ({ cognigy, config }: ITranslateTextParams) => {
 		const { api } = cognigy;
 		const { connection, type, title, description, storeLocation, inputKey, contextKey } = config;

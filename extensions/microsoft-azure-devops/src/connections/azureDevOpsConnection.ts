@@ -1,7 +1,7 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const azureDevOpsConnection: IConnectionSchema = {
-	type: "azure-devops",
+	type: "azuredevops",
 	label: "Personal Access Token",
 	fields: [
 		{ fieldName: "token" },

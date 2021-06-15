@@ -4,9 +4,12 @@ With this Extension, **work items** can be maintained within an Azure DevOps ins
 
 ## Connection
 
-- token
+Please read [this documentation](https://github.com/microsoft/azure-devops-node-api#create-a-connection).
+
+- **token**
   - Personal Access Token
-- organizationUrl
+- **organizationUrl**
   - The URL of the Azure DevOps organization
-- projectId
+  - e.g. https://dev.azure.com/yourorgname
+- **projectId**
   - The name of the DevOps project

@@ -164,6 +164,17 @@ export const onFoundWorkItem = createNodeDescriptor({
     type: "onFoundWorkItem",
     parentType: "getWorkItem",
     defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -175,6 +186,17 @@ export const onNotFoundWorkItem = createNodeDescriptor({
     type: "onNotFoundWorkItem",
     parentType: "getWorkItem",
     defaultLabel: "On Not Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
     appearance: {
         color: "#61d188",
         textColor: "white",

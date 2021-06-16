@@ -151,6 +151,17 @@ export const onFoundTicket = createNodeDescriptor({
 	type: "onFoundTicket",
 	parentType: "getTicket",
 	defaultLabel: "On Found",
+	constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
 	appearance: {
 		color: "#61d188",
 		textColor: "white",
@@ -162,6 +173,17 @@ export const onNotFoundTicket = createNodeDescriptor({
 	type: "onNotFoundTicket",
 	parentType: "getTicket",
 	defaultLabel: "On Not Found",
+	constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
 	appearance: {
 		color: "#61d188",
 		textColor: "white",

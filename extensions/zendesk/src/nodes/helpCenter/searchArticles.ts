@@ -163,6 +163,17 @@ export const onFoundArticles = createNodeDescriptor({
     type: "onFoundArticles",
     parentType: "searchArticles",
     defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
     appearance: {
         color: "#61d188",
         textColor: "white",
@@ -174,6 +185,17 @@ export const onNotFoundArticles = createNodeDescriptor({
     type: "onNotFoundArticles",
     parentType: "searchArticles",
     defaultLabel: "On Not Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
     appearance: {
         color: "#61d188",
         textColor: "white",

@@ -1,4 +1,4 @@
-# UiPath Extension
+# iCal Conversion Extension
 
 This extension allows you to convert iCal and ICS files (for example the URL for a calendar feed or the download link for the .ics file for a specificevent) to JSON as well as convert JSON to a downloadable ical file which can be imported as an event into a caledar program such as Outlook Calendar. 
 

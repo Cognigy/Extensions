@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosResponse } from 'axios';
+import * as ical2json from 'ical2json';
 
 export interface IiCaltoJSONviaURLParams extends INodeFunctionBaseParams {
 	config: {
@@ -79,12 +80,11 @@ export const iCaltoJSONviaURLNode = createNodeDescriptor({
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
-		color: "#fa4514"
+		color: "#329997"
 	},
 	function: async ({ cognigy, config }: IiCaltoJSONviaURLParams) => {
         const { api } = cognigy;
 		const { iCalURL, storeLocation, inputKey, contextKey } = config;
-		let ical2json = require('ical2json');
 		let endpoint = iCalURL;
 
 		try {

@@ -1,7 +1,8 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { v4 as uuidv4 } from 'uuid';
-const moment = require('moment');
-const ical2json = require('ical2json');
+import * as moment from 'moment';
+import * as ical2json from 'ical2json';
+
 
 export interface IJSONtoiCalParams extends INodeFunctionBaseParams {
 	config: {
@@ -127,7 +128,7 @@ export const iJSONtoiCalNode = createNodeDescriptor({
 		}
 	],
 	appearance: {
-		color: "#fa4514"
+		color: "#329997"
 	},
 	function: async ({ cognigy, config }: IJSONtoiCalParams) => {
         const { input, api } = cognigy;

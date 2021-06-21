@@ -10,7 +10,9 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "UiPath"
+    "ical",
+    "ics",
+    "calendar"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
@@ -19,7 +21,6 @@
     "axios": "^0.21.1",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.2",
-    "file-saver": "^2.0.5",
     "ical2json": "^3.0.0",
     "localtunnel": "^2.0.1",
     "moment": "^2.29.1",
@@ -28,7 +29,6 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/file-saver": "^2.0.2",
     "@types/node": "^15.12.0"
   }
 }

@@ -7,6 +7,7 @@ export interface IgetTrackingInformationParams extends INodeFunctionBaseParams {
             apiKey: string;
         };
         trackingNumber: string;
+        language: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -31,7 +32,20 @@ export const getTrackingInformationNode = createNodeDescriptor({
             key: "trackingNumber",
             label: "Tracking Number",
             type: "cognigyText",
-            description: "Tracking number for the delivery you wish to see."
+            description: "Tracking number for the delivery you wish to see.",
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "language",
+            label: "Response language",
+            type: "cognigyText",
+            description: "Response language for the client in ISO 639-1 two character format (en, de, jp etc.)",
+            defaultValue: "en",
+            params: {
+                required: true
+            }
         },
         {
 			key: "storeLocation",
@@ -88,6 +102,7 @@ export const getTrackingInformationNode = createNodeDescriptor({
     form: [
         { type: "field", key: "apiConnection"},
         { type: "field", key: "trackingNumber"},
+        { type: "field", key: "language"},
         { type: "section", key: "storageOption"}
     ],
     appearance: {
@@ -95,13 +110,14 @@ export const getTrackingInformationNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IgetTrackingInformationParams) => {
         const { api } = cognigy;
-        const { apiConnection, trackingNumber, storeLocation, inputKey, contextKey } = config;
+        const { apiConnection, trackingNumber, language, storeLocation, inputKey, contextKey } = config;
         const { apiKey } = apiConnection;
 
         const endpoint = `https://api-eu.dhl.com/track/shipments`;
 		const axiosConfig: AxiosRequestConfig = {
 			params: {
-				trackingNumber: trackingNumber
+				trackingNumber: trackingNumber,
+                language: language
 			},
 			headers: {
 				'DHL-API-Key': apiKey,

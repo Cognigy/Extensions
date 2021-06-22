@@ -1,0 +1,34 @@
+{
+  "name": "ical-conversion",
+  "version": "4.0.0",
+  "description": "Converts iCal format to JSON and JSON to iCal",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz icalconversion.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "ical",
+    "ics",
+    "calendar"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "express-http-proxy": "^1.6.2",
+    "ical2json": "^3.0.0",
+    "localtunnel": "^2.0.1",
+    "moment": "^2.29.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.0"
+  }
+}

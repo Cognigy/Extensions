@@ -19,8 +19,6 @@
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
     "axios": "^0.21.1",
-    "express": "^4.17.1",
-    "express-http-proxy": "^1.6.2",
     "ical2json": "^3.0.0",
     "localtunnel": "^2.0.1",
     "moment": "^2.29.1",

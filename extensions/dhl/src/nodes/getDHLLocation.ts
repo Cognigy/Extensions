@@ -7,7 +7,11 @@ export interface IgetDHLLocationParams extends INodeFunctionBaseParams {
             apiKey: string;
         };
         postalCode: string;
+        streetAddress: string;
+        addressLocality: string;
         countryCode: string;
+        radius: string;
+        limit: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -29,19 +33,48 @@ export const getDHLLocationNode = createNodeDescriptor({
             }
         },
         {
+            key: "streetAddress",
+            label: "Street and House Number",
+            type: "cognigyText",
+            description: "The street and house number for where you want to find the location.",
+        },
+        {
             key: "postalCode",
             label: "Postal Code",
             type: "cognigyText",
-            description: "The postal code where you want to find the DHL location.",
-            params: {
-                required: true
-            }
+            description: "The postal code where you want to find the DHL location."
+        },
+        {
+            key: "addressLocality",
+            label: "City/Town",
+            type: "cognigyText",
+            description: "The city or town where you want to find the DHL location."
         },
         {
             key: "countryCode",
             label: "Country Code",
             type: "cognigyText",
             description: "Country where you are looking for the location (GB, DE, JP etc.)",
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "radius",
+            label: "Search radius in meters",
+            type: "cognigyText",
+            description: "The radius in meters from the point of origin you wish to search. Maximum 25000 meters.",
+            defaultValue: "500",
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "limit",
+            label: "limit",
+            type: "cognigyText",
+            description: "The maximum amount of locations you wish to return. Maximum 50.",
+            defaultValue: "15",
             params: {
                 required: true
             }
@@ -100,8 +133,12 @@ export const getDHLLocationNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "apiConnection"},
+        { type: "field", key: "streetAddress"},
         { type: "field", key: "postalCode"},
+        { type: "field", key: "addressLocality"},
         { type: "field", key: "countryCode"},
+        { type: "field", key: "radius"},
+        { type: "field", key: "limit"},
         { type: "section", key: "storageOption"}
     ],
     appearance: {
@@ -109,14 +146,18 @@ export const getDHLLocationNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IgetDHLLocationParams) => {
         const { api } = cognigy;
-        const { apiConnection, postalCode, countryCode, storeLocation, inputKey, contextKey } = config;
+        const { apiConnection, postalCode, countryCode, storeLocation, streetAddress, addressLocality, radius, limit, inputKey, contextKey } = config;
         const { apiKey } = apiConnection;
 
         const endpoint = `https://api.dhl.com/location-finder/v1/find-by-address`;
 		const axiosConfig: AxiosRequestConfig = {
 			params: {
 				postalCode: postalCode,
-                countryCode: countryCode
+                countryCode: countryCode,
+                streetAddress: streetAddress,
+                addressLocality: addressLocality,
+                radius: radius,
+                limit: limit
 			},
 			headers: {
 				'DHL-API-Key': apiKey,

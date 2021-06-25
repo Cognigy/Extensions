@@ -36,6 +36,7 @@ export const getProductNode = createNodeDescriptor({
 			label: "Image Source",
 			description: "The source of the image that should be used for the product search",
 			type: "select",
+			defaultValue: "url",
 			params: {
 				required: true,
 				options: [
@@ -97,10 +98,7 @@ export const getProductNode = createNodeDescriptor({
 			key: "productCategories",
 			label: "Product Categories",
 			type: "textArray",
-			description: "The list of categories that should be used",
-			params: {
-				required: true
-			}
+			description: "The list of categories that should be used"
 		},
 		{
 			key: "filter",

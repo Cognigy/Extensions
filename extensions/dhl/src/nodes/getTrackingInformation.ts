@@ -125,11 +125,33 @@ export const getTrackingInformationNode = createNodeDescriptor({
 		};
     try {
         const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
+        const trackingStatusOrig = result.data.shipments[0].status.statusCode;
+        let trackingStatusNum;
+
+        switch (trackingStatusOrig) {
+            case "pre-transit":
+                trackingStatusNum = "0";
+                break;
+            case "transit":
+                trackingStatusNum = "1";
+                break;
+            case "delivered":
+                trackingStatusNum = "2";
+                break;
+            default:
+                trackingStatusNum = "No information available";
+        }
+
+        const trackingResults = {
+            details: result.data,
+            statusNum: trackingStatusNum
+        };
+
         if (storeLocation === 'context') {
-            api.addToContext(contextKey, result.data, 'simple');
+            api.addToContext(contextKey, trackingResults, 'simple');
         } else {
             // @ts-ignore
-            api.addToInput(inputKey, result.data);
+            api.addToInput(inputKey, trackingResults);
         }
     } catch (error) {
         if (storeLocation === 'context') {

@@ -1,12 +1,14 @@
 import { createExtension } from "@cognigy/extension-tools";
 
-import { getProductNode } from "./nodes/productSearch/searchProduct";
+import { searchProductNode } from "./nodes/productSearch/searchProduct";
 import { googleCloudConnection } from "./connections/googleCloudConnection";
+import { getProductImageNode } from "./nodes/productSearch/getProductImage";
 
 
 export default createExtension({
 	nodes: [
-		getProductNode
+		searchProductNode,
+		getProductImageNode
 	],
 
 	connections: [

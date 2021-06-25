@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
 
-export interface IGetProductParams extends INodeFunctionBaseParams {
+export interface ISearchProductParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
@@ -18,9 +18,9 @@ export interface IGetProductParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
-export const getProductNode = createNodeDescriptor({
-	type: "getProduct",
-	defaultLabel: "Get Product",
+export const searchProductNode = createNodeDescriptor({
+	type: "searchProduct",
+	defaultLabel: "Search Product",
 	fields: [
 		{
 			key: "connection",
@@ -181,7 +181,7 @@ export const getProductNode = createNodeDescriptor({
 	appearance: {
 		color: "#4383f3"
 	},
-	function: async ({ cognigy, config }: IGetProductParams) => {
+	function: async ({ cognigy, config }: ISearchProductParams) => {
 		const { api } = cognigy;
 		const { featureMaxResults, gcsImageUri, content, imageSource, productCategories, productSet, filter, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;

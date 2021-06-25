@@ -1,0 +1,7 @@
+{
+    "inputConfig": {
+        "gcsSource": {
+            "csvFileUri": "gs://cloud-samples-data/vision/product_search/product_catalog.csv"
+        }
+    }
+}

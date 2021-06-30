@@ -10,8 +10,11 @@ export interface IgetDHLLocationParams extends INodeFunctionBaseParams {
         streetAddress: string;
         addressLocality: string;
         countryCode: string;
+        latitude: string;
+        longitude: string;
         radius: string;
         limit: string;
+        searchType: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -37,26 +40,62 @@ export const getDHLLocationNode = createNodeDescriptor({
             label: "Street and House Number",
             type: "cognigyText",
             description: "The street and house number for where you want to find the location.",
+            condition: {
+                key: "searchType",
+                value: "address"
+            }
         },
         {
             key: "postalCode",
             label: "Postal Code",
             type: "cognigyText",
-            description: "The postal code where you want to find the DHL location."
+            description: "The postal code where you want to find the DHL location.",
+            condition: {
+                key: "searchType",
+                value: "address"
+            }
         },
         {
             key: "addressLocality",
             label: "City/Town",
             type: "cognigyText",
-            description: "The city or town where you want to find the DHL location."
+            description: "The city or town where you want to find the DHL location.",
+            condition: {
+                key: "searchType",
+                value: "address"
+            }
         },
         {
             key: "countryCode",
             label: "Country Code",
             type: "cognigyText",
             description: "Country where you are looking for the location (GB, DE, JP etc.)",
+            condition: {
+                key: "searchType",
+                value: "address"
+            },
             params: {
                 required: true
+            }
+        },
+        {
+            key: "latitude",
+            label: "Latitude",
+            type: "cognigyText",
+            description: "Latitude of the user's current location",
+            condition: {
+                key: "searchType",
+                value: "geoLocation"
+            }
+        },
+        {
+            key: "Longitude",
+            label: "longitude",
+            type: "cognigyText",
+            description: "Longitude of the user's current location",
+            condition: {
+                key: "searchType",
+                value: "geoLocation"
             }
         },
         {
@@ -79,6 +118,25 @@ export const getDHLLocationNode = createNodeDescriptor({
                 required: true
             }
         },
+        {
+			key: "searchType",
+			type: "select",
+			label: "How to search for the location",
+			params: {
+				options: [
+					{
+						label: "Find by address",
+						value: "address"
+					},
+					{
+						label: "Find by geo coordinates",
+						value: "geoLocation"
+					}
+				],
+				required: true
+			},
+			defaultValue: "address"
+		},
         {
 			key: "storeLocation",
 			type: "select",
@@ -133,10 +191,13 @@ export const getDHLLocationNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "apiConnection"},
+        { type: "field", key: "searchType"},
         { type: "field", key: "streetAddress"},
         { type: "field", key: "postalCode"},
         { type: "field", key: "addressLocality"},
         { type: "field", key: "countryCode"},
+        { type: "field", key: "longitude"},
+        { type: "field", key: "latitude"},
         { type: "field", key: "radius"},
         { type: "field", key: "limit"},
         { type: "section", key: "storageOption"}
@@ -146,23 +207,34 @@ export const getDHLLocationNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IgetDHLLocationParams) => {
         const { api } = cognigy;
-        const { apiConnection, postalCode, countryCode, storeLocation, streetAddress, addressLocality, radius, limit, inputKey, contextKey } = config;
+        const { apiConnection, postalCode, countryCode, storeLocation, streetAddress, addressLocality, latitude, longitude, radius, limit, searchType, inputKey, contextKey } = config;
         const { apiKey } = apiConnection;
 
-        const endpoint = `https://api.dhl.com/location-finder/v1/find-by-address`;
-		const axiosConfig: AxiosRequestConfig = {
-			params: {
-				postalCode: postalCode,
+        let endpoint;
+        let searchParameters = {};
+        if (searchType === 'address') {
+            endpoint = `https://api.dhl.com/location-finder/v1/find-by-address`;
+            searchParameters = {
+			    postalCode: postalCode,
                 countryCode: countryCode,
                 streetAddress: streetAddress,
                 addressLocality: addressLocality,
                 radius: radius,
                 limit: limit
-			},
-			headers: {
-				'DHL-API-Key': apiKey,
-			}
-		};
+            };
+        } else {
+            endpoint = `https://api.dhl.com/location-finder/v1/find-by-geo`;
+            searchParameters = {
+			    latitude: latitude,
+                longitude: longitude
+		    };
+		}
+        const axiosConfig: AxiosRequestConfig = {
+            params: searchParameters,
+            headers: {
+                'DHL-API-Key': apiKey,
+            }
+        };
     try {
         const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
         if (storeLocation === 'context') {

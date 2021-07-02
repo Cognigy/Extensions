@@ -6,7 +6,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 export interface IChangeUserAvatar extends INodeFunctionBaseParams {
     config: {
         avatarURL: any;
-    }
+    };
 }
 export const changeUserAvatar = createNodeDescriptor({
     type: "changeUserAvatar",

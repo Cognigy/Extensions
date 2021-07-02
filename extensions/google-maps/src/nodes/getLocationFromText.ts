@@ -1,11 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getGoogleMapsLocation } from "../helper/getGoogleMapsLocation";
+import { getGoogleMapsLocation, getGoogleMapsLocationFromGeocodes } from "../helper/getGoogleMapsLocation";
 
 export interface IGetLocationFromText extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			key: string;
 		};
+		long: number;
+		lat: number;
+		searchchoice: string;
 		place: string;
 		city: string;
 		country: string;
@@ -18,11 +21,7 @@ export interface IGetLocationFromText extends INodeFunctionBaseParams {
 }
 export const getLocationFromText = createNodeDescriptor({
 	type: "getLocationFromText",
-	defaultLabel: "Location search",
-	preview: {
-		key: "place",
-		type: "text"
-	},
+	defaultLabel: "Search Location",
 	fields: [
 		{
 			key: "connection",
@@ -34,12 +33,71 @@ export const getLocationFromText = createNodeDescriptor({
 			}
 		},
 		{
+			key: "searchchoice",
+			type: "select",
+			label: "Location Type",
+			defaultValue: "address",
+			params: {
+				options: [
+					{
+						label: "Address",
+						value: "address",
+					},
+					{
+						label: "Coordinates",
+						value: "coordinates",
+					},
+				],
+			},
+		},
+		{
+			key: "searchquery",
+			label: "Address",
+			type: "cognigyText",
+			defaultValue: "Speditionsstraße 1",
+			condition: {
+				key: "searchchoice",
+				value: "address"
+			},
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "lat",
+			label: "Latitude",
+			type: "cognigyText",
+			condition: {
+				key: "searchchoice",
+				value: "coordinates"
+			},
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "long",
+			label: "Longitude",
+			type: "cognigyText",
+			condition: {
+				key: "searchchoice",
+				value: "coordinates"
+			},
+			params: {
+				required: true
+			}
+		},
+		{
 			key: "place",
 			label: "Place",
 			type: "cognigyText",
 			defaultValue: "",
 			params: {
 				required: true
+			},
+			condition: {
+				key: "searchchoice",
+				value: "address"
 			},
 		},
 		{
@@ -49,6 +107,10 @@ export const getLocationFromText = createNodeDescriptor({
 			params: {
 				required: true
 			},
+			condition: {
+				key: "searchchoice",
+				value: "address"
+			},
 		},
 		{
 			key: "country",
@@ -56,6 +118,10 @@ export const getLocationFromText = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true
+			},
+			condition: {
+				key: "searchchoice",
+				value: "address"
 			},
 		},
 		{
@@ -81,7 +147,7 @@ export const getLocationFromText = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -91,7 +157,7 @@ export const getLocationFromText = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "httprequest",
+			defaultValue: "maps",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -102,24 +168,19 @@ export const getLocationFromText = createNodeDescriptor({
 		{
 			key: "storageOption",
 			label: "Storage Option",
-			defaultCollapsed: false,
+			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
 				"inputKey",
 				"contextKey"
 			]
-		},
-		{
-			key: "connectionSection",
-			label: "Connection",
-			defaultCollapsed: false,
-			fields: [
-				"connection",
-			]
 		}
 	],
 	form: [
-		{ type: "section", key: "connectionSection" },
+		{ type: "field", key: "connection" },
+		{ type: "field", key: "searchchoice" },
+		{ type: "field", key: "lat" },
+		{ type: "field", key: "long" },
 		{ type: "field", key: "place" },
 		{ type: "field", key: "city" },
 		{ type: "field", key: "country" },
@@ -131,45 +192,55 @@ export const getLocationFromText = createNodeDescriptor({
 
 	function: async ({ cognigy, config }: IGetLocationFromText) => {
 		const { api } = cognigy;
-		const { connection, place, city, country, storeLocation, contextKey, inputKey } = config;
+		const { connection, searchchoice, lat, long, place, city, country, storeLocation, contextKey, inputKey } = config;
 
-		let userAddress: string;
-		let latitude: any;
-		let longitude: any;
+		if (searchchoice === "address") {
+			let userAddress: string;
+			let latitude: any;
+			let longitude: any;
 
-		if (!place || !city || !country || !connection) {
-		} else {
-			try {
-				let address = `${place}, ${city}, ${country}`.replace(/ /g, "%20");
-
-				const response = await getGoogleMapsLocation(connection.key, address);
-
+			if (!place || !city || !country || !connection) {
+				throw new Error("The request is missing the 'place', 'city' or 'country' value");
+			} else {
 				try {
-					userAddress = response.location.formatted_address;
-					latitude = response.location.geometry.location.lat;
-					longitude = response.location.geometry.location.lng;
+					let address = `${place}, ${city}, ${country}`.replace(/ /g, "%20");
 
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, {
-							"coordinates": {
-								"longitude": longitude,
-								"latitude": latitude
-							},
-							"address": userAddress,
-							"name": place
-						}, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, {
-							"coordinates": {
-								"longitude": longitude,
-								"latitude": latitude
-							},
-							"address": userAddress,
-							"name": place
-						});
+					const response = await getGoogleMapsLocation(connection.key, address);
+
+					try {
+						userAddress = response.location.formatted_address;
+						latitude = response.location.geometry.location.lat;
+						longitude = response.location.geometry.location.lng;
+
+						if (storeLocation === "context") {
+							api.addToContext(contextKey, {
+								"coordinates": {
+									"longitude": longitude,
+									"latitude": latitude
+								},
+								"address": userAddress,
+								"name": place
+							}, "simple");
+						} else {
+							// @ts-ignore
+							api.addToInput(inputKey, {
+								"coordinates": {
+									"longitude": longitude,
+									"latitude": latitude
+								},
+								"address": userAddress,
+								"name": place
+							});
+						}
+
+					} catch (error) {
+						if (storeLocation === "context") {
+							api.addToContext(contextKey, error, "simple");
+						} else {
+							// @ts-ignore
+							api.addToInput(inputKey, error);
+						}
 					}
-
 				} catch (error) {
 					if (storeLocation === "context") {
 						api.addToContext(contextKey, error, "simple");
@@ -178,7 +249,20 @@ export const getLocationFromText = createNodeDescriptor({
 						api.addToInput(inputKey, error);
 					}
 				}
-			} catch (error) {
+			}
+		} else if (searchchoice === "coordinates") {
+
+			const response = await getGoogleMapsLocationFromGeocodes(connection.key, `${lat},${long}`);
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, {
+					address: response.location.formatted_address
+				}, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, {
+					address: response.location.formatted_address
+				});
 			}
 		}
 	}

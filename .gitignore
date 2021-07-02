@@ -1,7 +1,9 @@
 /**/credentials.json
 /**/token.json
+docs/**/build
+docs/**/node_modules
 extensions/*/build
-extensions/*/node_modules
+extensions/**/node_modules
 extensions/*/src/shared
 extensions/*/.env
 extensions/*/*.tar.gz
@@ -12,5 +14,5 @@ coverage/
 *.zip
 .idea
 *.bat
-
+*.tar.gz
 /**/.DS_Store

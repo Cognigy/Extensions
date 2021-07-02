@@ -1,6 +1,6 @@
 {
   "name": "cognigy-webchat",
-  "version": "1.0.0",
+  "version": "4.1.0",
   "description": "Change the Webachat avatars",
   "main": "build/module.js",
   "scripts": {
@@ -10,13 +10,12 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Cognigy.AI",
-    "4.0.0",
-    "extensions",
-    "4.0.0"
+    "Cognigy",
+    "Webchat",
+    "Avatar"
   ],
   "author": "Cognigy GmbH",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
     "tslint": "^6.1.2"

@@ -1,0 +1,28 @@
+{
+  "name": "parcellab",
+  "version": "4.0.0",
+  "description": "Parcel Lab package information",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz parcellab.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Parcel Lab"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "@cognigy/extension-tools": "^0.10.0",
+    "@types/axios": "^0.14.0",
+    "@types/node": "^13.13.4",
+    "tslint": "^5.16.0",
+    "typescript": "^3.8.3"
+  }
+}

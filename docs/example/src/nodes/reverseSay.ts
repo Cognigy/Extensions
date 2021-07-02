@@ -15,7 +15,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 export interface IReverseSayParams extends INodeFunctionBaseParams {
 	config: {
 		text: string;
-	}
+	};
 }
 
 export const reverseSay = createNodeDescriptor({

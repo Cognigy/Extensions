@@ -1,0 +1,29 @@
+<html>
+
+<body>
+	<script>
+		if (window.opener) {
+			const { code, session_state } = window.location.search
+				.substr(1)
+				.split('&')
+				.reduce((params, paramString) => {
+					const [key, value] = paramString.split('=');
+
+					params[key] = value;
+
+					return params;
+				}, {});
+
+			window.opener.cognigyWebchat.sendMessage('', {
+				microsoftAuth: {
+					code,
+					session_state
+				}
+			});
+
+			window.close();
+		}    
+	</script>
+</body>
+
+</html>

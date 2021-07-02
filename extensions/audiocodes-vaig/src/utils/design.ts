@@ -1,0 +1,1 @@
+export const nodeColor = "#00539B";

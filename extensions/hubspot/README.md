@@ -5,8 +5,8 @@ This extension is based on node-hubspot (https://www.npmjs.com/package/hubspot)
 ### Connection
 This extension needs a Connection to be defined and passed to the Nodes. The Connection must have the following keys:
 
-- **key**:  apiKey
-- **value**: Your Hubspot API KEY
+- key: apiKey
+- value: Your Hubspot API KEY
 
 **Properties**
 
@@ -112,84 +112,4 @@ You can include a **query** to search in your **Contacts**, such as the full nam
       }
     ]
   }
-```
-
-# Node: findCompanyByDomain
-
-If you only know the **domain** of a company, such as the website (eg. google.com) you can search for a company with only this information. The result will be the ID plus the specified **properties**: 
-
-```json
-"company": [
-    {
-      "portalId": 12345,
-      "companyId": 123456,
-      "isDeleted": false,
-      "properties": {
-        "industry": {
-          "value": "AUTOMOTIVE",
-          "timestamp": 123456,
-          "source": "BIDEN",
-          "sourceId": "BidenPropertyMappings",
-          "versions": [
-            {
-              "name": "industry",
-              "value": "AUTOMOTIVE",
-              "timestamp": 123456,
-              "sourceId": "BidenPropertyMappings",
-              "source": "BIDEN",
-              "sourceVid": []
-            }
-          ]
-        }
-      },
-      "additionalDomains": [],
-      "stateChanges": [],
-      "mergeAudits": []
-    }
-  ]
-}
-```
-
-# Node: createEngagement
-
-[Source](https://developers.hubspot.com/docs/methods/engagements/create_engagement)
-
-Creates a new **Engagement** in Hubspot. Here is an example for a note: 
-
-```json
-    "engagement": {
-        "active": true,
-        "ownerId": 1,
-        "type": "NOTE",
-        "timestamp": 1409172644778
-    }
-```
-
-# Node: getOwners
-
-Returns all Hubspot owners: 
-
-```json
-"owners": [
-    {
-      "portalId": 123356,
-      "ownerId": 123456,
-      "type": "PERSON",
-      "firstName": "Max",
-      "lastName": "Mustermann",
-      "email": "m.mustermann@cognigy.com",
-      "createdAt": 1547690284152,
-      "updatedAt": 1547738101831,
-      "remoteList": [
-        {
-          "id": 123456,
-          "portalId": 6542321,
-          "ownerId": 65432123,
-          "remoteId": "654323",
-          "remoteType": "HUBSPOT",
-          "active": true
-        }
-      ],
-      "hasContactsAccess": false
-    
 ```

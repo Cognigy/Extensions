@@ -27,7 +27,7 @@ export const getDHLLocationNode = createNodeDescriptor({
     fields: [
         {
             key: "apiConnection",
-            label: "Your API Keys",
+            label: "DHL API Keys",
             type: "connection",
             description: "API authentication information for DHL",
             params: {
@@ -89,8 +89,8 @@ export const getDHLLocationNode = createNodeDescriptor({
             }
         },
         {
-            key: "Longitude",
-            label: "longitude",
+            key: "longitude",
+            label: "Longitude",
             type: "cognigyText",
             description: "Longitude of the user's current location",
             condition: {
@@ -100,7 +100,7 @@ export const getDHLLocationNode = createNodeDescriptor({
         },
         {
             key: "radius",
-            label: "Search radius in meters",
+            label: "Search Radius in Meters",
             type: "cognigyText",
             description: "The radius in meters from the point of origin you wish to search. Maximum 25000 meters.",
             defaultValue: "500",
@@ -121,15 +121,15 @@ export const getDHLLocationNode = createNodeDescriptor({
         {
 			key: "searchType",
 			type: "select",
-			label: "How to search for the location",
+			label: "Search Type",
 			params: {
 				options: [
 					{
-						label: "Find by address",
+						label: "Address",
 						value: "address"
 					},
 					{
-						label: "Find by geo coordinates",
+						label: "Geo Coordinates",
 						value: "geoLocation"
 					}
 				],
@@ -160,7 +160,7 @@ export const getDHLLocationNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to Store Result",
-			defaultValue: "location",
+			defaultValue: "dhlLocations",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -170,7 +170,7 @@ export const getDHLLocationNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "location",
+			defaultValue: "dhlLocations",
 			condition: {
 				key: "storeLocation",
 				value: "context"

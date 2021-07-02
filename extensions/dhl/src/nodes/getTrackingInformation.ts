@@ -8,6 +8,8 @@ export interface IgetTrackingInformationParams extends INodeFunctionBaseParams {
         };
         trackingNumber: string;
         language: string;
+        specifyService: boolean;
+        service: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -20,7 +22,7 @@ export const getTrackingInformationNode = createNodeDescriptor({
     fields: [
         {
             key: "apiConnection",
-            label: "Your API Keys",
+            label: "DHL API Keys",
             type: "connection",
             description: "API authentication information for DHL",
             params: {
@@ -39,7 +41,7 @@ export const getTrackingInformationNode = createNodeDescriptor({
         },
         {
             key: "language",
-            label: "Response language",
+            label: "Response Language",
             type: "cognigyText",
             description: "Response language for the client in ISO 639-1 two character format (en, de, jp etc.)",
             defaultValue: "en",
@@ -47,6 +49,71 @@ export const getTrackingInformationNode = createNodeDescriptor({
                 required: true
             }
         },
+		{
+			key: "specifyService",
+			label: "Specify DHL Service",
+            description: "Specify the specific DHL service the user should be allowed to track.",
+			type: "toggle",
+			defaultValue: false
+		},
+        {
+			key: "service",
+			label: "DHL Service",
+			type: "select",
+            params: {
+				options: [
+					{
+						label: "Express",
+						value: "express"
+					},
+					{
+						label: "Parcel DE",
+						value: "parcel-de"
+					},
+					{
+						label: "ecommerce",
+						value: "ecommerce"
+					},
+					{
+						label: "DGF",
+						value: "dgf"
+					},
+					{
+						label: "Parcel UK",
+						value: "parcel-uk"
+					},
+					{
+						label: "Post DE",
+						value: "post-de"
+					},
+					{
+						label: "Same day",
+						value: "sameday"
+					},
+					{
+						label: "Freight",
+						value: "freight"
+					},
+					{
+						label: "Parcel NL",
+						value: "parcel-nl"
+					},
+					{
+						label: "Parcel PL",
+						value: "parcel-pl"
+					},
+					{
+						label: "DSC",
+						value: "dsc"
+					}
+				]
+			},
+			defaultValue: "address",
+			condition: {
+				key: "specifyService",
+				value: true
+			}
+		},
         {
 			key: "storeLocation",
 			type: "select",
@@ -103,6 +170,8 @@ export const getTrackingInformationNode = createNodeDescriptor({
         { type: "field", key: "apiConnection"},
         { type: "field", key: "trackingNumber"},
         { type: "field", key: "language"},
+        { type: "field", key: "specifyService"},
+        { type: "field", key: "service"},
         { type: "section", key: "storageOption"}
     ],
     appearance: {
@@ -110,15 +179,25 @@ export const getTrackingInformationNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IgetTrackingInformationParams) => {
         const { api } = cognigy;
-        const { apiConnection, trackingNumber, language, storeLocation, inputKey, contextKey } = config;
+        const { apiConnection, trackingNumber, language, specifyService, service, storeLocation, inputKey, contextKey } = config;
         const { apiKey } = apiConnection;
 
         const endpoint = `https://api-eu.dhl.com/track/shipments`;
-		const axiosConfig: AxiosRequestConfig = {
-			params: {
-				trackingNumber: trackingNumber,
+        let trackingParameters = {};
+        if (specifyService === false) {
+            trackingParameters = {
+                trackingNumber: trackingNumber,
                 language: language
-			},
+            };
+        } else {
+            trackingParameters = {
+                trackingNumber: trackingNumber,
+                language: language,
+                service: service
+            };
+        }
+		const axiosConfig: AxiosRequestConfig = {
+			params: trackingParameters,
 			headers: {
 				'DHL-API-Key': apiKey,
 			}

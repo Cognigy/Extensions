@@ -10,7 +10,7 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "DHL"
+    "DHL", "Shipping", "Tracking", "Deutsche Post", "Freight"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",

@@ -12,8 +12,8 @@ export interface IgetDHLLocationParams extends INodeFunctionBaseParams {
         countryCode: string;
         latitude: string;
         longitude: string;
-        radius: string;
-        limit: string;
+        radius: number;
+        limit: number;
         searchType: string;
         storeLocation: string;
         inputKey: string;
@@ -101,21 +101,25 @@ export const getDHLLocationNode = createNodeDescriptor({
         {
             key: "radius",
             label: "Search Radius in Meters",
-            type: "cognigyText",
+            type: "slider",
             description: "The radius in meters from the point of origin you wish to search. Maximum 25000 meters.",
-            defaultValue: "500",
+            defaultValue: 500,
             params: {
-                required: true
+                required: true,
+                min: 200,
+				max: 25000,
+				step: 100
             }
         },
         {
             key: "limit",
             label: "limit",
-            type: "cognigyText",
+            type: "number",
             description: "The maximum amount of locations you wish to return. Maximum 50.",
-            defaultValue: "15",
+            defaultValue: 15,
             params: {
-                required: true
+                required: true,
+                max: 50
             }
         },
         {
@@ -226,7 +230,9 @@ export const getDHLLocationNode = createNodeDescriptor({
             endpoint = `https://api.dhl.com/location-finder/v1/find-by-geo`;
             searchParameters = {
 			    latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                radius: radius,
+                limit: limit
 		    };
 		}
         const axiosConfig: AxiosRequestConfig = {

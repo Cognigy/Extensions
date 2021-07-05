@@ -8,6 +8,7 @@ export interface ISearchProductParams extends INodeFunctionBaseParams {
 		};
 		imageSource: string;
 		gcsImageUri: string;
+		imageUri: string;
 		content: string;
 		featureMaxResults: number;
 		productSet: string;
@@ -45,6 +46,10 @@ export const searchProductNode = createNodeDescriptor({
 						value: "url"
 					},
 					{
+						label: "Google Cloud Storage",
+						value: "gs"
+					},
+					{
 						label: "Base64",
 						value: "base64"
 					}
@@ -53,8 +58,20 @@ export const searchProductNode = createNodeDescriptor({
 		},
 		{
 			key: "gcsImageUri",
+			label: "Google Cloud Storage URL",
+			description: "The URL of the actual image in the Google Cloud Storage bucket",
+			type: "cognigyText",
+			params: {
+				required: true
+			},
+			condition: {
+				key: "imageSource",
+				value: "gs"
+			}
+		},
+		{
+			key: "imageUri",
 			label: "Image URL",
-			description: "The URL of the actual image",
 			type: "cognigyText",
 			params: {
 				required: true
@@ -172,6 +189,7 @@ export const searchProductNode = createNodeDescriptor({
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "imageSource" },
 		{ type: "field", key: "gcsImageUri" },
+		{ type: "field", key: "imageUri" },
 		{ type: "field", key: "content" },
 		{ type: "field", key: "productSet" },
 		{ type: "field", key: "productCategories" },
@@ -183,13 +201,20 @@ export const searchProductNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ISearchProductParams) => {
 		const { api } = cognigy;
-		const { featureMaxResults, gcsImageUri, content, imageSource, productCategories, productSet, filter, connection, storeLocation, contextKey, inputKey } = config;
+		const { featureMaxResults, imageUri, gcsImageUri, content, imageSource, productCategories, productSet, filter, connection, storeLocation, contextKey, inputKey } = config;
 		const { key } = connection;
 
 		let image = {};
 
 		switch (imageSource) {
 			case "url":
+				image = {
+					source: {
+						imageUri
+					}
+				};
+				break;
+			case "gs":
 				image = {
 					source: {
 						gcsImageUri

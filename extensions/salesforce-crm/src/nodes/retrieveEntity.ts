@@ -108,6 +108,12 @@ export const retrieveEntityNode = createNodeDescriptor({
     appearance: {
         color: "#009EDB"
     },
+    dependencies: {
+        children: [
+            "onFoundEntity",
+            "onNotFoundEntity"
+        ]
+    },
     function: async ({ cognigy, config, childConfigs }: IRetrieveEntityParams) => {
         const { api } = cognigy;
         const { entityType, entityId, connection, storeLocation, contextKey, inputKey } = config;
@@ -137,8 +143,8 @@ export const retrieveEntityNode = createNodeDescriptor({
 
         } catch (error) {
 
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateEntity");
-            api.setNextNode(onErrorChild.id);
+            const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundEntity");
+            api.setNextNode(onNotFoundChild.id);
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");

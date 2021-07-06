@@ -107,6 +107,12 @@ export const createEntityNode = createNodeDescriptor({
     appearance: {
         color: "#009EDB"
     },
+    dependencies: {
+        children: [
+            "onSuccessCreateEntity",
+            "onErrorCreateEntity"
+        ]
+    },
     function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
         const { api } = cognigy;
         const { entityType, entityRecord, connection, storeLocation, contextKey, inputKey } = config;

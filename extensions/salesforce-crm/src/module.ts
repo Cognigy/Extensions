@@ -7,7 +7,7 @@ import { deleteEntityNode } from "./nodes/deleteEntity";
 import { onFoundEntity, onNotFoundEntity, retrieveEntityNode } from "./nodes/retrieveEntity";
 import { updateEntityNode } from "./nodes/updateEntity";
 import { queryNode } from "./nodes/query";
-import { searchNode } from "./nodes/search";
+import { onEmptyResults, onFoundResults, searchNode } from "./nodes/search";
 
 export default createExtension({
 	nodes: [
@@ -24,7 +24,10 @@ export default createExtension({
 		updateEntityNode,
 		deleteEntityNode,
 		queryNode,
-		searchNode
+
+		searchNode,
+		onFoundResults,
+		onEmptyResults
 	],
 
 	connections: [

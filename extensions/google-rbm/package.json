@@ -1,0 +1,34 @@
+{
+	"name": "google-rbm",
+	"version": "4.0.0",
+	"description": "Provides Google RBM Tools",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz google-rbm.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Alexander Teusz",
+	"keywords": [
+		"Google",
+		"Business",
+		"Messaging",
+		"RBM"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^10.17.28",
+		"tslint": "^5.16.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.11.0",
+		"businessmessages": "^1.0.3",
+		"googleapis": "^80.1.0"
+	}
+}

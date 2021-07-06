@@ -1,10 +1,10 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const blueprismConnection: IConnectionSchema = {
-	type: "blueprism",
-	label: "Blueprism Account",
-	fields: [
-		{ fieldName: "username" },
-		{ fieldName: "password"}
-	]
+  type: "blueprism",
+  label: "Username and password for the Blueprism RPA web service",
+  fields: [
+    { fieldName: "username" },
+    { fieldName: "password" }
+  ]
 };

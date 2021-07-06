@@ -1,15 +1,8 @@
 import { createExtension } from "@cognigy/extension-tools";
-
-import { startSimpleProcessNode } from "./nodes/startSimpleProcess";
-import { blueprismConnection } from "./connections/blueprismConnection";
-
+import { blueprismWebservice as blueprismWebservice } from "./nodes/blueprismWebservice";
+import { blueprismConnection as blueprismConnection } from "./connections/blueprismConnection";
 
 export default createExtension({
-	nodes: [
-		startSimpleProcessNode
-	],
-
-	connections: [
-		blueprismConnection
-	]
+  nodes: [blueprismWebservice],
+  connections: [blueprismConnection]
 });

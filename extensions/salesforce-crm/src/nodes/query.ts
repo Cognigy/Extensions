@@ -117,7 +117,13 @@ export const queryNode = createNodeDescriptor({
     appearance: {
         color: "#009EDB"
     },
-    function: async ({ cognigy, config }: IQueryParams) => {
+    dependencies: {
+        children: [
+            "onFoundQueryResults",
+            "onEmptyQueryResults"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: IQueryParams) => {
         const { api } = cognigy;
         const { soql, maxFetch, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
@@ -131,6 +137,14 @@ export const queryNode = createNodeDescriptor({
 
             // Run SOQL query:
             const queryResult = await conn.query(soql, { autoFetch: true, maxFetch: Number(maxFetch) });
+
+            if (queryResult.records.length === 0) {
+                const onEmptyQueryResultsChild = childConfigs.find(child => child.type === "onEmptyQueryResults");
+                api.setNextNode(onEmptyQueryResultsChild.id);
+            } else {
+                const onFoundQueryResultsChild = childConfigs.find(child => child.type === "onFoundQueryResults");
+                api.setNextNode(onFoundQueryResultsChild.id);
+            }
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, queryResult, "simple");
@@ -147,5 +161,49 @@ export const queryNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
+    }
+});
+
+export const onFoundQueryResults = createNodeDescriptor({
+    type: "onFoundQueryResults",
+    parentType: "salesforceQuery",
+    defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onEmptyQueryResults = createNodeDescriptor({
+    type: "onEmptyQueryResults",
+    parentType: "salesforceQuery",
+    defaultLabel: "On Empty Result",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
     }
 });

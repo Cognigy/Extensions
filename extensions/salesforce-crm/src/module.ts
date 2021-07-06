@@ -6,7 +6,7 @@ import { createEntityNode, onErrorCreateEntity, onSuccessCreateEntity } from "./
 import { deleteEntityNode } from "./nodes/deleteEntity";
 import { onFoundEntity, onNotFoundEntity, retrieveEntityNode } from "./nodes/retrieveEntity";
 import { updateEntityNode } from "./nodes/updateEntity";
-import { queryNode } from "./nodes/query";
+import { onEmptyQueryResults, onFoundQueryResults, queryNode } from "./nodes/query";
 import { onEmptyResults, onFoundResults, searchNode } from "./nodes/search";
 
 export default createExtension({
@@ -23,7 +23,10 @@ export default createExtension({
 
 		updateEntityNode,
 		deleteEntityNode,
+
 		queryNode,
+		onFoundQueryResults,
+		onEmptyQueryResults,
 
 		searchNode,
 		onFoundResults,

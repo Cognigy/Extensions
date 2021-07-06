@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { Client } from "@microsoft/microsoft-graph-client";
 import getAuthenticatedClient from "../../helpers/getAuthenticatedClient";
-
+import "isomorphic-fetch";
 
 export interface ISendChannelMessageParams extends INodeFunctionBaseParams {
 	config: {

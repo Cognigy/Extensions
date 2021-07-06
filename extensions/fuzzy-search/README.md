@@ -49,7 +49,7 @@ Options could be something like
     "title",
     "author.firstName"
   ]
-};
+}
 ```
 
 The full list of options - both mandatory and optional - is explained in the **Fuse.js** developer [documentation](https://fusejs.io/).

@@ -1,0 +1,28 @@
+{
+  "name": "microsoft-azure-devops",
+  "version": "4.0.0",
+  "description": "Integrates with Microsoft Azure DevOps",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz microsoft-azure-devops.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Development",
+    "Azure",
+    "DevOps"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.11.0",
+    "azure-devops-node-api": "^11.0.0",
+    "tslint": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "typescript": "^3.8.3"
+  }
+}

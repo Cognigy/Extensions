@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import { Client } from "@microsoft/microsoft-graph-client";
 import getAuthenticatedClient from "../helpers/getAuthenticatedClient";
 import createAttendeesList from "../helpers/createAttendeesList";
-
+import "isomorphic-fetch";
 
 export interface IScheduleMeetingParams extends INodeFunctionBaseParams {
 	config: {

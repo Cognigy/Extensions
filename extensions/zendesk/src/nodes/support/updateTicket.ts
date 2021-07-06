@@ -1,14 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const zendesk = require('node-zendesk');
+import axios from "axios";
 
 export interface IUpdateTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
-			token: string;
-			remoteUri: string;
+			password: string;
+			subdomain: string;
 		};
-		ticketID: number;
+		ticketId: number;
 		ticket: any;
 		storeLocation: string;
 		contextKey: string;
@@ -18,10 +18,7 @@ export interface IUpdateTicketParams extends INodeFunctionBaseParams {
 export const updateTicketNode = createNodeDescriptor({
 	type: "updateTicket",
 	defaultLabel: "Update Ticket",
-	preview: {
-		key: "ticketID",
-		type: "text"
-	},
+	summary: "Updates a given ticket in zendesk",
 	fields: [
 		{
 			key: "connection",
@@ -33,22 +30,32 @@ export const updateTicketNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "ticketID",
+			key: "ticketId",
 			label: "Ticket ID",
 			type: "cognigyText",
-			description: "ID of the ticket to request.",
+			description: "The ID of the ticket to request.",
 			params: {
 				required: true,
 			},
 		},
 		{
 			key: "ticket",
-			label: "Ticket",
+			label: "Ticket Data",
 			type: "json",
-			description: "JSON of the ticket to update.",
+			description: "The JSON of the ticket to update.",
 			params: {
 				required: true,
 			},
+			defaultValue: `{
+	"ticket": {
+		"comment": {
+			"body": "Thanks for choosing Acme Jet Motors.",
+				"public": true
+		},
+		"status": "solved"
+	}
+}
+			`
 		},
 		{
 			key: "storeLocation",
@@ -104,7 +111,7 @@ export const updateTicketNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "ticketID" },
+		{ type: "field", key: "ticketId" },
 		{ type: "field", key: "ticket" },
 		{ type: "section", key: "storage" },
 	],
@@ -113,36 +120,38 @@ export const updateTicketNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IUpdateTicketParams) => {
 		const { api } = cognigy;
-		const { ticketID, ticket, connection, storeLocation, contextKey, inputKey } = config;
-		const { username, token, remoteUri } = connection;
+		const { ticketId, ticket, connection, storeLocation, contextKey, inputKey } = config;
+		const { username, password, subdomain } = connection;
 
-		const client = zendesk.createClient({
-			username,
-			token,
-			remoteUri
-		});
+		try {
 
-		return new Promise((resolve, reject) => {
-			client.tickets.update(ticketID, ticket, (err, statusCode, body, response, res) => {
-
-				if (err) {
-					if (storeLocation === "context") {
-						api.addToContext(contextKey, { error: err.message }, "simple");
-					} else {
-						// @ts-ignore
-						api.addToInput(inputKey, { error: err.message });
-					}
+			const response = await axios({
+				method: "put",
+				url: `https://${subdomain}.zendesk.com/api/v2/tickets/${ticketId}`,
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json"
+				},
+				data: ticket,
+				auth: {
+					username,
+					password
 				}
-
-				if (storeLocation === "context") {
-					api.addToContext(contextKey, body, "simple");
-				} else {
-					// @ts-ignore
-					api.addToInput(inputKey, body);
-				}
-
-				resolve();
 			});
-		});
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, response.data, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, response.data);
+			}
+		} catch (error) {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { error: error.message }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { error: error.message });
+			}
+		}
 	}
 });

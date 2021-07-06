@@ -1,6 +1,6 @@
 {
   "name": "sunshine-conversations",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Perform Sunshine conversations application switchboard actions",
   "main": "build/module.js",
   "scripts": {

@@ -1041,8 +1041,8 @@
         {
             "name": "sunshine-conversations",
             "label": "Sunshine Conversations",
-            "version": "4.0.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/sunshine-conversations400/sunshine-conversations.tar.gz",
+            "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/sunshine-conversations410/sunshine-conversations.tar.gz",
             "description": "Perform Sunshine conversations application switchboard actions",
             "tags": [
                 "sunco",

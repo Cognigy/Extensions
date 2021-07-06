@@ -58,7 +58,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce.search",
             condition: {
@@ -68,7 +68,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce.search",
             condition: {

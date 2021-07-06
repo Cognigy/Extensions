@@ -68,7 +68,7 @@ export const retrieveEntityNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -78,7 +78,7 @@ export const retrieveEntityNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -108,7 +108,7 @@ export const retrieveEntityNode = createNodeDescriptor({
     appearance: {
         color: "#009EDB"
     },
-    function: async ({ cognigy, config }: IRetrieveEntityParams) => {
+    function: async ({ cognigy, config, childConfigs }: IRetrieveEntityParams) => {
         const { api } = cognigy;
         const { entityType, entityId, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
@@ -125,6 +125,9 @@ export const retrieveEntityNode = createNodeDescriptor({
             // Single record creation
             const entity = await conn.sobject(entityType).retrieve(entityId);
 
+            const onFoundChild = childConfigs.find(child => child.type === "onFoundEntity");
+            api.setNextNode(onFoundChild.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, entity, "simple");
             } else {
@@ -133,6 +136,10 @@ export const retrieveEntityNode = createNodeDescriptor({
             }
 
         } catch (error) {
+
+            const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateEntity");
+            api.setNextNode(onErrorChild.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");
             } else {
@@ -140,5 +147,49 @@ export const retrieveEntityNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
+    }
+});
+
+export const onFoundEntity = createNodeDescriptor({
+    type: "onFoundEntity",
+    parentType: "retrieveEntity",
+    defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onNotFoundEntity = createNodeDescriptor({
+    type: "onNotFoundEntity",
+    parentType: "retrieveEntity",
+    defaultLabel: "On Not Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
     }
 });

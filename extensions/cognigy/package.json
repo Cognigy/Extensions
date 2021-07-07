@@ -1,6 +1,6 @@
 {
   "name": "cognigy",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "Basic Cognigy Extensions",
   "main": "build/module.js",
   "scripts": {

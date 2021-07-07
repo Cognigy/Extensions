@@ -29,7 +29,8 @@ async function triggerWebservice(): Promise<void> {
 
     config: {
       url: 'https://webhook.site/7c356b57-0fab-48e1-ae2e-8c1cb5c2139c',
-      connection: { username: "username", password: "password" },
+      // connection: { username: "username", password: "password" },
+      connection: undefined,
       soapBody: "<AddressUpdate xmlns=\"blueprism:webservice:addressupdate\">\n <User>max.mustermann</User>\n <FirstName>Max</FirstName>\n <LastName>Mustermann</LastName>\n <Street>Speditionstrasse 1</Street>\n <City>Dusseldorf</City>\n <State>NRW</State>\n <ZIPCode>40200</ZIPCode>\n</AddressUpdate>",
       storeLocation: "context",
       inputKey: "blueprism",

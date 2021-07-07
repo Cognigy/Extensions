@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import * as xmljs from 'xml-js';
 
 export interface IBlueprismWsParams extends INodeFunctionBaseParams {
@@ -29,7 +29,7 @@ export const blueprismWebservice = createNodeDescriptor({
       label: "Blueprism Connection",
       type: 'connection',
       description: 'Username and password used to authorize with the Blueprism webservice',
-      params: { connectionType: "blueprism", required: true }
+      params: { connectionType: "blueprism", required: false }
     },
     {
       key: "soapBody",
@@ -88,7 +88,6 @@ export const blueprismWebservice = createNodeDescriptor({
   function: async ({ cognigy, config }: IBlueprismWsParams) => {
     const { api } = cognigy;
     const { connection, url, soapBody, storeLocation, contextKey, inputKey } = config;
-    const { username, password } = connection;
 
     const store = (result: any) => {
       if (storeLocation === 'context') {
@@ -101,15 +100,20 @@ export const blueprismWebservice = createNodeDescriptor({
     let requestBody = '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
       `<soap:Header/><soap:Body>${soapBody}</soap:Body></soap:Envelope>`;
 
+    const axiosConfig: AxiosRequestConfig = {
+      method: 'post',
+      url: url,
+      headers: { 'Content-Type': 'text/xml' },
+      timeout: 15000, // Cognigy extension node execution time is limited to 20s
+      data: requestBody
+    };
+    if (connection) {
+      axiosConfig.auth = connection;
+    }
+
     let xmlResponse;
     try {
-      const response = await axios({
-        method: 'post',
-        url: url,
-        headers: { 'Content-Type': 'text/xml' },
-        auth: { username, password },
-        data: requestBody
-      });
+      const response = await axios(axiosConfig);
       xmlResponse = response.data;
     } catch (error) {
       api.log('error', `Request to ${url} resulted in error: ${JSON.stringify(error.toJSON())}`);

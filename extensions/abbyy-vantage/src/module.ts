@@ -3,6 +3,7 @@ import { createExtension } from "@cognigy/extension-tools";
 import { oauthConnection } from "./connections/oauthConnection";
 import { onErrorAuth, onSuccessAuth, authenticateAbbyyNode } from "./nodes/authenticate";
 import { getSkillsAbbyyNode, onFoundSkills, onNotFoundSkills } from "./nodes/getSkills";
+import { getTransactionNode, onNotFinishedTransaction, onProcessedTransaction } from "./nodes/getTransactionResult";
 import { onErrorTransaction, onScheduledTransaction, runTransactionNode } from "./nodes/runTransaction";
 
 
@@ -18,7 +19,11 @@ export default createExtension({
 
 		runTransactionNode,
 		onScheduledTransaction,
-		onErrorTransaction
+		onErrorTransaction,
+
+		getTransactionNode,
+		onProcessedTransaction,
+		onNotFinishedTransaction
 	],
 
 	connections: [

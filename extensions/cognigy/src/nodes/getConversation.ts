@@ -19,9 +19,9 @@ export interface IGetConversationParams extends INodeFunctionBaseParams {
 		odataBaseUrl: string;
 		userId: string;
 		sessionId: string;
-		outputType: string;
+		outputType: "json" | "html";
 		tzOffset: string;
-		storeLocation: string;
+		storeLocation: "input" | "context";
 		contextKey: string;
 		inputKey: string;
 	};
@@ -44,7 +44,7 @@ export const getConversationNode = createNodeDescriptor({
 			key: "odataBaseUrl",
 			label: "OData Base URL",
 			type: "cognigyText",
-			defaultValue: "https://odata-demo.cognigy.ai",
+			defaultValue: "https://odata-trial.cognigy.ai",
 		},
 		{
 			key: "userId",
@@ -111,7 +111,7 @@ export const getConversationNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "cognigy.conversation",
+			defaultValue: "conversation",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -121,7 +121,7 @@ export const getConversationNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "cognigy.conversation",
+			defaultValue: "conversation",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -166,7 +166,7 @@ export const getConversationNode = createNodeDescriptor({
 
 		const me = 'get-conversation';
 
-		for (let a of ['odataBaseUrl', 'userId', 'sessionId', 'outputType', 'tzOffset', 'storeLocation']) {
+		for (let a of ['odataBaseUrl', 'outputType', 'tzOffset', 'storeLocation']) {
 			if (!config[a]) throw new Error(`${me}: Argument ${a} is missing.`);
 		}
 		if (!config.connection || !config.connection.apiKey) {
@@ -181,8 +181,6 @@ export const getConversationNode = createNodeDescriptor({
 		}
 
 
-		// const { CognigyODataHost, userId, sessionId, secret, StoreOutputIn, StorageKey, HtmlFormat, tzOffset } = args;
-
 		if (outputType === 'html') {
 			if (!tzOffset || !tzOffset.match(/^([+-][0-9]+)|0$/)) {
 				throw new Error(`${me}: For HtmlFormat please supply tzOffset like "-10" or "+3" (hours) up to +/-16, or "-390" (minutes) for partial hour offsets.`);
@@ -194,11 +192,21 @@ export const getConversationNode = createNodeDescriptor({
 		const odataPredicates = [
 			// Reduce data size with select:
 			`$select=type,source,channel,inputText,inputData,timestamp`,
-			// Filter to the requested user-session (of course!)
-			`$filter=contactId eq '${userId}' and sessionId eq '${sessionId}'`,
 			// And order by time: (Otherwise they CAN come in strange order)
 			`$orderby=timestamp`
 		];
+		// Filter to the requested user-session (of course!)
+		if (userId && sessionId) {
+			odataPredicates.push(`$filter=contactId eq '${userId}' and sessionId eq '${sessionId}'`);
+		} else if (userId) {
+			odataPredicates.push(`$filter=contactId eq '${userId}'`);
+			odataPredicates[0] += `,sessionId`;
+		} else if (sessionId) {
+			odataPredicates.push(`$filter=sessionId eq '${sessionId}'`);
+			odataPredicates[0] += `,contactId`;
+		} else
+			throw new Error(`${me}: Please supply one or both of: User ID and/or Session ID.`);
+
 
 		const reqUrl = `${odataBaseUrl}/Conversations?${odataPredicates.join("&")}&apikey=${apiKey}`;
 		// Log the URL, but obscure a chunk of the apiKey:
@@ -229,9 +237,10 @@ export const getConversationNode = createNodeDescriptor({
 			returnVal.transcript = response.data.value.map((event: IStringProps) => {
 
 				// Just pull out a few select values:
-				const { type, source, channel, inputText, inputData: inputDataString, timestamp } = event;
+				const { type, source, channel, inputText, inputData: inputDataString, timestamp, sessionId: dataSessionId } = event;
 				const inputData = inputDataString && JSON.parse(inputDataString);
 				// LOG("Input data: " + pretty(inputData));
+
 
 				/** By default, use the plain inputText: */
 				let textTranscript = inputText;
@@ -266,9 +275,14 @@ export const getConversationNode = createNodeDescriptor({
 
 
 				// Set overall channel to first non-null channel:
-				if (!returnVal.channel && channel) returnVal.channel = channel;
+				if (returnVal.channel === 'unknown' && channel) returnVal.channel = channel;
 
-				return { type, source, text: textTranscript, data: inputData, timestamp };
+				const item: any = { type, source, text: textTranscript, data: inputData, timestamp };
+				if (dataSessionId) {
+					item.sessionId = dataSessionId;
+					item.channel = channel;
+				}
+				return item;
 
 			});
 		}
@@ -280,8 +294,8 @@ export const getConversationNode = createNodeDescriptor({
 			// If requested, convert the transcript to nice HTML:
 			//
 
-			// Default styles, can be over-ridden by user via 'ci.GetConversationStyles':
-			const styles = cognigy.input.getConversationStyles || `
+			// Default styles, can be over-ridden by user via 'input.GetConversationStyles':
+			const styles = cognigy.input.GetConversationStyles || `
 					<style>
 						table { font-family: arial; border-collapse: collapse; outline:thin solid; }
 						tr { padding: 8; }
@@ -298,12 +312,12 @@ export const getConversationNode = createNodeDescriptor({
 				`;
 
 			// Default time format, can be over-ridden by user via 'ci.GetConversationTimeFormat':
-			const timeFormat = cognigy.input[`${me}TimeFormat`] || '[(]HH:mm:ss[)]';
+			const timeFormat = cognigy.input.GetConversationStylesTimeFormat || '[(]HH:mm:ss[)]';
 
 			const htmlContent: string[] = [];
 			//
-			// NOTE: Email clients deal with whitespace between tags inconsistently, so
-			//  NO ENSURE NO STRAY WHITESPACE IN ANY OF THE TABLE TAGS:
+			// NOTE: Email clients deal with whitespace between tags inconsistently, so:
+			//  ENSURE NO STRAY WHITESPACE IN ANY OF THE TABLE TAGS BELOW:
 			//
 			htmlContent.push(`<table>`);
 			let lastSource = '';
@@ -348,7 +362,7 @@ export const getConversationNode = createNodeDescriptor({
 			api.addToContext(contextKey, returnVal, "simple");
 		} else {
 			// @ts-ignore
-			api.addToInput(inputKey, returnVal);
+			cognigy.input[inputKey] = returnVal;
 		}
 	}
 });

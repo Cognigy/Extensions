@@ -17,4 +17,7 @@ export default createExtension({
 		changeAgentAvatar,
 		resetAgentAvatar
 	],
+	options: {
+		label: "Cognigy Webchat"
+	}
 });

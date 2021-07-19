@@ -15,5 +15,8 @@ export default createExtension({
 
 	connections: [
 		personalAccessTokenConnection
-	]
+	],
+	options: {
+		label: "Calendly"
+	}
 });

@@ -10,8 +10,10 @@ export default createExtension({
 		onSucces,
 		onError
 	],
-
 	connections: [
 		deeplConnection
-	]
+	],
+	options: {
+		label: "DeepL"
+	}
 });

@@ -11,5 +11,8 @@ export default createExtension({
 
 	connections: [
 		confluenceConnection
-	]
+	],
+	options: {
+		label: "Confluence"
+	}
 });

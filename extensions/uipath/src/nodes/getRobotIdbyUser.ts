@@ -190,7 +190,7 @@ export const getRobotIdbyUserNode = createNodeDescriptor({
 			tenantInfo = tenantLogicalName;
 	 	} else { // onPrem
 			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Releases/`;
+			endpoint = `https://${orchestratorUrl}/odata/users/`;
 			tenantInfo = tenancyName;
 		}
 		const axiosConfig: AxiosRequestConfig = {

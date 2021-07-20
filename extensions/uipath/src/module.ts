@@ -6,6 +6,12 @@ import { startJobNode } from './nodes/startJob';
 import { getProcessesNode } from "./nodes/getProcesses";
 import { getProcessByNameNode } from "./nodes/getProcessByName";
 import { getRobotIdbyUserNode } from "./nodes/getRobotIdbyUser";
+import { getUsersNode } from "./nodes/getUsers";
+import { getTasksNode } from "./nodes/getTasks";
+import { assignTaskNode } from "./nodes/assignTask";
+import { unassignTaskNode } from "./nodes/unassignTask";
+import { reassignTaskNode } from "./nodes/reassignTask";
+import { deleteTaskNode } from "./nodes/deleteTasks";
 
 import { AuthenticationNode } from "./nodes/Authentication";
 
@@ -17,7 +23,13 @@ export default createExtension({
 		getProcessesNode,
 		AuthenticationNode,
 		getProcessByNameNode,
-		getRobotIdbyUserNode
+		getRobotIdbyUserNode,
+		getUsersNode,
+		getTasksNode,
+		assignTaskNode,
+		unassignTaskNode,
+		reassignTaskNode,
+		deleteTaskNode
 	],
 
 	connections: [

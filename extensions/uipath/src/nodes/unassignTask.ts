@@ -1,8 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AddTransactionItem } from "../../types/uipath";
 
-export interface IAddQueueItem extends INodeFunctionBaseParams {
+export interface IUnassignTaskParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -10,28 +9,24 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 			tenantLogicalName: string;
 			clientId: string;
 			userKey: string;
-        };
+		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
 			tenancyName: string;
 			usernameOrEmailAddress: string;
 			password: string;
 		};
-        accessToken: string;
-		orgUnitId: string;
-        queueName: string;
-        reference: string;
-        priority: string;
-        specificContent: any;
+		accessToken: string;
+		taskId: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const addQueueItemNode = createNodeDescriptor({
-	type: "addQueueItem",
-	defaultLabel: "Add a Queue Item",
+export const unassignTaskNode = createNodeDescriptor({
+	type: "unassignTaskNode",
+	defaultLabel: "Unassign Task from User",
 	fields: [
 		{
 			key: "authType",
@@ -87,55 +82,22 @@ export const addQueueItemNode = createNodeDescriptor({
 				required: true
 			}
         },
+        {
+			key: "releaseKey",
+			label: "Process Release Key",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
 		{
-			key: "orgUnitId",
-			label: "Organization Unit ID",
+			key: "taskId",
+			label: "Task ID",
 			type: "cognigyText",
 			params: {
 				required: true
 			}
         },
-        {
-			key: "queueName",
-			label: "Queue Name",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
-        },
-        {
-			key: "reference",
-			label: "Queue Reference",
-			type: "cognigyText",
-			params: {
-				required: false
-			}
-		},        {
-			key: "priority",
-			label: "Transaction Item Priority",
-			type: "select",
-			params: {
-                options: [
-                    {
-                        label: "Low",
-                        value: "Low"
-                    },
-                    {
-                        label: "High",
-                        value: "High"
-                    }
-                ],
-				required: true
-			}
-		},
-        {
-			key: "specificContent",
-			label: "Transaction Item Specific Content",
-			type: "json",
-			params: {
-				required: true
-			}
-		},
 		{
 			key: "storeLocation",
 			type: "select",
@@ -158,8 +120,8 @@ export const addQueueItemNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
-			defaultValue: "uipath.queueItemId",
+			label: "Input Key to Store Result",
+			defaultValue: "uipath.unassignedTask",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -168,8 +130,8 @@ export const addQueueItemNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
-			defaultValue: "uipath.queueItemId",
+			label: "Context Key to Store Result",
+			defaultValue: "uipath.unassignedTask",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -193,58 +155,43 @@ export const addQueueItemNode = createNodeDescriptor({
 		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
-		{ type: "field", key: "orgUnitId"},
-		{ type: "field", key: "queueName" },
-		{ type: "field", key: "reference" },
-		{ type: "field", key: "priority" },
-		{ type: "field", key: "specificContent" },
-		{ type: "section", key: "storageOption" },
+		{ type: "field", key: "orgUnitId" },
+		{ type: "field", key: "taskId" },
+		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IAddQueueItem) => {
+	function: async ({ cognigy, config }: IUnassignTaskParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, orgUnitId, queueName, reference, priority,
-				specificContent, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, accessToken, taskId, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
 		let endpoint;
-		let tenantInfo;
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
-			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
-			tenantInfo = tenantLogicalName;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Tasks/UiPath.Server.Configuration.OData.UnassignTasks`;
 		} else { // onPrem
-			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Queues/UiPathODataSvc.AddQueueItem`;
-			tenantInfo = tenancyName;
+			const { orchestratorUrl } = onPremAuthConnection;
+			endpoint = `https://${orchestratorUrl}/odata/Tasks/UiPath.Server.Configuration.OData.UnassignTasks`;
 		}
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantInfo,
-				'X-UIPATH-OrganizationUnitId': orgUnitId
+				'Authorization': `Bearer ${accessToken}`
             }
-		};
-		const data = {
-			itemData: {
-				Name: queueName,
-				Reference: reference,
-				Priority: priority.charAt(0).toUpperCase() + priority.slice(1),
-				SpecificContent: specificContent,
-				DeferDate: null,
-				DueDate: null
-			}
+        };
+        const data = {
+            taskIds: [
+				taskId
+			]
 		};
 		try {
-            const result: AxiosResponse <AddTransactionItem> =  await axios.post(endpoint, data, axiosConfig);
-
+            const result: AxiosResponse =  await axios.post(endpoint, data, axiosConfig);
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, result.data.Id , 'simple');
+				api.addToContext(contextKey, result.data , 'simple');
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, result.data.Id);
+				api.addToInput(inputKey, result.data);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

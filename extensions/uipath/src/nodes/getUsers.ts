@@ -1,8 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AddTransactionItem } from "../../types/uipath";
 
-export interface IAddQueueItem extends INodeFunctionBaseParams {
+export interface IGetUsersParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -10,28 +9,27 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 			tenantLogicalName: string;
 			clientId: string;
 			userKey: string;
-        };
+		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
 			tenancyName: string;
 			usernameOrEmailAddress: string;
 			password: string;
 		};
-        accessToken: string;
+		createQuickReplies: boolean;
+		quickReplyText: string;
+		fallbackText: string;
+		accessToken: string;
 		orgUnitId: string;
-        queueName: string;
-        reference: string;
-        priority: string;
-        specificContent: any;
-        storeLocation: string;
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const addQueueItemNode = createNodeDescriptor({
-	type: "addQueueItem",
-	defaultLabel: "Add a Queue Item",
+export const getUsersNode = createNodeDescriptor({
+	type: "getUsers",
+	defaultLabel: "Get list of users for assigning tasks.",
 	fields: [
 		{
 			key: "authType",
@@ -80,13 +78,43 @@ export const addQueueItemNode = createNodeDescriptor({
 			}
         },
 		{
+			key: "createQuickReplies",
+			label: "Quick Replies?",
+			type: "toggle",
+			description: "Should the agent create a set of quick replies of users to choose?",
+			defaultValue: false
+		},
+		{
+			key: "quickReplyText",
+			label: "Quick Reply Text",
+			type: "cognigyText",
+			description: "Text to add before the quick replies",
+			params: {
+				required: true
+			},
+			condition: {
+				key: "createQuickReplies",
+				value: true,
+			}
+		},
+		{
+			key: "fallbackText",
+			label: "Fallback Text",
+			type: "cognigyText",
+			description: "Default text if channel not compatible with quick replies",
+			condition: {
+				key: "createQuickReplies",
+				value: true,
+			}
+		},
+		{
 			key: "accessToken",
 			label: "Access Token",
 			type: "cognigyText",
 			params: {
 				required: true
 			}
-        },
+		},
 		{
 			key: "orgUnitId",
 			label: "Organization Unit ID",
@@ -95,51 +123,10 @@ export const addQueueItemNode = createNodeDescriptor({
 				required: true
 			}
         },
-        {
-			key: "queueName",
-			label: "Queue Name",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
-        },
-        {
-			key: "reference",
-			label: "Queue Reference",
-			type: "cognigyText",
-			params: {
-				required: false
-			}
-		},        {
-			key: "priority",
-			label: "Transaction Item Priority",
-			type: "select",
-			params: {
-                options: [
-                    {
-                        label: "Low",
-                        value: "Low"
-                    },
-                    {
-                        label: "High",
-                        value: "High"
-                    }
-                ],
-				required: true
-			}
-		},
-        {
-			key: "specificContent",
-			label: "Transaction Item Specific Content",
-			type: "json",
-			params: {
-				required: true
-			}
-		},
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: "Where to Store the Result",
 			params: {
 				options: [
 					{
@@ -158,8 +145,8 @@ export const addQueueItemNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
-			defaultValue: "uipath.queueItemId",
+			label: "Input Key to Store Result",
+			defaultValue: "uipath.actionUserList",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -169,7 +156,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "uipath.queueItemId",
+			defaultValue: "uipath.actionUserList",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -193,58 +180,69 @@ export const addQueueItemNode = createNodeDescriptor({
 		{ type: "field", key: "onPremAuthConnection" },
 		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "accessToken" },
-		{ type: "field", key: "orgUnitId"},
-		{ type: "field", key: "queueName" },
-		{ type: "field", key: "reference" },
-		{ type: "field", key: "priority" },
-		{ type: "field", key: "specificContent" },
-		{ type: "section", key: "storageOption" },
+		{ type: "field", key: "orgUnitId" },
+		{ type: "field", key: "createQuickReplies" },
+		{ type: "field", key: "quickReplyText" },
+		{ type: "field", key: "fallbackText" },
+		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IAddQueueItem) => {
+	function: async ({ cognigy, config }: IGetUsersParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, orgUnitId, queueName, reference, priority,
-				specificContent, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, accessToken, orgUnitId, createQuickReplies, quickReplyText, fallbackText, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
 		let endpoint;
-		let tenantInfo;
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
-			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Queues/UiPathODataSvc.AddQueueItem`;
-			tenantInfo = tenantLogicalName;
-		} else { // onPrem
-			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Queues/UiPathODataSvc.AddQueueItem`;
-			tenantInfo = tenancyName;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/orchestrator_/odata/tasks/UiPath.Server.Configuration.OData.GetTaskUsers(organizationUnitId=${orgUnitId})`;
+	 	} else { // onPrem
+			const { orchestratorUrl } = onPremAuthConnection;
+			endpoint = `https://${orchestratorUrl}/orchestrator_/odata/tasks/UiPath.Server.Configuration.OData.GetTaskUsers(organizationUnitId=${orgUnitId})`;
 		}
-        const axiosConfig: AxiosRequestConfig = {
-            headers: {
-                'Content-Type': 'application/json',
+		const axiosConfig: AxiosRequestConfig = {
+			headers: {
+				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
-				'X-UIPATH-TenantName': tenantInfo,
 				'X-UIPATH-OrganizationUnitId': orgUnitId
-            }
-		};
-		const data = {
-			itemData: {
-				Name: queueName,
-				Reference: reference,
-				Priority: priority.charAt(0).toUpperCase() + priority.slice(1),
-				SpecificContent: specificContent,
-				DeferDate: null,
-				DueDate: null
 			}
 		};
 		try {
-            const result: AxiosResponse <AddTransactionItem> =  await axios.post(endpoint, data, axiosConfig);
+			const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
+
+			if (createQuickReplies === true) {
+				const listOfUsers = result.data.value;
+				let tempUsers = [];
+				for (const users of listOfUsers) {
+					tempUsers.push(
+						{
+							"contentType": "postback",
+							"payload": `${users.Id}`,
+							"title": users.UserName
+						}
+					);
+				}
+
+				api.say("", {
+					"_cognigy": {
+						"_fallbackText": fallbackText,
+						"_default": {
+							"_quickReplies": {
+								"type": "quick_replies",
+								"quickReplies": tempUsers,
+								"text": quickReplyText
+							}
+						}
+					}
+				});
+			}
 
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, result.data.Id , 'simple');
+				api.addToContext(contextKey, result.data, 'simple');
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, result.data.Id);
+				api.addToInput(inputKey, result.data);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

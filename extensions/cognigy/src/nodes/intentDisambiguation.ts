@@ -188,8 +188,9 @@ export const intentDisambiguationNode = createNodeDescriptor({
 							"_cognigy": {
 								"_fallbackText": disambiguationQuestion,
 								"_default": {
-									"message": {
-										"quick_replies": createQuickReplies(input, array),
+									"_quickReplies": {
+										"type": "quick_replies",
+										"quickReplies": createQuickReplies(input, array),
 										"text": disambiguationQuestion
 									}
 								}

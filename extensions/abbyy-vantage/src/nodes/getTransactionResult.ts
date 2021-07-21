@@ -3,6 +3,9 @@ import axios from 'axios';
 
 export interface IGetTransactionParams extends INodeFunctionBaseParams {
     config: {
+        connection: {
+			instanceUri: string;
+		},
         accessToken: string;
         transactionId: string;
         storeLocation: string;
@@ -16,6 +19,15 @@ export const getTransactionNode = createNodeDescriptor({
     defaultLabel: "Get Transaction",
     summary: "Retrieves the results of a Transaction by id",
     fields: [
+        {
+			key: "connection",
+			label: "Abbyy Instance",
+			type: "connection",
+			params: {
+				connectionType: "abbyy-instance",
+				required: true
+			}
+		},
         {
             key: "accessToken",
             label: "Access Token",
@@ -87,6 +99,7 @@ export const getTransactionNode = createNodeDescriptor({
         }
     ],
     form: [
+        { type: "field", key: "connection" },
         { type: "field", key: "accessToken" },
         { type: "field", key: "transactionId" },
         { type: "section", key: "storageOption" },
@@ -102,12 +115,13 @@ export const getTransactionNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IGetTransactionParams) => {
         const { api } = cognigy;
-        const { transactionId, accessToken, storeLocation, inputKey, contextKey } = config;
+        const { connection, transactionId, accessToken, storeLocation, inputKey, contextKey } = config;
+        const { instanceUri } = connection;
 
         try {
             const response = await axios({
                 method: "get",
-                url: `https://vantage-preview.abbyy.com/api/publicapi/v1/transactions/${transactionId}`,
+                url: `https://${instanceUri}/api/publicapi/v1/transactions/${transactionId}`,
                 headers: {
                     "Accept": "application/json",
                     "Authorization": `Bearer ${accessToken}`

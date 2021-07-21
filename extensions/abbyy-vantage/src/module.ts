@@ -1,4 +1,5 @@
 import { createExtension } from "@cognigy/extension-tools";
+import { abbyyConnection } from "./connections/abbyyConnection";
 
 import { oauthConnection } from "./connections/oauthConnection";
 import { onErrorAuth, onSuccessAuth, authenticateAbbyyNode } from "./nodes/authenticate";
@@ -27,6 +28,11 @@ export default createExtension({
 	],
 
 	connections: [
-		oauthConnection
-	]
+		oauthConnection,
+		abbyyConnection
+	],
+
+	options: {
+		label: "Abbyy Vantage"
+	}
 });

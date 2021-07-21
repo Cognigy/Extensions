@@ -3,6 +3,9 @@ import axios from 'axios';
 
 export interface IGetSkillsParams extends INodeFunctionBaseParams {
 	config: {
+		connection: {
+			instanceUri: string;
+		},
 		accessToken: string;
 		storeLocation: string;
 		inputKey: string;
@@ -15,6 +18,15 @@ export const getSkillsAbbyyNode = createNodeDescriptor({
 	defaultLabel: "Get Skills",
 	summary: "Retrieves a list of Vantage Skills",
 	fields: [
+		{
+			key: "connection",
+			label: "Abbyy Instance",
+			type: "connection",
+			params: {
+				connectionType: "abbyy-instance",
+				required: true
+			}
+		},
 		{
 			key: "accessToken",
 			label: "Access Token",
@@ -92,26 +104,27 @@ export const getSkillsAbbyyNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IGetSkillsParams) => {
 		const { api } = cognigy;
-		const { accessToken, storeLocation, inputKey, contextKey } = config;
+		const { connection, accessToken, storeLocation, inputKey, contextKey } = config;
+		const { instanceUri } = connection;
 
 		try {
 			const response = await axios({
 				method: 'get',
-				url: "https://vantage-preview.abbyy.com/api/publicapi/v1/skills",
+				url: `https://${instanceUri}/api/publicapi/v1/skills`,
 				headers: {
 					"Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-				},
+					"Accept": "application/json",
+					"Authorization": `Bearer ${accessToken}`
+				}
 			});
 
-            if (response.data.length === 0) {
-                const onNotFoundSkillsChild = childConfigs.find(child => child.type === "onNotFoundSkills");
-                api.setNextNode(onNotFoundSkillsChild.id);
-            } else {
-                const onFoundSkillsChild = childConfigs.find(child => child.type === "onFoundSkills");
-                api.setNextNode(onFoundSkillsChild.id);
-            }
+			if (response.data.length === 0) {
+				const onNotFoundSkillsChild = childConfigs.find(child => child.type === "onNotFoundSkills");
+				api.setNextNode(onNotFoundSkillsChild.id);
+			} else {
+				const onFoundSkillsChild = childConfigs.find(child => child.type === "onFoundSkills");
+				api.setNextNode(onFoundSkillsChild.id);
+			}
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
@@ -131,45 +144,45 @@ export const getSkillsAbbyyNode = createNodeDescriptor({
 });
 
 export const onFoundSkills = createNodeDescriptor({
-    type: "onFoundSkills",
-    parentType: "authenticateAbbyy",
-    defaultLabel: "On Found",
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	type: "onFoundSkills",
+	parentType: "authenticateAbbyy",
+	defaultLabel: "On Found",
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });
 
 export const onNotFoundSkills = createNodeDescriptor({
-    type: "onNotFoundSkills",
-    parentType: "authenticateAbbyy",
-    defaultLabel: "On Not Found",
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	type: "onNotFoundSkills",
+	parentType: "authenticateAbbyy",
+	defaultLabel: "On Not Found",
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });

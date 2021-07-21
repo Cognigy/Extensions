@@ -3,6 +3,9 @@ import axios from 'axios';
 
 export interface IRunTransactionParams extends INodeFunctionBaseParams {
     config: {
+        connection: {
+			instanceUri: string;
+		},
         accessToken: string;
         skillId: string;
         fileName: string;
@@ -18,6 +21,15 @@ export const runTransactionNode = createNodeDescriptor({
     defaultLabel: "Run Transaction",
     summary: "Runs a Transaction with a given skill",
     fields: [
+        {
+			key: "connection",
+			label: "Abbyy Instance",
+			type: "connection",
+			params: {
+				connectionType: "abbyy-instance",
+				required: true
+			}
+		},
         {
             key: "accessToken",
             label: "Access Token",
@@ -107,6 +119,7 @@ export const runTransactionNode = createNodeDescriptor({
         }
     ],
     form: [
+        { type: "field", key: "connection" },
         { type: "field", key: "accessToken" },
         { type: "field", key: "skillId" },
         { type: "field", key: "fileName" },
@@ -124,12 +137,13 @@ export const runTransactionNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IRunTransactionParams) => {
         const { api } = cognigy;
-        const { skillId, fileContent, fileName, accessToken, storeLocation, inputKey, contextKey } = config;
+        const { connection, skillId, fileContent, fileName, accessToken, storeLocation, inputKey, contextKey } = config;
+        const { instanceUri } = connection;
 
         try {
             const response = await axios({
                 method: "post",
-                url: "https://vantage-preview.abbyy.com/api/publicapi/v1/transactions/run",
+                url: `https://${instanceUri}/api/publicapi/v1/transactions/run`,
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",

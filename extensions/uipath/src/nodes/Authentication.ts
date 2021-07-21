@@ -26,6 +26,7 @@ export interface IAuthenticationParams extends INodeFunctionBaseParams {
 export const AuthenticationNode = createNodeDescriptor({
 	type: "Authentication",
 	defaultLabel: "Authentication",
+	summary: "Required node which must be added when using UiPath.",
 	fields: [
 		{
 			key: "authType",

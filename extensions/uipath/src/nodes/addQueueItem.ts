@@ -32,6 +32,7 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 export const addQueueItemNode = createNodeDescriptor({
 	type: "addQueueItem",
 	defaultLabel: "Add a Queue Item",
+	summary: "Add items to an already existing queue",
 	fields: [
 		{
 			key: "authType",

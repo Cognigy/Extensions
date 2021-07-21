@@ -32,6 +32,7 @@ export interface IStartJobParams extends INodeFunctionBaseParams {
 export const startJobNode = createNodeDescriptor({
 	type: "startJobNode",
 	defaultLabel: "Start a Job",
+	summary: "Start a process directly in the flow.",
 	fields: [
 		{
 			key: "authType",

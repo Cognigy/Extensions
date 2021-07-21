@@ -34,6 +34,7 @@ export interface IGetTasksParams extends INodeFunctionBaseParams {
 export const getTasksNode = createNodeDescriptor({
 	type: "getTasks",
 	defaultLabel: "Get Tasks",
+	summary: "Get a list of tasks which can be filtered by status.",
 	fields: [
 		{
 			key: "authType",

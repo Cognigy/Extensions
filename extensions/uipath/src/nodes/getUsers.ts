@@ -30,6 +30,7 @@ export interface IGetUsersParams extends INodeFunctionBaseParams {
 export const getUsersNode = createNodeDescriptor({
 	type: "getUsers",
 	defaultLabel: "Get Users for Assigning Tasks",
+	summary: "Get users who can be assigned tasks.",
 	fields: [
 		{
 			key: "authType",

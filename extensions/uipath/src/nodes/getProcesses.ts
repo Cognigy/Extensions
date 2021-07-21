@@ -26,6 +26,7 @@ export interface IGetProcessesParams extends INodeFunctionBaseParams {
 export const getProcessesNode = createNodeDescriptor({
 	type: "getReleases",
 	defaultLabel: "Get Processes",
+	summary: "Get all processes.",
 	fields: [
 		{
 			key: "authType",

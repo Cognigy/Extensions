@@ -27,6 +27,7 @@ export interface IUnassignTaskParams extends INodeFunctionBaseParams {
 export const unassignTaskNode = createNodeDescriptor({
 	type: "unassignTaskNode",
 	defaultLabel: "Unassign Task from User",
+	summary: "Unassign a task altogether from a user.",
 	fields: [
 		{
 			key: "authType",

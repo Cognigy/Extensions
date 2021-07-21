@@ -28,6 +28,7 @@ export interface IReassignTaskParams extends INodeFunctionBaseParams {
 export const reassignTaskNode = createNodeDescriptor({
 	type: "reassignTaskNode",
 	defaultLabel: "Reassign Task to New User",
+	summary: "Reassign an already assigned task to a new user.",
 	fields: [
 		{
 			key: "authType",

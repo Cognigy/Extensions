@@ -28,6 +28,7 @@ export interface IAssignTaskParams extends INodeFunctionBaseParams {
 export const assignTaskNode = createNodeDescriptor({
 	type: "assignTaskNode",
 	defaultLabel: "Assign Task to User",
+	summary: "Assign tasks to a specific user.",
 	fields: [
 		{
 			key: "authType",

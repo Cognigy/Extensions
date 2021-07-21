@@ -29,6 +29,7 @@ export interface IGetRobotsIdsbyUserParams extends INodeFunctionBaseParams {
 export const getRobotIdbyUserNode = createNodeDescriptor({
 	type: "getRobotIdbyUser",
 	defaultLabel: "Get Robots By Username",
+	summary: "Get a specific Robot ID if using classic folders.",
 	fields: [
 		{
 			key: "authType",

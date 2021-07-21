@@ -27,6 +27,7 @@ export interface IDeleteTaskParams extends INodeFunctionBaseParams {
 export const deleteTaskNode = createNodeDescriptor({
 	type: "deleteTaskNode",
 	defaultLabel: "Delete Task from Action Center",
+	summary: "Delete a chosen task from the action center.",
 	fields: [
 		{
 			key: "authType",

@@ -27,6 +27,7 @@ export interface IGetProcessByNameParams extends INodeFunctionBaseParams {
 export const getProcessByNameNode = createNodeDescriptor({
 	type: "getProcessByName",
 	defaultLabel: "Get Process By Name",
+	summary: "Find a process based on it's name in the orchestrator folder.",
 	fields: [
 		{
 			key: "authType",

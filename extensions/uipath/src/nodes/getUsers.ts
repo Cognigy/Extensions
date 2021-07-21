@@ -29,7 +29,7 @@ export interface IGetUsersParams extends INodeFunctionBaseParams {
 
 export const getUsersNode = createNodeDescriptor({
 	type: "getUsers",
-	defaultLabel: "Get list of users for assigning tasks.",
+	defaultLabel: "Get Users for Assigning Tasks",
 	fields: [
 		{
 			key: "authType",
@@ -79,7 +79,7 @@ export const getUsersNode = createNodeDescriptor({
         },
 		{
 			key: "createQuickReplies",
-			label: "Quick Replies?",
+			label: "Create Quick Replies",
 			type: "toggle",
 			description: "Should the agent create a set of quick replies of users to choose?",
 			defaultValue: false

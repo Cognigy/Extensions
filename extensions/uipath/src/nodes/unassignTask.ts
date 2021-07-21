@@ -1,8 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AccessToken } from "../../types/uipath";
 
-export interface IAuthenticationParams extends INodeFunctionBaseParams {
+export interface IUnassignTaskParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -10,23 +9,25 @@ export interface IAuthenticationParams extends INodeFunctionBaseParams {
 			tenantLogicalName: string;
 			clientId: string;
 			userKey: string;
-        };
+		};
 		onPremAuthConnection: {
 			orchestratorUrl: string;
 			tenancyName: string;
 			usernameOrEmailAddress: string;
 			password: string;
 		};
+		accessToken: string;
+		taskId: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const AuthenticationNode = createNodeDescriptor({
-	type: "Authentication",
-	defaultLabel: "Authentication",
-	summary: "Required node which must be added when using UiPath.",
+export const unassignTaskNode = createNodeDescriptor({
+	type: "unassignTaskNode",
+	defaultLabel: "Unassign Task from User",
+	summary: "Unassign a task altogether from a user.",
 	fields: [
 		{
 			key: "authType",
@@ -53,7 +54,7 @@ export const AuthenticationNode = createNodeDescriptor({
 			label: "Orchestrator Instance Information",
 			type: "connection",
 			params: {
-				connectionType: "instanceData",
+				connectionType: 'instanceData',
 				required: false
 			},
 			condition: {
@@ -75,9 +76,33 @@ export const AuthenticationNode = createNodeDescriptor({
 			}
         },
 		{
+			key: "accessToken",
+			label: "Access Token",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
+        {
+			key: "releaseKey",
+			label: "Process Release Key",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
+		{
+			key: "taskId",
+			label: "Task ID",
+			type: "cognigyText",
+			params: {
+				required: true
+			}
+        },
+		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to Store the Result",
+			label: "Where to store the result",
 			params: {
 				options: [
 					{
@@ -97,7 +122,7 @@ export const AuthenticationNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to Store Result",
-			defaultValue: "uiPathAccessToken",
+			defaultValue: "uipath.unassignedTask",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -107,7 +132,7 @@ export const AuthenticationNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to Store Result",
-			defaultValue: "uiPathAccessToken",
+			defaultValue: "uipath.unassignedTask",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -128,70 +153,46 @@ export const AuthenticationNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "authType" },
-		{ type: "field", key: "instanceInfo" },
 		{ type: "field", key: "onPremAuthConnection" },
-		{ type: "section", key: "storageOption" },
-	],
-	tokens: [
-		{
-			label: "UiPath AccessToken Input",
-			script: "ci.uiPathAccessToken",
-			type: "input"
-		},
-		{
-			label: "UiPath AccessToken Context",
-			script: "cc.uiPathAccessToken",
-			type: "context"
-		}
+		{ type: "field", key: "instanceInfo" },
+		{ type: "field", key: "accessToken" },
+		{ type: "field", key: "orgUnitId" },
+		{ type: "field", key: "taskId" },
+		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IAuthenticationParams) => {
-        const { api } = cognigy;
-		const { instanceInfo, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+	function: async ({ cognigy, config }: IUnassignTaskParams) => {
+		const { api } = cognigy;
+		const { instanceInfo, accessToken, taskId, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
-        let endpoint;
-		let data;
+		let endpoint;
 		if (authType === 'cloud') {
-			const { clientId, userKey } = instanceInfo;
-			endpoint = 'https://account.uipath.com/oauth/token';
-			data = {
-				'grant_type': "refresh_token",
-            	'client_id': clientId,
-            	'refresh_token': userKey
-			};
+			const { accountLogicalName, tenantLogicalName } = instanceInfo;
+			endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/Tasks/UiPath.Server.Configuration.OData.UnassignTasks`;
 		} else { // onPrem
-			const { tenancyName, orchestratorUrl, password, usernameOrEmailAddress } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/api/account/authenticate`;
-			data = {
-				'tenancyName': tenancyName,
-				'usernameOrEmailAddress': usernameOrEmailAddress,
-				'password': password
-			};
+			const { orchestratorUrl } = onPremAuthConnection;
+			endpoint = `https://${orchestratorUrl}/odata/Tasks/UiPath.Server.Configuration.OData.UnassignTasks`;
 		}
         const axiosConfig: AxiosRequestConfig = {
-			"headers":
-			{
-				"Content-Type" : "application/json"
-			}
+            headers: {
+                'Content-Type': 'application/json',
+				'Authorization': `Bearer ${accessToken}`
+            }
+        };
+        const data = {
+            taskIds: [
+				taskId
+			]
 		};
 		try {
-			const response: AxiosResponse <AccessToken> = await axios.post(endpoint, data, axiosConfig);
+            const result: AxiosResponse =  await axios.post(endpoint, data, axiosConfig);
 			if (storeLocation === 'context') {
-				if (authType === 'cloud') {
-					api.addToContext(contextKey, response.data.access_token , 'simple');
-				} else if (authType === 'onPrem') {
-					api.addToContext(contextKey, response.data.result , 'simple');
-				}
-			} else if (storeLocation === 'input') {
-				if (authType === 'cloud') {
-					// @ts-ignore
-					api.addToInput(inputKey, response.data.access_token);
-				} else if (authType === 'onPrem') {
-					// @ts-ignore
-					api.addToInput(inputKey, response.data.result);
-				}
+				api.addToContext(contextKey, result.data , 'simple');
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, result.data);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

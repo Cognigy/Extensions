@@ -29,6 +29,7 @@ export interface IGetRobotsIdsbyUserParams extends INodeFunctionBaseParams {
 export const getRobotIdbyUserNode = createNodeDescriptor({
 	type: "getRobotIdbyUser",
 	defaultLabel: "Get Robots By Username",
+	summary: "Get a specific Robot ID if using classic folders.",
 	fields: [
 		{
 			key: "authType",
@@ -190,7 +191,7 @@ export const getRobotIdbyUserNode = createNodeDescriptor({
 			tenantInfo = tenantLogicalName;
 	 	} else { // onPrem
 			const { tenancyName, orchestratorUrl } = onPremAuthConnection;
-			endpoint = `https://${orchestratorUrl}/odata/Releases/`;
+			endpoint = `https://${orchestratorUrl}/odata/users/`;
 			tenantInfo = tenancyName;
 		}
 		const axiosConfig: AxiosRequestConfig = {

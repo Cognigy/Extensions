@@ -27,6 +27,7 @@ export interface IGetProcessByNameParams extends INodeFunctionBaseParams {
 export const getProcessByNameNode = createNodeDescriptor({
 	type: "getProcessByName",
 	defaultLabel: "Get Process By Name",
+	summary: "Find a process based on it's name in the orchestrator folder.",
 	fields: [
 		{
 			key: "authType",
@@ -113,7 +114,7 @@ export const getProcessByNameNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to Store Result",
-			defaultValue: "uipath.releases",
+			defaultValue: "uipath.specificRelease",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -123,7 +124,7 @@ export const getProcessByNameNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "uipath.releases",
+			defaultValue: "uipath.specificRelease",
 			condition: {
 				key: "storeLocation",
 				value: "context"

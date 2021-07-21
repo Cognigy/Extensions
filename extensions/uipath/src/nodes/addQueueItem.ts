@@ -32,6 +32,7 @@ export interface IAddQueueItem extends INodeFunctionBaseParams {
 export const addQueueItemNode = createNodeDescriptor({
 	type: "addQueueItem",
 	defaultLabel: "Add a Queue Item",
+	summary: "Add items to an already existing queue",
 	fields: [
 		{
 			key: "authType",
@@ -159,7 +160,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "queueItemId",
+			defaultValue: "uipath.queueItemId",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -169,7 +170,7 @@ export const addQueueItemNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "queueItemId",
+			defaultValue: "uipath.queueItemId",
 			condition: {
 				key: "storeLocation",
 				value: "context"

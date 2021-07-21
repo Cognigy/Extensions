@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { StartJob } from "../../types/uipath";
 
-export interface ICreateTokenParams extends INodeFunctionBaseParams {
+export interface IStartJobParams extends INodeFunctionBaseParams {
 	config: {
 		authType: string;
 		instanceInfo: {
@@ -19,6 +19,7 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 		};
 		accessToken: string;
         releaseKey: string;
+		useClassicFolders: boolean;
 		orgUnitId: string;
         robotIds: string;
 		inputArguments: string;
@@ -31,6 +32,7 @@ export interface ICreateTokenParams extends INodeFunctionBaseParams {
 export const startJobNode = createNodeDescriptor({
 	type: "startJobNode",
 	defaultLabel: "Start a Job",
+	summary: "Start a process directly in the flow.",
 	fields: [
 		{
 			key: "authType",
@@ -102,12 +104,23 @@ export const startJobNode = createNodeDescriptor({
 				required: true
 			}
         },
+		{
+			key: "useClassicFolders",
+			label: "Use Classic Folders",
+			type: "toggle",
+			description: "Use API call for classic folders / Specify specific robot ID?",
+			defaultValue: false
+		},
         {
 			key: "robotIds",
 			label: "Robot IDs",
 			type: "cognigyText",
 			params: {
 				required: true
+			},
+			condition: {
+				key: "useClassicFolders",
+				value: true
 			}
         },
 		{
@@ -142,7 +155,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to Store Result",
-			defaultValue: "uiPathProcessState",
+			defaultValue: "uipath.uiPathProcessState",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -152,7 +165,7 @@ export const startJobNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to Store Result",
-			defaultValue: "uiPathProcessState",
+			defaultValue: "uipath.uiPathProcessState",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -178,6 +191,7 @@ export const startJobNode = createNodeDescriptor({
 		{ type: "field", key: "accessToken" },
 		{ type: "field", key: "releaseKey" },
 		{ type: "field", key: "orgUnitId" },
+		{ type: "field", key: "useClassicFolders" },
 		{ type: "field", key: "robotIds" },
 		{ type: "field", key: "inputArguments" },
 		{ type: "section", key: "storageOption" }
@@ -185,13 +199,14 @@ export const startJobNode = createNodeDescriptor({
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: ICreateTokenParams) => {
+	function: async ({ cognigy, config }: IStartJobParams) => {
 		const { api } = cognigy;
-		const { instanceInfo, accessToken, releaseKey, orgUnitId, robotIds, inputArguments, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
+		const { instanceInfo, accessToken, releaseKey, orgUnitId, useClassicFolders, robotIds, inputArguments, storeLocation, inputKey, contextKey, authType, onPremAuthConnection } = config;
 
 		let endpoint;
 		let tenantInfo;
 		let ids = [];
+		let data;
 		ids.push(robotIds);
 		if (authType === 'cloud') {
 			const { accountLogicalName, tenantLogicalName } = instanceInfo;
@@ -210,14 +225,25 @@ export const startJobNode = createNodeDescriptor({
 				'X-UIPATH-OrganizationUnitId': orgUnitId
             }
         };
-        const data = {
-            startInfo: {
-                ReleaseKey: releaseKey,
-                RobotIds: ids,
-                Strategy: "Specific",
-				InputArguments: JSON.stringify(inputArguments)
-              }
-		};
+        if (useClassicFolders === true) {
+			data = {
+				startInfo: {
+					ReleaseKey: releaseKey,
+					RobotIds: ids,
+					Strategy: "Specific",
+					InputArguments: JSON.stringify(inputArguments)
+				  }
+			};
+		} else {
+			data = {
+				startInfo: {
+					ReleaseKey: releaseKey,
+					Strategy: "ModernJobsCount",
+					JobsCount: 1,
+					InputArguments: JSON.stringify(inputArguments)
+				  }
+			};
+		}
 		try {
             const result: AxiosResponse <StartJob> =  await axios.post(endpoint, data, axiosConfig);
 			if (storeLocation === 'context') {

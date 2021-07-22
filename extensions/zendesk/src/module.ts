@@ -23,5 +23,9 @@ export default createExtension({
 
 	connections: [
 		zendeskConnection
-	]
+	],
+
+	options: {
+		label: "Zendesk"
+	}
 });

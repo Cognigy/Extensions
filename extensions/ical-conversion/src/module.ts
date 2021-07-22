@@ -9,5 +9,9 @@ export default createExtension({
 		iCaltoJSONviaJSONNode,
 		iCaltoJSONviaURLNode,
 		iJSONtoiCalNode
-	]
+	],
+
+	options: {
+		label: "iCal Conversion"
+	}
 });

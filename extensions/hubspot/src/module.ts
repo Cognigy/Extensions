@@ -23,5 +23,9 @@ export default createExtension({
 
 	connections: [
 		hubspotConnection
-	]
+	],
+
+	options: {
+		label: "Hubspot"
+	}
 });

@@ -3,24 +3,24 @@
   "version": "4.0.0",
   "description": "Integrates Cognigy.AI with Hubspot.",
   "main": "build/module.js",
-  "scripts": {
-    "transpile": "tsc -p .",
-    "zip": "tar cfz hubspot.tar.gz build/* package.json package-lock.json README.md icon.png",
-    "build": "npm run transpile && npm run lint && npm run zip",
-    "lint": "tslint -c tslint.json src/**/*.ts"
-  },
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz hubspot.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
   "keywords": [
     "Hubspot"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.9.0",
-    "hubspot": "^2.3.13",
-    "tslint": "^6.1.3"
+    "@cognigy/extension-tools": "^0.12.0",
+    "hubspot": "^2.3.14"
   },
   "devDependencies": {
     "@types/node": "^13.13.14",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "tslint": "^5.16.0"
   }
 }

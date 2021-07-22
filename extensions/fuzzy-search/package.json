@@ -15,7 +15,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.12.0",
     "fuse.js": "^6.4.1",
     "tslint": "^6.1.2"
   },

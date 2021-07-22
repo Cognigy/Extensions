@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		hereConnection
-	]
+	],
+
+	options: {
+		label: "Here"
+	}
 });

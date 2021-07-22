@@ -14,5 +14,9 @@ export default createExtension({
 		cloudConnection,
 		basicConnection,
 		apiKeyConnection
-	]
+	],
+
+	options: {
+		label: "Elastic Search"
+	}
 });

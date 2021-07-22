@@ -52,6 +52,8 @@ Uses the OAuth Connection and creates the required Access Token that is stored i
 
 ### Node: Get Skills
 
+Retrieves all skills for the currently logged in Abbyy Vantage user -- based on the provided access token.
+
 ```json
 {
     "abbyy": {
@@ -66,3 +68,57 @@ Uses the OAuth Connection and creates the required Access Token that is stored i
 }
 ```
 
+### Node: Run Transaction
+
+Runs an Abbyy Skill and creates a new transaction based on a `skill ID` and `file content`. Finally, it returns the new `transaction ID`:
+
+```json
+{
+    "abbyy": {
+      "run": {
+        "transactionId": "c369fb23-9844-4e8f-9ba7-23453334"
+      }
+  }
+}
+```
+
+### Node: Get Transaction
+
+After running a skill and creating a new transaction with the previous Flow Nodes, the conversation can check if the results are already available and continue based on this information.
+
+```json
+{
+  "transaction": {
+    "Transaction": {
+      "Id": "...",
+      "SkillId": "...",
+      "SkillName": "MySkillOne",
+      "Documents": [
+        {
+          "Id": "...",
+          "ExtractedData": {
+            "DocumentDefinition": {
+              "RootConcept": {
+                "Id": "root",
+                "Name": "Empty",
+                "Fields": [
+                  {
+                    "Id": "...",
+                    "Name": "Address",
+                    "Type": "String",
+                    "Cardinality": {
+                      "Min": 0,
+                      "Max": 1
+                    }
+                  },
+                  "...": "..."
+                ],
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```

@@ -50,5 +50,9 @@ export default createExtension({
 
 	connections: [
 		snowConnection
-	]
+	],
+
+	options: {
+		label: "Service Now"
+	}
 });

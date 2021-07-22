@@ -8,7 +8,7 @@ export interface IGetAccessTokenParams extends INodeFunctionBaseParams {
             clientId: string;
             clientSecret: string;
             tenantId: string;
-            scope: string;
+            resource: string;
         };
         contextKey: string;
     };
@@ -44,13 +44,13 @@ export const getAccessTokenNode = createNodeDescriptor({
     function: async ({ cognigy, config }: IGetAccessTokenParams) => {
         const { api } = cognigy;
         const { connection, contextKey } = config;
-        const { clientId, clientSecret, scope, tenantId } = connection;
+        const { clientId, clientSecret, resource, tenantId } = connection;
 
         const data = qs.stringify({
             'client_id': clientId,
             'client_secret': clientSecret,
             'grant_type': 'client_credentials',
-            'Scope': scope
+            'resource': resource
         });
 
         try {

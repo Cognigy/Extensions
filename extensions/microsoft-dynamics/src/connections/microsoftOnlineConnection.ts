@@ -7,6 +7,6 @@ export const microsoftOnlineConnection: IConnectionSchema = {
 		{ fieldName: "clientId" },
 		{ fieldName: "clientSecret" },
 		{ fieldName: "tenantId" },
-        { fieldName: "scope" }
+        { fieldName: "resource" }
 	]
 };

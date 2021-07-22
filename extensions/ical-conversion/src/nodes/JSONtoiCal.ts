@@ -145,7 +145,7 @@ export const iJSONtoiCalNode = createNodeDescriptor({
 					METHOD: "PUBLISH",
 					VEVENT: [
 						{
-							DTSTAMP: moment(input.currentTime.ISODATE).locale("en").format(dateFormat),
+							DTSTAMP: moment(input.currentTime.ISODate).locale("en").format(dateFormat),
 							DTSTART: moment(dateStart).locale("en").format(dateFormat),
 							DTEND: moment(dateEnd).locale("en").format(dateFormat),
 							UID: uuidv4(),

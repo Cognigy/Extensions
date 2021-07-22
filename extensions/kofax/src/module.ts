@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		kofaxRobotConnection
-	]
+	],
+
+	options: {
+		label: "Kofax"
+	}
 });

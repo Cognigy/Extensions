@@ -1,6 +1,7 @@
 {
     "rules": {
         "prefer-for-of": true,
+        "prefer-const": true,
         "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
         "no-var-keyword": true,
         "no-var-requires": false,

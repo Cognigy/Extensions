@@ -19,6 +19,11 @@ export interface IgetTrackingInformationParams extends INodeFunctionBaseParams {
 export const getTrackingInformationNode = createNodeDescriptor({
     type: "getTrackingInformation",
     defaultLabel: "Get Tracking Information",
+    summary: "Get the tracking status of a package.",
+    preview: {
+        key: "trackingNumber",
+        type: "text"
+    },
     fields: [
         {
             key: "apiConnection",

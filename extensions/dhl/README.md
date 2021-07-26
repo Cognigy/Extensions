@@ -36,6 +36,7 @@ This node allows the user to find a nearby DHL location. This can either be done
 - Search Type: The type of search which should be used to find DHL locations. `Geo Coordinates` allows the designer to use the longitude and latitude of the user in oder to find the nearest locations. `Address` allows the street address to be used.
 - Search Radius in Meters: The search radius for the query. The maximum search radius is 25000 meters. 
 - Limit: The amount of results which should be returned. Maximum is 50.
+- Specify Services: If you would like to have your search only include certain services then you can use this function to filter based on these services. You can add as many services as you want to this criteria.
 - Where to Store the Result: The selection, where to store the list (either in `context` or `input`)
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)

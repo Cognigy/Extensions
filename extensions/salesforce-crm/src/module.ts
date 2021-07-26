@@ -35,5 +35,9 @@ export default createExtension({
 
 	connections: [
 		salesforceConnection
-	]
+	],
+
+	options: {
+		label: "Salesforce CRM"
+	}
 });

@@ -208,7 +208,7 @@ export const getConversationNode = createNodeDescriptor({
 			throw new Error(`${me}: Please supply one or both of: User ID and/or Session ID.`);
 
 
-		const reqUrl = `${odataBaseUrl}/Conversations?${odataPredicates.join("&")}&apikey=${apiKey}`;
+		const reqUrl = `${odataBaseUrl}/v2.0/ChatHistory?${odataPredicates.join("&")}&apikey=${apiKey}`;
 		// Log the URL, but obscure a chunk of the apiKey:
 		LOG("Request URL:" + reqUrl.substring(0, reqUrl.length - 20) + " <...apiKey>");
 
@@ -302,17 +302,17 @@ export const getConversationNode = createNodeDescriptor({
 						td { padding: 8; }
 						tr.bot { background: #DDDDFF; }
 						tr.user {}
-						td.user-time { font-weight: bold; }
-						td.bot-time { font-weight: bold; }
+						td.user-time {}
+						td.bot-time {}
 						td.user-source {}
 						td.bot-source {}
-						td.user-text {}
-						td.bot-text { font-weight: bold; }
+						td.user-text { font-weight: bold; }
+						td.bot-text {}
 					</style>
 				`;
 
 			// Default time format, can be over-ridden by user via 'ci.GetConversationTimeFormat':
-			const timeFormat = cognigy.input.GetConversationStylesTimeFormat || '[(]HH:mm:ss[)]';
+			const timeFormat = cognigy.input.GetConversationTimeFormat || '[(]HH:mm:ss[)]';
 
 			const htmlContent: string[] = [];
 			//
@@ -334,7 +334,7 @@ export const getConversationNode = createNodeDescriptor({
 					const sourceShow = (entry.source === lastSource) ? '' : entry.source;
 					lastSource = entry.source;
 
-					// NOTE: NO WHITESPACE HERE :
+					// NOTE: ENSURE NO WHITESPACE BETWEEN TAGS HERE :
 					htmlContent.push(`<tr class='${entry.source}'>`);
 					htmlContent.push(`<td class='${entry.source}-time'>${time.format(timeFormat)}</td>`);
 					htmlContent.push(`<td class='${entry.source}-source'>${sourceShow}</td>`);
@@ -353,15 +353,14 @@ export const getConversationNode = createNodeDescriptor({
 
 
 		if (config.storeLocation === 'context') {
-			cognigy.api.addToContext(contextKey, returnVal, "simple");
+			cognigy.context[contextKey] = returnVal;
 		} else {
 			cognigy.input[inputKey] = returnVal;
 		}
 
 		if (storeLocation === "context") {
-			api.addToContext(contextKey, returnVal, "simple");
+			cognigy.context[contextKey] = returnVal;
 		} else {
-			// @ts-ignore
 			cognigy.input[inputKey] = returnVal;
 		}
 	}

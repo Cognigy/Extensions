@@ -40,8 +40,9 @@ async function TEST_getConversationNode(): Promise<void> {
 
             odataBaseUrl: 'https://odata-au-02.cognigy.ai',
             // 1 or both of these next 2 must be non-blank:
-            userId: 'p.nann@cognigy.com',
-            sessionId: 'fffce495-a071-49da-800f-e7f160519a0d',
+            userId: 'tester@cognigy.com',
+            sessionId: 'bcb8aee5-8cba-45fb-81f2-aad5d8bfa3c6',
+            // sessionId: null,
             outputType: 'json',
             tzOffset: '-10',
 

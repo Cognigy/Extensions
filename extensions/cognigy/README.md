@@ -131,11 +131,11 @@ Note that there are styles for the table itself, and then for each one of bot/us
     td { padding: 8; }
     tr.bot { background: #DDDDFF; }
     tr.user {}
-    td.user-time { font-weight: bold; }
-    td.bot-time { font-weight: bold; }
+    td.user-time {}
+    td.bot-time {}
     td.user-source {}
     td.bot-source {}
-    td.user-text {}
+    td.user-text { font-weight: bold; }
     td.bot-text {}
 </style>
 ```

@@ -24,3 +24,4 @@ All exposed Flow Nodes of this Extension follow the [Zendesk API](https://develo
   - [Update Ticket](https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#update-ticket)
 - *Help Center*
   - [Search Articles](https://developer.zendesk.com/api-reference/help_center/help-center-api/search/)
+  - [Get Categories](https://developer.zendesk.com/api-reference/help_center/help-center-api/categories/)

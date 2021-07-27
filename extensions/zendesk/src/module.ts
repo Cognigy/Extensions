@@ -1,5 +1,6 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { zendeskConnection } from "./connections/zendeskConnection";
+import { getCategoriesNode } from "./nodes/helpCenter/getCategories";
 import { onFoundArticles, onNotFoundArticles, searchArticlesNode } from "./nodes/helpCenter/searchArticles";
 import { createTicketNode } from "./nodes/support/createTicket";
 import { getTicketNode, onFoundTicket, onNotFoundTicket } from "./nodes/support/getTicket";
@@ -18,7 +19,9 @@ export default createExtension({
 
 		searchArticlesNode,
 		onFoundArticles,
-		onNotFoundArticles
+		onNotFoundArticles,
+
+		getCategoriesNode
 	],
 
 	connections: [

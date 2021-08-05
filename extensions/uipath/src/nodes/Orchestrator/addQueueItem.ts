@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AddTransactionItem } from "../../types/uipath";
+import { AddTransactionItem } from "../../../types/uipath";
 
 export interface IAddQueueItem extends INodeFunctionBaseParams {
 	config: {

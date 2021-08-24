@@ -145,7 +145,7 @@ export const patternMatcher = (ci: INLProperties, patterns: string[], compoundGr
                             break;
 
                         default:
-                            originalSlot = ci.slots[pattern.slots[i - 1]].find(e => (e.synonym) ? e.synonym === matches[i].toLowerCase() : false);
+                            originalSlot = ci.slots[pattern.slots[i - 1]].find(e => (e.synonym) ? e.synonym.toLowerCase() === matches[i].toLowerCase() : false);
                     }
 
                     // create compound groups

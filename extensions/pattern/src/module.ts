@@ -6,5 +6,7 @@ export default createExtension({
 		matchPatternNode
 	],
 
-	connections: []
+	options: {
+		label: "Patterns"
+	}
 });

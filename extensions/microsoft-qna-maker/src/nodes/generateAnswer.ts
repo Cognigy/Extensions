@@ -151,7 +151,7 @@ export const generateAnswerNode = createNodeDescriptor({
 				}
 			});
 
-			if (response.data?.answers?.id === -1) {
+			if (response.data?.answers[0]?.id === -1) {
 				const onNotFoundAnswerChild = childConfigs.find(child => child.type === "onNotFoundAnswer");
 				api.setNextNode(onNotFoundAnswerChild.id);
 

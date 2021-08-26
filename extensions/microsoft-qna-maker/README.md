@@ -56,12 +56,12 @@ This path is executed, if no article/answer was found for the given input text:
 {
     "answers": [
         {
-        "questions": [],
-        "answer": "No good match found in KB.",
-        "score": 0,
-        "id": -1,
-        "isDocumentText": false,
-        "metadata": []
+          "questions": [],
+          "answer": "No good match found in KB.",
+          "score": 0,
+          "id": -1,
+          "isDocumentText": false,
+          "metadata": []
         }
   ],
 }

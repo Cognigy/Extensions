@@ -76,7 +76,7 @@ export const generateAnswerNode = createNodeDescriptor({
 		},
 		{
 			key: "inputKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Input Key to store Result",
 			defaultValue: "answers",
 			condition: {
@@ -86,7 +86,7 @@ export const generateAnswerNode = createNodeDescriptor({
 		},
 		{
 			key: "contextKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Context Key to store Result",
 			defaultValue: "answers",
 			condition: {

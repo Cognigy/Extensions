@@ -16,5 +16,9 @@ export default createExtension({
 	connections: [
 		smtpConnection,
 		cognigyApiConnection
-	]
+	],
+
+	options: {
+		label: "Cognigy Customs"
+	}
 });

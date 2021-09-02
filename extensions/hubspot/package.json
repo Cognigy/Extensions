@@ -15,7 +15,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.9.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "hubspot": "^2.3.13",
     "tslint": "^6.1.3"
   },

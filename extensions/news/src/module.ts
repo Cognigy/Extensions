@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		apiKeyConnection
-	]
+	],
+
+	options: {
+		label: "News"
+	}
 });

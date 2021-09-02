@@ -13,5 +13,9 @@ export default createExtension({
 
 	connections: [
 		apiKeyConnection
-	]
+	],
+
+	options: {
+		label: "Google Maps"
+	}
 });

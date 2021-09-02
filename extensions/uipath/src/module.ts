@@ -35,5 +35,9 @@ export default createExtension({
 	connections: [
 		uiPathOnPremAccessData,
 		uiPathInstanceData,
-	]
+	],
+
+	options: {
+		label: "UiPath Orchestrator"
+	}
 });

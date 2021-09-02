@@ -17,5 +17,9 @@ export default createExtension({
 
 	connections: [
 		vonageConnection
-	]
+	],
+
+	options: {
+		label: "Vonage"
+	}
 });

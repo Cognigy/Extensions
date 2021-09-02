@@ -17,7 +17,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.1",
     "qs": "^6.10.1",
     "tslint": "^6.1.2"

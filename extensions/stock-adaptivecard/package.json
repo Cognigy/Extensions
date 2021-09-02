@@ -17,7 +17,7 @@
   "author": "Cognigy GmbH",
   "license": "ISC",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.11.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.1"
   },
   "devDependencies": {

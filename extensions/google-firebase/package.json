@@ -25,7 +25,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
+		"@cognigy/extension-tools": "^0.13.0",
 		"firebase": "^8.2.3"
 	}
 }

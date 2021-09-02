@@ -10,5 +10,9 @@ export default createExtension({
 
 	connections: [
 		slackConnection
-	]
+	],
+
+	options: {
+		label: "Slack"
+	}
 });

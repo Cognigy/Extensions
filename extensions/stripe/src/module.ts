@@ -67,5 +67,9 @@ export default createExtension({
 
 	connections: [
 		stripeConnection
-	]
+	],
+
+	options: {
+		label: "Stripe"
+	}
 });

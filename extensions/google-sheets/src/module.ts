@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		googleCloudConnection
-	]
+	],
+
+	options: {
+		label: "Google Sheets"
+	}
 });

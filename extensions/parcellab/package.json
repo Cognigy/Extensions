@@ -15,11 +15,10 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.19.2"
   },
   "devDependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
     "@types/axios": "^0.14.0",
     "@types/node": "^13.13.4",
     "tslint": "^5.16.0",

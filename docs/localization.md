@@ -19,31 +19,31 @@ Localization supports the replacement of simple strings with a JSON object like 
 }
 ```
 
-where the "default" field is mandatory and the other ones are optional, so you can e.g. choose to have an English and a German Localization only
+The "default" property is mandatory and the other ones are optional, so you can e.g. choose to have an English and a German Localization only.
 
 ## Where is Localization visible?
 
-Localization will be visible for every user of the Cognigy AI GUI, therefore a Node with a German Localization will be displayed in German for every user with a GUI language of German.
+Localization will be visible for every user of the Cognigy.AI User Interface (UI), therefore a Node with a German Localization will be displayed in German for every user that has their UI set to German.
 
-Endusers won't see a difference when communicating with the localized Node
+End users won't see a difference when communicating with the localized Node.
 
 ## What can be localized?
 
-Localization doesn't work for all fields. Right now these fields are supported in a Descriptor:
+Localization doesn't work for all properties. Right now these properties are supported in a Descriptor:
 
 1. defaultLabel
 2. summary
 
-These fields are supported in a Node Section:
+These properties are supported in a Node Section:
 
 1. label
 
-These fields are supported in a Node Field:
+These properties are supported in a Node Field:
 
 1. label
 2. description
 
-If a Node Field is of type "select" then it's also supported in the label field of the options in the params
+If a Node Field is of type "select" then it's also supported in the label property of the options in the params
 
 ## Localization Example
 

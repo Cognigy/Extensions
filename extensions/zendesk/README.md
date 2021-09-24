@@ -4,6 +4,8 @@ Integrates Cognigy.AI with the Zendesk Ticketing System (https://www.zendesk.com
 
 ## Connection
 
+**Zendesk**:
+
 - **username**
   - The username of the Zendesk user
 - **password**
@@ -11,6 +13,13 @@ Integrates Cognigy.AI with the Zendesk Ticketing System (https://www.zendesk.com
 - **subdomain**
   - e.g. 'cognigy' or 'my-company'
   - One can find this in the company Zendesk URL, such as cognigy.zendesk.com
+
+**Zendesk Chat**:
+
+- **client_id**
+  - The Zendesk Chat client id
+- **client_secret**
+  - The Zendesk Chat client secret
 
 ## Flow Nodes
 
@@ -25,3 +34,5 @@ All exposed Flow Nodes of this Extension follow the [Zendesk API](https://develo
 - *Help Center*
   - [Search Articles](https://developer.zendesk.com/api-reference/help_center/help-center-api/search/)
   - [Get Categories](https://developer.zendesk.com/api-reference/help_center/help-center-api/categories/)
+- *Live Chat*
+  - [Check Agent Availability](https://developer.zendesk.com/api-reference/live-chat/real-time-chat-api/rest/#get-agent-status-counts)

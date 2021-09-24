@@ -1,7 +1,7 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { zendeskConnection } from "./connections/zendeskConnection";
-import { zendeskOAuthConnection } from "./connections/zendeskOAuthConnection";
-import { checkLiveAgentAvailabilityNode } from "./nodes/liveAgent/checkLiveAgentAvailability";
+import { zendeskChatConnection } from "./connections/zendeskChatConnection";
+import { checkLiveAgentAvailabilityNode, onAgentAvailable, onNoAgentAvailable } from "./nodes/liveAgent/checkLiveAgentAvailability";
 import { getCategoriesNode } from "./nodes/helpCenter/getCategories";
 import { onFoundArticles, onNotFoundArticles, searchArticlesNode } from "./nodes/helpCenter/searchArticles";
 import { createTicketNode } from "./nodes/support/createTicket";
@@ -25,12 +25,14 @@ export default createExtension({
 
 		getCategoriesNode,
 
-		checkLiveAgentAvailabilityNode
+		checkLiveAgentAvailabilityNode,
+		onAgentAvailable,
+		onNoAgentAvailable
 	],
 
 	connections: [
 		zendeskConnection,
-		zendeskOAuthConnection
+		zendeskChatConnection
 	],
 
 	options: {

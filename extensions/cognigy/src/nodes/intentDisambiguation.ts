@@ -54,7 +54,11 @@ export const intentDisambiguationNode = createNodeDescriptor({
 					{
 						label: "Plain Text",
 						value: "plainText"
-					}
+					},
+					{
+						label: "Data Only",
+						value: "dataOnly"
+					},
 				]
 			},
 			defaultValue: "quickReplies"

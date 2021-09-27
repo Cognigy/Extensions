@@ -146,7 +146,7 @@ Similarly, the time format can be altered via ```ci.GetConversationTimeFormat```
 
 ## Node: Intent Disambiguation
 
-This node reviews the intent mapper result from the Cognigy NLU and finds intents that are within the speicified score delta. These intents are recorded and saved in order of similarity to the Cognigy Context. The disambiguation sentences for each intent are also posted back to the user as quick replies with a specified `text` message. A maximum of **three** disambiguation sentences in addition to the main intent disambiguation sentence will be posted back as quick replies.
+This node reviews the intent mapper result from the Cognigy NLU and finds intents that are within the specified score delta. These intents are recorded and saved in order of similarity to the Cognigy Context. The disambiguation sentences for each intent can also posted back to the user as quick replies, a list or plaintext with a specified `text` message. A maximum of **three** disambiguation sentences in addition to the main intent disambiguation sentence will be posted back.
 
 The stored response looks like the following:
 
@@ -192,6 +192,15 @@ The stored response looks like the following:
     }
   }
 ```
+### Node: Display Options
+
+Here is a brief summary of the additional options. 
+
+* **Disambiguation Question**: The sentence which should be shown when triggering the node. In the case of 'Plain Text' it will be the first part of the sentence.
+
+* **Reply Type**: Determines the type of message to be displayed to the user. This can either be 'Quick Replies', 'List', 'Plain Text' or 'Data Only'. 'Data Only' only adds the data to the context or input without sending a message to the user. 
+
+* **Punctuation**: If you choose 'Plain Text' as a reply type, the answer will be displayed as a complete sentence. With this field you can determine how the sentence should end. 
 
 **Important**
 

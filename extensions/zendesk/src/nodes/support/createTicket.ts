@@ -18,12 +18,24 @@ export interface ICreateTicketParams extends INodeFunctionBaseParams {
 }
 export const createTicketNode = createNodeDescriptor({
 	type: "createTicket",
-	defaultLabel: "Create Ticket",
-	summary: "Creates a new support ticket",
+	defaultLabel: {
+		default: "Create Ticket",
+		deDE: "Ticket erstellen",
+		esES: "Crear Ticket"
+	},
+	summary: {
+		default: "Creates a new support ticket",
+		deDE: "Erstellt ein neues Support Ticket",
+		esES: "Crea un nuevo ticket de soporte"
+	},
 	fields: [
 		{
 			key: "connection",
-			label: "Zendesk Connection",
+			label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
 			type: "connection",
 			params: {
 				connectionType: "zendesk",
@@ -32,7 +44,11 @@ export const createTicketNode = createNodeDescriptor({
 		},
 		{
 			key: "subject",
-			label: "Subject",
+			label: {
+				default: "Subject",
+				deDE: "Betreff",
+				esES: "Tema"
+			},
 			type: "cognigyText",
 			description: "The subject of the new support ticket",
 			params: {
@@ -41,7 +57,11 @@ export const createTicketNode = createNodeDescriptor({
 		},
 		{
 			key: "description",
-			label: "Description",
+			label: {
+				default: "Description",
+				deDE: "Beschreibung",
+				esES: "Descripción"
+			},
 			type: "cognigyText",
 			description: "The description of the new support ticket",
 			params: {
@@ -50,7 +70,11 @@ export const createTicketNode = createNodeDescriptor({
 		},
 		{
 			key: "priority",
-			label: "Priority",
+			label: {
+				default: "Priority",
+				deDE: "Priorität",
+				esES: "Prioridad"
+			},
 			type: "select",
 			description: "The priority of the new support ticket",
 			defaultValue: "normal",
@@ -75,7 +99,11 @@ export const createTicketNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
 			defaultValue: "input",
 			params: {
 				options: [
@@ -94,7 +122,11 @@ export const createTicketNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: {
+				default: "Input Key to store Result",
+				deDE: "Input Schlüssel",
+				esES: "Input Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
@@ -104,7 +136,11 @@ export const createTicketNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: {
+				default: "Context Key to store Result",
+				deDE: "Context Schlüssel",
+				esES: "Context Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
@@ -115,7 +151,11 @@ export const createTicketNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "storage",
-			label: "Storage Option",
+			label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
 			defaultCollapsed: true,
 			fields: [
 				"storeLocation",

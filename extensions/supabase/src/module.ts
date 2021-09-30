@@ -1,7 +1,8 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { supabaseConnection } from "./connections/supabaseConnection";
-import { insertNode } from "./nodes/insert";
-import { selectNode } from "./nodes/select";
+import { insertNode } from "./nodes/database/insert";
+import { selectNode } from "./nodes/database/select";
+import { uploadNode } from "./nodes/storage/upload";
 
 export default createExtension({
 
@@ -11,7 +12,8 @@ export default createExtension({
 
 	nodes: [
 		selectNode,
-		insertNode
+		insertNode,
+		uploadNode
 	],
 
 	options: {

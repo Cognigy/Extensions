@@ -16,7 +16,7 @@ export interface IInsertParams extends INodeFunctionBaseParams {
 }
 export const insertNode = createNodeDescriptor({
     type: "insert",
-    defaultLabel: "Insert",
+    defaultLabel: "Insert (Database)",
     summary: "Insert a new row to a database table",
     fields: [
         {

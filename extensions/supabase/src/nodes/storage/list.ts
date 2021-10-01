@@ -8,6 +8,7 @@ export interface IListParams extends INodeFunctionBaseParams {
             supabaseKey: string;
         }
         bucket: string;
+        path: string;
         limit: number;
         offset: number;
         useSort: boolean;
@@ -40,6 +41,12 @@ export const listNode = createNodeDescriptor({
             params: {
                 required: true
             }
+        },
+        {
+            key: "path",
+            label: "Path",
+            type: "cognigyText",
+            description: "The path of the folder that should be listed"
         },
         {
             key: "limit",
@@ -149,6 +156,7 @@ export const listNode = createNodeDescriptor({
             label: "Advanced",
             defaultCollapsed: true,
             fields: [
+                "path",
                 "limit",
                 "offset",
                 "useSort",
@@ -168,7 +176,7 @@ export const listNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IListParams) => {
         const { api } = cognigy;
-        const { connection, bucket, limit, offset, useSort, sortColumn, sortOrder, storeLocation, contextKey, inputKey } = config;
+        const { connection, bucket, path, limit, offset, useSort, sortColumn, sortOrder, storeLocation, contextKey, inputKey } = config;
         const { supabaseKey, supabaseUrl } = connection;
 
         try {
@@ -179,7 +187,7 @@ export const listNode = createNodeDescriptor({
                 const { data, error } = await supabase
                     .storage
                     .from(bucket)
-                    .list(undefined, {
+                    .list(path, {
                         limit,
                         offset,
                         sortBy: {
@@ -198,7 +206,7 @@ export const listNode = createNodeDescriptor({
                 const { data, error } = await supabase
                     .storage
                     .from(bucket)
-                    .list(undefined, {
+                    .list(path, {
                         limit,
                         offset
                     });

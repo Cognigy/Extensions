@@ -17,7 +17,7 @@ export interface ISelectParams extends INodeFunctionBaseParams {
 }
 export const selectNode = createNodeDescriptor({
 	type: "select",
-	defaultLabel: "Select",
+	defaultLabel: "Select (Database)",
 	summary: "Select rows from a database table",
 	fields: [
 		{

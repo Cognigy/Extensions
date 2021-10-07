@@ -5,9 +5,9 @@ export const googleFirebaseConnection: IConnectionSchema = {
 	label: "Google Firebase Project Credentials",
 	fields: [
 		{ fieldName: "apiKey" },
-		{ fieldName: "projectId" },
-		{ fieldName: "databaseName" },
-		{fieldName: "bucket" }
+		{ fieldName: "authDomain" },
+		{ fieldName: "databaseURL" },
+		{ fieldName: "storageBucket" }
 
 	]
 };

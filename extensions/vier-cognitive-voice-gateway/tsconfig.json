@@ -1,0 +1,13 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "build",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "watch": false,
+    "strict": false,
+  }
+}

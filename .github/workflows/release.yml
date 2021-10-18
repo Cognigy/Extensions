@@ -24,13 +24,13 @@ jobs:
           INPUT_SCHEMA: ../../metadata/schema.json
           INPUT_JSONS: ../../metadata/extensions.json
         
-      - uses: actions/create-release@v1
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          tag_name: ${{ steps.semantic_release_info.outputs.git_tag }}
-          release_name: ${{ steps.semantic_release_info.outputs.git_tag }}
-          body: ${{ steps.semantic_release_info.outputs.notes }}
-          draft: false
-          prerelease: false
+  #    - uses: actions/create-release@v1
+  #    - name: Create GitHub Release
+  #      env:
+  #        GITHUB_TOKEN: ${{ github.token }}
+  #      with:
+  #        tag_name: ${{ steps.semantic_release_info.outputs.git_tag }}
+  #        release_name: ${{ steps.semantic_release_info.outputs.git_tag }}
+  #        body: ${{ steps.semantic_release_info.outputs.notes }}
+  #        draft: false
+  #        prerelease: false

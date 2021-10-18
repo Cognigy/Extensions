@@ -13,24 +13,22 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  verify-json-validation:
+  updated-extensions-json:
     runs-on: ubuntu-latest
     steps:
 
+      # Convert the icon.png to base64 string
+      - uses: frostebite/File-To-Base64@master
+        id: base64Config
+        with:
+         # will create base64 in variable: ${{ steps.base64Config.outputs.base64 }}
+          filePath: ./extensions/deepl/icon.png
+
+      # Validate the updated extensions.json file
       - uses: actions/checkout@v2
       - name: Validate JSON
         uses: docker://orrosenblatt/validate-json-action:latest
         env:
           INPUT_SCHEMA: ./metadata/schema.json
           INPUT_JSONS: ./metadata/extensions.json
-        
-  #    - uses: actions/create-release@v1
-  #    - name: Create GitHub Release
-  #      env:
-  #        GITHUB_TOKEN: ${{ github.token }}
-  #      with:
-  #        tag_name: ${{ steps.semantic_release_info.outputs.git_tag }}
-  #        release_name: ${{ steps.semantic_release_info.outputs.git_tag }}
-  #        body: ${{ steps.semantic_release_info.outputs.notes }}
-  #        draft: false
-  #        prerelease: false
+

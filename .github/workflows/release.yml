@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Release Extension
 
 # Controls when the workflow will run
 on:
@@ -21,8 +21,8 @@ jobs:
       - name: Validate JSON
         uses: docker://orrosenblatt/validate-json-action:latest
         env:
-          INPUT_SCHEMA: ../../metadata/schema.json
-          INPUT_JSONS: ../../metadata/extensions.json
+          INPUT_SCHEMA: ./metadata/schema.json
+          INPUT_JSONS: ./metadata/extensions.json
         
   #    - uses: actions/create-release@v1
   #    - name: Create GitHub Release

@@ -30,3 +30,18 @@ export const getGoogleMapsLocationFromGeocodes = async (key: string, searchquery
 		throw new Error(error);
 	}
 };
+
+export const getDirections = async (key: string, origin: string, destination: string): Promise<any> => {
+	try {
+		const response = await axios({
+			method: 'get',
+			url: `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&key=${key}`
+		});
+
+		return {
+			location: response.data.routes
+		};
+	} catch (error) {
+		throw new Error(error);
+	}
+};

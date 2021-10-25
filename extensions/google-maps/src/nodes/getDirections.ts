@@ -8,6 +8,7 @@ export interface IGetDirectionsParams extends INodeFunctionBaseParams {
         };
         origin: string;
         destination: string;
+        mode: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -16,6 +17,7 @@ export interface IGetDirectionsParams extends INodeFunctionBaseParams {
 export const getDirectionsNode = createNodeDescriptor({
     type: "getDirections",
     defaultLabel: "Get Directions",
+    summary: "Returns instructions for a requested direction",
     preview: {
         key: "destination",
         type: "text"
@@ -34,6 +36,7 @@ export const getDirectionsNode = createNodeDescriptor({
             key: "origin",
             label: "Origin",
             type: "cognigyText",
+            description: "The address such as Speditionstraße 1, 40221 Düsseldorf",
             params: {
                 required: true
             }
@@ -42,8 +45,36 @@ export const getDirectionsNode = createNodeDescriptor({
             key: "destination",
             label: "Destination",
             type: "cognigyText",
+            description: "The address such as Speditionstraße 1, 40221 Düsseldorf",
             params: {
                 required: true
+            }
+        },
+        {
+            key: "mode",
+            label: "Mode",
+            type: "select",
+            defaultValue: "WALKING",
+            params: {
+                required: true,
+                options: [
+                    {
+                        value: "DRIVING",
+                        label: "Driving"
+                    },
+                    {
+                        value: "WALKING",
+                        label: "Walking"
+                    },
+                    {
+                        value: "BICYCLING",
+                        label: "Bicycling"
+                    },
+                    {
+                        value: "TRANSIT",
+                        label: "Transit"
+                    }
+                ]
             }
         },
         {
@@ -110,6 +141,7 @@ export const getDirectionsNode = createNodeDescriptor({
         { type: "field", key: "connection" },
         { type: "field", key: "origin" },
         { type: "field", key: "destination" },
+        { type: "field", key: "mode" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -117,12 +149,12 @@ export const getDirectionsNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IGetDirectionsParams) => {
         const { api } = cognigy;
-        let { connection, origin, destination, storeLocation, inputKey, contextKey } = config;
+        let { connection, origin, destination, mode, storeLocation, inputKey, contextKey } = config;
         const { key } = connection;
 
         try {
 
-            const routes = await getDirections(key, origin, destination);
+            const routes = await getDirections(key, origin, destination, mode);
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, routes, "simple");

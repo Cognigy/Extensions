@@ -31,11 +31,11 @@ export const getGoogleMapsLocationFromGeocodes = async (key: string, searchquery
 	}
 };
 
-export const getDirections = async (key: string, origin: string, destination: string): Promise<any> => {
+export const getDirections = async (key: string, origin: string, destination: string, mode: string): Promise<any> => {
 	try {
 		const response = await axios({
 			method: 'get',
-			url: `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&key=${key}`
+			url: `https://maps.googleapis.com/maps/api/directions/json?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=${mode}&key=${key}`
 		});
 
 		return {

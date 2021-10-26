@@ -1,14 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
 
 import { dbConnection } from "./connections/dbConnection";
-import { onError, onSucces, translateTextNode } from "./nodes/translateText";
+import { getDirectionsNode } from "./nodes/getDirections";
 
 
 export default createExtension({
 	nodes: [
-		translateTextNode,
-		onSucces,
-		onError
+		getDirectionsNode
 	],
 
 	connections: [

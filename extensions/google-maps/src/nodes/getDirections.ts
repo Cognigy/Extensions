@@ -54,24 +54,24 @@ export const getDirectionsNode = createNodeDescriptor({
             key: "mode",
             label: "Mode",
             type: "select",
-            defaultValue: "WALKING",
+            defaultValue: "walking",
             params: {
                 required: true,
                 options: [
                     {
-                        value: "DRIVING",
+                        value: "driving",
                         label: "Driving"
                     },
                     {
-                        value: "WALKING",
+                        value: "walking",
                         label: "Walking"
                     },
                     {
-                        value: "BICYCLING",
+                        value: "bicycling",
                         label: "Bicycling"
                     },
                     {
-                        value: "TRANSIT",
+                        value: "transit",
                         label: "Transit"
                     }
                 ]

@@ -2083,6 +2083,26 @@
                     "tags": []
                 }
             ]
+        },
+        {
+            "name": "patterns",
+            "label": "Patterns",
+            "version": "4.0.1",
+            "description": "Pattern matching Node for Cognigy.AI",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/patterns401/patterns.tar.gz",
+            "tags": [
+                "pattern",
+                "matching"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "matchPattern",
+                    "defaultLabel": "Match Pattern",
+                    "description": "Match Pattern",
+                    "tags": []
+                }
+            ]
         }
     ]
 }

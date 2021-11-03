@@ -1,6 +1,6 @@
 {
   "name": "patterns",
-  "version": "4.0.1",
+  "version": "4.0.3",
   "description": "Pattern matching Node for Cognigy.AI",
   "main": "build/module.js",
   "scripts": {

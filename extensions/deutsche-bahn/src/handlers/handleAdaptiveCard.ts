@@ -5,7 +5,7 @@ export async function handleAdaptiveCard(data: any): Promise<any[]> {
     let transit_steps: any[] = [
         {
             "type": "Image",
-            "url": "https://logosmarken.com/wp-content/uploads/2021/03/Deutsche-Bahn-Logo.png",
+            "url": "https://cognigydemoimages.blob.core.windows.net/images/Deutsche-Bahn-Logo.png",
             "size": "Medium",
             "horizontalAlignment": "Left"
         }

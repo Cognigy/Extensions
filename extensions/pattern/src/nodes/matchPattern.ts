@@ -64,8 +64,6 @@ export const matchPatternNode = createNodeDescriptor({
 		let { input } = cognigy;
 		const { patterns, compoundGroupName, alternateInput, detailedCompoundSlots, createNewSlots, tagExistingSlots } = config;
 
-		const result = patternMatcher(input, patterns, compoundGroupName, detailedCompoundSlots, tagExistingSlots, createNewSlots, alternateInput);
-
-		input = result;
+		patternMatcher(input, patterns, compoundGroupName, detailedCompoundSlots, tagExistingSlots, createNewSlots, alternateInput);
 	}
 });

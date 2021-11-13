@@ -1,10 +1,13 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-
+import { handleQRCode } from "../handlers/handleQRCode";
 
 export interface IShowTicketParams extends INodeFunctionBaseParams {
 	config: {
 		origin: string;
 		destination: string;
+		price: string;
+		ticketType: string;
+		ticketUrl: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -33,6 +36,33 @@ export const showTicketNode = createNodeDescriptor({
 			label: "Destination",
 			type: "cognigyText",
 			description: "The transit station such as Berlin Hbf",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "price",
+			label: "Price",
+			type: "cognigyText",
+			description: "The price of the ticket",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "ticketType",
+			label: "Ticket Type",
+			type: "cognigyText",
+			defaultValue: "Sparpreis",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "ticketUrl",
+			label: "Ticket URL",
+			type: "cognigyText",
+			defaultValue: "https://cognigydemoimages.blob.core.windows.net/images/online-ticket.pdf",
 			params: {
 				required: true
 			}
@@ -92,6 +122,9 @@ export const showTicketNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "origin" },
 		{ type: "field", key: "destination" },
+		{ type: "field", key: "price" },
+		{ type: "field", key: "ticketType" },
+		{ type: "field", key: "ticketUrl" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -99,325 +132,319 @@ export const showTicketNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IShowTicketParams) => {
 		const { api } = cognigy;
-		let {  origin, destination, storeLocation, inputKey, contextKey } = config;
+		let { origin, destination, price, ticketType, ticketUrl, storeLocation, inputKey, contextKey } = config;
 
 		try {
 
-				const outputData = {
-					"_plugin": {
-						"type": "adaptivecards",
-						"payload": {
-							"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-							"type": "AdaptiveCard",
-							"version": "1.0",
-							"body": [
-								{
-									"type": "Container",
-									"style": "emphasis",
-									"items": [
-										{
-											"type": "ColumnSet",
-											"columns": [
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "TextBlock",
-															"size": "Large",
-															"weight": "Bolder",
-															"text": "Online Ticket",
-															"wrap": true,
-															"style": "heading"
-														}
-													],
-													"width": "stretch"
-												},
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "Image",
-															"url": "https://cognigydemoimages.blob.core.windows.net/images/Deutsche-Bahn-Logo.png",
-															"height": "30px",
-															"altText": "Pending"
-														}
-													],
-													"width": "auto"
-												}
-											]
-										}
-									],
-									"bleed": true
-								},
-								{
-									"type": "Container",
-									"items": [
-										{
-											"type": "ColumnSet",
-											"columns": [
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "TextBlock",
-															"size": "ExtraLarge",
-															"text": "ICE Fahrkarte",
-															"wrap": true,
-															"style": "heading"
-														}
-													],
-													"width": "stretch"
-												},
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "ActionSet",
-															"actions": [
-																{
-																	"type": "Action.OpenUrl",
-																	"title": "Download Ticket",
-																	"url": "https://cognigydemoimages.blob.core.windows.net/images/online-ticket.pdf"
-																}
-															]
-														}
-													],
-													"width": "auto"
-												}
-											]
-										},
-										{
-											"type": "ColumnSet",
-											"columns": [
-												{
-													"type": "Column",
-													"width": "stretch",
-													"items": [
-														{
-															"type": "ColumnSet",
-															"columns": [
-																{
-																	"type": "Column",
-																	"width": "stretch",
-																	"items": [
-																		{
-																			"type": "TextBlock",
-																			"text": "Halt",
-																			"wrap": true
-																		},
-																		{
-																			"type": "TextBlock",
-																			"text": origin,
-																			"wrap": true
-																		},
-																		{
-																			"type": "TextBlock",
-																			"text": destination,
-																			"wrap": true
-																		}
-																	]
-																},
-																{
-																	"type": "Column",
-																	"width": "stretch",
-																	"items": [
-																		{
-																			"type": "TextBlock",
-																			"text": "Zeit",
-																			"wrap": true
-																		},
-																		{
-																			"type": "TextBlock",
-																			"text": "19.02.2021",
-																			"wrap": true
-																		},
-																		{
-																			"type": "TextBlock",
-																			"text": "19.02",
-																			"wrap": true
-																		}
-																	]
-																},
-																{
-																	"type": "Column",
-																	"width": "stretch",
-																	"items": [
-																		{
-																			"type": "TextBlock",
-																			"text": "Zeit",
-																			"wrap": true
-																		},
-																		{
-																			"type": "TextBlock",
-																			"text": "7",
-																			"wrap": true
-																		}
-																	]
-																}
-															]
-														}
-													]
-												},
-												{
-													"type": "Column",
-													"width": "122px",
-													"items": [
-														{
-															"type": "Image",
-															"url": "https://cognigydemoimages.blob.core.windows.net/images/qr-code.png",
-															"size": "Large",
-															"width": "171px"
-														}
-													]
-												}
-											]
-										},
-										{
-											"type": "TextBlock",
-											"spacing": "Small",
-											"size": "Small",
-											"weight": "Bolder",
-											"text": "[ER-13052](https://adaptivecards.io)",
-											"wrap": true
-										}
-									]
-								},
-								{
-									"type": "Container",
-									"spacing": "Large",
-									"style": "emphasis",
-									"items": [
-										{
-											"type": "ColumnSet",
-											"columns": [
-												{
-													"type": "Column",
-													"spacing": "Large",
-													"items": [
-														{
-															"type": "TextBlock",
-															"weight": "Bolder",
-															"text": "Positionen",
-															"wrap": true
-														}
-													],
-													"width": "stretch"
-												},
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "TextBlock",
-															"weight": "Bolder",
-															"text": "Preis",
-															"wrap": true
-														}
-													],
-													"width": "auto"
-												}
-											]
-										}
-									],
-									"bleed": true
-								},
-								{
-									"type": "ColumnSet",
-									"columns": [
-										{
-											"type": "Column",
-											"spacing": "Medium",
-											"items": [
-												{
-													"type": "TextBlock",
-													"text": "ICE Fahrkarte",
-													"wrap": true
-												}
-											],
-											"width": "stretch"
-										},
-										{
-											"type": "Column",
-											"items": [
-												{
-													"type": "TextBlock",
-													"text": "€89,55",
-													"wrap": true
-												}
-											],
-											"width": "auto"
-										}
-									]
-								},
-								{
-									"type": "ColumnSet",
-									"columns": [
-										{
-											"type": "Column",
-											"spacing": "Medium",
-											"items": [
-												{
-													"type": "TextBlock",
-													"text": "Sitzplatzreservierung",
-													"wrap": true
-												}
-											],
-											"width": "stretch"
-										},
-										{
-											"type": "Column",
-											"items": [
-												{
-													"type": "TextBlock",
-													"text": "€10,00",
-													"wrap": true
-												}
-											],
-											"width": "auto"
-										}
-									]
-								},
-								{
-									"type": "Container",
-									"style": "emphasis",
-									"items": [
-										{
-											"type": "ColumnSet",
-											"columns": [
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "TextBlock",
-															"horizontalAlignment": "Right",
-															"text": "Summe",
-															"wrap": true
-														}
-													],
-													"width": "stretch"
-												},
-												{
-													"type": "Column",
-													"items": [
-														{
-															"type": "TextBlock",
-															"weight": "Bolder",
-															"text": "€99,55",
-															"wrap": true
-														}
-													],
-													"width": "auto"
-												}
-											]
-										}
-									],
-									"bleed": true
-								}
-							]
-						}
-					}
-				};
+			const ticketUrlQrCode = await handleQRCode(ticketUrl);
 
-				api.say("", outputData);
+			const outputData = {
+				"_plugin": {
+					"type": "adaptivecards",
+					"payload": {
+						"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+						"type": "AdaptiveCard",
+						"version": "1.0",
+						"body": [
+							{
+								"type": "Container",
+								"style": "emphasis",
+								"items": [
+									{
+										"type": "ColumnSet",
+										"columns": [
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "TextBlock",
+														"size": "Large",
+														"weight": "Bolder",
+														"text": "Online Ticket",
+														"wrap": true,
+														"style": "heading"
+													}
+												],
+												"width": "stretch"
+											},
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "Image",
+														"url": "https://cognigydemoimages.blob.core.windows.net/images/Deutsche-Bahn-Logo.png",
+														"height": "30px",
+														"altText": "Pending"
+													}
+												],
+												"width": "auto"
+											}
+										]
+									}
+								],
+								"bleed": true
+							},
+							{
+								"type": "Container",
+								"items": [
+									{
+										"type": "ColumnSet",
+										"columns": [
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "TextBlock",
+														"size": "ExtraLarge",
+														"text": ticketType,
+														"wrap": true,
+														"style": "heading"
+													}
+												],
+												"width": "stretch"
+											},
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "ActionSet",
+														"actions": [
+															{
+																"type": "Action.OpenUrl",
+																"title": "Download Ticket",
+																"url": ticketUrl
+															}
+														]
+													}
+												],
+												"width": "auto"
+											}
+										]
+									},
+									{
+										"type": "ColumnSet",
+										"columns": [
+											{
+												"type": "Column",
+												"width": "stretch",
+												"items": [
+													{
+														"type": "ColumnSet",
+														"columns": [
+															{
+																"type": "Column",
+																"width": "stretch",
+																"items": [
+																	{
+																		"type": "TextBlock",
+																		"text": "Halt",
+																		"wrap": true
+																	},
+																	{
+																		"type": "TextBlock",
+																		"text": origin,
+																		"wrap": true
+																	},
+																	{
+																		"type": "TextBlock",
+																		"text": destination,
+																		"wrap": true
+																	}
+																]
+															},
+															{
+																"type": "Column",
+																"width": "stretch",
+																"items": [
+																	{
+																		"type": "TextBlock",
+																		"text": "Zeit",
+																		"wrap": true
+																	},
+																	{
+																		"type": "TextBlock",
+																		"text": "19.02.2021",
+																		"wrap": true
+																	},
+																	{
+																		"type": "TextBlock",
+																		"text": "19.02",
+																		"wrap": true
+																	}
+																]
+															},
+															{
+																"type": "Column",
+																"width": "stretch",
+																"items": [
+																	{
+																		"type": "TextBlock",
+																		"text": "Zeit",
+																		"wrap": true
+																	},
+																	{
+																		"type": "TextBlock",
+																		"text": "7",
+																		"wrap": true
+																	}
+																]
+															}
+														]
+													}
+												]
+											},
+											{
+												"type": "Column",
+												"width": "122px",
+												"items": [
+													{
+														"type": "Image",
+														"url": ticketUrlQrCode,
+														"size": "Large",
+														"width": "171px"
+													}
+												]
+											}
+										]
+									}
+								]
+							},
+							{
+								"type": "Container",
+								"spacing": "Large",
+								"style": "emphasis",
+								"items": [
+									{
+										"type": "ColumnSet",
+										"columns": [
+											{
+												"type": "Column",
+												"spacing": "Large",
+												"items": [
+													{
+														"type": "TextBlock",
+														"weight": "Bolder",
+														"text": "Positionen",
+														"wrap": true
+													}
+												],
+												"width": "stretch"
+											},
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "TextBlock",
+														"weight": "Bolder",
+														"text": "Preis",
+														"wrap": true
+													}
+												],
+												"width": "auto"
+											}
+										]
+									}
+								],
+								"bleed": true
+							},
+							{
+								"type": "ColumnSet",
+								"columns": [
+									{
+										"type": "Column",
+										"spacing": "Medium",
+										"items": [
+											{
+												"type": "TextBlock",
+												"text": ticketType,
+												"wrap": true
+											}
+										],
+										"width": "stretch"
+									},
+									{
+										"type": "Column",
+										"items": [
+											{
+												"type": "TextBlock",
+												"text": price,
+												"wrap": true
+											}
+										],
+										"width": "auto"
+									}
+								]
+							},
+							{
+								"type": "ColumnSet",
+								"columns": [
+									{
+										"type": "Column",
+										"spacing": "Medium",
+										"items": [
+											{
+												"type": "TextBlock",
+												"text": "Sitzplatzreservierung",
+												"wrap": true
+											}
+										],
+										"width": "stretch"
+									},
+									{
+										"type": "Column",
+										"items": [
+											{
+												"type": "TextBlock",
+												"text": "€10,00",
+												"wrap": true
+											}
+										],
+										"width": "auto"
+									}
+								]
+							},
+							{
+								"type": "Container",
+								"style": "emphasis",
+								"items": [
+									{
+										"type": "ColumnSet",
+										"columns": [
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "TextBlock",
+														"horizontalAlignment": "Right",
+														"text": "Summe",
+														"wrap": true
+													}
+												],
+												"width": "stretch"
+											},
+											{
+												"type": "Column",
+												"items": [
+													{
+														"type": "TextBlock",
+														"weight": "Bolder",
+														"text": "€99,55",
+														"wrap": true
+													}
+												],
+												"width": "auto"
+											}
+										]
+									}
+								],
+								"bleed": true
+							}
+						]
+					}
+				}
+			};
+
+			api.say("", outputData);
 
 		} catch (error) {
 			if (storeLocation === "context") {

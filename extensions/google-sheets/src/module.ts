@@ -2,11 +2,13 @@ import { createExtension } from "@cognigy/extension-tools";
 
 import { getSpreadsheetNode } from "./nodes/getSpreadsheet";
 import { googleCloudConnection } from "./connections/googleCloudConnection";
+import { appendValuesNode } from "./nodes/appendValues";
 
 
 export default createExtension({
 	nodes: [
-		getSpreadsheetNode
+		getSpreadsheetNode,
+		appendValuesNode
 	],
 
 	connections: [

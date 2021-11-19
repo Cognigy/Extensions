@@ -1,14 +1,13 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import { google } from 'googleapis';
+const sheets = google.sheets('v4');
 
 export interface IGetSpreadsheetParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
-			key: string;
-		};
+		serviceAccount: any;
 		spreadsheetId: string;
 		range: string;
-        values: any;
+		values: any;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -19,13 +18,13 @@ export const appendValuesNode = createNodeDescriptor({
 	defaultLabel: "Append Values",
 	fields: [
 		{
-			key: "connection",
-			label: "API Key",
-			type: "connection",
+			key: "serviceAccount",
+			label: "Service Account",
+			description: "The JSON content of the service account",
+			type: "json",
 			params: {
-				connectionType: "google-cloud-connection",
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "spreadsheetId",
@@ -42,11 +41,11 @@ export const appendValuesNode = createNodeDescriptor({
 			description: "The A1 notation of a range to search for a logical table of data. Values are appended after the last row of the table",
 			type: "cognigyText",
 			defaultValue: "A2:G30",
-            params: {
-                required: true
-            }
+			params: {
+				required: true
+			}
 		},
-        {
+		{
 			key: "values",
 			label: "Values",
 			description: "The list of values that should be added",
@@ -102,13 +101,22 @@ export const appendValuesNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "auth",
+			label: "Auth Options",
+			defaultCollapsed: true,
+			fields: [
+				"serviceAccount"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "spreadsheetId" },
-        { type: "field", key: "range" },
+		{ type: "field", key: "range" },
 		{ type: "field", key: "values" },
+		{ type: "section", key: "auth" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -116,26 +124,33 @@ export const appendValuesNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetSpreadsheetParams) => {
 		const { api } = cognigy;
-		const { spreadsheetId, range, values, connection, storeLocation, contextKey, inputKey } = config;
-		const { key } = connection;
+		const { spreadsheetId, range, values, serviceAccount, storeLocation, contextKey, inputKey } = config;
 
 		try {
-			const response = await axios({
-				method: 'post',
-                url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}:append?key=${key}&valueInputOption=RAW`,
-				headers: {
-					'Content-Type': 'application/json'
-				},
-                data: {
-                    values
-                }
-			});
+
+			const authClient = new google.auth.JWT(
+				serviceAccount.client_email,
+				null,
+				serviceAccount.private_key,
+				["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.file",
+					"https://www.googleapis.com/auth/spreadsheets"]
+			);
+
+			const response = (await sheets.spreadsheets.values.update({
+				spreadsheetId,
+				valueInputOption: 'USER_ENTERED',
+				auth: authClient,
+				range,
+				requestBody: {
+					values
+				}
+			})).data;
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
+				api.addToContext(contextKey, response, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+				api.addToInput(inputKey, response);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

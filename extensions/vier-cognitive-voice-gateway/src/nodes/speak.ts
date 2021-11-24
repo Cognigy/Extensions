@@ -244,16 +244,14 @@ export const speakNode = createNodeDescriptor({
     },
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
-    const xmlRegex = /<.*>.*<\/.*>/gm;
-    const hasSsmlTags = (msg: string) => xmlRegex.test(msg);
-
-    if (hasSsmlTags(config.text)) {
-      if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>'))
+    if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
       cognigy.api.say(`<speak>${config.text}</speak>`, {
         interpretAs: 'SSML'
       });
     } else {
-      cognigy.api.say(config.text);
+      cognigy.api.say(config.text, {
+        interpretAs: 'SSML'
+      });
     }
   },
 });

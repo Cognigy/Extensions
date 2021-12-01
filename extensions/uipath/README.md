@@ -152,9 +152,56 @@ Is this instance an on-premise or cloud installation?
 - Organization Unit ID: The Organization Unit ID obtained with the **Get Processes By Name** Node. This can be added dynamically using Cognigy Script.
 - Use Classic Folders: Determine if a specific robot should be given for the call. Most useful for clasic folders.
 - Robot IDs: The array that contains a list of robots that should perform the respective process. 
+- Input Arguments: This field can be used to provide the **JSON** object with the relevant data for the respective queue. It has to look like that:
+
+``` json
+{
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3",
+}
+``` 
 - Where to Store the Result: The selection, where to store the bearer token (either in `context` or `input`)
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
+
+# Node: Start a Job (Simplified)
+This node combines the authentication, get process and start a job node into one node. This simplifys the process of quickly and easily starting a process in a flow. 
+
+### **Authentication Type**
+Is this instance an on-premise or cloud installation?
+
+## Configuration Fields
+
+### **UiPath Instance**
+- accountLogicalName: The account name of the the UiPatch Orchestrator Instance.
+- tenantLogicalName: The tenant name of the the UiPatch Orchestrator Instance.
+- clientId: The client Id required for the REST endpoint
+- userKey: The password required to access your REST endpoint
+
+### **UiPath On-Premise Connection**
+- orchestratorURL: The base URL for your UiPath Orchestrator installation
+- tenancyName: The name of the tenant you are using
+- usernameOrEmailAddress: The username or email address for the user associated with the robot/machine in the Orchestrator instance
+- password: The password for the aforementioned user 
+
+### **Input Parameters**
+- Name of Release: (Only available in Node Get Process by Name) The name of the process you wish to use. 
+- Use Classic Folders: Determine if a specific robot should be given for the call. Most useful for clasic folders.
+- Robot IDs: The array that contains a list of robots that should perform the respective process. 
+- Input Arguments: This field can be used to provide the **JSON** object with the relevant data for the respective queue. It has to look like that:
+
+``` json
+{
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3",
+}
+```
+- Where to Store the Result: The selection, where to store the bearer token (either in `context` or `input`)
+- Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
+- Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
+
 
 # Node: Get Tasks
 This node retrieves tasks from the UiPath Action Center. The tasks it retrieves depends on the settings in the node itself. 

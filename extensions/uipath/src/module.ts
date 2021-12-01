@@ -12,6 +12,7 @@ import { assignTaskNode } from "./nodes/Action Center/assignTask";
 import { unassignTaskNode } from "./nodes/Action Center/unassignTask";
 import { reassignTaskNode } from "./nodes/Action Center/reassignTask";
 import { deleteTaskNode } from "./nodes/Action Center/deleteTasks";
+import { startJobSimplifiedNode } from "./nodes/Orchestrator/startJobSimplified";
 
 import { AuthenticationNode } from "./nodes/Orchestrator/Authentication";
 
@@ -29,11 +30,16 @@ export default createExtension({
 		assignTaskNode,
 		unassignTaskNode,
 		reassignTaskNode,
-		deleteTaskNode
+		deleteTaskNode,
+		startJobSimplifiedNode
 	],
 
 	connections: [
 		uiPathOnPremAccessData,
 		uiPathInstanceData,
-	]
+	],
+
+	options: {
+		label: "UiPath"
+	}
 });

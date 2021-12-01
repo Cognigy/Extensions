@@ -18,12 +18,12 @@ export interface IStartJobParams extends INodeFunctionBaseParams {
 			password: string;
 		};
 		accessToken: string;
-        releaseKey: string;
+		releaseKey: string;
 		useClassicFolders: boolean;
 		orgUnitId: string;
-        robotIds: string;
+		robotIds: string;
 		inputArguments: string;
-        storeLocation: string;
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
@@ -63,23 +63,23 @@ export const startJobNode = createNodeDescriptor({
 				required: false
 			},
 			condition: {
-			 	key: "authType",
-			 	value: "cloud"
+				key: "authType",
+				value: "cloud"
 			}
 		},
 		{
-            key: "onPremAuthConnection",
-            label: "UiPath On-Prem Connection",
-            type: "connection",
-            params: {
-                 connectionType: "onPremAuth",
-                 required: false
-            },
-			 condition: {
-			 	key: "authType",
-			 	value: "onPrem"
+			key: "onPremAuthConnection",
+			label: "UiPath On-Prem Connection",
+			type: "connection",
+			params: {
+				connectionType: "onPremAuth",
+				required: false
+			},
+			condition: {
+				key: "authType",
+				value: "onPrem"
 			}
-        },
+		},
 		{
 			key: "accessToken",
 			label: "Access Token",
@@ -87,15 +87,15 @@ export const startJobNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-        },
-        {
+		},
+		{
 			key: "releaseKey",
 			label: "Process Release Key",
 			type: "cognigyText",
 			params: {
 				required: true
 			}
-        },
+		},
 		{
 			key: "orgUnitId",
 			label: "Organization Unit ID",
@@ -103,7 +103,7 @@ export const startJobNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-        },
+		},
 		{
 			key: "useClassicFolders",
 			label: "Use Classic Folders",
@@ -111,7 +111,7 @@ export const startJobNode = createNodeDescriptor({
 			description: "Use API call for classic folders / Specify specific robot ID?",
 			defaultValue: false
 		},
-        {
+		{
 			key: "robotIds",
 			label: "Robot IDs",
 			type: "cognigyText",
@@ -122,7 +122,7 @@ export const startJobNode = createNodeDescriptor({
 				key: "useClassicFolders",
 				value: true
 			}
-        },
+		},
 		{
 			key: "inputArguments",
 			label: "Input Arguments",
@@ -217,22 +217,22 @@ export const startJobNode = createNodeDescriptor({
 			endpoint = `https://${orchestratorUrl}/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs`;
 			tenantInfo = tenancyName;
 		}
-        const axiosConfig: AxiosRequestConfig = {
-            headers: {
-                'Content-Type': 'application/json',
+		const axiosConfig: AxiosRequestConfig = {
+			headers: {
+				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
 				'X-UIPATH-TenantName': tenantInfo,
 				'X-UIPATH-OrganizationUnitId': orgUnitId
-            }
-        };
-        if (useClassicFolders === true) {
+			}
+		};
+		if (useClassicFolders === true) {
 			data = {
 				startInfo: {
 					ReleaseKey: releaseKey,
 					RobotIds: ids,
 					Strategy: "Specific",
 					InputArguments: JSON.stringify(inputArguments)
-				  }
+				}
 			};
 		} else {
 			data = {
@@ -241,13 +241,13 @@ export const startJobNode = createNodeDescriptor({
 					Strategy: "ModernJobsCount",
 					JobsCount: 1,
 					InputArguments: JSON.stringify(inputArguments)
-				  }
+				}
 			};
 		}
 		try {
-            const result: AxiosResponse <StartJob> =  await axios.post(endpoint, data, axiosConfig);
+			const result: AxiosResponse<StartJob> = await axios.post(endpoint, data, axiosConfig);
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, result.data.value[0] , 'simple');
+				api.addToContext(contextKey, result.data.value[0], 'simple');
 			} else {
 				// @ts-ignore
 				api.addToInput(inputKey, result.data.value[0]);

@@ -142,7 +142,9 @@ export const appendValuesNode = createNodeDescriptor({
 				auth: authClient,
 				range,
 				requestBody: {
-					values
+					values: [
+						values
+					]
 				}
 			})).data;
 

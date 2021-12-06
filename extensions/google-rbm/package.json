@@ -1,11 +1,11 @@
 {
-	"name": "google-rbm",
+	"name": "google-chat",
 	"version": "4.0.0",
-	"description": "Provides Google RBM Tools",
+	"description": "Provides Google Chat Tools",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz google-rbm.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz google-chat.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
@@ -16,9 +16,8 @@
 	"author": "Alexander Teusz",
 	"keywords": [
 		"Google",
-		"Business",
-		"Messaging",
-		"RBM"
+		"Chat",
+		"Messaging"
 	],
 	"license": "MIT",
 	"devDependencies": {
@@ -27,7 +26,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.11.0",
+		"@cognigy/extension-tools": "^0.14.0",
 		"businessmessages": "^1.0.3",
 		"googleapis": "^80.1.0"
 	}

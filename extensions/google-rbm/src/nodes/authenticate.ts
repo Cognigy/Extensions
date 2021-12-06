@@ -90,6 +90,7 @@ export const authenticateNode = createNodeDescriptor({
 			// Set the scope that we need for the Business Messages API
 			const scopes = [
 				'https://www.googleapis.com/auth/businessmessages',
+				'https://www.googleapis.com/auth/chat.bot'
 			];
 
 			/**

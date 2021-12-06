@@ -4,5 +4,9 @@ import { authenticateNode } from "./nodes/authenticate";
 export default createExtension({
 	nodes: [
 		authenticateNode
-	]
+	],
+
+	options: {
+		label: "Google Chat"
+	}
 });

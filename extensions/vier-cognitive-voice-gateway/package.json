@@ -1,14 +1,14 @@
 {
   "name": "vier-voice",
   "description": "Enable phone bots with VIER Cognitive Voice Gateway",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "build/module.js",
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.12.0",
+    "@cognigy/extension-tools": "^0.14.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.3.5"
+    "typescript": "^4.5.2"
   },
   "scripts": {
     "zip": "tar cfz vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json",

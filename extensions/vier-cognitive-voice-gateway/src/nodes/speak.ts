@@ -3,6 +3,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extensio
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
   config: {
     text: string,
+    bargeIn?: boolean,
   };
 }
 
@@ -242,18 +243,49 @@ export const speakNode = createNodeDescriptor({
       ],
       },
     },
+    {
+      type: 'checkbox',
+      key: 'bargeIn',
+      label: 'Barge In',
+      description: 'Allows the message to be interrupted by the speaker',
+      defaultValue: false,
+    },
+  ],
+  sections: [
+    {
+      key: 'general',
+      fields: ['text'],
+      label: 'General Settings',
+      defaultCollapsed: false,
+    },
+    {
+      key: 'additional',
+      fields: ['bargeIn'],
+      label: 'Additional Settings',
+      defaultCollapsed: true
+    }
+  ],
+  form: [
+    {
+      key: 'general',
+      type: 'section'
+    },
+    {
+      key: 'additional',
+      type: 'section',
+    }
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
-    const xmlRegex = /<.*>.*<\/.*>/gm;
-    const hasSsmlTags = (msg: string) => xmlRegex.test(msg);
-
-    if (hasSsmlTags(config.text)) {
-      if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>'))
+    if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
       cognigy.api.say(`<speak>${config.text}</speak>`, {
-        interpretAs: 'SSML'
+        interpretAs: 'SSML',
+        bargeIn: config.bargeIn,
       });
     } else {
-      cognigy.api.say(config.text);
+      cognigy.api.say(config.text, {
+        interpretAs: 'SSML',
+        bargeIn: config.bargeIn,
+      });
     }
   },
 });

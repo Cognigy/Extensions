@@ -4,7 +4,9 @@ const sheets = google.sheets('v4');
 
 export interface IGetSpreadsheetParams extends INodeFunctionBaseParams {
 	config: {
-		serviceAccount: any;
+		connection: {
+			serviceAccountJSON: string;
+		};
 		spreadsheetId: string;
 		range: string;
 		values: any;
@@ -18,13 +20,13 @@ export const appendValuesNode = createNodeDescriptor({
 	defaultLabel: "Append Values",
 	fields: [
 		{
-			key: "serviceAccount",
+			key: "connection",
 			label: "Service Account",
-			description: "The JSON content of the service account",
-			type: "json",
+			type: "connection",
 			params: {
-				required: true,
-			},
+				connectionType: "serviceAccount-connection",
+				required: true
+			}
 		},
 		{
 			key: "spreadsheetId",
@@ -101,14 +103,6 @@ export const appendValuesNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "auth",
-			label: "Auth Options",
-			defaultCollapsed: true,
-			fields: [
-				"serviceAccount"
-			]
 		}
 	],
 	form: [
@@ -116,7 +110,6 @@ export const appendValuesNode = createNodeDescriptor({
 		{ type: "field", key: "spreadsheetId" },
 		{ type: "field", key: "range" },
 		{ type: "field", key: "values" },
-		{ type: "section", key: "auth" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -124,7 +117,11 @@ export const appendValuesNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetSpreadsheetParams) => {
 		const { api } = cognigy;
-		const { spreadsheetId, range, values, serviceAccount, storeLocation, contextKey, inputKey } = config;
+		const { spreadsheetId, range, values, connection, storeLocation, contextKey, inputKey } = config;
+		let { serviceAccountJSON } = connection;
+
+		serviceAccountJSON = serviceAccountJSON.replace('\n', ' ');
+		const serviceAccount = JSON.parse(serviceAccountJSON);
 
 		try {
 

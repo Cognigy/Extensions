@@ -1,6 +1,6 @@
 {
 	"name": "google-sheets",
-	"version": "4.2.0",
+	"version": "4.1.0",
 	"description": "Integrates with Google Sheets",
 	"main": "build/module.js",
 	"scripts": {

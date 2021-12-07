@@ -3,7 +3,9 @@ import { google } from "googleapis";
 
 export interface IAuthenticateParams extends INodeFunctionBaseParams {
 	config: {
-		serviceAccount: any;
+		connection: {
+			serviceAccountJSON: string;
+		};
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -14,19 +16,19 @@ export const authenticateNode = createNodeDescriptor({
 	defaultLabel: "Authenticate",
 	fields: [
 		{
-			key: "serviceAccount",
+			key: "connection",
 			label: "Service Account",
-			description: "The JSON content of the service account",
-			type: "json",
+			type: "connection",
 			params: {
-				required: true,
-			},
+				connectionType: "serviceAccount-connection",
+				required: true
+			}
 		},
 		{
 			key: "storeLocation",
 			type: "select",
 			label: "Where to store the result",
-			defaultValue: "input",
+			defaultValue: "context",
 			params: {
 				options: [
 					{
@@ -45,7 +47,7 @@ export const authenticateNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "rbm",
+			defaultValue: "auth",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -55,7 +57,7 @@ export const authenticateNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "rbm",
+			defaultValue: "auth",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -84,7 +86,11 @@ export const authenticateNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IAuthenticateParams) => {
 		const { api } = cognigy;
-		const { serviceAccount, storeLocation, contextKey, inputKey } = config;
+		const { connection, storeLocation, contextKey, inputKey } = config;
+		let { serviceAccountJSON } = connection;
+
+		serviceAccountJSON = serviceAccountJSON.replace('\n', ' ');
+		const serviceAccount = JSON.parse(serviceAccountJSON);
 
 		try {
 			// Set the scope that we need for the Business Messages API

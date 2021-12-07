@@ -7,17 +7,17 @@ export interface IGetSpreadsheetParams extends INodeFunctionBaseParams {
 		connection: {
 			serviceAccountJSON: string;
 		};
-		connectionType: string;
 		spreadsheetId: string;
 		range: string;
+		values: any;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const getSpreadsheetNode = createNodeDescriptor({
-	type: "getSpreadsheet",
-	defaultLabel: "Get Spreadsheet",
+export const appendValuesNode = createNodeDescriptor({
+	type: "appendValues",
+	defaultLabel: "Append Values",
 	fields: [
 		{
 			key: "connection",
@@ -40,9 +40,18 @@ export const getSpreadsheetNode = createNodeDescriptor({
 		{
 			key: "range",
 			label: "Range",
-			description: "A data range such as A1 or F30",
+			description: "The A1 notation of a range to search for a logical table of data. Values are appended after the last row of the table",
 			type: "cognigyText",
-			defaultValue: "A2:G30"
+			defaultValue: "A2:G30",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "values",
+			label: "Values",
+			description: "The list of values that should be added",
+			type: "json"
 		},
 		{
 			key: "storeLocation",
@@ -100,14 +109,15 @@ export const getSpreadsheetNode = createNodeDescriptor({
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "spreadsheetId" },
 		{ type: "field", key: "range" },
-		{ type: "section", key: "storage" }
+		{ type: "field", key: "values" },
+		{ type: "section", key: "storage" },
 	],
 	appearance: {
 		color: "#0F9D57"
 	},
 	function: async ({ cognigy, config }: IGetSpreadsheetParams) => {
 		const { api } = cognigy;
-		const { spreadsheetId, connection, range, storeLocation, contextKey, inputKey } = config;
+		const { spreadsheetId, range, values, connection, storeLocation, contextKey, inputKey } = config;
 		let { serviceAccountJSON } = connection;
 
 		serviceAccountJSON = serviceAccountJSON.replace('\n', ' ');
@@ -123,17 +133,23 @@ export const getSpreadsheetNode = createNodeDescriptor({
 					"https://www.googleapis.com/auth/spreadsheets"]
 			);
 
-			const response = (await sheets.spreadsheets.values.get({
+			const response = (await sheets.spreadsheets.values.update({
 				spreadsheetId,
+				valueInputOption: 'USER_ENTERED',
 				auth: authClient,
-				range
-			}));
+				range,
+				requestBody: {
+					values: [
+						values
+					]
+				}
+			})).data;
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+				api.addToInput(inputKey, response);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

@@ -1,6 +1,6 @@
 {
 	"name": "google-sheets",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"description": "Integrates with Google Sheets",
 	"main": "build/module.js",
 	"scripts": {
@@ -13,7 +13,7 @@
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"
 	},
-	"author": "Alexander Teusz",
+	"author": "Cognigy GmbH",
 	"keywords": [
 		"Google",
 		"Sheets",
@@ -28,6 +28,7 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.13.0",
-		"axios": "^0.20.0"
+		"axios": "^0.20.0",
+		"googleapis": "^91.0.0"
 	}
 }

@@ -1,19 +1,20 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { uiPathOnPremAccessData } from './connections/uiPathOnPrem';
 import { uiPathInstanceData } from './connections/uiPathInstance';
-import { addQueueItemNode } from './nodes/addQueueItem';
-import { startJobNode } from './nodes/startJob';
-import { getProcessesNode } from "./nodes/getProcesses";
-import { getProcessByNameNode } from "./nodes/getProcessByName";
-import { getRobotIdbyUserNode } from "./nodes/getRobotIdbyUser";
-import { getUsersNode } from "./nodes/getUsers";
-import { getTasksNode } from "./nodes/getTasks";
-import { assignTaskNode } from "./nodes/assignTask";
-import { unassignTaskNode } from "./nodes/unassignTask";
-import { reassignTaskNode } from "./nodes/reassignTask";
-import { deleteTaskNode } from "./nodes/deleteTasks";
+import { addQueueItemNode } from './nodes/Orchestrator/addQueueItem';
+import { startJobNode } from './nodes/Orchestrator/startJob';
+import { getProcessesNode } from "./nodes/Orchestrator/getProcesses";
+import { getProcessByNameNode } from "./nodes/Orchestrator/getProcessByName";
+import { getRobotIdbyUserNode } from "./nodes/Orchestrator/getRobotIdbyUser";
+import { getUsersNode } from "./nodes/Action Center/getUsers";
+import { getTasksNode } from "./nodes/Action Center/getTasks";
+import { assignTaskNode } from "./nodes/Action Center/assignTask";
+import { unassignTaskNode } from "./nodes/Action Center/unassignTask";
+import { reassignTaskNode } from "./nodes/Action Center/reassignTask";
+import { deleteTaskNode } from "./nodes/Action Center/deleteTasks";
+import { startJobSimplifiedNode } from "./nodes/Orchestrator/startJobSimplified";
 
-import { AuthenticationNode } from "./nodes/Authentication";
+import { AuthenticationNode } from "./nodes/Orchestrator/Authentication";
 
 
 export default createExtension({
@@ -29,7 +30,8 @@ export default createExtension({
 		assignTaskNode,
 		unassignTaskNode,
 		reassignTaskNode,
-		deleteTaskNode
+		deleteTaskNode,
+		startJobSimplifiedNode
 	],
 
 	connections: [
@@ -38,6 +40,6 @@ export default createExtension({
 	],
 
 	options: {
-		label: "UiPath Orchestrator"
+		label: "UiPath"
 	}
 });

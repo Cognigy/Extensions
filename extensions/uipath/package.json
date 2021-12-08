@@ -1,6 +1,6 @@
 {
   "name": "uipath-orchestrator",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Provides the functions for the interaction with UiPath Orchestraor",
   "main": "build/module.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.13.0",
+    "@cognigy/extension-tools": "^0.14.0",
     "axios": "^0.21.1",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.2",

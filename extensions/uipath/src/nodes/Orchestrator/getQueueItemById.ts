@@ -1,9 +1,9 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { TransactionData } from '../../types/uipath';
-import { sleep } from '../helper/timeout';
+import { TransactionData } from '../../../types/uipath';
+import { sleep } from '../../helper/timeout';
 
-export interface IGetQueueItems extends INodeFunctionBaseParams {
+export interface IGetQueueItemById extends INodeFunctionBaseParams {
 	config: {
 		instanceInfo: {
 			accountLogicalName: string;
@@ -13,16 +13,16 @@ export interface IGetQueueItems extends INodeFunctionBaseParams {
         };
         accessToken: string;
 		orgUnitId: string;
-        maxItems: string;
+        transactionItemId: string;
         storeLocation: string;
 		inputKey: string;
 		contextKey: string;
 	};
 }
 
-export const getQueueItemsNode = createNodeDescriptor({
-	type: 'getQueueItems',
-	defaultLabel: 'Get Queue Items',
+export const getQueueItemByIdNode = createNodeDescriptor({
+	type: 'getQueueItemById',
+	defaultLabel: 'Get Queue Item by ID',
 	fields: [
 		{
 			key: 'instanceInfo',
@@ -51,9 +51,9 @@ export const getQueueItemsNode = createNodeDescriptor({
 			}
         },
         {
-			key: 'maxItems',
-            label: 'Max Number of Results',
-            description: 'The maximum number of queue items which should be returned.',
+			key: 'transactionItemId',
+            label: 'Transaction Item ID',
+            description: 'The ID of the previous created Transaction Item ID',
 			type: 'cognigyText',
 			params: {
 				required: true
@@ -81,7 +81,7 @@ export const getQueueItemsNode = createNodeDescriptor({
 		{
 			key: 'inputKey',
 			type: 'cognigyText',
-			label: 'Input Key to Store Result',
+			label: 'Input Key to Store the Result',
 			defaultValue: 'outputInformation',
 			condition: {
 				key: 'storeLocation',
@@ -114,24 +114,25 @@ export const getQueueItemsNode = createNodeDescriptor({
 	form: [
 		{ type: 'field', key: 'instanceInfo' },
         { type: 'field', key: 'accessToken' },
-		{ type: 'field', key: 'maxItems' },
+		{ type: 'field', key: 'transactionItemId' },
 		{ type: 'section', key: 'storageOption' },
 	],
 	appearance: {
 		color: "#fa4514"
 	},
-	function: async ({ cognigy, config }: IGetQueueItems) => {
+	function: async ({ cognigy, config }: IGetQueueItemById) => {
         const { api } = cognigy;
-		const { instanceInfo, accessToken, orgUnitId, maxItems, storeLocation, inputKey, contextKey } = config;
+		const { instanceInfo, accessToken, orgUnitId, transactionItemId, storeLocation, inputKey, contextKey } = config;
 		const { accountLogicalName, tenantLogicalName } = instanceInfo;
 
-        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/QueueItems?$top=${maxItems}`;
+        const endpoint = `https://platform.uipath.com/${accountLogicalName}/${tenantLogicalName}/odata/QueueItems?$filter=Id eq ${transactionItemId}`;
         const axiosConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
 				'Authorization': `Bearer ${accessToken}`,
 				'X-UIPATH-TenantName': tenantLogicalName,
 				'X-UIPATH-OrganizationUnitId': orgUnitId
+
             }
 		};
 

@@ -105,3 +105,34 @@ Next to the Task, one could ask for **Request**, which can be retrieved from Ser
 This information can be used dynamically in the further Flow, such as in a confirmation Say Node:
 
 <img src="./docs/snow-get-catalog-request-confirmation-say-node-edit-menu.PNG">
+
+
+## Email
+
+With the Email serivce, one can maintain email messages within Service Now.
+
+### Node: Send Email
+
+- [Documentation](https://docs.servicenow.com/bundle/rome-application-development/page/integrate/inbound-rest/concept/email-api.html)
+
+This Flow Node can be used in order to send an email message with the Service Now SMTP/Pop configuration. It will return the following JSON if the message was sent successfully:
+
+```json
+{
+  "snow": {
+    "email": {
+      "id": "...",
+      "links": [
+        {
+          "rel": "self",
+          "href": "/now/v1/email/..."
+        },
+        {
+          "rel": "status",
+          "href": "/now/v1/email/...?sysparm_fields=id,type,state,error"
+        }
+      ]
+    }
+  }
+}
+```

@@ -1,6 +1,6 @@
 {
 	"name": "salesforce-crm",
-	"version": "4.2.0",
+	"version": "4.2.1",
 	"description": "This Extension integrates Cognigy.AI with Salesforce CRM",
 	"main": "build/module.js",
 	"scripts": {
@@ -26,7 +26,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
+		"@cognigy/extension-tools": "^0.12.0",
 		"jsforce": "^1.10.1"
 	}
 }

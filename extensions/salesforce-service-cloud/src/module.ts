@@ -16,5 +16,9 @@ export default createExtension({
 
 	connections: [
 		livechatConnection
-	]
+	],
+
+	options: {
+		label: "Salesforce Service Cloud"
+	}
 });

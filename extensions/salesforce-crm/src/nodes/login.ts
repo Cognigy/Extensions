@@ -64,7 +64,7 @@ export const loginNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce",
             condition: {
@@ -74,7 +74,7 @@ export const loginNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce",
             condition: {

@@ -99,11 +99,11 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			// Loop through each intent that was mapped
 			for (i = 1; i < input.nlu.intentMapperResults.scores.length; i++) {
 				// Find the score difference between the main intent and the mapped intent
-				let delta = input.nlu.intentMapperResults.scores[0].score - input.nlu.intentMapperResults.scores[i][0].score;
+				let delta = (input.nlu.intentMapperResults.finalIntentScore - input.nlu.intentMapperResults.scores[i].score);
 				// If the delta is less than the limit, add it to the array for similar intnets
 				if (delta < maxScoreDelta) {
-					input.nlu.intentMapperResults.scores[i][0].delta = delta;
-					similarIntents.push(input.nlu.intentMapperResults.scores[i][0]);
+					input.nlu.intentMapperResults.scores[i].delta = delta;
+					similarIntents.push(input.nlu.intentMapperResults.scores[i]);
 				}
 			}
 

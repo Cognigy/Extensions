@@ -92,7 +92,7 @@ export const updateEntityNode = createNodeDescriptor({
 		},
 		{
 			key: "inputKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Input Key to store Result",
 			defaultValue: "salesforce.entity",
 			condition: {
@@ -102,7 +102,7 @@ export const updateEntityNode = createNodeDescriptor({
 		},
 		{
 			key: "contextKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Context Key to store Result",
 			defaultValue: "salesforce.entity",
 			condition: {

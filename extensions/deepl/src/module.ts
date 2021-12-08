@@ -13,5 +13,9 @@ export default createExtension({
 
 	connections: [
 		deeplConnection
-	]
+	],
+
+	options: {
+		label: "DeepL"
+	}
 });

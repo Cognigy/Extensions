@@ -11,9 +11,9 @@ export interface IGetParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			apiKey: string;
-			projectId: string;
-			databaseName: string;
-			bucket: string;
+			authDomain: string;
+			databaseURL: string;
+			storageBucket: string;
 		};
 		path: string;
 		storeLocation: string;
@@ -108,14 +108,14 @@ export const getNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IGetParams) => {
 		const { api } = cognigy;
 		const { path, connection, storeLocation, contextKey, inputKey } = config;
-		const { apiKey, projectId, bucket, databaseName } = connection;
+		const { apiKey, authDomain, storageBucket, databaseURL } = connection;
 
 		// set the firebase configuration
 		const firebaseConfig = {
 			apiKey,
-			authDomain: `${projectId}.firebaseapp.com`,
-			databaseURL: `https://${databaseName}.firebaseio.com`,
-			storageBucket: `${bucket}.appspot.com`
+			authDomain,
+			databaseURL,
+			storageBucket
 		};
 
 		try {

@@ -18,8 +18,8 @@
   "author": "Cognigy GmbH",
   "license": "ISC",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.21.1",
+    "@cognigy/extension-tools": "^0.13.0",
+    "axios": "^0.21.2",
     "crypto": "^1.0.1",
     "node-fetch": "^2.6.1"
   },

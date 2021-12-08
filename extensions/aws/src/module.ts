@@ -17,5 +17,9 @@ export default createExtension({
 
 	connections: [
 		awsConnection
-	]
+	],
+
+	options: {
+		label: "AWS"
+	}
 });

@@ -1,6 +1,6 @@
 {
 	"name": "microsoft-graph",
-	"version": "4.2.0",
+	"version": "4.2.1",
 	"description": "Integrates with Microsoft Graph",
 	"main": "build/module.js",
 	"scripts": {
@@ -29,9 +29,10 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
-		"@microsoft/microsoft-graph-client": "^1.7.0",
+		"@cognigy/extension-tools": "^0.13.0",
+		"@microsoft/microsoft-graph-client": "^2.2.1",
 		"axios": "^0.20.0",
+		"isomorphic-fetch": "^3.0.0",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6"
 	}

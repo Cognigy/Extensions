@@ -15,5 +15,9 @@ export default createExtension({
 	connections: [
 		awsConnection,
 		azureConnection
-	]
+	],
+
+	options: {
+		label: "File Upload"
+	}
 });

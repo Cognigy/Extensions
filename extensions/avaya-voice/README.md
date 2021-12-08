@@ -21,9 +21,9 @@ This node will get office hour operations definition and holiday definitions fro
       - `key`:  **domain**
       - `value`:  base URL.
 
-- **Holiday URL or Id**: Complete URL or just identifier of Holiday hours of operation
-- **Hoop URL or Id**: Complete URL or just identifier of daily hours of operation
-- **HolidayContextKey**: _How to store the result in the Cognigy Context. It's a simple name_
+- `Holiday URL or Id`: Complete URL or just identifier of Holiday hours of operation
+- `Hoop URL or Id`: Complete URL or just identifier of daily hours of operation
+- `HolidayContextKey`: _How to store the result in the Cognigy Context. It's a simple name_
 
 	-   Example:  `holiday`
 - **HoopsContextKey**: _How to store the result in the Cognigy Context. It's a simple name_
@@ -62,9 +62,9 @@ This node will hand over the call conversation to the destination, either as a p
       - `Callback URL`: REST endpoint that receives call events from CPasS.  
         
    - **Sip**: Hand over the call conversation to sip address.  
-      - `User`: user name of the sip address such as `6002151` for vdn or `sip:dwang1` for personal sip phone.
-      - `Domain`: domain for sip address such as `moon-sbc.bpo.avaya.com`.
-      - Credential: user name and password of the sip address such as `abc` as username and `xyz` as password.
+      - `Sip Address`: sip address such as `6002151@moon-sbc.bpo.avaya.com` for a vdn destination or `sip:dwang1@sip.linphone.org` for a sip phone.  
+      - `Authenticatio Type`: `None` or `Auth`.  
+      - Credentials: `username` and `password` of the sip address such as `abc` as username and `xyz` as password.
       - `Callback URL`: REST endpoint that receives call events from CPasS.  
      
 ## Node: Play  
@@ -87,6 +87,7 @@ This node will redirect current call to the target Cognigy flow without return.
 ## Node: Sms  
   
 This node will send SMS to the destination with the text for voice channel. 
+   - `From`: The optional phone number from which the sms message is sent from. 
    - `Text`: the message to be sent to the destination. 
    - `To`: The destination phone number to send the sms to such as `+14252019415`. 
 
@@ -99,14 +100,48 @@ This node will join the CPaaS conference room.
   
 This node will hang up the call.
 
-## Node: Locale
+## Node: Locale  
 
 This node will set the locale language and the voice type on CPaaS so that the intended language and the voice will be spoken to the customers. 
    - `Language`: the lauage to be spoken to the customer such as `English(United States)`. 
    - `Voice`: the man or woman's voice to be spoken to the customer such as `woman`.
 
-# Node: Call 
+## Node: Counter  
 
-This node will perform a variety of call operations such as make call etc.
-This node will be available in upcoming release.
+This node increment 1 to a value set by the customer when it's hit by the flow runs. This is used to control how many times a path has been run in the flow.  
+
+## Node: Call  
+
+This node will perform a variety of call operations such as make call etc.  
+   - **CPaaS Connection**: You need to create a Connection. Name is for example 'My CPaaS Connection' or something similar.  
+
+   - `accountSid`:  account sid of CPaaS account.
+   - `token`: auth token of CPaaS account.
+   - `domain`: domain of CPaaS REST API such as `api.zang.io`.
+
+   - **Type**: Make call, Interrupt call, Record call, Send audio to call, Send dtmf to call.  
+   - **From**: the phone number that the call is made from.  
+   - **To**: the phone number or sip address that the call is made to.  
+   - **Url**: the url that handles the call interaction once it's connected.  
+
+## Node Pass  
+
+This node controls the number of specified executions on the path.  
+   - `Enter maximum number of passes allowed`: maximum number of executions on this path.  
+  
+
+## Node Queue  
+
+This node gets the real time information on queue, like: agent available, Agent loggedInn, estimated waiting time, calls in queue.
+- **Connection**: You need to create a Connection. Name is for example 'avaya cloud ivr Connection' or something similar. Now you need some Connection keys:
+  
+   - Api Key:   Api key to authenticate
+      - `key`:  **apiKey**
+      - `value`:  Api key from cloud IVR
+	- Tenant Id : Tenant Id should be as cloud IVR tenant Id. 
+	- Domain: Domain is base url where resource are stored .
+
+- `Enter Url`: endpoint to get result  
+- `contextKey`: _How to store the result in the Cognigy Context. It's a simple name_
+    -   Example:  `queue`
   

@@ -65,6 +65,28 @@
                         "handover",
                         "livechat"
                     ]
+                },
+                {
+                    "type": "getPhoneNumbers",
+                    "defaultLabel": "Get Phone Numbers",
+                    "description": "Retrieves the list of phone numbers from Zendesk",
+                    "tags": [
+                        "talk",
+                        "phone",
+                        "call"
+                    ]
+                },
+                {
+                    "type": "requestCallback",
+                    "defaultLabel": "Request Callback",
+                    "description": "Creates a new callback request in Zendesk",
+                    "tags": [
+                        "talk",
+                        "phone",
+                        "call",
+                        "callback",
+                        "request"
+                    ]
                 }
             ]
         },

@@ -7,6 +7,8 @@ import { onFoundArticles, onNotFoundArticles, searchArticlesNode } from "./nodes
 import { createTicketNode } from "./nodes/support/createTicket";
 import { getTicketNode, onFoundTicket, onNotFoundTicket } from "./nodes/support/getTicket";
 import { updateTicketNode } from "./nodes/support/updateTicket";
+import { getPhoneNumbersNode } from "./nodes/talk/getPhoneNumbers";
+import { requestCallbackNode } from "./nodes/talk/requestCallback";
 
 
 export default createExtension({
@@ -27,7 +29,10 @@ export default createExtension({
 
 		checkLiveAgentAvailabilityNode,
 		onAgentAvailable,
-		onNoAgentAvailable
+		onNoAgentAvailable,
+
+		getPhoneNumbersNode,
+		requestCallbackNode
 	],
 
 	connections: [

@@ -36,3 +36,6 @@ All exposed Flow Nodes of this Extension follow the [Zendesk API](https://develo
   - [Get Categories](https://developer.zendesk.com/api-reference/help_center/help-center-api/categories/)
 - *Live Chat*
   - [Check Agent Availability](https://developer.zendesk.com/api-reference/live-chat/real-time-chat-api/rest/#get-agent-status-counts)
+- *Talk*
+  - [Get Phone Numbers](https://developer.zendesk.com/api-reference/voice/talk-api/phone_numbers/#list-phone-numbers)
+  - [Request Callback](https://developer.zendesk.com/api-reference/voice/talk-api/callback_requests/)

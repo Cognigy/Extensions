@@ -1,0 +1,32 @@
+{
+  "name": "microsoft-bot-auth",
+  "version": "4.0.0",
+  "description": "Retrieve Token to Download Inline Images from Teams.",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz microsoft-bot-auth.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "extensions",
+    "documentation"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "axios": "^0.21.2",
+    "botframework-connector": "^4.15.0",
+    "crypto": "^1.0.1",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "@types/node-fetch": "^2.5.7",
+    "tslint": "^6.1.3",
+    "typescript": "^3.9.9"
+  }
+}

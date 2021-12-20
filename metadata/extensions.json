@@ -4,12 +4,14 @@
         {
             "name": "zendesk",
             "label": "Zendesk",
-            "version": "4.3.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk430/zendesk.tar.gz",
+            "version": "4.4.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk440/zendesk.tar.gz",
             "description": "Integrates Cognigy.AI with the Zendesk Ticketing System",
             "tags": [
                 "support",
-                "ticket"
+                "ticket",
+                "livechat",
+                "talk"
             ],
             "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNBNAaMQAAAU7SURBVHhe7VpbiBtVGD6J2qp4QbcqVlTobgWjsG5mziSZnJNIVyRYiljdQlurbS1eUVHE6ouLfZGi2O2L4EN90AfxQbyCgoII7UPBCxas+qBoFasFC15bqrv1m81fs5n5k0wm58SBzgcfJDP/7Xwz58w5Z0ZkyJAhQ4YMJzFGb7z52mFz2crVyyn9fxhddcsYZ2uT42vWVUWuWDmSc/zjw6QoVp6ldrcw4c9wttZYrMyK8dJGkfP0t+DxYVJ4+nFqdgtSzXC21ijVDmTNQQD1LmtgkRBgZbPVCzBMAaR6GxlzzcSemmaNrFEdFUV9cTP5AgxLAKn2C887h7ICjvZwYi5iaItSf0SZ2zEMAaT+WRT9UcpImJo6BSe/jBhbonDVvZS5HfYFOIYck5QtBFlbxziYp1Tfi7HGYsraDrsCzGLcuYsyMajXT0Xf3Ms4GqXwqpspYxR2BXiOsnRBqXYl+shfjLMZto28DOwJ8H7QzSlLD8jaGhT6NxNkMEr9mXCuO5ey8LAjwFdCqfMoQ0xIfTscj4UCDUC1T1QqF1L0zjAtgNSHcVdHptzxgNEyeGSwgfuh1K/1vPInYFIA3MWI16DICSHlCBrwAoIdZZN053eipG5FFL7PO9XL6FcL5gTAiK8eoqgG4KpluI1nIMYPQfBQshbnxw61Bw3fhKfK6eQdhVfTeCQ9Q/9aMCWA1LsQrfNgmxjBSIonBdRdm5fVrTlXbctjGp2X6gE06Hrh1JeQZWeU62Mo8BfY76QjLRgRQH0oCoVFFDFlwPw7GBCDQq0IINU3Qk6OULSUwXFOQ5FvnSjWuABS/4o7s0CRUgipty8s2LAAmONXb6IoKYRXvQ1Ftq02TQqAK/8oRUghXO1zj1FjAkj9EjzzzQBpw0TlchR5KFI0aEYAtTe9I36hfhYK/IQv3IQA6kCs6fX/gubS+lW+8CYHEkDq3zDZcsgrfUCBT7KFL+AAAgTT3CnySCGC5TRfeBsTCjAXzDzJOoUINldjbqgkE0C9AquUjvjl8iUo8Ee+8CgTCPApZpNnkmXKUC6fgcb3tZ/YlwBYhYoJfylZpQzBlrrUL7OFd2FsAdClMJMsk0X6kJf6sUjRMRhPADUr3PlNlZTCra1GoZ03SLowlgCueorOpBBedRxX6I+2gvtgTwGkel2I6ZSO+KUVF6HxBxY2qF92F0DtE75/Nh1NGQpTizAw7Q43qF92EeAQu2EaxjXqAtg38m7tQUyOnoBo2/KytlVIvV7I6lVi2sbd0xzxd4Ubk4S8AHr7/IZpJwSvtKXegsbuQYweY486iG60Y14MY5DqYT5Z/2QF4L4ZCBBsxuLKQvz+31MEO9VSvzj4yrFUuwHB/mGTJCArAAenvgR53+Bi9MXgu4DEL0o8VcAt9TsbOCFjCeD7S9H4/Zx/Qs4GXYiix4ScHIHj16FAA7OnAMFbKRsfbQSvzDy1lrL0QKOxGE7vRYIYYA8B8rB5M+xjjupP4davplwdkUO/eZ4PMDi7CuCqTZyPUTa/U+ryqPT0fTC09uFURwEwAUJxP3E+poka7qCsIXh6BfpKojl+XHYUQKp7OHsrlPrz6JcjUl2BE4dZB4PsJACE/5izt8Q5LOgmKDVQLp+Pg1+EjKyQFcDVl+Kc1TsvTDwRaMU5v5Wt3wkb2CIvQG0VZ2uVUn8QpM7hz87ISYtkBfD0I5ytXaqDWFmVt+Qcfy7yOblFiqIfFcDxn+ZsrbJYOSIm775/wl2/UQ6TzoY7I0ve4Bhna5Nyw2aX0mfIkCFDhgwnH4T4F1qbdL6xyR08AAAAAElFTkSuQmCC",
             "nodes": [
@@ -86,6 +88,17 @@
                         "call",
                         "callback",
                         "request"
+                    ]
+                },
+                {
+                    "type": "startLiveChat",
+                    "defaultLabel": "Start Live Chat",
+                    "description": "Initializes the Zendesk Chat within the Cognigy Webchat",
+                    "tags": [
+                        "livechat",
+                        "chat",
+                        "webchat",
+                        "handover"
                     ]
                 }
             ]

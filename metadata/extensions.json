@@ -4,8 +4,8 @@
         {
             "name": "zendesk",
             "label": "Zendesk",
-            "version": "4.4.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk440/zendesk.tar.gz",
+            "version": "4.4.1",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk441/zendesk.tar.gz",
             "description": "Integrates Cognigy.AI with the Zendesk Ticketing System",
             "tags": [
                 "support",

@@ -99,6 +99,6 @@ export const startLiveChatNode = createNodeDescriptor({
                 email,
                 phone
             }
-        })
+        });
     }
 });

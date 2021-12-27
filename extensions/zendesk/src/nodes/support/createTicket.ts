@@ -50,7 +50,11 @@ export const createTicketNode = createNodeDescriptor({
 				esES: "Tema"
 			},
 			type: "cognigyText",
-			description: "The subject of the new support ticket",
+			description: {
+				default: "The subject of the new support ticket",
+				deDE: "Der Betreff des neuen Tickets",
+				esES: "El tema del nuevo ticket de soporte"
+			},
 			params: {
 				required: true
 			}
@@ -63,7 +67,11 @@ export const createTicketNode = createNodeDescriptor({
 				esES: "Descripción"
 			},
 			type: "cognigyText",
-			description: "The description of the new support ticket",
+			description: {
+				default: "The description of the new support ticket",
+				deDE: "Die Beschreibung des neuen Tickets",
+				esES: "La descripción del nuevo ticket de soporte"
+			},
 			params: {
 				required: true
 			}
@@ -76,7 +84,11 @@ export const createTicketNode = createNodeDescriptor({
 				esES: "Prioridad"
 			},
 			type: "select",
-			description: "The priority of the new support ticket",
+			description: {
+				default: "The priority of the new support ticket",
+				deDE: "Die Priorität des neuen Tickets",
+				esES: "La prioridad del nuevo ticket de soporte"
+			},
 			defaultValue: "normal",
 			params: {
 				required: true,

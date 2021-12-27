@@ -16,12 +16,24 @@ export interface IGetTicketParams extends INodeFunctionBaseParams {
 }
 export const getTicketNode = createNodeDescriptor({
 	type: "getTicket",
-	defaultLabel: "Get Ticket",
-	summary: "Retrieves the information about a given ticket from zendesk",
+	defaultLabel: {
+		default: "Get Ticket",
+		deDE: "Erhalte Ticket",
+		esES: "Obtener Ticket"
+	},
+	summary: {
+		default: "Retrieves the information about a given ticket",
+		deDE: "Erhält alle Infos über ein bestimmtes Ticket",
+		esES: "Recupera la información sobre un ticket determinad"
+	},
 	fields: [
 		{
 			key: "connection",
-			label: "Zendesk Connection",
+			label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
 			type: "connection",
 			params: {
 				connectionType: "zendesk",
@@ -32,7 +44,11 @@ export const getTicketNode = createNodeDescriptor({
 			key: "ticketId",
 			label: "Ticket ID",
 			type: "cognigyText",
-			description: "The ID of the ticket to request.",
+			description: {
+				default: "The ID of the ticket to request",
+				deDE: "Die ID des Support Tickets",
+				esES: "La identificación del ticket de soporte"
+			},
 			params: {
 				required: true,
 			},
@@ -40,7 +56,11 @@ export const getTicketNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
 			defaultValue: "input",
 			params: {
 				options: [
@@ -59,7 +79,11 @@ export const getTicketNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: {
+				default: "Input Key to store Result",
+				deDE: "Input Schlüssel",
+				esES: "Input Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
@@ -69,7 +93,11 @@ export const getTicketNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: {
+				default: "Context Key to store Result",
+				deDE: "Context Schlüssel",
+				esES: "Context Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
@@ -80,7 +108,11 @@ export const getTicketNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "storage",
-			label: "Storage Option",
+			label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
 			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
@@ -150,7 +182,11 @@ export const getTicketNode = createNodeDescriptor({
 export const onFoundTicket = createNodeDescriptor({
 	type: "onFoundTicket",
 	parentType: "getTicket",
-	defaultLabel: "On Found",
+	defaultLabel: {
+		default: "On Found",
+		deDE: "Artikel gefunden",
+		esES: "Encontre"
+	},
 	constraints: {
         editable: false,
         deletable: false,
@@ -172,7 +208,11 @@ export const onFoundTicket = createNodeDescriptor({
 export const onNotFoundTicket = createNodeDescriptor({
 	type: "onNotFoundTicket",
 	parentType: "getTicket",
-	defaultLabel: "On Not Found",
+	defaultLabel: {
+		default: "On Not Found",
+		deDE: "Keine Artikel gefunden",
+		esES: "Nada Encontrado"
+	},
 	constraints: {
         editable: false,
         deletable: false,

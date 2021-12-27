@@ -15,12 +15,24 @@ export interface IGetTicketParams extends INodeFunctionBaseParams {
 }
 export const getPhoneNumbersNode = createNodeDescriptor({
 	type: "getPhoneNumbers",
-	defaultLabel: "Get Phone Numbers",
-	summary: "Retrieves the list of phone numbers from Zendesk",
+	defaultLabel: {
+		default: "Get Phone Numbers",
+		deDE: "Erhalte Telefonnummern",
+		esES: "Obtener números de teléfono"
+	},
+	summary: {
+		default: "Retrieves the list of phone numbers from Zendesk",
+		deDE: "Erhält eine Liste von Telefonnummern aus Zendesk",
+		esES: "Recupera la lista de números de teléfono de Zendesk"
+	},
 	fields: [
 		{
 			key: "connection",
-			label: "Zendesk Connection",
+			label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
 			type: "connection",
 			params: {
 				connectionType: "zendesk",
@@ -30,7 +42,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
 			defaultValue: "input",
 			params: {
 				options: [
@@ -49,7 +65,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+			label: {
+				default: "Input Key to store Result",
+				deDE: "Input Schlüssel",
+				esES: "Input Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.phoneNumbers",
 			condition: {
 				key: "storeLocation",
@@ -59,7 +79,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+			label: {
+				default: "Context Key to store Result",
+				deDE: "Context Schlüssel",
+				esES: "Context Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.phoneNumbers",
 			condition: {
 				key: "storeLocation",
@@ -70,7 +94,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "storage",
-			label: "Storage Option",
+			label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
 			defaultCollapsed: true,
 			fields: [
 				"storeLocation",

@@ -1,6 +1,6 @@
 {
 	"name": "zendesk",
-	"version": "4.4.0",
+	"version": "4.4.1",
 	"description": "Integrates with Zendesk",
 	"main": "build/module.js",
 	"scripts": {
@@ -28,7 +28,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.12.0",
+		"@cognigy/extension-tools": "^0.14.0",
 		"axios": "^0.20.0"
 	}
 }

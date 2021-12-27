@@ -14,12 +14,24 @@ export interface IGetAccountStatusParams extends INodeFunctionBaseParams {
 }
 export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	type: "checkLiveAgentAvailability",
-	defaultLabel: "Check Agent Availability",
-	summary: "Checks if an agent is available in Zendesk Chat",
+    defaultLabel: {
+        default: "Check Agent Availability",
+        deDE: "Überprüfe Agenten Verfügbarkeit",
+        esES: "Verificar la disponibilidad del agente"
+    },
+    summary: {
+        default: "Checks if an agent is available in Zendesk Chat",
+        deDE: "Überprüft ob ein Agent in Zendesk Chat verfügbar ist",
+        esES: "Comprueba si hay un agente disponible en Zendesk Chat"
+    },
 	fields: [
 		{
 			key: "connection",
-			label: "Zendesk Chat Connection",
+			label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
 			type: "connection",
 			params: {
 				connectionType: "zendesk-chat",
@@ -29,7 +41,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
 			defaultValue: "input",
 			params: {
 				options: [
@@ -48,7 +64,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+            label: {
+                default: "Input Key to store result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.liveAgentAvailability",
 			condition: {
 				key: "storeLocation",
@@ -58,7 +78,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+            label: {
+                default: "Context Key to store result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.liveAgentAvailability",
 			condition: {
 				key: "storeLocation",
@@ -69,7 +93,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "storage",
-			label: "Storage Option",
+			label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
 			defaultCollapsed: true,
 			fields: [
 				"storeLocation",
@@ -157,7 +185,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 export const onAgentAvailable = createNodeDescriptor({
     type: "onAgentAvailable",
     parentType: "checkLiveAgentAvailability",
-    defaultLabel: "On Online",
+	defaultLabel: {
+		default: "On Online",
+		deDE: "Ist Online",
+		esES: "Está en línea"
+	},
     constraints: {
         editable: false,
         deletable: false,
@@ -179,7 +211,11 @@ export const onAgentAvailable = createNodeDescriptor({
 export const onNoAgentAvailable = createNodeDescriptor({
     type: "onNoAgentAvailable",
     parentType: "checkLiveAgentAvailability",
-    defaultLabel: "On Offline",
+	defaultLabel: {
+		default: "On Offline",
+		deDE: "Ist Offline",
+		esES: "Está desconectado"
+	},
     constraints: {
         editable: false,
         deletable: false,

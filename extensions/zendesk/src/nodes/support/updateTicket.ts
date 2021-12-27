@@ -17,12 +17,24 @@ export interface IUpdateTicketParams extends INodeFunctionBaseParams {
 }
 export const updateTicketNode = createNodeDescriptor({
 	type: "updateTicket",
-	defaultLabel: "Update Ticket",
-	summary: "Updates a given ticket in zendesk",
+	defaultLabel: {
+		default: "Update Ticket",
+		deDE: "Bearbeite Ticket",
+		esES: "Actualizar Ticket"
+	},
+    summary: {
+        default: "Updates a given ticket in zendesk",
+        deDE: "Bearbeitet ein bestimmtes Ticket in Zendesk",
+        esES: "Actualiza un ticket determinado en Zendesk"
+    },
 	fields: [
 		{
 			key: "connection",
-			label: "Zendesk Connection",
+			label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
 			type: "connection",
 			params: {
 				connectionType: "zendesk",
@@ -33,16 +45,28 @@ export const updateTicketNode = createNodeDescriptor({
 			key: "ticketId",
 			label: "Ticket ID",
 			type: "cognigyText",
-			description: "The ID of the ticket to request.",
+            description: {
+                default: "The ID of the support ticket",
+                deDE: "Die ID des Support Tickets",
+                esES: "La identificación del ticket de soporte"
+            },
 			params: {
 				required: true,
 			},
 		},
 		{
 			key: "ticket",
-			label: "Ticket Data",
+			label: {
+				default: "Ticket Data",
+				deDE: "Ticket Daten",
+				esES: "Datos del ticket"
+			},
 			type: "json",
-			description: "The JSON of the ticket to update.",
+            description: {
+                default: "The JSON of the ticket to update",
+                deDE: "Die JSON Daten des zu bearbeitenden Tickets",
+                esES: "La JSON del ticket a actualizar"
+            },
 			params: {
 				required: true,
 			},
@@ -60,7 +84,11 @@ export const updateTicketNode = createNodeDescriptor({
 		{
 			key: "storeLocation",
 			type: "select",
-			label: "Where to store the result",
+			label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
 			defaultValue: "input",
 			params: {
 				options: [
@@ -79,7 +107,11 @@ export const updateTicketNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: "Input Key to store Result",
+            label: {
+                default: "Input Key to store Result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.updated",
 			condition: {
 				key: "storeLocation",
@@ -89,7 +121,11 @@ export const updateTicketNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: "Context Key to store Result",
+            label: {
+                default: "Context Key to store Result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.updated",
 			condition: {
 				key: "storeLocation",
@@ -100,7 +136,11 @@ export const updateTicketNode = createNodeDescriptor({
 	sections: [
 		{
 			key: "storage",
-			label: "Storage Option",
+			label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
 			defaultCollapsed: true,
 			fields: [
 				"storeLocation",

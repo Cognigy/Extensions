@@ -15,12 +15,24 @@ export interface IGetCategoriesParams extends INodeFunctionBaseParams {
 }
 export const getCategoriesNode = createNodeDescriptor({
     type: "getCategories",
-    defaultLabel: "Get Categories",
-    summary: "Retrieves all categories of the Help Center",
+    defaultLabel: {
+		default: "Get Categories",
+		deDE: "Erhalte Kategorien",
+		esES: "Obtener categorías"
+	},
+    summary: {
+        default: "Retrieves all categories of the Help Center",
+        deDE: "Erhalte alle Kategorien des Help Centers",
+        esES: "Recupera todas las categorías del centro de ayuda"
+    },
     fields: [
         {
             key: "connection",
-            label: "Zendesk Connection",
+            label: {
+				default: "Zendesk Connection",
+				deDE: "Zendesk Verbindung",
+				esES: "Zendesk Conexión"
+			},
             type: "connection",
             params: {
                 connectionType: "zendesk",
@@ -30,7 +42,11 @@ export const getCategoriesNode = createNodeDescriptor({
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+				default: "Where to store the result",
+				deDE: "Wo das Ergebnis gespeichert werden soll",
+				esES: "Dónde almacenar el resultado"
+			},
             defaultValue: "input",
             params: {
                 options: [
@@ -49,7 +65,11 @@ export const getCategoriesNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "cognigyText",
-            label: "Input Key to store Result",
+            label: {
+                default: "Input Key to store Result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
             defaultValue: "zendesk.categories",
             condition: {
                 key: "storeLocation",
@@ -59,7 +79,11 @@ export const getCategoriesNode = createNodeDescriptor({
         {
             key: "contextKey",
             type: "cognigyText",
-            label: "Context Key to store Result",
+            label: {
+                default: "Context Key to store Result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
             defaultValue: "zendesk.categories",
             condition: {
                 key: "storeLocation",
@@ -70,7 +94,11 @@ export const getCategoriesNode = createNodeDescriptor({
     sections: [
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+				default: "Storage Option",
+				deDE: "Speicheroption",
+				esES: "Opción de almacenamiento"
+			},
             defaultCollapsed: true,
             fields: [
                 "storeLocation",

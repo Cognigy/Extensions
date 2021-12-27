@@ -13,12 +13,24 @@ export interface IStartLiveChatParams extends INodeFunctionBaseParams {
 }
 export const startLiveChatNode = createNodeDescriptor({
     type: "startLiveChat",
-    defaultLabel: "Start Live Chat",
-    summary: "Initializes the Zendesk Chat within the Cognigy Webchat",
+    defaultLabel: {
+        default: "Start Live Chat",
+        deDe: "Starte Live Chat",
+        esES: "Iniciar Live Chat"
+    },
+    summary: {
+        default: "Initializes the Zendesk Chat within the Cognigy Webchat",
+        deDe: "Initialisiert den Zendesk Chat im Cognigy Webchat",
+        esES: "Inicializa Zendesk Chat dentro de Cognigy Webchat"
+    },
     fields: [
         {
             key: "connection",
-            label: "Zendesk Chat Account Key",
+            label: {
+                default: "Zendesk Chat Account Key",
+                deDe: "Zendesk Chat Account Key",
+                esES: "Clave de cuenta de Zendesk Chat"
+            },
             type: "connection",
             params: {
                 connectionType: "zendesk-chat-account-key",
@@ -27,8 +39,16 @@ export const startLiveChatNode = createNodeDescriptor({
         },
         {
             key: "text",
-            label: "Text Message",
-            description: "The message to display to the user once the handover request was sent",
+            label: {
+                default: "Text Message",
+                deDe: "Textnachricht",
+                esES: "Mensaje de texto"
+            },
+            description: {
+                default: "The message to display to the user once the handover request was sent",
+                deDe: "Die Nachricht, die dem Benutzer angezeigt wird, sobald die Übergabeanforderung gesendet wurde",
+                esES: "El mensaje que se mostrará al usuario una vez que se haya enviado la solicitud de traspaso"
+            },
             type: "cognigyText",
             params: {
                 required: true
@@ -36,8 +56,16 @@ export const startLiveChatNode = createNodeDescriptor({
         },
         {
             key: "displayName",
-            label: "Display Name",
-            description: "The user's name that will be displayed in Zendesk",
+            label: {
+                default: "Display Name",
+                deDe: "Anzeigename",
+                esES: "Nombre para mostrar"
+            },
+            description: {
+                default: "The user's name that will be displayed in Zendesk",
+                deDe: "Der Name des Benutzers, der in Zendesk angezeigt wird",
+                esES: "El nombre de usuario que se mostrará en Zendesk"
+            },
             type: "cognigyText",
             defaultValue: "Cognigy User",
             params: {
@@ -46,8 +74,16 @@ export const startLiveChatNode = createNodeDescriptor({
         },
         {
             key: "email",
-            label: "Email Address",
-            description: "The user's email address that will be used in Zendesk",
+            label: {
+                default: "Email Address",
+                deDe: "E-Mail Addresse",
+                esES: "Dirección de correo electrónico"
+            },
+            description: {
+                default: "The user's email address that will be used in Zendesk",
+                deDe: "Die E-Mail Adresse des Benutzers, die in Zendesk verwendet wird",
+                esES: "La dirección de correo electrónico del usuario que se utilizará en Zendesk"
+            },
             type: "cognigyText",
             defaultValue: "",
             params: {
@@ -56,8 +92,16 @@ export const startLiveChatNode = createNodeDescriptor({
         },
         {
             key: "phone",
-            label: "Phone Number",
-            description: "The user's phone number that will be used in Zendesk",
+            label: {
+                default: "Phone Number",
+                deDe: "Telefonnummer",
+                esES: "Número de teléfono"
+            },
+            description: {
+                default: "The user's phone number that will be used in Zendesk",
+                deDe: "Die Telefonnummer des Benutzers, die in Zendesk verwendet wird",
+                esES: "El número de teléfono del usuario que se utilizará en Zendesk"
+            },
             type: "cognigyText",
             defaultValue: "",
             params: {
@@ -68,7 +112,11 @@ export const startLiveChatNode = createNodeDescriptor({
     sections: [
         {
             key: "visitor",
-            label: "Visitor",
+            label: {
+                default: "Visitor",
+                deDe: "Besucher",
+                esES: "Visitante"
+            },
             defaultCollapsed: true,
             fields: [
                 "displayName",

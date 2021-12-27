@@ -24,7 +24,7 @@ export const getTicketNode = createNodeDescriptor({
 	summary: {
 		default: "Retrieves the information about a given ticket",
 		deDE: "Erhält alle Infos über ein bestimmtes Ticket",
-		esES: "Recupera la información sobre un ticket determinad"
+		esES: "Recupera la información sobre un ticket determinado"
 	},
 	fields: [
 		{
@@ -44,11 +44,11 @@ export const getTicketNode = createNodeDescriptor({
 			key: "ticketId",
 			label: "Ticket ID",
 			type: "cognigyText",
-			description: {
-				default: "The ID of the ticket to request",
-				deDE: "Die ID des Support Tickets",
-				esES: "La identificación del ticket de soporte"
-			},
+            description: {
+                default: "The ID of the support ticket",
+                deDE: "Die ID des Support Tickets",
+                esES: "La identificación del ticket de soporte"
+            },
 			params: {
 				required: true,
 			},
@@ -79,11 +79,11 @@ export const getTicketNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: {
-				default: "Input Key to store Result",
-				deDE: "Input Schlüssel",
-				esES: "Input Key para almacenar el resultado"
-			},
+            label: {
+                default: "Input Key to store Result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",
@@ -93,11 +93,11 @@ export const getTicketNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: {
-				default: "Context Key to store Result",
-				deDE: "Context Schlüssel",
-				esES: "Context Key para almacenar el resultado"
-			},
+            label: {
+                default: "Context Key to store Result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.ticket",
 			condition: {
 				key: "storeLocation",

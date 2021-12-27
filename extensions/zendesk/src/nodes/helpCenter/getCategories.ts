@@ -21,10 +21,10 @@ export const getCategoriesNode = createNodeDescriptor({
 		esES: "Obtener categorías"
 	},
     summary: {
-		default: "Retrieves all categories of the Help Center",
-		deDE: "Erhalte alle Kategorien des Help Centers",
-		esES: "Recupera todas las categorías del Centro de ayuda."
-	},
+        default: "Retrieves all categories of the Help Center",
+        deDE: "Erhalte alle Kategorien des Help Centers",
+        esES: "Recupera todas las categorías del centro de ayuda"
+    },
     fields: [
         {
             key: "connection",
@@ -66,10 +66,10 @@ export const getCategoriesNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: {
-				default: "Input Key to store Result",
-				deDE: "Input Schlüssel",
-				esES: "Input Key para almacenar el resultado"
-			},
+                default: "Input Key to store Result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
             defaultValue: "zendesk.categories",
             condition: {
                 key: "storeLocation",
@@ -80,10 +80,10 @@ export const getCategoriesNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: {
-				default: "Context Key to store Result",
-				deDE: "Context Schlüssel",
-				esES: "Context Key para almacenar el resultado"
-			},
+                default: "Context Key to store Result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
             defaultValue: "zendesk.categories",
             condition: {
                 key: "storeLocation",

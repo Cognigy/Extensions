@@ -19,12 +19,12 @@ export const searchArticlesNode = createNodeDescriptor({
     defaultLabel: {
         default: "Search Articles",
         deDE: "Suche Artikel",
-        esES: "Buscar Articulos"
+        esES: "Buscar Artículos"
     },
     summary: {
         default: "Searches for Help Center articles based on a search query",
         deDE: "Durchsucht das Help Center nach passenden Artikeln zu einer Suchanfrage",
-        esES: "Busca artículos del Centro de ayuda según una consulta de búsqueda"
+        esES: "Busca artículos del centro de ayuda según una consulta de búsqueda"
     },
     fields: [
         {
@@ -45,13 +45,13 @@ export const searchArticlesNode = createNodeDescriptor({
             label: {
                 default: "Search Query",
                 deDE: "Suchanfrage",
-                esES: "Consulta de busqueda"
+                esES: "Consulta de búsqueda"
             },
             type: "cognigyText",
             description: {
-                default: "The search query that is used in order find help center articles",
+                default: "The search query that is used in order to find help center articles",
                 deDE: "Die Suchanfrage welche verwendet werden soll",
-                esES: "La consulta de búsqueda que se utiliza para buscar artículos del centro de ayuda."
+                esES: "La consulta de búsqueda que se utiliza para encontrar artículos del centro de ayuda."
             },
             params: {
                 required: true,
@@ -85,7 +85,7 @@ export const searchArticlesNode = createNodeDescriptor({
             type: "cognigyText",
             label: {
                 default: "Input Key to store Result",
-                deDE: "Input Schlüssel",
+                deDE: "Input Key zum Speichern des Ergebnisses",
                 esES: "Input Key para almacenar el resultado"
             },
             defaultValue: "zendesk.articles",
@@ -99,7 +99,7 @@ export const searchArticlesNode = createNodeDescriptor({
             type: "cognigyText",
             label: {
                 default: "Context Key to store Result",
-                deDE: "Context Schlüssel",
+                deDE: "Context Key zum Speichern des Ergebnisses",
                 esES: "Context Key para almacenar el resultado"
             },
             defaultValue: "zendesk.articles",
@@ -199,10 +199,10 @@ export const onFoundArticles = createNodeDescriptor({
     type: "onFoundArticles",
     parentType: "searchArticles",
     defaultLabel: {
-		default: "On Found",
-		deDE: "Artikel gefunden",
-		esES: "Encontre"
-	},
+        default: "On Found",
+        deDE: "Artikel gefunden",
+        esES: "Encontrado"
+    },
     constraints: {
         editable: false,
         deletable: false,
@@ -225,10 +225,10 @@ export const onNotFoundArticles = createNodeDescriptor({
     type: "onNotFoundArticles",
     parentType: "searchArticles",
     defaultLabel: {
-		default: "On Not Found",
-		deDE: "Keine Artikel gefunden",
-		esES: "Nada Encontrado"
-	},
+        default: "On Not Found",
+        deDE: "Keine Artikel gefunden",
+        esES: "Nada Encontrado"
+    },
     constraints: {
         editable: false,
         deletable: false,

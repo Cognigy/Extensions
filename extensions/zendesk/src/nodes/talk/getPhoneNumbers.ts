@@ -65,11 +65,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-			label: {
-				default: "Input Key to store Result",
-				deDE: "Input Schlüssel",
-				esES: "Input Key para almacenar el resultado"
-			},
+            label: {
+                default: "Input Key to store Result",
+                deDE: "Input Key zum Speichern des Ergebnisses",
+                esES: "Input Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.phoneNumbers",
 			condition: {
 				key: "storeLocation",
@@ -79,11 +79,11 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-			label: {
-				default: "Context Key to store Result",
-				deDE: "Context Schlüssel",
-				esES: "Context Key para almacenar el resultado"
-			},
+            label: {
+                default: "Context Key to store Result",
+                deDE: "Context Key zum Speichern des Ergebnisses",
+                esES: "Context Key para almacenar el resultado"
+            },
 			defaultValue: "zendesk.phoneNumbers",
 			condition: {
 				key: "storeLocation",

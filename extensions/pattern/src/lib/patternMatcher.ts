@@ -21,84 +21,86 @@ export const patternMatcher = (ci: INLProperties, patterns: string[], compoundGr
 
     const regexPatterns = [];
 
-    // go through patterns and create regex versions of each
+    // go through patterns and create regex versions of each that is not empty string
     patterns.forEach((pattern) => {
-        // set parsedPattern to pattern in case there are no slots
-        let parsedPattern = pattern;
+        if (pattern) {
+            // set parsedPattern to pattern in case there are no slots
+            let parsedPattern = pattern;
 
-        // match all mentioned slots in the pattern
-        const foundSlots = pattern.match(/\@[\w>]+/g);
-        const tags = [];
-        const slots = [];
+            // match all mentioned slots in the pattern
+            const foundSlots = pattern.match(/\@[\w>]+/g);
+            const tags = [];
+            const slots = [];
 
-        // if there are slots, process them
-        if (Array.isArray(foundSlots) && foundSlots.length > 0) {
-            foundSlots.forEach((slot) => {
-                // splits tags from slots
-                const split = slot.split(">");
-                const slotName = split[0].replace("@", "");
-                slots.push(slotName);
+            // if there are slots, process them
+            if (Array.isArray(foundSlots) && foundSlots.length > 0) {
+                foundSlots.forEach((slot) => {
+                    // splits tags from slots
+                    const split = slot.split(">");
+                    const slotName = split[0].replace("@", "");
+                    slots.push(slotName);
 
-                // if there is a tag (SLOT>TAG), remember it
-                if (split.length === 2) tags.push(split[1]);
-                else tags.push("");
+                    // if there is a tag (SLOT>TAG), remember it
+                    if (split.length === 2) tags.push(split[1]);
+                    else tags.push("");
 
-                const slotValues = [];
-                if (ci.slots[slotName]) {
-                    switch (slotName) {
-                        case "DATE":
-                            ci.slots.DATE.forEach((s) => {
-                                // just add the number
-                                if (s.start) slotValues.push(s.start["text"]);
-                                if (s.end) slotValues.push(s.end["text"]);
-                            });
-                            break;
+                    const slotValues = [];
+                    if (ci.slots[slotName]) {
+                        switch (slotName) {
+                            case "DATE":
+                                ci.slots.DATE.forEach((s) => {
+                                    // just add the number
+                                    if (s.start) slotValues.push(s.start["text"]);
+                                    if (s.end) slotValues.push(s.end["text"]);
+                                });
+                                break;
 
-                        case "TEMPERATURE":
-                            ci.slots.TEMPERATURE.forEach((s) => {
-                                // just add the number
-                                slotValues.push(s);
-                            });
-                            break;
-                        case "AGE":
-                            ci.slots.AGE.forEach((s) => {
-                                // just add the number
-                                slotValues.push(s);
-                            });
-                            break;
-                        case "PERCENTAGE":
-                            ci.slots.PERCENTAGE.forEach((s) => {
-                                // just add the number
-                                slotValues.push(s + "%");
-                                slotValues.push(s + " percent");
-                            });
-                        case "NUMBER":
-                            ci.slots.NUMBER.forEach((s) => {
-                                // just add the number
-                                slotValues.push(s);
-                            });
-                            break;
+                            case "TEMPERATURE":
+                                ci.slots.TEMPERATURE.forEach((s) => {
+                                    // just add the number
+                                    slotValues.push(s);
+                                });
+                                break;
+                            case "AGE":
+                                ci.slots.AGE.forEach((s) => {
+                                    // just add the number
+                                    slotValues.push(s);
+                                });
+                                break;
+                            case "PERCENTAGE":
+                                ci.slots.PERCENTAGE.forEach((s) => {
+                                    // just add the number
+                                    slotValues.push(s + "%");
+                                    slotValues.push(s + " percent");
+                                });
+                            case "NUMBER":
+                                ci.slots.NUMBER.forEach((s) => {
+                                    // just add the number
+                                    slotValues.push(s);
+                                });
+                                break;
 
-                        default:
-                            ci.slots[slotName].forEach((s) => {
-                                // it's important to use the synonym, as this is the text that was actually found
-                                slotValues.push(s.synonym);
-                            });
+                            default:
+                                ci.slots[slotName].forEach((s) => {
+                                    // it's important to use the synonym, as this is the text that was actually found
+                                    slotValues.push(s.synonym);
+                                });
+                        }
+
+                        const slotRegex = slotValues.join("|");
+                        // replace the slots name with the list of actually found entites for this slot
+                        parsedPattern = parsedPattern.replace(new RegExp(`${slot}`, "g"), `(${slotRegex})`);
                     }
+                });
+            }
 
-                    const slotRegex = slotValues.join("|");
-                    // replace the slots name with the list of actually found entites for this slot
-                    parsedPattern = parsedPattern.replace(new RegExp(`${slot}`, "g"), `(${slotRegex})`);
-                }
+            regexPatterns.push({
+                "pattern": pattern,
+                "parsedPattern": parsedPattern,
+                "tags": tags,
+                "slots": slots
             });
         }
-
-        regexPatterns.push({
-            "pattern": pattern,
-            "parsedPattern": parsedPattern,
-            "tags": tags,
-            "slots": slots
-        });
     });
 
     const compoundGroups = [];
@@ -189,3 +191,24 @@ export const patternMatcher = (ci: INLProperties, patterns: string[], compoundGr
     if (compoundGroups && compoundGroups.length === 0 && (!Array.isArray(ci["compoundSlots"]) || ci["compoundSlots"].length === 0)) delete ci["compoundSlots"];
     return ci;
 };
+
+/*
+
+const test = () => {
+    let input = {
+        text: "I want to fly to New York",
+        slots: {
+            "city": [
+                {
+                    "keyphrase": "New York",
+                    "synonym": "New York"
+                }
+            ]
+        }
+    };
+    patternMatcher(input, ["", "to @city>origin"], "flights", false, true, true, null);
+    console.log(JSON.stringify(input, undefined, 4));
+};
+
+test();
+*/

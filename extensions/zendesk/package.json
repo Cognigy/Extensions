@@ -1,6 +1,10 @@
 {
 	"name": "zendesk",
+<<<<<<< HEAD
 	"version": "4.3.0",
+=======
+	"version": "4.4.0",
+>>>>>>> master
 	"description": "Integrates with Zendesk",
 	"main": "build/module.js",
 	"scripts": {
@@ -9,6 +13,12 @@
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
+	"keywords": [
+		"Talk",
+		"Suppot",
+		"Help Center",
+		"Live Chat"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"

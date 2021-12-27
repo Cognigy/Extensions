@@ -11,9 +11,9 @@ export interface ISetParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			apiKey: string;
-			projectId: string;
-			databaseName: string;
-			bucket: string;
+			authDomain: string;
+			databaseURL: string;
+			storageBucket: string;
 		};
 		path: string;
 		data: object;
@@ -118,14 +118,14 @@ export const setNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: ISetParams) => {
 		const { api } = cognigy;
 		const { path, data, connection, storeLocation, contextKey, inputKey } = config;
-		const { apiKey, projectId, bucket, databaseName } = connection;
+		const { apiKey, authDomain, storageBucket, databaseURL } = connection;
 
 		// set the firebase configuration
 		const firebaseConfig = {
 			apiKey,
-			authDomain: `${projectId}.firebaseapp.com`,
-			databaseURL: `https://${databaseName}.firebaseio.com`,
-			storageBucket: `${bucket}.appspot.com`
+			authDomain,
+			databaseURL,
+			storageBucket
 		};
 
 		try {

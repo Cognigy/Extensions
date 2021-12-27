@@ -1,14 +1,15 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import { google } from 'googleapis';
+const sheets = google.sheets('v4');
 
 export interface IGetSpreadsheetParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			key: string;
+			serviceAccountJSON: string;
 		};
+		connectionType: string;
 		spreadsheetId: string;
-		sheetName: string;
-		filter: string;
+		range: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -20,10 +21,10 @@ export const getSpreadsheetNode = createNodeDescriptor({
 	fields: [
 		{
 			key: "connection",
-			label: "API Key",
+			label: "Service Account",
 			type: "connection",
 			params: {
-				connectionType: "google-cloud-connection",
+				connectionType: "serviceAccount-connection",
 				required: true
 			}
 		},
@@ -37,18 +38,9 @@ export const getSpreadsheetNode = createNodeDescriptor({
 			},
 		},
 		{
-			key: "sheetName",
-			label: "Sheet Name",
-			description: "The name of he sheet that includes the table data",
-			type: "cognigyText",
-			params: {
-				required: true,
-			},
-		},
-		{
-			key: "filter",
-			label: "Filter",
-			description: "A data filter such as A1 or F30",
+			key: "range",
+			label: "Range",
+			description: "A data range such as A1 or F30",
 			type: "cognigyText",
 			defaultValue: "A2:G30"
 		},
@@ -107,29 +99,38 @@ export const getSpreadsheetNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "spreadsheetId" },
-		{ type: "field", key: "sheetName" },
-		{ type: "field", key: "filter" },
-		{ type: "section", key: "storage" },
+		{ type: "field", key: "range" },
+		{ type: "section", key: "storage" }
 	],
 	appearance: {
 		color: "#0F9D57"
 	},
 	function: async ({ cognigy, config }: IGetSpreadsheetParams) => {
 		const { api } = cognigy;
-		const { spreadsheetId, sheetName, filter, connection, storeLocation, contextKey, inputKey } = config;
-		const { key } = connection;
+		const { spreadsheetId, connection, range, storeLocation, contextKey, inputKey } = config;
+		let { serviceAccountJSON } = connection;
+
+		serviceAccountJSON = serviceAccountJSON.replace('\n', ' ');
+		const serviceAccount = JSON.parse(serviceAccountJSON);
 
 		try {
-			const response = await axios({
-				method: 'get',
-				url: `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!${filter}?key=${key}`,
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
+
+			const authClient = new google.auth.JWT(
+				serviceAccount.client_email,
+				null,
+				serviceAccount.private_key,
+				["https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/drive.file",
+					"https://www.googleapis.com/auth/spreadsheets"]
+			);
+
+			const response = (await sheets.spreadsheets.values.get({
+				spreadsheetId,
+				auth: authClient,
+				range
+			}));
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
+				api.addToContext(contextKey, response, "simple");
 			} else {
 				// @ts-ignore
 				api.addToInput(inputKey, response.data);

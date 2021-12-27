@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AccessToken } from "../../types/uipath";
+import { AccessToken } from "../../../types/uipath";
 
 export interface IAuthenticationParams extends INodeFunctionBaseParams {
 	config: {

@@ -15,12 +15,12 @@ export const startLiveChatNode = createNodeDescriptor({
     type: "startLiveChat",
     defaultLabel: {
         default: "Start Live Chat",
-        deDe: "Starte Live Chat",
+        deDE: "Starte Live Chat",
         esES: "Iniciar Live Chat"
     },
     summary: {
         default: "Initializes the Zendesk Chat within the Cognigy Webchat",
-        deDe: "Initialisiert den Zendesk Chat im Cognigy Webchat",
+        deDE: "Initialisiert den Zendesk Chat im Cognigy Webchat",
         esES: "Inicializa Zendesk Chat dentro de Cognigy Webchat"
     },
     fields: [
@@ -28,7 +28,7 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "connection",
             label: {
                 default: "Zendesk Chat Account Key",
-                deDe: "Zendesk Chat Account Key",
+                deDE: "Zendesk Chat Account Key",
                 esES: "Clave de cuenta de Zendesk Chat"
             },
             type: "connection",
@@ -41,12 +41,12 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "text",
             label: {
                 default: "Text Message",
-                deDe: "Textnachricht",
+                deDE: "Textnachricht",
                 esES: "Mensaje de texto"
             },
             description: {
                 default: "The message to display to the user once the handover request was sent",
-                deDe: "Die Nachricht, die dem Benutzer angezeigt wird, sobald die Übergabeanforderung gesendet wurde",
+                deDE: "Die Nachricht, die dem Benutzer angezeigt wird, sobald die Übergabeanforderung gesendet wurde",
                 esES: "El mensaje que se mostrará al usuario una vez que se haya enviado la solicitud de traspaso"
             },
             type: "cognigyText",
@@ -58,12 +58,12 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "displayName",
             label: {
                 default: "Display Name",
-                deDe: "Anzeigename",
+                deDE: "Anzeigename",
                 esES: "Nombre para mostrar"
             },
             description: {
                 default: "The user's name that will be displayed in Zendesk",
-                deDe: "Der Name des Benutzers, der in Zendesk angezeigt wird",
+                deDE: "Der Name des Benutzers, der in Zendesk angezeigt wird",
                 esES: "El nombre de usuario que se mostrará en Zendesk"
             },
             type: "cognigyText",
@@ -76,12 +76,12 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "email",
             label: {
                 default: "Email Address",
-                deDe: "E-Mail Addresse",
+                deDE: "E-Mail Addresse",
                 esES: "Dirección de correo electrónico"
             },
             description: {
                 default: "The user's email address that will be used in Zendesk",
-                deDe: "Die E-Mail Adresse des Benutzers, die in Zendesk verwendet wird",
+                deDE: "Die E-Mail Adresse des Benutzers, die in Zendesk verwendet wird",
                 esES: "La dirección de correo electrónico del usuario que se utilizará en Zendesk"
             },
             type: "cognigyText",
@@ -94,12 +94,12 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "phone",
             label: {
                 default: "Phone Number",
-                deDe: "Telefonnummer",
+                deDE: "Telefonnummer",
                 esES: "Número de teléfono"
             },
             description: {
                 default: "The user's phone number that will be used in Zendesk",
-                deDe: "Die Telefonnummer des Benutzers, die in Zendesk verwendet wird",
+                deDE: "Die Telefonnummer des Benutzers, die in Zendesk verwendet wird",
                 esES: "El número de teléfono del usuario que se utilizará en Zendesk"
             },
             type: "cognigyText",
@@ -114,7 +114,7 @@ export const startLiveChatNode = createNodeDescriptor({
             key: "visitor",
             label: {
                 default: "Visitor",
-                deDe: "Besucher",
+                deDE: "Besucher",
                 esES: "Visitante"
             },
             defaultCollapsed: true,

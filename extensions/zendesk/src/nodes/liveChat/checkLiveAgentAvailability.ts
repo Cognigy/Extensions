@@ -4,8 +4,7 @@ import axios from "axios";
 export interface IGetAccountStatusParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			clientId: string;
-			clientSecret: string;
+			accessToken: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -122,22 +121,9 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	function: async ({ cognigy, config, childConfigs }: IGetAccountStatusParams) => {
 		const { api } = cognigy;
 		const { connection, storeLocation, contextKey, inputKey } = config;
-		const { clientId, clientSecret } = connection;
+		const { accessToken } = connection;
 
 		try {
-
-			const tokenPayload = `client_id=${clientId}`
-			+ `&grant_type=client_credentials`
-			+ `&client_secret=${clientSecret}`;
-
-			const authResponse = await axios({
-				method: "post",
-				url: "https://www.zopim.com/oauth2/token",
-				headers: {
-					"Content-Type": "application/x-www-form-urlencoded"
-				},
-				data: tokenPayload,
-			});
 
 			const response = await axios({
 				method: "get",
@@ -145,7 +131,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 				headers: {
 					"Accept": "application/json",
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${authResponse.data.access_token}`
+					"Authorization": `Bearer ${accessToken}`
 				},
 			});
 

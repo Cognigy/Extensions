@@ -4,7 +4,6 @@ export const zendeskChatConnection: IConnectionSchema = {
 	type: "zendesk-chat",
 	label: "Zendesk Chat",
 	fields: [
-		{ fieldName: "clientId" },
-		{ fieldName: "clientSecret" }
+		{ fieldName: "accessToken" }
 	]
 };

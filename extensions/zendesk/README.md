@@ -16,10 +16,8 @@ Integrates Cognigy.AI with the Zendesk Ticketing System (https://www.zendesk.com
 
 **Zendesk Chat**:
 
-- **client_id**
-  - The Zendesk Chat client id
-- **client_secret**
-  - The Zendesk Chat client secret
+- **accessToken**
+  - The Zendesk Chat OAuth Access Token
 
 ## Flow Nodes
 

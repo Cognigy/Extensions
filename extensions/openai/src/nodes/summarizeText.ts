@@ -16,7 +16,7 @@ export interface ISummarizeTextParams extends INodeFunctionBaseParams {
     };
 }
 export const summarizeTextNode = createNodeDescriptor({
-    type: "Summarize Text",
+    type: "summarizeText",
     defaultLabel: {
         default: "Summarize Text",
         deDE: "Text zusammenfassen"
@@ -50,7 +50,8 @@ export const summarizeTextNode = createNodeDescriptor({
                 deDE: "Der Text welcher zusammengefasst werden soll"
             },
             params: {
-                required: true
+                required: true,
+                multiline: true
             }
         },
         {

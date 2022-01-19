@@ -1,0 +1,27 @@
+{
+  "name": "strip-html",
+  "version": "4.0.0",
+  "description": "Strips HTML tags from the incoming text",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz strip-html.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "extensions",
+    "Strip HTML"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "string-strip-html": "^8.3.0"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.3",
+    "typescript": "^4.5.4"
+  }
+}

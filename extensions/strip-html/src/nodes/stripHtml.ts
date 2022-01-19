@@ -17,17 +17,15 @@ export const stripHtmlNode = createNodeDescriptor({
     {
       key: "textWithHtml",
       label: "Text with HTML",
+      description: "Incoming HTML containing some text, which we needs to be strip out",
       type: "cognigyText",
-      defaultValue: "",
-      params: {
-        placeholder: "",
-        required: true
-      }
+      params: { required: true }
     },
     {
       key: "storeLocation",
       type: "select",
       label: "Where to store the result",
+      description: "Choose in which object should the stripped text be stored",
       params: {
         options: [
           { label: "Input", value: "input" },
@@ -41,6 +39,7 @@ export const stripHtmlNode = createNodeDescriptor({
       key: "inputKey",
       type: "cognigyText",
       label: "Input Key to store Result",
+      description: "In which field of the input object should the stripped text be stored",
       defaultValue: "stripText",
       condition: { key: "storeLocation", value: "input" }
     },
@@ -48,6 +47,7 @@ export const stripHtmlNode = createNodeDescriptor({
       key: "contextKey",
       type: "cognigyText",
       label: "Context Key to store Result",
+      description: "In which field of the context object should the stripped text be stored",
       defaultValue: "stripText",
       condition: { key: "storeLocation", value: "context" }
     }

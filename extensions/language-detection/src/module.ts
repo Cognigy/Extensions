@@ -7,5 +7,8 @@ export default createExtension({
 	nodes: [
 		detectLanguageNode
 	],
-	connections: []
+
+	options: {
+		label: "Language Detection"
+	}
 });

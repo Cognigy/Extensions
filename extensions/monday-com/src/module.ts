@@ -12,5 +12,9 @@ export default createExtension({
 
 	connections: [
 		mondayConnection
-	]
+	],
+
+	options: {
+		label: "Monday"
+	}
 });

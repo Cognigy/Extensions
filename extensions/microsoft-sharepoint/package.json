@@ -16,7 +16,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "tslint": "^6.1.2",
     "node-sp-auth": "^2.5.7",
     "request": "^2.88.0",

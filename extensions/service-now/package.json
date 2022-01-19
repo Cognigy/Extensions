@@ -1,7 +1,7 @@
 {
   "name": "service-now",
-  "version": "4.0.0",
-  "description": "Integrates with Service Now",
+  "version": "4.2.0",
+  "description": "Integrates with ServiceNow",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -15,8 +15,8 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.20.0",
+    "@cognigy/extension-tools": "^0.12.0",
+    "axios": "^0.21.1",
     "https": "^1.0.0",
     "tslint": "^6.1.2"
   },

@@ -143,10 +143,10 @@ export const detectLanguageNode = createNodeDescriptor({
 					}
 				} else {
 					if (storeLocation === "context") {
-						api.addToContext(contextKey, { result: "unkown" }, "simple");
+						api.addToContext(contextKey, { result: "unknown" }, "simple");
 					} else {
 						// @ts-ignore
-						api.addToInput(inputKey, { result: "unkown" });
+						api.addToInput(inputKey, { result: "unknown" });
 					}
 				}
 			}

@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		twilioConnection
-	]
+	],
+
+	options: {
+		label: "Twilio"
+	}
 });

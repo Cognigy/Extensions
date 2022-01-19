@@ -9,10 +9,7 @@ export interface ICreateEntityParams extends INodeFunctionBaseParams {
             loginUrl: string;
         };
         entityType: string,
-        accountRecord: object;
-        contactRecord: object;
-        eventRecord: object;
-        caseRecord: object;
+        entityRecord: object;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -33,110 +30,20 @@ export const createEntityNode = createNodeDescriptor({
         },
         {
             key: "entityType",
-            type: "select",
+            type: "cognigyText",
             label: "Entity Type",
             defaultValue: "Contact",
             params: {
-                options: [
-                    {
-                        label: "Account",
-                        value: "Account"
-                    },
-                    {
-                        label: "Contact",
-                        value: "Contact"
-                    },
-                    {
-                        label: "Event",
-                        value: "Event"
-                    },
-                    {
-                        label: "Case",
-                        value: "Case"
-                    }
-                ],
                 required: true
             },
         },
         {
-            key: "accountRecord",
+            key: "entityRecord",
             type: "json",
-            label: "Account Record",
-            defaultValue: `{
-    "Name": "Company X",
-    "Phone": "0221 12345",
-    "BillingCity": "Dusseldorf",
-    "BillingStreet": "Speditionsstraße 1",
-    "BillingState": "NRW",
-    "BillingPostalCode": "40221",
-    "BillingCountry": "Germany",
-    "Description": "New Contact",
-    "Industry": "IT",
-    "Website": "www.cognigy.com"
-}
-            `,
+            label: "Entity Record",
+            defaultValue: `{}`,
             params: {
                 required: true
-            },
-            condition: {
-                key: "entityType",
-                value: "Account"
-            }
-        },
-        {
-            key: "contactRecord",
-            type: "json",
-            label: "Contact Record",
-            defaultValue: `{
-    "FirstName": "Max",
-    "LastName": "Mustermann"
-}
-            `,
-            params: {
-                required: true
-            },
-            condition: {
-                key: "entityType",
-                value: "Contact"
-            }
-        },
-        {
-            key: "eventRecord",
-            type: "json",
-            label: "Event Record",
-            defaultValue: `{
-    "Location": "Dusseldorf",
-    "Description": "Eating Stones",
-    "Subject": "Event X",
-    "ActivityDate": "2019-01-25",
-    "DurationInMinutes": "60",
-    "ActivityDateTime": "2019-01-25T13:00:00"
-}
-            `,
-            params: {
-                required: true
-            },
-            condition: {
-                key: "entityType",
-                value: "Event"
-            }
-        },
-        {
-            key: "caseRecord",
-            type: "json",
-            label: "Case Record",
-            defaultValue: `{
-    "Status": "New",
-    "Origin": "Web",
-    "Subject": "New Case",
-    "Description": "This is a new order"
-}`,
-            params: {
-                required: true
-            },
-            condition: {
-                key: "entityType",
-                value: "Case"
             }
         },
         {
@@ -160,7 +67,7 @@ export const createEntityNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -170,7 +77,7 @@ export const createEntityNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -194,36 +101,22 @@ export const createEntityNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "entityType" },
-        { type: "field", key: "accountRecord" },
-        { type: "field", key: "contactRecord" },
-        { type: "field", key: "eventRecord" },
-        { type: "field", key: "caseRecord" },
+        { type: "field", key: "entityRecord" },
         { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#009EDB"
     },
-    function: async ({ cognigy, config }: ICreateEntityParams) => {
+    dependencies: {
+        children: [
+            "onSuccessCreateEntity",
+            "onErrorCreateEntity"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
         const { api } = cognigy;
-        const { entityType, accountRecord, contactRecord, eventRecord, caseRecord, connection, storeLocation, contextKey, inputKey } = config;
+        const { entityType, entityRecord, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
-
-        let entityRecord: object = {};
-        switch (entityType) {
-            case 'Account':
-                entityRecord = accountRecord;
-                break;
-            case 'Contact':
-                entityRecord = contactRecord;
-                break;
-            case 'Event':
-                entityRecord = eventRecord;
-                break;
-            case 'Case':
-                entityRecord = caseRecord;
-                break;
-        }
-
 
         try {
 
@@ -236,6 +129,9 @@ export const createEntityNode = createNodeDescriptor({
             // Single record creation
             const record = await conn.sobject(entityType).create(entityRecord);
 
+            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessCreateEntity");
+            api.setNextNode(onSuccessChild.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, record, "simple");
             } else {
@@ -244,6 +140,10 @@ export const createEntityNode = createNodeDescriptor({
             }
 
         } catch (error) {
+
+            const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateEntity");
+            api.setNextNode(onErrorChild.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");
             } else {
@@ -251,5 +151,49 @@ export const createEntityNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
+    }
+});
+
+export const onSuccessCreateEntity = createNodeDescriptor({
+    type: "onSuccessCreateEntity",
+    parentType: "createEntity",
+    defaultLabel: "On Success",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onErrorCreateEntity = createNodeDescriptor({
+    type: "onErrorCreateEntity",
+    parentType: "createEntity",
+    defaultLabel: "On Error",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini"
     }
 });

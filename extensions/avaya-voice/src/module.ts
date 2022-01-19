@@ -33,5 +33,9 @@ export default createExtension({
         credentialConnection,
         avayaApiConnection,
         cpaasConnection
-    ]
+    ],
+
+    options: {
+        label: "Avaya Voice"
+    }
 });

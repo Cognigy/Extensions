@@ -3,7 +3,7 @@ import { createExtension } from "@cognigy/extension-tools";
 import { getCharacterNode } from "./nodes/GetCharacter";
 import { getListOfCharactersNode } from "./nodes/getListOfCharacters";
 import { getCreatorNode } from "./nodes/getCreator";
-import { getSeriesByCreatorIDNode} from "./nodes/getSeriesByCreatorID";
+import { getSeriesByCreatorIDNode } from "./nodes/getSeriesByCreatorID";
 import { getComicByUPCNode } from "./nodes/getComicByUPC";
 import { getComicByNameIssueNode } from "./nodes/getComicByNameIssue";
 import { getComicByComicIDNode } from "./nodes/getComicByComicID";
@@ -23,5 +23,9 @@ export default createExtension({
 	],
 	connections: [
 		marvelAPIKeys
-	]
+	],
+
+	options: {
+		label: "Marvel"
+	}
 });

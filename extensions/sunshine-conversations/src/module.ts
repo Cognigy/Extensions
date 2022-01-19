@@ -16,6 +16,9 @@ export default createExtension({
 
     connections: [
         sunshineConnection
-    ]
+    ],
 
+    options: {
+        label: "Sunshine Conversations"
+    }
 });

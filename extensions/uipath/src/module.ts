@@ -1,27 +1,45 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { uiPathAccessData } from './connections/uiPathAccessData';
 import { uiPathOnPremAccessData } from './connections/uiPathOnPrem';
 import { uiPathInstanceData } from './connections/uiPathInstance';
-import { addQueueItemNode } from './nodes/addQueueItem';
-import { startJobNode } from './nodes/startJob';
-import { getReleasesNode } from "./nodes/getReleases";
-import { getReleasesByNameNode } from "./nodes/getReleasesByName";
+import { addQueueItemNode } from './nodes/Orchestrator/addQueueItem';
+import { startJobNode } from './nodes/Orchestrator/startJob';
+import { getProcessesNode } from "./nodes/Orchestrator/getProcesses";
+import { getProcessByNameNode } from "./nodes/Orchestrator/getProcessByName";
+import { getRobotIdbyUserNode } from "./nodes/Orchestrator/getRobotIdbyUser";
+import { getUsersNode } from "./nodes/Action Center/getUsers";
+import { getTasksNode } from "./nodes/Action Center/getTasks";
+import { assignTaskNode } from "./nodes/Action Center/assignTask";
+import { unassignTaskNode } from "./nodes/Action Center/unassignTask";
+import { reassignTaskNode } from "./nodes/Action Center/reassignTask";
+import { deleteTaskNode } from "./nodes/Action Center/deleteTasks";
+import { startJobSimplifiedNode } from "./nodes/Orchestrator/startJobSimplified";
 
-import { AuthenticationNode } from "./nodes/Authentication";
+import { AuthenticationNode } from "./nodes/Orchestrator/Authentication";
 
 
 export default createExtension({
 	nodes: [
 		addQueueItemNode,
 		startJobNode,
-		getReleasesNode,
+		getProcessesNode,
 		AuthenticationNode,
-		getReleasesByNameNode
+		getProcessByNameNode,
+		getRobotIdbyUserNode,
+		getUsersNode,
+		getTasksNode,
+		assignTaskNode,
+		unassignTaskNode,
+		reassignTaskNode,
+		deleteTaskNode,
+		startJobSimplifiedNode
 	],
 
 	connections: [
-		uiPathAccessData,
 		uiPathOnPremAccessData,
 		uiPathInstanceData,
-	]
+	],
+
+	options: {
+		label: "UiPath"
+	}
 });

@@ -17,7 +17,7 @@
     "tslint": "^5.16.0"
   },
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "languagedetect": "^2.0.0"
   }
 }

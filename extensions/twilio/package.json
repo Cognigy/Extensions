@@ -16,7 +16,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "twilio": "^3.33.0",
     "tslint": "^6.1.2"
   },

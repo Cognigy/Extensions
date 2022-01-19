@@ -11,5 +11,9 @@ export default createExtension({
 
 	connections: [
 		bambooConnection
-	]
+	],
+
+	options: {
+		label: "Bamboo HR"
+	}
 });

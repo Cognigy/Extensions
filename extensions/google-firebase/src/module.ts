@@ -15,5 +15,9 @@ export default createExtension({
 
 	connections: [
 		googleFirebaseConnection
-	]
+	],
+
+	options: {
+		label: "Google Firebase"
+	}
 });

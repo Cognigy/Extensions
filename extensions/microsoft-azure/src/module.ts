@@ -17,5 +17,9 @@ export default createExtension({
 	connections: [
 		spellcheckConnection,
 		textanalyticsConnection
-	]
+	],
+
+	options: {
+		label: "Microsoft Azure"
+	}
 });

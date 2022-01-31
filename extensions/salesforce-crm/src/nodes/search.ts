@@ -29,7 +29,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "sosl",
-            type: "text",
+            type: "cognigyText",
             label: "Salesforce Object Search (SOSL)",
             defaultValue: 'FIND {John OR Jane} IN Name Fields RETURNING Contact(Id,FirstName,LastName)',
             description: "The SOSL query to run. Refer to Salesforce documentation.",

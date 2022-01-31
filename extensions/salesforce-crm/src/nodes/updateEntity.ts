@@ -30,28 +30,14 @@ export const updateEntityNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "entityType",
-			type: "select",
-			label: "Entity Type",
-			defaultValue: "Contact",
-			params: {
-				options: [
-					{
-						label: "Account",
-						value: "Account"
-					},
-					{
-						label: "Contact",
-						value: "Contact"
-					},
-					{
-						label: "Event",
-						value: "Event"
-					}
-				],
-				required: true
-			},
-		},
+            key: "entityType",
+            type: "cognigyText",
+            label: "Entity Type",
+            defaultValue: "Contact",
+            params: {
+                required: true
+            },
+        },
 		{
 			key: "entityId",
 			type: "cognigyText",

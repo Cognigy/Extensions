@@ -122,6 +122,7 @@ export const appendValuesNode = createNodeDescriptor({
 
 		serviceAccountJSON = serviceAccountJSON.replace('\n', ' ');
 		const serviceAccount = JSON.parse(serviceAccountJSON);
+		cognigy.api.log('debug', `google-sheets, client_email: ${serviceAccount.client_email}`);
 
 		try {
 
@@ -133,7 +134,8 @@ export const appendValuesNode = createNodeDescriptor({
 					"https://www.googleapis.com/auth/spreadsheets"]
 			);
 
-			const response = (await sheets.spreadsheets.values.update({
+			cognigy.api.log('debug', `google-sheets, inserting values: ${values}`);
+			const response = (await sheets.spreadsheets.values.append({
 				spreadsheetId,
 				valueInputOption: 'USER_ENTERED',
 				auth: authClient,
@@ -145,6 +147,7 @@ export const appendValuesNode = createNodeDescriptor({
 				}
 			})).data;
 
+			cognigy.api.log('debug', `google-sheets, response: ${response}`);
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response, "simple");
 			} else {
@@ -152,6 +155,7 @@ export const appendValuesNode = createNodeDescriptor({
 				api.addToInput(inputKey, response);
 			}
 		} catch (error) {
+			cognigy.api.log('error', `google-sheets, error.message: ${error.message}`);
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {

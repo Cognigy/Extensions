@@ -10,10 +10,9 @@
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
 	"keywords": [
-		"Talk",
-		"Suppot",
-		"Help Center",
-		"Live Chat"
+		"OpenAI",
+		"GPT",
+		"AI"
 	],
 	"repository": {
 		"type": "git",

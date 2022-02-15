@@ -1,11 +1,11 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { openaiConnection } from "./connections/openaiConnection";
-import { summarizeTextNode } from "./nodes/summarizeText";
+import { generateTextNode } from "./nodes/generateText";
 
 
 export default createExtension({
 	nodes: [
-		summarizeTextNode
+		generateTextNode
 	],
 
 	connections: [

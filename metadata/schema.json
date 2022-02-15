@@ -15,6 +15,8 @@
                 "name",
                 "label",
                 "downloadUrl",
+                "infoUrl",
+                "longDescription",
                 "description",
                 "tags",
                 "icon",
@@ -34,7 +36,16 @@
                     "maxLength": 200
                 },
                 "downloadUrl": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "infoUrl": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "longDescription": {
+                    "type": "string",
+                    "maxLength": 2000
                 },
                 "description": {
                     "type": "string",

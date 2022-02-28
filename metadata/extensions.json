@@ -2203,6 +2203,47 @@
                     "tags": []
                 }
             ]
+        },
+        {
+            "name": "amazon-connect",
+            "label": "Amazon Connect",
+            "version": "4.0.0",
+            "description": "Exposes helper functions for an Amazon Connect Contact Flow",
+            "longDescription": "Amazon Connect is a cloud contact center that can be up and running in minutes, on both telephone and chat channels. It has a pay-as-you-go pricing model that many businesses are starting to find attractive. With Amazon Connect being so easy to access, all of a sudden, the power of Conversational AI can be readily employed in contact centers of all shapes and sizes.",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/amazon-connect400/amazon-connect.tar.gz",
+            "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360016863379-Amazon-Connect",
+            "tags": [
+                "Amazon",
+                "Connect",
+                "Contact Center",
+                "Phone",
+                "Transfer",
+                "Hang up",
+                "Forward",
+                "Agent"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "hangup",
+                    "defaultLabel": "Hang Up",
+                    "description": "Ends the current call session and hangs up the phone",
+                    "tags": [
+                        "han up",
+                        "end call"
+                    ]
+                },
+                {
+                    "type": "transfer",
+                    "defaultLabel": "Transfer",
+                    "description": "Transfers the current call to a queue in Connect or a specific phone number",
+                    "tags": [
+                        "transfer",
+                        "handover",
+                        "forward"
+                    ]
+                }
+            ]
         }
     ]
 }

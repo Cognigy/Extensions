@@ -1514,8 +1514,8 @@
         {
             "name": "service-now",
             "label": "Service Now",
-            "version": "4.1.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/service-now410/service-now.tar.gz",
+            "version": "4.2.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/service-now420/service-now.tar.gz",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360021072399-Service-Now-Provide-powerful-IT-Service-Management",
             "description": "Perform various operations in Service Now",
             "longDescription": "Deliver resilient services that increase productivity and create amazing experiences wherever your employees work, with the most innovative ITSM solution (Service Now, 2021).",
@@ -1530,87 +1530,76 @@
             "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAA6hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOS0wNC0xMlQxNDowNDowMzwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6Q3JlYXRvclRvb2w+UGl4ZWxtYXRvciAzLjguMjwveG1wOkNyZWF0b3JUb29sPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpDb21wcmVzc2lvbj4wPC90aWZmOkNvbXByZXNzaW9uPgogICAgICAgICA8dGlmZjpSZXNvbHV0aW9uVW5pdD4yPC90aWZmOlJlc29sdXRpb25Vbml0PgogICAgICAgICA8dGlmZjpZUmVzb2x1dGlvbj43MjwvdGlmZjpZUmVzb2x1dGlvbj4KICAgICAgICAgPHRpZmY6WFJlc29sdXRpb24+NzI8L3RpZmY6WFJlc29sdXRpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj42NDwvZXhpZjpQaXhlbFhEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOkNvbG9yU3BhY2U+MTwvZXhpZjpDb2xvclNwYWNl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",
             "nodes": [
                 {
-                    "type": "deleteAttachment",
-                    "defaultLabel": "Delete Attachment",
-                    "description": "Delete an attachment in Service Now",
-                    "tags": [
-                        "service now",
-                        "delete",
-                        "attachment"
-                    ]
+                    "type": "sendEmail",
+                    "defaultLabel": "Send Email",
+                    "description": "Sends an email to a specific person",
+                    "tags": ["email"]
                 },
                 {
-                    "type": "deleteFromTable",
-                    "defaultLabel": "Delete From Table",
-                    "description": "Delete an entry from any table in Service Now",
-                    "tags": [
-                        "service now",
-                        "delete",
-                        "entry",
-                        "table"
-                    ]
+                    "type": "getArticles",
+                    "defaultLabel": "Get Articles",
+                    "description": "Searches for knowledge articles based on a given query",
+                    "tags": ["knowledge", "article", "help"]
                 },
                 {
-                    "type": "getAttachmentsById",
-                    "defaultLabel": "Get Attachments By ID",
-                    "description": "Delete an entry from any table in Service Now",
-                    "tags": [
-                        "service now",
-                        "attachment",
-                        "id"
-                    ]
+                    "type": "createIncident",
+                    "defaultLabel": "Create Incident",
+                    "description": "Creates a new support incident",
+                    "tags": ["support", "incident", "ticket"]
                 },
                 {
-                    "type": "getAttachments",
-                    "defaultLabel": "Get Attachments",
-                    "description": "Get all attachments from Service Now",
-                    "tags": [
-                        "service now",
-                        "attachment",
-                        "search",
-                        "query"
-                    ]
+                    "type": "getIncident",
+                    "defaultLabel": "Get Incident",
+                    "description": "Retreives an existing support incident",
+                    "tags": ["support", "incident", "ticket"]
                 },
                 {
-                    "type": "getFromTable",
-                    "defaultLabel": "Get From Table",
-                    "description": "Get entries from a specific table in Service Now",
-                    "tags": [
-                        "service now",
-                        "table",
-                        "entries"
-                    ]
+                    "type": "findTicketInText",
+                    "defaultLabel": "Find Ticket in Text",
+                    "description": "Recognizes an incident number in the user text input",
+                    "tags": ["support", "incident", "ticket", "find"]
                 },
                 {
-                    "type": "patchRecordInTable",
-                    "defaultLabel": "Patch Record In Table",
-                    "description": "Update a table entry in Service Now",
-                    "tags": [
-                        "service now",
-                        "table",
-                        "entry",
-                        "update"
-                    ]
+                    "type": "addToServiceCatalogCart",
+                    "defaultLabel": "Add to Cart",
+                    "description": "Add a new item to a service catalog cart",
+                    "tags": ["service", "catalog", "cart", "item", "retail", "itsm"]
                 },
                 {
-                    "type": "postAttachments",
-                    "defaultLabel": "Post Attachment",
-                    "description": "Add a new attachment to any entry in Service Now",
-                    "tags": [
-                        "service now",
-                        "post",
-                        "attachment"
-                    ]
+                    "type": "getCatalogRequest",
+                    "defaultLabel": "Get Request",
+                    "description": "Retrieves an existing catalog request",
+                    "tags": ["service", "catalog", "request", "item", "retail", "itsm"]
                 },
                 {
-                    "type": "postToTable",
-                    "defaultLabel": "Post To Table",
-                    "description": "Add a new entry to any table in Service Now",
-                    "tags": [
-                        "service now",
-                        "post",
-                        "entry"
-                    ]
+                    "type": "getCatalogTask",
+                    "defaultLabel": "Get Task",
+                    "description": "Retrieves a service catalog task by a given number",
+                    "tags": ["service", "catalog", "cart", "item", "task", "itsm"]
+                },
+                {
+                    "type": "getServiceCatalogDetails",
+                    "defaultLabel": "Get Details",
+                    "description": "Retrieves the details of a given and existing catalog",
+                    "tags": ["service", "catalog", "itsm"]
+                },
+                {
+                    "type": "getServiceCatalogItems",
+                    "defaultLabel": "Get Items",
+                    "description": "Retrieves the list of items that are offered in the given service catalog",
+                    "tags": ["service", "catalog", "item", "retail", "itsm"]
+                },
+                {
+                    "type": "getServiceCatalogs",
+                    "defaultLabel": "Get Serivce Catalogs",
+                    "description": "Retrieves all service catalogs from Service Now",
+                    "tags": ["service", "catalog", "itsm"]
+                },
+                {
+                    "type": "orderServiceCatalogItem",
+                    "defaultLabel": "Order Item Now",
+                    "description": "Orders a specific service catalog item",
+                    "tags": ["service", "catalog", "item", "order", "itsm"]
                 }
             ]
         },

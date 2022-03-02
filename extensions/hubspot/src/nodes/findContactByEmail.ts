@@ -1,6 +1,8 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Hubspot from 'hubspot';
 
+const EXTENSION_TIMEOUT = 10000;
+
 export interface IFindContactByEmailRequestParams extends INodeFunctionBaseParams {
 	config: {
 		email: string;
@@ -151,7 +153,10 @@ export const findContactByEmailNode = createNodeDescriptor({
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
-			const result = await findContactByEmail(email, fields, properties, apikey);
+			const result = await Promise.race([
+				findContactByEmail(email, fields, properties, apikey),
+				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT)),
+			]);
 
 			if (storeLocation === "context") api.addToContext(contextKey, result, "simple");
 			// @ts-ignore
@@ -189,38 +194,38 @@ async function findContactByEmail(email: string, flds: string, props: string, ap
 		let result = {};
 
 		return hubspot.contacts.getByEmail(email)
-			.then((res) => {
-				// Remove all fields which weren't explicitly requested
-				// always keep "properties"
-				const fields = (flds) ? flds.split(",") : [];
-				if (fields.indexOf("properties") === -1) fields.push("properties");
-				Object.keys(res).forEach((key) => {
-					if (fields.indexOf(key) === -1) {
-						delete res[key];
-					}
-				});
+				.then((res) => {
+					// Remove all fields which weren't explicitly requested
+					// always keep "properties"
+					const fields = (flds) ? flds.split(",") : [];
+					if (fields.indexOf("properties") === -1) fields.push("properties");
+					Object.keys(res).forEach((key) => {
+						if (fields.indexOf(key) === -1) {
+							delete res[key];
+						}
+					});
 
-				// Remove all the properties which weren't explicitly requested
-				// Always keep "vid" (the contact ID)
-				const properties = (props) ? props.split(",") : [];
-				if (properties.indexOf("vid") === -1) properties.push("vid");
-				Object.keys(res.properties).forEach((key) => {
-					// if key isn't in the defined properties, delete it
-					if (properties.indexOf(key) === -1) {
-						delete res.properties[key];
-					} else if (key === "properties") {
-						// if the key is properties, remove versions
-						Object.keys(res[key]).forEach((propkey) => {
-							delete res[key][propkey]["versions"];
-						});
-					}
+					// Remove all the properties which weren't explicitly requested
+					// Always keep "vid" (the contact ID)
+					const properties = (props) ? props.split(",") : [];
+					if (properties.indexOf("vid") === -1) properties.push("vid");
+					Object.keys(res.properties).forEach((key) => {
+						// if key isn't in the defined properties, delete it
+						if (properties.indexOf(key) === -1) {
+							delete res.properties[key];
+						} else if (key === "properties") {
+							// if the key is properties, remove versions
+							Object.keys(res[key]).forEach((propkey) => {
+								delete res[key][propkey]["versions"];
+							});
+						}
+					});
+					return res;
+				})
+				.catch((err) => {
+					result = { "error": err.message };
+					return result;
 				});
-				return res;
-			})
-			.catch((err) => {
-				result = { "error": err.message };
-				return result;
-			});
 	} catch (err) {
 		return Promise.reject(err.message);
 	}

@@ -2,6 +2,8 @@ Integrates Cognigy.AI with Hubspot CRM (https://www.hubspot.com)
 
 This extension is based on node-hubspot (https://www.npmjs.com/package/hubspot)
 
+Please note the Hubspot API calls will sometimes not return a result. In that case we will abort after 10000ms.
+
 ### Connection
 This extension needs a Connection to be defined and passed to the Nodes. The Connection must have the following keys:
 

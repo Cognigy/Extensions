@@ -1,6 +1,8 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Hubspot from 'hubspot';
 
+const EXTENSION_TIMEOUT = 10000;
+
 export interface ICreateContactParams extends INodeFunctionBaseParams {
 	config: {
 		data: any;
@@ -120,7 +122,10 @@ export const createContactNode = createNodeDescriptor({
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
-			const result = await createContact(data, apikey);
+			const result = await Promise.race([
+				createContact(data, apikey),
+				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT))
+			]);
 
 			if (storeLocation === "context") api.addToContext(contextKey, result, "simple");
 			// @ts-ignore

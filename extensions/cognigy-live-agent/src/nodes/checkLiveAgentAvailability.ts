@@ -15,16 +15,16 @@ export interface ICheckLiveAgentAvailabilityParams extends INodeFunctionBasePara
 }
 export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	type: "checkLiveAgentAvailability",
-    defaultLabel: {
-        default: "Check Agent Availability",
-        deDE: "Überprüfe Agenten Verfügbarkeit",
-        esES: "Verificar la disponibilidad del agente"
-    },
-    summary: {
-        default: "Checks if an agent is available in Zendesk Chat",
-        deDE: "Überprüft ob ein Agent in Zendesk Chat verfügbar ist",
-        esES: "Comprueba si hay un agente disponible en Zendesk Chat"
-    },
+	defaultLabel: {
+		default: "Check Agent Availability",
+		deDE: "Überprüfe Agenten Verfügbarkeit",
+		esES: "Verificar la disponibilidad del agente"
+	},
+	summary: {
+		default: "Checks if an agent is available in Live Agent",
+		deDE: "Überprüft ob ein Agent in Live Agent verfügbar ist",
+		esES: "Comprueba si hay un agente disponible en Live Agent"
+	},
 	fields: [
 		{
 			key: "connection",
@@ -65,12 +65,12 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-            label: {
-                default: "Input Key to store result",
-                deDE: "Input Key zum Speichern des Ergebnisses",
-                esES: "Input Key para almacenar el resultado"
-            },
-			defaultValue: "zendesk.liveAgentAvailability",
+			label: {
+				default: "Input Key to store result",
+				deDE: "Input Key zum Speichern des Ergebnisses",
+				esES: "Input Key para almacenar el resultado"
+			},
+			defaultValue: "agentsAvailable",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -79,12 +79,12 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-            label: {
-                default: "Context Key to store result",
-                deDE: "Context Key zum Speichern des Ergebnisses",
-                esES: "Context Key para almacenar el resultado"
-            },
-			defaultValue: "zendesk.liveAgentAvailability",
+			label: {
+				default: "Context Key to store result",
+				deDE: "Context Key zum Speichern des Ergebnisses",
+				esES: "Context Key para almacenar el resultado"
+			},
+			defaultValue: "agentsAvailable",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -136,29 +136,27 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 
 			const onlineAgents: any[] = response.data.filter((agent: any) => agent.availability_status === "online");
 
-			
-
 			if (onlineAgents?.length === 0) {
-                const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
-                api.setNextNode(onOfflineChild.id);
+				const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
+				api.setNextNode(onOfflineChild.id);
 
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data, "simple");
-                } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, response.data);
-                }
-            } else {
-                const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
-                api.setNextNode(onAvailableChild.id);
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, onlineAgents, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, onlineAgents);
+				}
+			} else {
+				const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
+				api.setNextNode(onAvailableChild.id);
 
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data, "simple");
-                } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, response.data);
-                }
-            }
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, onlineAgents, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, onlineAgents);
+				}
+			}
 		} catch (error) {
 
 			if (storeLocation === "context") {
@@ -172,53 +170,53 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 });
 
 export const onAgentAvailable = createNodeDescriptor({
-    type: "onAgentAvailable",
-    parentType: "checkLiveAgentAvailability",
+	type: "onAgentAvailable",
+	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
 		default: "On Online",
 		deDE: "Ist Online",
 		esES: "Está en línea"
 	},
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });
 
 export const onNoAgentAvailable = createNodeDescriptor({
-    type: "onNoAgentAvailable",
-    parentType: "checkLiveAgentAvailability",
+	type: "onNoAgentAvailable",
+	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
 		default: "On Offline",
 		deDE: "Ist Offline",
 		esES: "Está desconectado"
 	},
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });

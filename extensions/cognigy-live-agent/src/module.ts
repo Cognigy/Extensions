@@ -1,10 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { cognigyLiveAgentAccessTokenConnection } from "./connections/cognigyLiveAgentConnection";
-import { checkLiveAgentAvailabilityNode } from "./nodes/checkLiveAgentAvailability";
+import { checkLiveAgentAvailabilityNode, onAgentAvailable, onNoAgentAvailable } from "./nodes/checkLiveAgentAvailability";
 
 export default createExtension({
 	nodes: [
-		checkLiveAgentAvailabilityNode
+		checkLiveAgentAvailabilityNode,
+		onAgentAvailable,
+		onNoAgentAvailable
 	],
 
 	connections: [

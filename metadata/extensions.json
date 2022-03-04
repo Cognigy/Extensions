@@ -755,8 +755,8 @@
         {
             "name": "google-sheets",
             "label": "Google Sheets",
-            "version": "4.1.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-sheets410/google-sheets.tar.gz",
+            "version": "4.2.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/google-sheets420/google-sheets.tar.gz",
             "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/google-sheets",
             "description": "Use external information from a Google Sheet",
             "longDescription": "Google Sheets is a spreadsheet program included as part of the free, web-based Google Docs Editors suite offered by Google. The app allows users to create and edit files online while collaborating with other users in real-time. Edits are tracked by user with a revision history presenting changes. An editor's position is highlighted with an editor-specific color and cursor and a permissions system regulates what users can do. Updates have introduced features using machine learning, including Explore, offering answers based on natural language questions in a spreadsheet.",
@@ -858,9 +858,9 @@
         {
             "name": "hubspot",
             "label": "Hubspot",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360021247139-Hubspot-Maintain-Contact-Information",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hubspot400/hubspot.tar.gz",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hubspot401/hubspot.tar.gz",
             "description": "Find and update contacts or companies in Hubspot",
             "longDescription": "HubSpot is an American developer and marketer of software products for inbound marketing, sales, and customer service. Its products and services aim to provide tools for customer relationship management, social media marketing, content management, lead generation, web analytics, search engine optimization, live chat, and customer support.",
             "tags": [

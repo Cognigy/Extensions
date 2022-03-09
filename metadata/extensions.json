@@ -2244,6 +2244,34 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "microsoft-powerautomate",
+            "label": "Microsoft Power Automate",
+            "version": "4.0.0",
+            "description": "Trigger automation processes within a virtual agent conversation",
+            "longDescription": "Empower everyone to build automated processes with flows in Power Automate. Use low-code, drag-and-drop tools and hundreds of pre-built connectors that automate repetitive, mundane tasks with ease. (https://powerautomate.microsoft.com/en-us/) With the Cognigy.AI Extension users can benefit from human-like, automated conversations to answer various questions. Furthermore, the virtual agent can start an asynchronous process and inject the result back to the conversation as soon as the process is finisheed.",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/microsoft-powerautomate400/microsoft-power-automate.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/microsoft-powerautomate",
+            "tags": [
+                "Microsoft",
+                "RPA",
+                "Process",
+                "Robotic Process Automation",
+                "Automate"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "startMicrosoftFlow",
+                    "defaultLabel": "Start Flow",
+                    "description": "Starts a Flow in Power Automate",
+                    "tags": [
+                        "start",
+                        "flow"
+                    ]
+                }
+            ]
         }
     ]
 }

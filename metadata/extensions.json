@@ -2272,6 +2272,63 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "freshdesk",
+            "label": "Freshdesk",
+            "version": "4.0.0",
+            "description": "Provides ticket management functions",
+            "longDescription": "Freshdesk is built to propel agent productivity and speedy response to customers. Agents can easily stay on top of all tickets and work collaboratively with teammates to efficiently resolve customer issues. Prioritize, categorize, and assign tickets to the right agents and leverage the power of your entire organization to deliver customer delight. (https://freshdesk.com/ticketing)",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/freshdesk400/freshdesk.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/freshdesk",
+            "tags": [
+                "Support",
+                "Ticketing",
+                "Helpdesk"
+            ],
+            "icon": "data:image/png;base64,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ripSOs1AaiQrWwroTQ/zZv9H+JzT47ml1fiVxW8PvsSLnbvoSw27jTc0Y1JnUc6ZIMCdwC/cWBUELULQ8uNXvkwLCZCSdNYhLEtZBJznBeHHDas5c1o133nvIdJiexFr+DmKHyFgjSYNA88Dh91YHd3F2aJJ6BRx50roVE7xO+08H7OTlFpBloTn0hKLekX+MPAEAvsbN4ztBAXVDDzh1rpXEAQUXFG7nJrgdF7sfNeTICjwNMj7ozcWGCWUmVX/DLSdTpK26BMuQagKhLl+TiO3zPsKG6M72DnQ4sVZwEHgMVAy2vMnpsiIeg8lD2DSyQuaniEIc0rO4Ira5YSs4LhyqAqU8bny+cwMlvOPo//jkcP/wRbttvsL8IcuCe6eoZKZwgkWHYdYA/wNk+tfMGgRGsrquL1+JRX+UGbyVMCwnaA11sHLXbt4Z6ANjWvyAFuBa4COcX7v+CQpBUgH8FNgCVCXtfkcYSlFSyzKuj1/PGFBY4smKWlEBN8UB6pZIgrcyyQ73wn/vL/x1wD4lNqKmRKTU9t2h5TYJJyZYvRKi401SVwwTySB+1Gy2XDcMOHHE/5hf+MGbONtH3OuT2YsJzsI5hWZ3yFjjm88Ttq3HH8wA3gAM3Y+jXgK82pM52TkTynAOBHmAA8Cq4rNJkc855D/+GTkYYqpznnwY8fQPwHvj3y8h2as5U9JfkoBjhPh+8Cj5LlrPE1IYPxWVuQhh02qMxxCwE2Yt0Zqi832OESB+4HfA8PZkM9JgFERFFgCXwLuAS6m+Kn0NrAd+AkmrqGzJZ+zAKMiOJgJfBe4ERfpdS5xGNPlH8RZ5ORCPi8Bxgsh5mXZcxwhrgbmurGZJQTzLvBG4FEF7wGyL0firgUYLwTGmZ4NrMFknJ6H9+8TJoAPgReAv2OiOjl194IIMCbEWifh2pqB8Q1fw2Sdn41Jxcv1HUMbE7reD7wLvARs00inAjnQ+BtP6l2Q7hppWodSKBGqMFloyzC5SPMws0cp5vX50V4SxxzSxoBOzL79Ledqdn5z3dqT4f/PBWxD389ITQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0xMS0yOFQxMzo0MTowOCswMDowMFUHCQcAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMTEtMjhUMTM6NDE6MDgrMDA6MDAkWrG7AAAAIHRFWHRzb2Z0d2FyZQBodHRwczovL2ltYWdlbWFnaWNrLm9yZ7zPHZ0AAAAYdEVYdFRodW1iOjpEb2N1bWVudDo6UGFnZXMAMaf/uy8AAAAYdEVYdFRodW1iOjpJbWFnZTo6SGVpZ2h0ADUxMo+NU4EAAAAXdEVYdFRodW1iOjpJbWFnZTo6V2lkdGgANTEyHHwD3AAAABl0RVh0VGh1bWI6Ok1pbWV0eXBlAGltYWdlL3BuZz+yVk4AAAAXdEVYdFRodW1iOjpNVGltZQAxNjA2NTcwODY41aB59gAAABN0RVh0VGh1bWI6OlNpemUAMTg1MzZCQieSuqoAAABKdEVYdFRodW1iOjpVUkkAZmlsZTovLy4vdXBsb2Fkcy81Ni9CT0RDSjlxLzI2OTkvZnJlc2hkZXNrX2xvZ29faWNvbl8xNzAxMjEucG5np3o3VQAAAABJRU5ErkJggg==",
+            "nodes": [
+                {
+                    "type": "createTicket",
+                    "defaultLabel": "Create Ticket",
+                    "description": "Creates a new ticket",
+                    "tags": [
+                        "create",
+                        "ticket",
+                        "incident"
+                    ]
+                },
+                {
+                    "type": "getTicket",
+                    "defaultLabel": "Get Ticket",
+                    "description": "Retrieves a ticket by a given ID",
+                    "tags": [
+                        "get",
+                        "ticket",
+                        "incident"
+                    ]
+                },
+                {
+                    "type": "updateTicket",
+                    "defaultLabel": "Update Ticket",
+                    "description": "Updates a ticket by a given ID with dynamic values",
+                    "tags": [
+                        "update",
+                        "ticket",
+                        "incident"
+                    ]
+                },
+                {
+                    "type": "filterTickets",
+                    "defaultLabel": "Filter Tickets",
+                    "description": "Returns a list of tickets by a given filter",
+                    "tags": [
+                        "filter",
+                        "ticket",
+                        "incident"
+                    ]
+                }
+            ]
         }
     ]
 }

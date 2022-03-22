@@ -1,0 +1,411 @@
+createSocketTransformer({
+
+	/**
+	 * This transformer is executed when receiving a message
+	 * from the user, before executing the Flow.
+	 *
+	 * @param payload The payload object containing userId, sessionId, text etc.
+	 * @param endpoint The configuration object for the used Endpoint.
+	 *
+	 * @returns A valid userId, sessionId, as well as text and/or data,
+	 * which has been extracted from the payload.
+	 */
+	handleInput: async ({ payload, endpoint }) => {
+
+		console.log("In handleInput");
+
+		let text = payload.text;
+		console.log("text=" + text);
+
+		const sessionStorage = await getSessionStorage(payload.userId, payload.sessionId);
+		if (sessionStorage.hasOwnProperty("chatHistory")) {
+			sessionStorage.chatHistory += "\nUser: " + text;
+		} else {
+			sessionStorage.chatHistory = "User: " + text;
+		}
+
+
+		if (sessionStorage.cognigyState == "OPENAGENT" || sessionStorage.cognigyState == "OPENBOT") {
+			console.log("Redirecting to ServiceNow");
+
+			let body = {
+				"token": sessionStorage.serviceNowAPIToken,
+				"requestId": sessionStorage.cognigyInputID, 
+				"action": null, 
+				"enterpriseId": "Cognigy", 
+				"clientSessionId": payload.sessionId,
+				"botToBot": true,
+				"clientVariables": {
+					"cognigyState": sessionStorage.cognigyState,
+					"cognigyInputID": sessionStorage.cognigyInputID,
+					"cognigyUserID": sessionStorage.cognigyUserID
+				},
+				"message": { 
+				  "text": payload.text, 
+				  "typed": true, 
+				  "clientMessageId": sessionStorage.cognigyInputID
+				}, 
+				"userId": sessionStorage.userId, 
+				"emailId": sessionStorage.emailId, 
+				"timezone": sessionStorage.timezone 
+			}
+
+			if (payload.text.toLowerCase() == sessionStorage.quitPhrase.toLowerCase()) {
+
+				body.action = "END_CONVERSATION";
+				body.message.text = "";
+				body.clientVariables.cognigyState = "CLOSED";
+				sessionStorage.cognigyState = "CLOSED";
+			}
+
+			console.log("handle Input - Body: " + JSON.stringify(body));
+			
+			try {
+
+				const result = await httpRequest({
+					uri: sessionStorage.serviceNowInstanceURL + "/api/sn_va_as_service/bot/integration",
+					method: "POST",
+					headers: {
+						'Authorization': sessionStorage.authorization,
+						'Content-Type': 'application/json',
+						'Accept': 'application/json'
+					},
+					body: body,
+					json: true
+				});
+
+				return null;
+
+			} catch(e) {
+				text = "Cannot connect to ServiceNow. Check connection details in Start_Conversation node ...\n" + e.message;
+			}
+
+		}
+
+		return {
+			userId: payload.userId,
+			sessionId: payload.sessionId,
+			text: text,
+			data: payload.data
+		};
+	},
+
+	/**
+	 * This transformer is executed on every output from the Flow.
+	 * For Socket based transformers, the return value of this transformer
+	 * will be sent directly to the user.
+	 *
+	 * @param processedOutput The output from the Flow which has been processed into the final object
+	 * that will be sent to the user. It is structured according to the data structure used
+	 * on the specific Endpoint channel.
+	 *
+	 * @param output The raw output from the Flow.
+	 * @param endpoint The configuration object for the used Endpoint.
+	 * @param userId The unique ID of the user.
+	 * @param sessionId The unique ID for this session. Can be used together with the userId
+	 * to retrieve the sessionStorage object.
+	 *
+	 * @returns An object that will be sent to the user, unchanged. It therefore has to have the
+	 * correct format according to the documentation of the specific Endpoint channel.
+	 */
+	handleOutput: async ({ processedOutput, output, endpoint, userId, sessionId }) => {
+
+		const sessionStorage = await getSessionStorage(userId, sessionId);
+		if (sessionStorage.hasOwnProperty("chatHistory")) {
+			sessionStorage.chatHistory += "\nBot: " + output.text;
+		} else {
+			sessionStorage.chatHistory = "Bot: " + output.text;
+		}
+
+		return processedOutput;
+	},
+
+	/**
+	 * This transformer is executed when the Flow execution has finished.
+	 * Since all outputs have already been sent to the user, this transformer does not return anything.
+	 *
+	 * @param userId The unique ID of the user.
+	 * @param sessionId The unique ID for this session. Can be used together with the userId
+	 * to retrieve the sessionStorage object.
+	 *
+	 * @param endpoint The configuration object for the used Endpoint.
+	 *
+	 * @returns This transformer cannot return anything.
+	 */
+	handleExecutionFinished: async ({ sessionId, userId, endpoint }) => {
+
+	},
+
+	/**
+	 * This transformer is executed when receiving an inject event.
+	 * The extracted text and data will be injected into the conversation
+	 * for the given user in the given session.
+	 *
+	 * @param request The Express request object with a JSON parsed body.
+	 * @param response The Express response object.
+	 * @param endpoint The configuration object for the used Endpoint.
+	 *
+	 * @returns A valid userId, sessionId, as well as text and/or data,
+	 * which has been extracted from the request body. The text and data
+	 * will be injected into this conversation.
+	 */
+	handleInject: async ({ request, response, endpoint }) => {
+
+		/**
+		 * Extract the userId, sessionId and text
+		 * from the request. Example:
+		 *
+		 * const { userId, sessionId, text, data } = request.body;
+		 *
+         * Note that the format of the request body will be different for
+		 * every Endpoint, and the example above needs to be adjusted
+		 * accordingly.
+		 */
+		const userId = "";
+		const sessionId = "";
+		const text = "";
+		const data = {}
+
+		return {
+			userId,
+			sessionId,
+			text,
+			data
+		};
+	},
+
+	/**
+	 * This transformer is executed when receiving a notify event.
+	 * The extracted text and data will be sent directly to the
+	 * given user in the given session as a notification.
+	 *
+	 * @param request The Express request object with a JSON parsed body.
+	 * @param response The Express response object.
+	 * @param endpoint The configuration object for the used Endpoint.
+	 *
+	 * @returns A valid userId, sessionId, as well as text and/or data,
+	 * which has been extracted from the request body. The text and data
+	 * will be sent directly to the user.
+	 */
+	handleNotify: async ({ request, response, endpoint }) => {
+
+		/**
+		 * Extract the userId, sessionId and text
+		 * from the request. Example:
+		 *
+		 * const { userId, sessionId, text, data } = request.body;
+		 *
+		 * Note that the format of the request body will be different for
+		 * every Endpoint, and the example above needs to be adjusted
+		 * accordingly.
+		 */
+
+		console.log("In handleNotify");
+
+		//console.log("Headers: " + JSON.stringify(request.headers));
+		console.log("Payload: " + JSON.stringify(request.body));
+
+		if (!request.body.clientVariables.hasOwnProperty('cognigyState')) return null;
+
+		const state = request.body.clientVariables.cognigyState;
+		if (state != "STARTAGENT" && state!= "STARTBOT" && state != "OPENAGENT" && state != "OPENBOT" && state != "CLOSED") return null;
+
+		let text = "";
+		let data = {};
+
+		const userId = request.body.clientVariables.cognigyUserID;
+		const sessionId = request.body.clientSessionId;
+
+		const sessionStorage = await getSessionStorage(userId, sessionId);
+
+		console.log("state=" + state);
+		console.log("request.body.agentChat=" + request.body.agentChat);
+		console.log("request.body.completed=" + request.body.completed);
+
+		if (state == "STARTAGENT" || state == "STARTBOT" || (state == "OPENAGENT" && request.body.completed) || (state == "OPENBOT" && request.body.completed)) {
+
+			if (state == "STARTAGENT" || state == "STARTBOT") {
+				sessionStorage.serviceNowInstanceURL = request.body.clientVariables.serviceNowInstanceURL;
+				sessionStorage.serviceNowAPIToken = request.body.clientVariables.serviceNowAPIToken;
+				sessionStorage.authorization = request.body.clientVariables.authorization;
+				console.log("Authorization: " + sessionStorage.authorization);
+				sessionStorage.userId = request.body.clientVariables.userId;
+				sessionStorage.emailId = request.body.clientVariables.emailId;
+				sessionStorage.timezone = request.body.clientVariables.timezone;
+				sessionStorage.quitPhrase = request.body.clientVariables.quitPhrase;
+				sessionStorage.cognigyUserID = userId;
+				sessionStorage.botQuitPhrase = request.body.clientVariables.botQuitPhrase;
+			}
+
+			const body = {
+				"token": sessionStorage.serviceNowAPIToken,
+				"requestId": sessionStorage.cognigyInputID, 
+				"action": "AGENT", 
+				"enterpriseId": "Cognigy", 
+				"clientSessionId": sessionId, 
+				"botToBot": true,
+				"clientVariables": {
+					"cognigyState": "CLOSED",
+					"cognigyInputID": sessionStorage.cognigyInputID,
+					"cognigyUserID": userId,
+				},
+				"message": { 
+					"text": null, 
+					"typed": true, 
+					"clientMessageId": sessionStorage.cognigyInputID
+				}, 
+				"userId": sessionStorage.userId,
+				"emailId": sessionStorage.emailId,
+				"timezone": sessionStorage.timezone
+			}
+
+			if (state == "STARTAGENT") {
+
+				//console.log("URI: "+ request.body.clientVariables.cognigyURL + "/new/v2.0/conversations/" + sessionId);
+				//console.log("API Key: " + request.body.clientVariables.cognigyAPIKey);
+				
+				const message = sessionStorage.chatHistory;
+
+				console.log("message:" + message);
+
+				body.requestId = request.body.clientVariables.cognigyInputID + "/H";
+				body.clientVariables.cognigyState = "OPENAGENT";
+				body.clientVariables.cognigyInputID = request.body.clientVariables.cognigyInputID + "/H";
+				body.message.clientMessageId = request.body.clientVariables.cognigyInputID + "/H";
+				body.message.text = message;
+
+				sessionStorage.cognigyInputID = request.body.clientVariables.cognigyInputID + "/H";
+
+				console.log("Requesting Handover - Body: " + JSON.stringify(body));
+				console.log("User ID = " + request.body.clientVariables.userId);
+				
+				try {
+
+					const result = await httpRequest({
+						uri: request.body.clientVariables.serviceNowInstanceURL + "/api/sn_va_as_service/bot/integration",
+						method: "POST",
+						headers: {
+							'Authorization': sessionStorage.authorization,
+							'Content-Type': 'application/json',
+							'Accept': 'application/json'
+						},
+						body: body,
+						json: true
+					});
+
+				} catch(e) {
+
+					text = "Cannot connect to ServiceNow to initiate the conversation with Livechat. Check connection details in Start_Conversation node ...\n" + e.message;
+
+					return {
+						userId,
+						sessionId,
+						text,
+						data
+					};
+					
+				}
+
+				sessionStorage.cognigyState = "OPENAGENT";
+
+				return null;
+			}
+
+			if (state == "STARTBOT") {
+				sessionStorage.cognigyState = "OPENBOT";
+				sessionStorage.cognigyInputID = request.body.clientVariables.cognigyInputID + "/H";
+
+				text = request.body.body[request.body.body.length - 1].promptMsg;
+
+				return {
+					userId,
+					sessionId,
+					text,
+					data
+				};
+			}
+			
+			if (state == "OPENAGENT" && request.body.completed) {
+
+				/*body.requestId = request.body.clientVariables.cognigyInputID + "/E";
+				body.action = "END_CONVERSATION";
+				body.clientVariables.cognigyState = "CLOSED";
+				body.clientVariables.cognigyInputID = request.body.clientVariables.cognigyInputID + "/E";
+				body.message.clientMessageId = request.body.clientVariables.cognigyInputID + "/E";
+				body.message.text = "";
+
+				sessionStorage.cognigyInputID = request.body.clientVariables.cognigyInputID;
+
+				console.log("End Conversation - Body: " + JSON.stringify(body));
+				
+				const result = await httpRequest({
+					uri: sessionStorage.serviceNowInstanceURL + "/api/sn_va_as_service/bot/integration",
+					method: "POST",
+					headers: {
+						'Authorization': sessionStorage.authorization,
+						'Content-Type': 'application/json',
+						'Accept': 'application/json'
+					},
+					body: body,
+					json: true
+				}); */
+
+				sessionStorage.cognigyState = "CLOSED";
+
+				text = request.body.body[request.body.body.length - 1].value;
+
+				return {
+					userId,
+					sessionId,
+					text,
+					data
+				};
+			}
+
+			if (state == "OPENBOT" && request.body.completed) {
+
+				sessionStorage.cognigyState = "CLOSED";
+
+				text = request.body.body[request.body.body.length - 1].value;
+
+				return {
+					userId,
+					sessionId,
+					text,
+					data
+				};
+			}
+
+		}
+
+		sessionStorage.cognigyInputID = request.body.clientVariables.cognigyInputID + "*";
+
+		console.log("cognigyState: " + sessionStorage.cognigyState);
+
+		for (let row in request.body.body) {
+			if (request.body.body[row].uiType == "OutputText") {
+				text += request.body.body[row].value + "\n";
+			} if (request.body.body[row].uiType == "OutputCard") {
+				let data = JSON.parse(request.body.body[row].data);
+				text += data.title + "\n";
+				for (let field in data.fields) {
+					console.log("Hello");
+					text += data.fields[field].fieldLabel + " - " + data.fields[field].fieldValue + "\n";
+				}
+			} if (request.body.body[row].uiType == "InputText") {
+				text += request.body.body[row].label + "\n";
+			}
+		}
+
+		if (sessionStorage.botQuitPhrase != null && sessionStorage.botQuitPhrase != "") {
+			if (text.includes(sessionStorage.botQuitPhrase)) sessionStorage.cognigyState = "CLOSED";
+		}
+
+		return {
+			userId,
+			sessionId,
+			text,
+			data
+		};
+	}
+});

@@ -11,13 +11,14 @@ export interface IServiceNowNodeParams extends INodeFunctionBaseParams {
 			serviceNowUserName: string;
 			serviceNowPassword: string;
 		};
+		handoverAcceptMessage: string;
 		cognigySessionID: string;
 		cognigyUserID: string;
 		cognigyInputID: string;
 		quitPhrase: string;
-		userID: string;
-		emailID: string;
-		locale: string;
+		userId: string;
+		emailId: string;
+		timezone: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -28,8 +29,8 @@ export interface IServiceNowNodeParams extends INodeFunctionBaseParams {
 
 export const handoverNode = createNodeDescriptor({
 	type: "handover",
-	summary: "Start a conversation in Service Now Live Agent",
-	defaultLabel: "Handover",
+	summary: "Start a conversation with a Live Agent in the Service Now Agent Workspace",
+	defaultLabel: "Handover to Agent",
 	fields: [
 		{
 			key: "connection",
@@ -41,8 +42,18 @@ export const handoverNode = createNodeDescriptor({
 			}
 		},
 		{
+			key: "handoverAcceptMessage",
+			label: "Handover Accept Message",
+			type: "cognigyText",
+			description: "The message to display to the user once the handover request was accepted by the live chat",
+			params: {
+				required: true
+			}
+		},
+		{
 			key: "quitPhrase",
-			label: "Phrase to quit livechat",
+			label: "Phrase to quit Live Chat",
+			defaultValue: "stop",
 			type: "cognigyText",
 			description: "Please enter the phrase to quit the livechat session.",
 			params: {
@@ -50,31 +61,38 @@ export const handoverNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "userID",
+			key: "userId",
 			label: "User Identifier",
 			type: "cognigyText",
-			description: "Please enter the user id.",
-			params: {
-				required: true
-			}
+			defaultValue: "Cognigy User",
+			description: "Please enter the user id."
 		},
 		{
-			key: "emailID",
+			key: "emailId",
 			label: "User email address",
 			type: "cognigyText",
-			description: "Please enter the user email address",
-			params: {
-				required: true
-			}
+			defaultValue: "user@cognigy.com",
+			description: "Please enter the user email address"
 		},
 		{
-			key: "locale",
+			key: "timezone",
 			label: "User's locale",
 			type: "cognigyText",
+			defaultValue: "Europe/Germany",
 			description: "Please enter the user's locale",
-			params: {
-				required: true
-			}
+		},
+		{
+			key: "talkToBOT",
+			type: "toggle",
+			label: "Talk to ServiceNow BOT Initially",
+			defaultValue: false
+
+		},
+		{
+			key: "botQuitPhrase",
+			label: "BOT closed phrase",
+			type: "cognigyText",
+			description: "Overcome bug in ServiceNow - phase emited by BOT when conversation closed..",
 		},
 		{
 			key: "storeLocation",
@@ -114,19 +132,6 @@ export const handoverNode = createNodeDescriptor({
 				key: "storeLocation",
 				value: "context"
 			}
-		},
-		{
-			key: "talkToBOT",
-			type: "toggle",
-			label: "Talk to ServiceNow BOT Initially",
-			defaultValue: false
-
-		},
-		{
-			key: "botQuitPhrase",
-			label: "BOT closed phrase",
-			type: "cognigyText",
-			description: "Overcome bug in ServiceNow - phase emited by BOT when conversation closed..",
 		}
 	],
 	sections: [
@@ -141,30 +146,53 @@ export const handoverNode = createNodeDescriptor({
 			]
 		},
 		{
-			key: "advanced",
-			label: "Advanced Options",
+			key: "cancelOptions",
+			label: "Cancel Handover Options",
+			defaultCollapsed: true,
+			fields: [
+				"quitPhrase"
+			]
+		},
+		{
+			key: "virtualAgentOptions",
+			label: "Virtual Agent Options",
 			defaultCollapsed: true,
 			fields: [
 				"talkToBOT",
 				"botQuitPhrase"
 			]
+		},
+		{
+			key: "userOptions",
+			label: "User Options",
+			defaultCollapsed: false,
+			fields: [
+				"userId",
+				"emailId",
+				"timezone"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "quitPhrase" },
-		{ type: "field", key: "userID" },
-		{ type: "field", key: "emailID" },
-		{ type: "field", key: "locale" },
-		{ type: "section", key: "advanced" },
+		{ type: "field", key: "handoverAcceptMessage" },
+		{ type: "section", key: "userOptions" },
+		{ type: "section", key: "cancelOptions" },
+		{ type: "section", key: "virtualAgentOptions" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#80b6a1"
 	},
-	function: async ({ cognigy, config }: IServiceNowNodeParams) => {
+	dependencies: {
+		children: [
+			"onSuccess",
+			"onError"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: IServiceNowNodeParams) => {
 		const { api, input } = cognigy;
-		const { connection, quitPhrase, userID, emailID, locale, storeLocation, inputKey, contextKey, talkToBOT, botQuitPhrase } = config;
+		const { connection, handoverAcceptMessage, quitPhrase, userId, emailId, timezone, storeLocation, inputKey, contextKey, talkToBOT, botQuitPhrase } = config;
 
 		let hashedAuthHeader = null;
 		if (connection.serviceNowUserName != null)
@@ -176,6 +204,8 @@ export const handoverNode = createNodeDescriptor({
 
 		try {
 
+			api.say(handoverAcceptMessage);
+
 			const data = {
 				"token": connection.serviceNowAPIToken,
 				"requestId": input.inputId + "/S",
@@ -185,10 +215,10 @@ export const handoverNode = createNodeDescriptor({
 				"botToBot": true,
 				"clientVariables": {
 					"cognigyUserID": input.userId,
-					"cognigyState": cognigyState,
-					"userId": userID,
-					"emailId": emailID,
-					"timezone": locale,
+					cognigyState,
+					userId,
+					emailId,
+					timezone,
 					"cognigyInputID": input.userId + "/S",
 					"serviceNowInstanceURL": connection.serviceNowInstanceURL,
 					"serviceNowAPIToken": connection.serviceNowAPIToken,
@@ -201,9 +231,9 @@ export const handoverNode = createNodeDescriptor({
 					"typed": true,
 					"clientMessageId": input.inputId,
 				},
-				"userId": userID,
-				"emailId": emailID,
-				"timezone": locale
+				userId,
+				emailId,
+				timezone
 			};
 
 			let response = await axios({
@@ -217,6 +247,14 @@ export const handoverNode = createNodeDescriptor({
 				}
 			});
 
+			if (response.data?.status === "success") {
+				const onSuccessChild = childConfigs.find(child => child.type === "onSuccess");
+				api.setNextNode(onSuccessChild.id);
+			} else {
+				const onErrorChild = childConfigs.find(child => child.type === "onError");
+				api.setNextNode(onErrorChild.id);
+			}
+
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
 			} else {
@@ -224,12 +262,64 @@ export const handoverNode = createNodeDescriptor({
 				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
+
+			const onErrorChild = childConfigs.find(child => child.type === "onError");
+			api.setNextNode(onErrorChild.id);
+
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, "Unable to start ServiceNow agent conversation .../n" + error.message, "simple");
+				api.addToContext(contextKey, "Unable to start ServiceNow agent conversation: " + error.message, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, "Unable to start ServiceNow agent conversation .../n" + error.message);
+				api.addToInput(inputKey, "Unable to start ServiceNow agent conversation: " + error.message);
 			}
 		}
+	}
+});
+
+export const onSuccess = createNodeDescriptor({
+	type: "onSuccess",
+	parentType: "handover",
+	defaultLabel: {
+		default: "On Success"
+	},
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
+});
+
+export const onError = createNodeDescriptor({
+	type: "onError",
+	parentType: "handover",
+	defaultLabel: {
+		default: "On Error"
+	},
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "red",
+		textColor: "white",
+		variant: "mini"
 	}
 });

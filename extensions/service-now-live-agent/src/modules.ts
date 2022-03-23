@@ -1,11 +1,13 @@
 import { createExtension } from "@cognigy/extension-tools";
 
-import { handoverNode } from "./nodes/handover";
+import { handoverNode, onError, onSuccess } from "./nodes/handover";
 import { serviceNowConnection } from "./connections/serviceNowConnection";
 
 export default createExtension ({
     nodes: [
-        handoverNode
+        handoverNode,
+        onSuccess,
+        onError
     ],
     connections: [
         serviceNowConnection

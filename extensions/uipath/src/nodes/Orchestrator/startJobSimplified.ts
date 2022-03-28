@@ -137,7 +137,7 @@ export const startJobSimplifiedNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to Store Result",
-			defaultValue: "uiPathAccessToken",
+			defaultValue: "uiPathStartJobSimplified",
 			condition: {
 				key: "storeLocation",
 				value: "input"

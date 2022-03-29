@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import axios from "axios";
 const spauth = require('node-sp-auth');
-const request = require('request-promise');
 
 export interface IGetSharepointSiteInfoParams extends INodeFunctionBaseParams {
 	config: {
@@ -172,13 +172,13 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 		try {
 			const data = await spauth.getAuth(url, auth);
 
-			let headers = data.headers;
-			headers['Accept'] = 'application/json;odata=verbose';
-
-			const response = await request.get({
+			const response = await axios({
+				method: "GET",
 				url: `${url}/_api/web`,
-				headers: headers,
-				json: true
+				headers: {
+					...data.headers,
+					"Accept": "application/json;odata=verbose"
+				}
 			});
 
 			if (storeLocation === "context") {

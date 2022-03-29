@@ -17,10 +17,9 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
-    "tslint": "^6.1.2",
-    "node-sp-auth": "^2.5.7",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "axios": "^0.26.1",
+    "node-sp-auth": "^2.5.9",
+    "tslint": "^6.1.2"
   },
   "devDependencies": {
     "@types/node": "^13.13.15",

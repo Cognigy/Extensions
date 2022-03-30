@@ -1,0 +1,1 @@
+{"version":3,"file":"basicConnection.js","sourceRoot":"","sources":["../../src/connections/basicConnection.ts"],"names":[],"mappings":";;;AAEa,QAAA,eAAe,GAAsB;IACjD,IAAI,EAAE,OAAO;IACb,KAAK,EAAE,uBAAuB;IAC9B,MAAM,EAAE;QACP,EAAE,SAAS,EAAE,UAAU,EAAE;QACzB,EAAE,SAAS,EAAE,UAAU,EAAC;KACxB;CACD,CAAC"}

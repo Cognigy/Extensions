@@ -5,6 +5,7 @@ export const cloudConnection: IConnectionSchema = {
 	label: "Sharepoint Connection",
 	fields: [
 		{ fieldName: "clientId" },
-		{ fieldName: "clientSecret"}
+		{ fieldName: "clientSecret"},
+		{ fieldName: "realm"}
 	]
 };

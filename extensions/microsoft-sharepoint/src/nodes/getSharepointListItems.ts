@@ -8,6 +8,7 @@ export interface IGetSharepointListItemsParams extends INodeFunctionBaseParams {
 		cloudAuth: {
 			clientId: string;
 			clientSecret: string;
+			realm: string;
 		};
 		basicAuth: {
 			username: string;
@@ -174,7 +175,7 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 		const { api } = cognigy;
 		const { basicAuth, cloudAuth, authentication, url, list, filter, storeLocation, inputKey, contextKey } = config;
 
-		const { clientId, clientSecret } = cloudAuth;
+		const { clientId, clientSecret, realm } = cloudAuth;
 		const { username, password } = basicAuth;
 
 		let auth: any;
@@ -189,7 +190,8 @@ export const getSharepointListItemsNode = createNodeDescriptor({
 			case 'cloud':
 				auth = {
 					clientId,
-					clientSecret
+					clientSecret,
+					realm
 				};
 		}
 

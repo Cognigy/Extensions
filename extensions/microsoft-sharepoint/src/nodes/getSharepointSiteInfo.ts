@@ -8,6 +8,7 @@ export interface IGetSharepointSiteInfoParams extends INodeFunctionBaseParams {
 		cloudAuth: {
 			clientId: string;
 			clientSecret: string;
+			realm: string;
 		};
 		basicAuth: {
 			username: string;
@@ -150,7 +151,7 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IGetSharepointSiteInfoParams) => {
 		const { api } = cognigy;
 		const { cloudAuth, basicAuth, authentication, url, storeLocation, inputKey, contextKey } = config;
-		const { clientId, clientSecret } = cloudAuth;
+		const { clientId, clientSecret, realm } = cloudAuth;
 		const { username, password } = basicAuth;
 
 		let auth: any;
@@ -165,7 +166,8 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 			case 'cloud':
 				auth = {
 					clientId,
-					clientSecret
+					clientSecret,
+					realm
 				};
 		}
 

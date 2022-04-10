@@ -28,7 +28,7 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.13.0",
-		"axios": "^0.20.0",
+		"axios": "^0.21.2",
 		"uuid": "^3.3.2"
 	}
 }

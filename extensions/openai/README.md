@@ -26,3 +26,9 @@ Read the following documentation for more information: https://beta.openai.com/d
 For example, with the default context about Albert Einstein (copied from [Wikipedia](https://en.wikipedia.org/wiki/Albert_Einstein)), the following conversation would be possible based on the automatic answer that OpenAI provides:
 
 <img src="./docs/openAIExampleFlowChatConversation.png" width="500">
+
+
+**Tipps**
+
+In terms of postprocessing the following code provides good results in extracting the first proper paragraph:
+`input.openai.match(/\w.*[!"#$%&'()*+,\-.\/:;<=>?@[\]^_{|}~]/m)`

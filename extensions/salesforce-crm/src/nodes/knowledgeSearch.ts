@@ -1,24 +1,22 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import jsforce from 'jsforce';
 
-export interface ICreateEntityParams extends INodeFunctionBaseParams {
+export interface ISearchParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             username: string;
             password: string;
             loginUrl: string;
         };
-        entityType: string,
-        entityRecord: object;
-        apiVersion: string;
+        sosl: string,
         storeLocation: string;
         contextKey: string;
         inputKey: string;
     };
 }
-export const createEntityNode = createNodeDescriptor({
-    type: "createEntity",
-    defaultLabel: "Create Entity",
+export const searchNode = createNodeDescriptor({
+    type: "salesforceSearch",
+    defaultLabel: "Search (SOSL)",
     fields: [
         {
             key: "connection",
@@ -30,31 +28,14 @@ export const createEntityNode = createNodeDescriptor({
             }
         },
         {
-            key: "entityType",
+            key: "sosl",
             type: "cognigyText",
-            label: "Entity Type",
-            defaultValue: "Contact",
-            params: {
-                required: true
-            },
-        },
-        {
-            key: "entityRecord",
-            type: "json",
-            label: "Entity Record",
-            defaultValue: `{}`,
+            label: "Salesforce Object Search (SOSL)",
+            defaultValue: 'FIND {John OR Jane} IN Name Fields RETURNING Contact(Id,FirstName,LastName)',
+            description: "The SOSL query to run. Refer to Salesforce documentation.",
             params: {
                 required: true
             }
-        },
-        {
-            key: "apiVersion",
-            type: "cognigyText",
-            label: "Salesforce API Version",
-            defaultValue: "54.0",
-            params: {
-                required: true
-            },
         },
         {
             key: "storeLocation",
@@ -79,7 +60,7 @@ export const createEntityNode = createNodeDescriptor({
             key: "inputKey",
             type: "text",
             label: "Input Key to store Result",
-            defaultValue: "salesforce.entity",
+            defaultValue: "salesforce.search",
             condition: {
                 key: "storeLocation",
                 value: "input",
@@ -89,7 +70,7 @@ export const createEntityNode = createNodeDescriptor({
             key: "contextKey",
             type: "text",
             label: "Context Key to store Result",
-            defaultValue: "salesforce.entity",
+            defaultValue: "salesforce.search",
             condition: {
                 key: "storeLocation",
                 value: "context",
@@ -110,9 +91,7 @@ export const createEntityNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "entityType" },
-        { type: "field", key: "entityRecord" },
-        { type: "field", key: "apiVersion" },
+        { type: "field", key: "sosl" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -120,42 +99,41 @@ export const createEntityNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onSuccessCreateEntity",
-            "onErrorCreateEntity"
+            "onFoundResults",
+            "onEmptyResults"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
+    function: async ({ cognigy, config, childConfigs }: ISearchParams) => {
         const { api } = cognigy;
-        const { entityType, entityRecord, apiVersion, connection, storeLocation, contextKey, inputKey } = config;
+        const { sosl, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
+
 
         try {
 
-            const conn = new jsforce.Connection({
-                loginUrl,
-                version: apiVersion
-            });
+            const conn = new jsforce.Connection({ loginUrl });
 
-            const userInfo = await conn.login(username, password);
+            await conn.login(username, password);
 
-            // Single record creation
-            const record = await conn.sobject(entityType).create(entityRecord);
+            // Run SOSL query:
+            const searchResult = await conn.search(sosl);
 
-            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessCreateEntity");
-            api.setNextNode(onSuccessChild.id);
+            if (searchResult.searchRecords.length === 0) {
+                const onEmptyResultsChild = childConfigs.find(child => child.type === "onEmptyResults");
+                api.setNextNode(onEmptyResultsChild.id);
+            } else {
+                const onFoundChild = childConfigs.find(child => child.type === "onFoundResults");
+                api.setNextNode(onFoundChild.id);
+            }
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, record, "simple");
+                api.addToContext(contextKey, searchResult, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, record);
+                api.addToInput(inputKey, searchResult);
             }
 
         } catch (error) {
-
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateEntity");
-            api.setNextNode(onErrorChild.id);
-
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");
             } else {
@@ -166,10 +144,10 @@ export const createEntityNode = createNodeDescriptor({
     }
 });
 
-export const onSuccessCreateEntity = createNodeDescriptor({
-    type: "onSuccessCreateEntity",
-    parentType: "createEntity",
-    defaultLabel: "On Success",
+export const onFoundResults = createNodeDescriptor({
+    type: "onFoundResults",
+    parentType: "salesforceSearch",
+    defaultLabel: "On Found",
     constraints: {
         editable: false,
         deletable: false,
@@ -188,10 +166,10 @@ export const onSuccessCreateEntity = createNodeDescriptor({
     }
 });
 
-export const onErrorCreateEntity = createNodeDescriptor({
-    type: "onErrorCreateEntity",
-    parentType: "createEntity",
-    defaultLabel: "On Error",
+export const onEmptyResults = createNodeDescriptor({
+    type: "onEmptyResults",
+    parentType: "salesforceSearch",
+    defaultLabel: "On Empty Result",
     constraints: {
         editable: false,
         deletable: false,
@@ -204,7 +182,7 @@ export const onErrorCreateEntity = createNodeDescriptor({
         }
     },
     appearance: {
-        color: "#cf142b",
+        color: "#61d188",
         textColor: "white",
         variant: "mini"
     }

@@ -8,6 +8,8 @@ import { onFoundEntity, onNotFoundEntity, retrieveEntityNode } from "./nodes/ret
 import { updateEntityNode } from "./nodes/updateEntity";
 import { onEmptyQueryResults, onFoundQueryResults, queryNode } from "./nodes/query";
 import { onEmptyResults, onFoundResults, searchNode } from "./nodes/search";
+import { retrieveMetadataNode } from "./nodes/retrieveMetadata";
+import { listMetadataNode } from "./nodes/listMetadata";
 
 export default createExtension({
 	nodes: [
@@ -30,7 +32,10 @@ export default createExtension({
 
 		searchNode,
 		onFoundResults,
-		onEmptyResults
+		onEmptyResults,
+
+		retrieveMetadataNode,
+		listMetadataNode
 	],
 
 	connections: [

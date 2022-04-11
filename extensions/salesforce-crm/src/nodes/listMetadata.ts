@@ -1,24 +1,22 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import jsforce from 'jsforce';
 
-export interface ICreateEntityParams extends INodeFunctionBaseParams {
+export interface IListMetadataParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             username: string;
             password: string;
             loginUrl: string;
         };
-        entityType: string,
-        entityRecord: object;
-        apiVersion: string;
+        dataType: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
     };
 }
-export const createEntityNode = createNodeDescriptor({
-    type: "createEntity",
-    defaultLabel: "Create Entity",
+export const listMetadataNode = createNodeDescriptor({
+    type: "listMetadata",
+    defaultLabel: "List Metadata",
     fields: [
         {
             key: "connection",
@@ -30,28 +28,9 @@ export const createEntityNode = createNodeDescriptor({
             }
         },
         {
-            key: "entityType",
+            key: "dataType",
             type: "cognigyText",
             label: "Entity Type",
-            defaultValue: "Contact",
-            params: {
-                required: true
-            },
-        },
-        {
-            key: "entityRecord",
-            type: "json",
-            label: "Entity Record",
-            defaultValue: `{}`,
-            params: {
-                required: true
-            }
-        },
-        {
-            key: "apiVersion",
-            type: "cognigyText",
-            label: "Salesforce API Version",
-            defaultValue: "54.0",
             params: {
                 required: true
             },
@@ -77,7 +56,7 @@ export const createEntityNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "text",
+            type: "cognigyText",
             label: "Input Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -87,7 +66,7 @@ export const createEntityNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "text",
+            type: "cognigyText",
             label: "Context Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -110,52 +89,41 @@ export const createEntityNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "entityType" },
-        { type: "field", key: "entityRecord" },
-        { type: "field", key: "apiVersion" },
+        { type: "field", key: "dataType" },
         { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#009EDB"
     },
-    dependencies: {
-        children: [
-            "onSuccessCreateEntity",
-            "onErrorCreateEntity"
-        ]
-    },
-    function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
+    function: async ({ cognigy, config }: IListMetadataParams) => {
         const { api } = cognigy;
-        const { entityType, entityRecord, apiVersion, connection, storeLocation, contextKey, inputKey } = config;
+        const { dataType, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
+
 
         try {
 
             const conn = new jsforce.Connection({
-                loginUrl,
-                version: apiVersion
+                loginUrl
             });
 
             const userInfo = await conn.login(username, password);
 
-            // Single record creation
-            const record = await conn.sobject(entityType).create(entityRecord);
+            // const metadata = await conn.metadata.read('Queue', ['Product_Support_Queue']);
+            const metadata = await conn.metadata.list([{type: dataType, folder: null}]);
 
-            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessCreateEntity");
-            api.setNextNode(onSuccessChild.id);
+            // const metadata = await conn.metadata.describe();
+            // Single record creation
+            // const entity = await conn.sobject(entityType).retrieve(entityId);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, record, "simple");
+                api.addToContext(contextKey, metadata, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, record);
+                api.addToInput(inputKey, metadata);
             }
 
         } catch (error) {
-
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateEntity");
-            api.setNextNode(onErrorChild.id);
-
             if (storeLocation === "context") {
                 api.addToContext(contextKey, error.message, "simple");
             } else {
@@ -163,49 +131,5 @@ export const createEntityNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
-    }
-});
-
-export const onSuccessCreateEntity = createNodeDescriptor({
-    type: "onSuccessCreateEntity",
-    parentType: "createEntity",
-    defaultLabel: "On Success",
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
-});
-
-export const onErrorCreateEntity = createNodeDescriptor({
-    type: "onErrorCreateEntity",
-    parentType: "createEntity",
-    defaultLabel: "On Error",
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#cf142b",
-        textColor: "white",
-        variant: "mini"
     }
 });

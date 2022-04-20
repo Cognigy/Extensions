@@ -1,15 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
-const FormData = require('form-data');
 
-export interface IUploadDocumentParams extends INodeFunctionBaseParams {
+export interface IGetDocumentResultsParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             username: string;
             password: string;
         };
         projectId: string;
-        fileUrl: string;
+        documentId: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -23,15 +22,15 @@ interface IHypatosProject {
     createdAt: string;
 }
 
-export const uploadDocumentNode = createNodeDescriptor({
-    type: "uploadDocument",
+export const getDocumentResultsNode = createNodeDescriptor({
+    type: "getDocumentResults",
     defaultLabel: {
-        default: "Upload Document",
-        deDE: "Dokument hochladen"
+        default: "Get Document Results",
+        deDE: "Erhalte Dokumentenergebnisse"
     },
     summary: {
-        default: "Uploads a user document to Hypatos",
-        deDE: "Lädt ein Nutzerdokument zu Hypatos hoch",
+        default: "Retrieves the results of the uploaded document",
+        deDE: "Gibt die Ergebnisse des hochgeladenen Dokuments zurück",
     },
     fields: [
         {
@@ -86,16 +85,17 @@ export const uploadDocumentNode = createNodeDescriptor({
             }
         },
         {
-            key: "fileUrl",
+            key: "documentId",
             label: {
-                default: "File Url",
-                deDE: "Dokument / Datei URL"
+                default: "Document ID",
+                deDE: "Dokumenten ID"
             },
             description: {
-                default: "The url to the file that should be uploaded as a document",
-                deDE: "Die URL zur Datei welche als Dokument hochgeladen werden soll",
+                default: "The ID to the document that should be checked for results",
+                deDE: "Die ID des Dokumentes welches nach Resultaten überprüft werden soll",
             },
             type: "cognigyText",
+            defaultValue: "{{input.hypatos.documentId}}",
             params: {
                 required: true
             }
@@ -104,9 +104,10 @@ export const uploadDocumentNode = createNodeDescriptor({
             key: "storeLocation",
             type: "select",
             label: {
-				default: "Where to store the result",
-				deDE: "Wo das Ergebnis gespeichert werden soll"
-			},
+                default: "Where to store the result",
+                deDE: "Wo das Ergebnis gespeichert werden soll",
+                esES: "Dónde almacenar el resultado"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -153,9 +154,9 @@ export const uploadDocumentNode = createNodeDescriptor({
         {
             key: "storage",
             label: {
-				default: "Storage Option",
-				deDE: "Speicheroption"
-			},
+                default: "Storage Option",
+                deDE: "Speicheroption"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -167,44 +168,35 @@ export const uploadDocumentNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "projectId" },
-        { type: "field", key: "fileUrl" },
-        { type: "section", key: "storage"}
+        { type: "field", key: "documentId" },
+        { type: "section", key: "storage" }
     ],
     appearance: {
         color: "#ff0050"
     },
     dependencies: {
         children: [
-            "onSuccessUpload",
-            "onErrorUpload"
+            "onProcessing",
+            "onExtracted"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IUploadDocumentParams) => {
-        const { api, input } = cognigy;
-        const { connection, projectId, fileUrl, storeLocation, contextKey, inputKey } = config;
+    function: async ({ cognigy, config, childConfigs }: IGetDocumentResultsParams) => {
+        const { api } = cognigy;
+        const { connection, projectId, documentId, storeLocation, contextKey, inputKey } = config;
         const { username, password } = connection;
 
         try {
 
-
-            const downloadDocumentResponse = await axios({
-                method: "get",
-                url: fileUrl,
-                responseType: "arraybuffer"
-            });
-
-            const form = new FormData();
-            form.append('file', downloadDocumentResponse.data, { filename: `cognigy-${input.inputId}`, contentType: downloadDocumentResponse?.headers["content-type"] });
-
             const response = await axios({
-                method: "POST",
-                url: `https://api.cloud.hypatos.ai/v1/projects/${projectId}/documents/upload`,
-                headers: form.getHeaders(),
+                method: "GET",
+                url: `https://api.cloud.hypatos.ai/v1/projects/${projectId}/documents/${documentId}`,
+                headers: {
+                    "Accept": "application/json"
+                },
                 auth: {
                     username,
                     password
-                },
-                data: form
+                }
             });
 
             if (storeLocation === "context") {
@@ -214,23 +206,30 @@ export const uploadDocumentNode = createNodeDescriptor({
                 api.addToInput(inputKey, response.data);
             }
 
-            const onSuccessChild = childConfigs.find(child => child.type === "onSuccessUpload");
-            api.setNextNode(onSuccessChild.id);
+            switch (response.data?.state) {
+                case "processing":
+                    const onProcessingChild = childConfigs.find(child => child.type === "onProcessing");
+                    api.setNextNode(onProcessingChild.id);
+                    break;
+                case "extracted":
+                    const onExtractedChild = childConfigs.find(child => child.type === "onExtracted");
+                    api.setNextNode(onExtractedChild.id);
+                    break;
+                default:
+            }
+
         } catch (error) {
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorUpload");
-            api.setNextNode(onErrorChild.id);
             api.log("error", error.message);
         }
     }
 });
 
-
-export const onSuccessUpload = createNodeDescriptor({
-    type: "onSuccessUpload",
-    parentType: "uploadDocument",
+export const onProcessing = createNodeDescriptor({
+    type: "onProcessing",
+    parentType: "getDocumentResults",
     defaultLabel: {
-        default: "On Success",
-        deDE: "Erfolgreich",
+        default: "On Processing",
+        deDE: "In Bearbeitung",
     },
     constraints: {
         editable: false,
@@ -244,18 +243,18 @@ export const onSuccessUpload = createNodeDescriptor({
         }
     },
     appearance: {
-        color: "#61d188",
+        color: "#ff0050",
         textColor: "white",
         variant: "mini"
     }
 });
 
-export const onErrorUpload = createNodeDescriptor({
-    type: "onErrorUpload",
-    parentType: "uploadDocument",
+export const onExtracted = createNodeDescriptor({
+    type: "onExtracted",
+    parentType: "getDocumentResults",
     defaultLabel: {
-        default: "On Error",
-        deDE: "Fehlerhaft"
+        default: "On Extracted",
+        deDE: "Fertig"
     },
     constraints: {
         editable: false,
@@ -269,7 +268,7 @@ export const onErrorUpload = createNodeDescriptor({
         }
     },
     appearance: {
-        color: "red",
+        color: "#ff0050",
         textColor: "white",
         variant: "mini"
     }

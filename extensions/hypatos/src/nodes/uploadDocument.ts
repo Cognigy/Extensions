@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
+const FormData = require('form-data');
 
 export interface IUploadDocumentParams extends INodeFunctionBaseParams {
     config: {
@@ -103,7 +104,7 @@ export const uploadDocumentNode = createNodeDescriptor({
         { type: "field", key: "fileUrl" }
     ],
     appearance: {
-        color: "#0c2a7a"
+        color: "#ff0050"
     },
     dependencies: {
         children: [
@@ -112,7 +113,7 @@ export const uploadDocumentNode = createNodeDescriptor({
         ]
     },
     function: async ({ cognigy, config, childConfigs }: IUploadDocumentParams) => {
-        const { api, input } = cognigy;
+        const { api } = cognigy;
         const { connection, projectId, fileUrl } = config;
         const { username, password } = connection;
 
@@ -122,32 +123,33 @@ export const uploadDocumentNode = createNodeDescriptor({
             const downloadDocumentResponse = await axios({
                 method: "get",
                 url: fileUrl,
-                headers: {
-                    "Accept": "multipart/form-data"
-                }
+                responseType: "arraybuffer"
             });
 
             const form = new FormData();
-            form.append('file', downloadDocumentResponse.data);
-            form.append('externalData', input.sessionId);
+            form.append('file', downloadDocumentResponse.data, { filename: "document", contentType: downloadDocumentResponse?.headers["content-type"] });
 
-            await axios.post(`https://api.cloud.hypatos.ai/v1/projects/${projectId}/documents/upload`, form, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    "Accept": "*/*"
-                },
+            const response = await axios({
+                method: "POST",
+                url: `https://api.cloud.hypatos.ai/v1/projects/${projectId}/documents/upload`,
+                headers: form.getHeaders(),
                 auth: {
                     username,
                     password
-                }
+                },
+                data: form
             });
+
+            // Store result in Input object
+            // @ts-ignore
+            api.addToInput("hypatos", response.data);
 
             const onSuccessChild = childConfigs.find(child => child.type === "onSuccessUpload");
             api.setNextNode(onSuccessChild.id);
         } catch (error) {
             const onErrorChild = childConfigs.find(child => child.type === "onErrorUpload");
             api.setNextNode(onErrorChild.id);
-            api.log("error", JSON.stringify(error));
+            api.say(JSON.stringify(error));
         }
     }
 });

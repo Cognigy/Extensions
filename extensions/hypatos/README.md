@@ -17,7 +17,7 @@ The result of this Node is the ID of the successfully uploaded document which is
 ```json
 {
     "hypatos": {
-        "documentId: "..."
+        "documentId": "..."
     }
 }
 ```

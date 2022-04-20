@@ -12,18 +12,9 @@ export interface IServiceNowNodeParams extends INodeFunctionBaseParams {
 			serviceNowPassword: string;
 		};
 		handoverAcceptMessage: string;
-		cognigySessionID: string;
-		cognigyUserID: string;
-		cognigyInputID: string;
-		quitPhrase: string;
-		userId: string;
-		emailId: string;
-		timezone: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
-		talkToBOT: boolean;
-		botQuitPhrase: string;
 	};
 }
 
@@ -49,50 +40,6 @@ export const handoverNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
-		},
-		{
-			key: "quitPhrase",
-			label: "Phrase to quit Live Chat",
-			defaultValue: "stop",
-			type: "cognigyText",
-			description: "Please enter the phrase to quit the livechat session.",
-			params: {
-				required: true
-			}
-		},
-		{
-			key: "userId",
-			label: "User Identifier",
-			type: "cognigyText",
-			defaultValue: "Cognigy User",
-			description: "Please enter the user id."
-		},
-		{
-			key: "emailId",
-			label: "User email address",
-			type: "cognigyText",
-			defaultValue: "user@cognigy.com",
-			description: "Please enter the user email address"
-		},
-		{
-			key: "timezone",
-			label: "User's locale",
-			type: "cognigyText",
-			defaultValue: "Europe/Germany",
-			description: "Please enter the user's locale",
-		},
-		{
-			key: "talkToBOT",
-			type: "toggle",
-			label: "Talk to ServiceNow BOT Initially",
-			defaultValue: false
-
-		},
-		{
-			key: "botQuitPhrase",
-			label: "BOT closed phrase",
-			type: "cognigyText",
-			description: "Overcome bug in ServiceNow - phase emited by BOT when conversation closed..",
 		},
 		{
 			key: "storeLocation",
@@ -144,41 +91,11 @@ export const handoverNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
-		},
-		{
-			key: "cancelOptions",
-			label: "Cancel Handover Options",
-			defaultCollapsed: true,
-			fields: [
-				"quitPhrase"
-			]
-		},
-		{
-			key: "virtualAgentOptions",
-			label: "Virtual Agent Options",
-			defaultCollapsed: true,
-			fields: [
-				"talkToBOT",
-				"botQuitPhrase"
-			]
-		},
-		{
-			key: "userOptions",
-			label: "User Options",
-			defaultCollapsed: false,
-			fields: [
-				"userId",
-				"emailId",
-				"timezone"
-			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "handoverAcceptMessage" },
-		{ type: "section", key: "userOptions" },
-		{ type: "section", key: "cancelOptions" },
-		{ type: "section", key: "virtualAgentOptions" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -192,58 +109,43 @@ export const handoverNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IServiceNowNodeParams) => {
 		const { api, input } = cognigy;
-		const { connection, handoverAcceptMessage, quitPhrase, userId, emailId, timezone, storeLocation, inputKey, contextKey, talkToBOT, botQuitPhrase } = config;
-
-		let hashedAuthHeader = null;
-		if (connection.serviceNowUserName != null)
-			hashedAuthHeader = "Basic " + Buffer.from(connection.serviceNowUserName + ":" + connection.serviceNowPassword).toString('base64');
-		else hashedAuthHeader = "Unset";
-
-		let cognigyState = "STARTAGENT";
-		if (talkToBOT) cognigyState = "STARTBOT";
+		const { connection, handoverAcceptMessage, storeLocation, inputKey, contextKey } = config;
+		const { serviceNowInstanceURL, serviceNowPassword, serviceNowUserName } = connection;
 
 		try {
 
 			api.say(handoverAcceptMessage);
 
 			const data = {
-				"token": connection.serviceNowAPIToken,
-				"requestId": input.inputId + "/S",
-				"action": "START_CONVERSATION",
-				"enterpriseId": "Cognigy",
-				"clientSessionId": input.sessionId,
-				"botToBot": true,
-				"clientVariables": {
-					"cognigyUserID": input.userId,
-					cognigyState,
-					userId,
-					emailId,
-					timezone,
-					"cognigyInputID": input.userId + "/S",
-					"serviceNowInstanceURL": connection.serviceNowInstanceURL,
-					"serviceNowAPIToken": connection.serviceNowAPIToken,
-					"quitPhrase": quitPhrase,
-					"authorization": hashedAuthHeader,
-					"botQuitPhrase": botQuitPhrase
+				requestId: input.inputId + "/S",
+				action: "START_CONVERSATION",
+				enterpriseId: "Cognigy",
+				clientSessionId: input.sessionId,
+				botToBot: true,
+				clientVariables: {
+					cognigyUserId: input.userId,
+					cognigyState: "STARTAGENT",
+					userId: input.userId,
+					authorization: "Basic " + Buffer.from(serviceNowUserName + ":" + serviceNowPassword).toString('base64'),
+					cognigyInputId: input.userId + "/S",
+					serviceNowInstanceURL,
 				},
-				"message": {
-					"text": "",
-					"typed": true,
-					"clientMessageId": input.inputId,
+				message: {
+					text: "",
+					typed: true,
+					clientMessageId: input.inputId
 				},
-				userId,
-				emailId,
-				timezone
+				userId: input.userId,
 			};
 
 			let response = await axios({
 				method: 'POST',
-				url: connection.serviceNowInstanceURL + '/api/sn_va_as_service/bot/integration',
+				url: serviceNowInstanceURL + '/api/sn_va_as_service/bot/integration',
 				data: data,
 				headers: {
-					'Authorization': hashedAuthHeader,
 					'Content-Type': 'application/json',
 					'Accept': 'application/json',
+					'Authorization': "Basic " + Buffer.from(serviceNowUserName + ":" + serviceNowPassword).toString('base64')
 				}
 			});
 

@@ -10,6 +10,7 @@ export interface IUploadDocumentParams extends INodeFunctionBaseParams {
         };
         projectId: string;
         fileUrl: string;
+        externalData: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -101,6 +102,19 @@ export const uploadDocumentNode = createNodeDescriptor({
             }
         },
         {
+            key: "externalData",
+            label: {
+                default: "Additional Data",
+                deDE: "Weitere Daten"
+            },
+            description: {
+                default: "A JSON object with additional data that should be used to validate the uploaded file",
+                deDE: "Weitere Daten, die helfen das hochgeladene Dokument zu validieren",
+            },
+            type: "json",
+            defaultValue: {}
+        },
+        {
             key: "storeLocation",
             type: "select",
             label: {
@@ -151,6 +165,17 @@ export const uploadDocumentNode = createNodeDescriptor({
     ],
     sections: [
         {
+            key: "externalDataSection",
+            label: {
+				default: "Additional Data",
+				deDE: "Weitere Daten"
+			},
+            defaultCollapsed: true,
+            fields: [
+                "externalData"
+            ]
+        },
+        {
             key: "storage",
             label: {
 				default: "Storage Option",
@@ -168,6 +193,7 @@ export const uploadDocumentNode = createNodeDescriptor({
         { type: "field", key: "connection" },
         { type: "field", key: "projectId" },
         { type: "field", key: "fileUrl" },
+        { type: "section", key: "externalDataSection" },
         { type: "section", key: "storage"}
     ],
     appearance: {
@@ -181,7 +207,7 @@ export const uploadDocumentNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IUploadDocumentParams) => {
         const { api, input } = cognigy;
-        const { connection, projectId, fileUrl, storeLocation, contextKey, inputKey } = config;
+        const { connection, projectId, fileUrl, externalData, storeLocation, contextKey, inputKey } = config;
         const { username, password } = connection;
 
         try {
@@ -195,6 +221,7 @@ export const uploadDocumentNode = createNodeDescriptor({
 
             const form = new FormData();
             form.append('file', downloadDocumentResponse.data, { filename: `cognigy-${input.inputId}`, contentType: downloadDocumentResponse?.headers["content-type"] });
+            form.append('externalData', JSON.stringify(externalData));
 
             const response = await axios({
                 method: "POST",

@@ -12,6 +12,9 @@ export interface IServiceNowNodeParams extends INodeFunctionBaseParams {
 			serviceNowPassword: string;
 		};
 		handoverAcceptMessage: string;
+		userId: string;
+		emailId: string;
+		timezone: string;
 		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
@@ -37,6 +40,33 @@ export const handoverNode = createNodeDescriptor({
 			label: "Handover Accept Message",
 			type: "cognigyText",
 			description: "The message to display to the user once the handover request was accepted by the live chat",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "userId",
+			label: "User Identifier",
+			type: "cognigyText",
+			description: "Please enter the user id.",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "emailId",
+			label: "User email address",
+			type: "cognigyText",
+			description: "Please enter the user email address",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "timezone",
+			label: "User's locale",
+			type: "cognigyText",
+			description: "Please enter the user's locale",
 			params: {
 				required: true
 			}
@@ -91,11 +121,22 @@ export const handoverNode = createNodeDescriptor({
 				"inputKey",
 				"contextKey",
 			]
+		},
+		{
+			key: "userOptions",
+			label: "User Options",
+			defaultCollapsed: true,
+			fields: [
+				"userId",
+				"emailId",
+				"timezone"
+			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "handoverAcceptMessage" },
+		{ type: "section", key: "userOptions" },
 		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
@@ -109,14 +150,15 @@ export const handoverNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IServiceNowNodeParams) => {
 		const { api, input } = cognigy;
-		const { connection, handoverAcceptMessage, storeLocation, inputKey, contextKey } = config;
-		const { serviceNowInstanceURL, serviceNowPassword, serviceNowUserName } = connection;
+		const { connection, handoverAcceptMessage, userId, emailId, timezone, storeLocation, inputKey, contextKey } = config;
+		const { serviceNowInstanceURL, serviceNowPassword, serviceNowUserName, serviceNowAPIToken } = connection;
 
 		try {
 
 			api.say(handoverAcceptMessage);
 
 			const data = {
+				token: serviceNowAPIToken,
 				requestId: input.inputId + "/S",
 				action: "START_CONVERSATION",
 				enterpriseId: "Cognigy",
@@ -125,17 +167,23 @@ export const handoverNode = createNodeDescriptor({
 				clientVariables: {
 					cognigyUserId: input.userId,
 					cognigyState: "STARTAGENT",
-					userId: input.userId,
+					userId,
+					emailId,
+					timezone,
 					authorization: "Basic " + Buffer.from(serviceNowUserName + ":" + serviceNowPassword).toString('base64'),
 					cognigyInputId: input.userId + "/S",
 					serviceNowInstanceURL,
+					cognigyInputI: input.userId + "/S",
+					serviceNowAPIToken
 				},
 				message: {
 					text: "",
 					typed: true,
 					clientMessageId: input.inputId
 				},
-				userId: input.userId,
+				userId,
+				emailId,
+				timezone
 			};
 
 			let response = await axios({

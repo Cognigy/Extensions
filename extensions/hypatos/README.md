@@ -10,7 +10,7 @@ The `application_id` and `application_key` must be provided as basic authenticat
 
 ## Nodes: Upload Document
 
-This Flow Node uploads a document to the Hypatos.ai based on a provided `File URL` that references the document. This could be similar to https://example.com/document.png. Furthermore, the Hypatos.ai project has to be selected from the list of given projects. As soon as the required Connection is created and valid, the `Project ID` select field will show the projects of the given account.
+This Flow Node uploads a document to the Hypatos.ai based on a provided `File URL` that references the document. This could be similar to https://example.com/document.png. Furthermore, the Hypatos.ai project has to be selected from the list of given projects. As soon as the required Connection is created and valid, the `Project ID` select field will show the projects of the given account. Last but not least, as optional configuration, one can send `external data` that Hypatos could use in order to check if the external data fit to the extractions from the document.  
 
 The result of this Node is the ID of the successfully uploaded document which is whether stored in the Input or Context of the current conversation:
 

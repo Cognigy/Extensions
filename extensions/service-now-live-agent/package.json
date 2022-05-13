@@ -1,6 +1,6 @@
 {
   "name": "service-now-live-agent",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Integrates with Service Now Live Agent",
   "main": "build/modules.js",
   "scripts": {

@@ -2355,6 +2355,38 @@
                     "tags": []
                 }
             ]
+        },
+        {
+            "name": "hypatos",
+            "label": "Hypatos",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hypatos400/hypatos.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/blob/master/extensions/hypatos/README.md",
+            "description": "Integrates with Hypatos for document processing",
+            "longDescription": "Manual document processing is slow, costly and error-prone leading to fraud and overpayments. Hypatos automates every stage of document processing at a high level of accuracy thanks to the deep learning technology honed over years with enterprise clients. With this Cognigy.AI Extension, the user can simply take a photo of a document and let the virtual agent extract all necessary information, such as names, addresses, prices, and more. (Source: https://www.hypatos.ai/)",
+            "tags": [
+                "ocr",
+                "document",
+                "extraction",
+                "processing"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADk0lEQVR4nO2aSWsUQRiGn68nEfXiGhcQ8eBBQRQFbyJeFNyyiBFCMMYVwYt3QUTv/gDFZFyjRDMxbqAGVDwIAVERD+KCirgc1BgM0ZlMeZgOTlfXZKYniTOl9Zwyb1e9+fpN1TfdRcDhcDgcDofD8X8iitrPBnmRkDDo+VHUxyD5weC5Wkg8LsZzLKkAqgyyN0Jfg+dg5Qg9x4SR3qj1uABKXUCpcQGUuoBS4wIodQGlpqLUBQyHor4Kfi0IqtIndD6K7rVxOngLNa+fZR0ADEyA2F1AssR+RfUsoasvmlfsALBfE9vKegsIV94CtzV5IsjmKD6KPZVAo+FKS1kH4NMalmRbNIvP6wk/nr+By90WBDA5AfRq4kpF7bwIJs0GrVVA5egByV2Kuu8RfkH23FENVYgPKGraQPYGZKQJOJxvfqaRJteFZLw45P4WOAKqqILHhlgLpPcGNbWVAgKAZCOgv4l2Cx1vwJLnAKGjB3imyfMVdSsKmL3dILYM/WBFAD4tYSndNNwERfVSUIs1+avfVwCrAkifAVJBTbYomsfnniPNYU2dE+IDQ59y9YCDQJFNUHkgR4ubmxuh65Oi9hpQkyVPgt5a4HyoCurH+ftfIxZYSTkCqDwutH8splD/THDUA8ggraBqglp6G4YAILUBmKaJj4WOh9mCRVsAoOo6oB3WymrFptnhscrUH07oglUBCMeSwBlNjsGgYanzXvv8EyrP6oOsCiCDFPho7J3WhMtC+5fQqFGq6q8hJJ4CPZq8SLFpWXBcxwPgxR9FGb5GLQzAx7AKBg2rQIZWwTtYestkZGsAbaAGgpI0+K+9WXhD/SIuHEqbjKwMQOj8BpLQ5Cr4uDY47tIr4D4MGlZMBisDyGBqhp5hG6T3CVde53KxOIAl3cA7TdygqJ+aLQhdT4ZzsTYAf0+f1ORxkGqI4mNtAD5xQgcXKtJxmdUBCJ0vgXuavFxRt9A03oTVAWQwNcPhzwmy+QcC+HER6A9q3lbFoYLuTfIPKW8U1fPBe07wXlKQnCFc+5pv/j+wAmQn4T/k1UJuHiwPQLGqwnzoaX7xMWF1ADClGpipiR+g90ahDpYHkN4d1uSUcCcV1s1YG4Bi41yQNYZLBS9/sDgA8HYSrv++kHgeyWX0Cvp7ZE6eZYfhUujQMx9WBgCptcAcTeyD/vaoTmX+HyK5UHWEjse5INz8UYpqHA6Hw+FwOKzkNxsQ05fWenxGAAAAAElFTkSuQmCC",
+            "nodes": [
+                {
+                    "type": "uploadDocument",
+                    "defaultLabel": "Upload Document",
+                    "description": "Uploads a user document to Hypatos",
+                    "tags": [
+                        "upload"
+                    ]
+                },
+                {
+                    "type": "getDocumentResults",
+                    "defaultLabel": "Get Document Results",
+                    "description": "Retrieves the results of the uploaded document",
+                    "tags": []
+                }
+            ]
         }
     ]
 }

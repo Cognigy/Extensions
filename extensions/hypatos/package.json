@@ -1,25 +1,23 @@
 {
-	"name": "microsoft",
-	"version": "4.2.0",
-	"description": "Integrates with Microsoft",
+	"name": "hypatos",
+	"version": "4.0.0",
+	"description": "Integrates with Hypatos",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz microsoft.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz hypatos.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
+	"keywords": [
+		"Document",
+		"Upload",
+		"OCR"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"
 	},
-	"keywords": [
-		"Microsoft",
-		"ADAL",
-		"Authentication",
-		"Azure",
-		"Graph API"
-	],
 	"author": "Cognigy GmbH",
 	"license": "MIT",
 	"devDependencies": {
@@ -29,10 +27,8 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
-		"@microsoft/microsoft-graph-client": "^1.7.0",
-		"axios": "^0.21.2",
-		"request": "^2.88.2",
-		"request-promise": "^4.2.6"
+		"@cognigy/extension-tools": "^0.14.0",
+		"axios": "^0.26.1",
+		"form-data": "^4.0.0"
 	}
 }

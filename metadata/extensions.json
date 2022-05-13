@@ -2333,8 +2333,8 @@
         {
             "name": "service-now-live-agent",
             "label": "Service Now Live Agent",
-            "version": "4.0.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/service-now-live-agent400/service-now-live-agent.tar.gz",
+            "version": "4.0.1",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/service-now-live-agent401/service-now-live-agent.tar.gz",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/4407410019602-Service-Now-Connect-to-Live-Chat",
             "description": "Integrates with the Service Now Live Agent Workspace",
             "longDescription": "Deliver resilient services that increase productivity and create amazing experiences wherever your employees work, with the most innovative ITSM solution (Service Now, 2021).",

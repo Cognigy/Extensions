@@ -1,4 +1,4 @@
-# Microsoft Azure Bot Services Dynamics 365
+# Microsoft Azure Bot Services Token 
 
 Cognigy users who wish to integrate with Microsoft Teams via Microsoft Bot Services registration often notice that it is not possible to upload and process images via copy and paste into the chat or by taking a photo with a cell phone. This extension will not be able to solve this problem directly but it will give the user the tools to solve this problem via a third party RPA service such as Microsoft Power Automate or UiPath by creating a token which can be used as a API Get Request in order to download the image for further processing.
 

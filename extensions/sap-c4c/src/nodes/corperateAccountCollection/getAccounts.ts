@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
 
-export interface IGetContactsParamss extends INodeFunctionBaseParams {
+export interface IGetAccountsParamss extends INodeFunctionBaseParams {
     config: {
         connection: {
             domain: string;
@@ -14,15 +14,15 @@ export interface IGetContactsParamss extends INodeFunctionBaseParams {
     };
 }
 
-export const getContactsNode = createNodeDescriptor({
-    type: "getContacts",
+export const getAccountsNode = createNodeDescriptor({
+    type: "getAccounts",
     defaultLabel: {
-        default: "Get Contacts",
-        deDE: "Erhalte Kontakte"
+        default: "Get Accounts",
+        deDE: "Erhalte Accounts"
     },
     summary: {
-        default: "Retrieves contacts from the contact collection in SAP",
-        deDE: "Gibt Kontakte aus SAP zurück",
+        default: "Retrieves Accounts from the account collection in SAP",
+        deDE: "Gibt Accounts aus SAP zurück",
     },
     fields: [
         {
@@ -42,11 +42,11 @@ export const getContactsNode = createNodeDescriptor({
                 default: "Filter"
             },
             description: {
-                default: "The filter that should be used to search the contacts",
+                default: "The filter that should be used to search the Accounts",
                 deDE: "Der Filter, welcher zum Suchen verwendet werden soll",
             },
             type: "cognigyText",
-            defaultValue: "Email eq 'doug.gamoff@3M.com'",
+            defaultValue: "Name eq 'Porter LLC'",
             params: {
                 required: true
             }
@@ -80,7 +80,7 @@ export const getContactsNode = createNodeDescriptor({
                 default: "Input Key to store Result",
                 deDE: "Input Key zum Speichern des Ergebnisses"
             },
-            defaultValue: "sap.contacts",
+            defaultValue: "sap.accounts",
             condition: {
                 key: "storeLocation",
                 value: "input",
@@ -93,7 +93,7 @@ export const getContactsNode = createNodeDescriptor({
                 default: "Context Key to store Result",
                 deDE: "Context Key zum Speichern des Ergebnisses"
             },
-            defaultValue: "sap.contacts",
+            defaultValue: "sap.accounts",
             condition: {
                 key: "storeLocation",
                 value: "context",
@@ -125,11 +125,11 @@ export const getContactsNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onFoundContact",
-            "onNotFoundContact"
+            "onFoundAccount",
+            "onNotFoundAccount"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IGetContactsParamss) => {
+    function: async ({ cognigy, config, childConfigs }: IGetAccountsParamss) => {
         const { api } = cognigy;
         const { connection, filter, storeLocation, contextKey, inputKey } = config;
         const { apikey, domain } = connection;
@@ -138,7 +138,7 @@ export const getContactsNode = createNodeDescriptor({
 
             const response = await axios({
                 method: "GET",
-                url: `https://${domain}/sap/c4c/odata/v1/c4codataapi/ContactCollection?$filter=${filter}`,
+                url: `https://${domain}/sap/c4c/odata/v1/c4codataapi/CorporateAccountCollection?$filter=${filter}`,
                 headers: {
                     "Accept": "application/json",
                     "APIKey": apikey
@@ -153,24 +153,24 @@ export const getContactsNode = createNodeDescriptor({
             }
 
             if (response.data["d"]?.results?.length !== 0) {
-                const onFoundChild = childConfigs.find(child => child.type === "onFoundContact");
+                const onFoundChild = childConfigs.find(child => child.type === "onFoundAccount");
                 api.setNextNode(onFoundChild.id);
             } else {
-                const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundContact");
+                const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundAccount");
                 api.setNextNode(onNotFoundChild.id);
             }
 
         } catch (error) {
             api.log("error", error.message);
-            const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundContact");
+            const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundAccount");
             api.setNextNode(onNotFoundChild.id);
         }
     }
 });
 
-export const onFoundContact = createNodeDescriptor({
-    type: "onFoundContact",
-    parentType: "getContacts",
+export const onFoundAccount = createNodeDescriptor({
+    type: "onFoundAccount",
+    parentType: "getAccounts",
     defaultLabel: {
         default: "On Found",
         deDE: "Gefunden",
@@ -193,9 +193,9 @@ export const onFoundContact = createNodeDescriptor({
     }
 });
 
-export const onNotFoundContact = createNodeDescriptor({
-    type: "onNotFoundContact",
-    parentType: "getContacts",
+export const onNotFoundAccount = createNodeDescriptor({
+    type: "onNotFoundAccount",
+    parentType: "getAccounts",
     defaultLabel: {
         default: "On Not Found",
         deDE: "Nicht gefunden"

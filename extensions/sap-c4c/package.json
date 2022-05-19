@@ -1,0 +1,36 @@
+{
+	"name": "sap-c4c",
+	"version": "4.0.0",
+	"description": "Integrates with SAP C4C",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz sap-c4c.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"keywords": [
+		"SAP",
+		"Cloud",
+		"Customers",
+		"CRM",
+		"Ticket",
+		"Contacts"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Cognigy GmbH",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/axios": "^0.14.0",
+		"@types/node": "^10.17.28",
+		"tslint": "^5.16.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.14.0",
+		"axios": "^0.26.1"
+	}
+}

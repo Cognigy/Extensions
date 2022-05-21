@@ -2387,6 +2387,50 @@
                     "tags": []
                 }
             ]
+        },
+        {
+            "name": "sap-c4c",
+            "label": "SAP C4C",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/sap-c4c400/sap-c4c.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/sap-c4c",
+            "description": "Integrates with the SAP Cloud for Customers",
+            "longDescription": "CRM has evolved to represent every touch point in the customer experience. Our enterprise-grade CX solutions provide end-to-end insights across the value chain, allowing you to connect real-time business data and signals to improve loyalty, customer retention, and revenue. (Source: https://www.sap.com/products/crm.html)",
+            "tags": [
+                "SAP",
+                "Cloud",
+                "Customers",
+                "CRM",
+                "Ticket",
+                "Contacts"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "getContacts",
+                    "defaultLabel": "Get Contacts",
+                    "description": "Retrieves contacts from the contact collection in SAP",
+                    "tags": [
+                        "contact"
+                    ]
+                },
+                {
+                    "type": "getAccounts",
+                    "defaultLabel": "Get Accounts",
+                    "description": "Retrieves Accounts from the account collection in SAP",
+                    "tags": [
+                        "account"
+                    ]
+                },
+                {
+                    "type": "getIndividualCustomers",
+                    "defaultLabel": "Get Customers",
+                    "description": "Retrieves individual customers from SAP",
+                    "tags": [
+                        "customer"
+                    ]
+                }
+            ]
         }
     ]
 }

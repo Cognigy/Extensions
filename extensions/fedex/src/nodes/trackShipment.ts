@@ -177,24 +177,24 @@ export const trackShipmentNode = createNodeDescriptor({
                 },
                 data: {
                     'trackingInfo': [
-                      {
-                        'trackingNumberInfo': {
-                          'trackingNumber': trackingNumber
+                        {
+                            'trackingNumberInfo': {
+                                'trackingNumber': trackingNumber
+                            }
                         }
-                      }
                     ],
                     'includeDetailedScans': includeDetailedScans
-                  }
+                }
             });
 
             if (storeLocation === 'context') {
-                api.addToContext(contextKey, response.data?.output?.completeTrackResults[0]?.trackResults, 'simple');
+                api.addToContext(contextKey, response?.data?.output?.completeTrackResults[0]?.trackResults, 'simple');
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, response.data?.output?.completeTrackResults[0]?.trackResults);
+                api.addToInput(inputKey, response?.data?.output?.completeTrackResults[0]?.trackResults);
             }
 
-            if (response.data?.output?.completeTrackResults?.trackResults[0]?.error?.code !== 'TRACKING.TRACKINGNUMBER.NOTFOUND') {
+            if (response?.data?.output?.completeTrackResults[0]?.trackResults[0]?.additionalTrackingInfo) {
                 const onFoundChild = childConfigs.find(child => child.type === 'onFoundShipment');
                 api.setNextNode(onFoundChild.id);
             } else {

@@ -2431,6 +2431,32 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "fedex",
+            "label": "FedEx",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/fedex400/fedex.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/fedex",
+            "description": "Integrates with FedEx",
+            "longDescription": "With the FedEx integration, a virtual agent can provide detailed information about existing shipments to the user on chat or voice channels.",
+            "tags": [
+                "Shipment",
+                "Tracking",
+                "Delivery",
+                "Parcel"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAE3UlEQVR4nO2Yf2xTVRTHP+e1dJuwKdIOIjJQ/AEEEPlDNKJAssQIKxlEiCSKMSITCDHOjaghcYpRgwOdINIREkwkqDMB2VCIkqAmJv4kimSIxCAizLUIwQFj23vHP9Z2r29d7RhKIveT9I973vmec+95t+feFgwGg8FgMBgMBoPBYDAYDAaDwXD5IPcUrL460M8ZmY2zWs6phuiyny/mBKaOqMrN/2vAOLdt++yK7MTt7JNNtPYlvz+QYxej8m42zqJWPTCzLwm9FLTkDVfhq2QOUVRAshEHGA0c6Et+qy/i/wOmAJd6ApcafzqjwuaGWMUD//VkMrBUaln7bwROW4BsmXPt6rwztlMI0N9nNdcdLT/3T5oZV7400Mnr75/U9OeJKqqcvuS/GEg49MrcNKfAXkW3eJ3zBp+pqdtf1RYeVF0qwnKFicQbtoJa8J2DPtcQq6x366qosr4N9X8elUeAIfHULSr6nqX2SsWX7OQiyrZZld5TYBvwRffZcxDlphSbRQcneF3qsBMmXcRAbBZ000eo7qkAaRHsAsVfDzolg5eCvl0fq5gP8XO+Jf8n0KIeBKeAq5Lq9AVIj8MYLHYA13kmukciTAPQKvwc42Aan0USYX2vmqAj1juexTuKHgU5AnR0mlSAB0tCq5YA5LcM2Jth8eBafK+xUNoYA0RT7MpULeMtAI7zOd0Xv04irO8M0QtEZbp7bCOjG2KVw+pjTw5XccZA17YTZU1p6NUJwChPlP1iOZMdn45T9MPe5E87p0204mc8nTupC2W+lslnKLd7JDslwpLEIH0TFPahbE2Nx0yBCS7T7z5Li8OF1cUup7NAfnwgNvYn3tC5sWG31DE3UagZ4VB1FCWYaZEKO8V1W3Q9iAHIOpr0USYhNOJ+qap3eRSHqCXlJaY/BpUfGmIVz7pt4WD1nR63oTi8kWniKINShiJbXYuPIytAazKFEdghkczHoGzgoC7mZjro6bfKSU4ySkDdxuy/AqJXZO3bUwi0+1sU6dNdPiXUOg4h1gs9PJ7iPhkSZH8PUDmRMoTNIp2NpGeN7gLpKpxSCryc4uM43p11wehjlOA4y9M/5BtdSkjWcNptzroAAvUKJa5xcW606CH3lg4HV04UNLmrHPF9L8odrjCTwtfUFNUfe/xIVxieyiL9cl3Y1biS+Jghb/ILgJZxNw7bMywgoOf5TRcSlFraE+asC5AT+3LjueBtNYLkxk2DW4NHDsy0XpucE3BOt7Y6G4F57i+Y7Wsr9HcEmlMCtbUfCgerdyFEUe4DAlmkHxz/pGJ3anUR12PzMd5f0cKPKGO7hhQAjQo3JnpB1j2gjjobuNdjvkGdjqbWVucsMM+VWdWyZn/U9ExUhPc9mn5ACcrDJE+MCyd+y9uPu5CKIhRLhHEKhz2SkSxkt87BB728BzTEKvc4InMVzfQvjA2UNzSXbwXIiRbdn/m81+rezCFVig+bRiA3xW7xhETYDSAFjAV+9SinMZBaAJkeWjnEJ/7xKXrh+Ad/lO/rKe+soS8O6mgLlAEL0OQt6xiwpd3fvnZn09OHvZpwcFWJoisSdwlFGsFZ3Obj6xz1uRphB9tLl2WzfFCaEQo9tvOygU9TTEsJcZ5bu+lPdhbJYDAYDAaDwWAwGAwGg8FgMBgMlwt/AwlNoSKKcnIsAAAAAElFTkSuQmCC",
+            "nodes": [
+                {
+                    "type": "trackShipment",
+                    "defaultLabel": "Track Shipment",
+                    "description": "Tracks an existing shipment based on the tracking number",
+                    "tags": [
+                        "tracking number"
+                    ]
+                }
+            ]
         }
     ]
 }

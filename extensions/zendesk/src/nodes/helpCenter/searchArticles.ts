@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export interface ISearchArticlesParams extends INodeFunctionBaseParams {
     config: {
@@ -12,6 +12,12 @@ export interface ISearchArticlesParams extends INodeFunctionBaseParams {
         storeLocation: string;
         contextKey: string;
         inputKey: string;
+        useBrandId: boolean;
+        brandId: string;
+        useLocale: boolean;
+        locale: string;
+        useFreeTextQuery: boolean;
+        freeTextQuery: string;
     };
 }
 export const searchArticlesNode = createNodeDescriptor({
@@ -54,8 +60,138 @@ export const searchArticlesNode = createNodeDescriptor({
                 esES: "La consulta de búsqueda que se utiliza para encontrar artículos del centro de ayuda."
             },
             params: {
-                required: true,
+                required: false,
             },
+        },
+        {
+            key: "useBrandId",
+            type: "toggle",
+            label: {
+                default: "Use Brand ID",
+                deDE: "Brand ID benutzen",
+                esES: "Usar identificación de marca"
+            },
+            description: {
+                default: "Should the Brand ID be used for the search query?",
+                deDE: "Soll die Brand ID für die Suchanfrage verwendet werden?",
+                esES: "¿Debe utilizarse el ID de marca para la consulta de búsqueda?"
+            },
+            defaultValue: false
+        },
+        {
+            key: "brandId",
+            label: {
+                default: "Brand ID",
+                deDE: "Brand ID",
+                esES: "Brand ID"
+            },
+            type: "cognigyText",
+            description: {
+                default: "The Brand ID for this search query.",
+                deDE: "Die Brand ID für diese Suchanfrage.",
+                esES: "El ID de marca para esta consulta de búsqueda."
+            },
+            params: {
+                required: false,
+            },
+            condition: {
+                key: "useBrandId",
+                value: true
+            }
+        },
+        {
+            key: "useLocale",
+            type: "toggle",
+            label: {
+                default: "Use Locale",
+                deDE: "Locale benutzen",
+                esES: "Usar configuración regional"
+            },
+            description: {
+                default: "Should the locale be used for the query?",
+                deDE: "Soll die Locale für die Suchanfrage verwendet werden?",
+                esES: "¿Se debe usar la configuración regional para la consulta?"
+            },
+            defaultValue: false
+        },
+        {
+            key: "locale",
+            label: {
+                default: "Locale",
+                deDE: "Locale",
+                esES: "Locale"
+            },
+            type: "cognigyText",
+            description: {
+                default: "The locale for this search query.",
+                deDE: "Die locale für diese Suchanfrage.",
+                esES: "La configuración regional para esta consulta de búsqueda."
+            },
+            params: {
+                required: false,
+            },
+            condition: {
+                key: "useLocale",
+                value: true
+            }
+        },
+        {
+            key: "useFreeTextQuery",
+            type: "toggle",
+            label: {
+                default: "Use Free Text Query",
+                deDE: "Freitext Suchanfrage benutzen",
+                esES: "Usar consulta de texto libre"
+            },
+            description: {
+                default: "Use a free text field for the search query.",
+                deDE: "Freitext für die Suchanfrage benutzen.",
+                esES: "Utilice un campo de texto libre para la consulta de búsqueda."
+            },
+            defaultValue: false,
+            condition: {
+                and: [{
+                    key: "useBrandId",
+                    value: false
+                },
+                {
+                    key: "useLocale",
+                    value: false
+                }
+                ]
+            }
+        },
+        {
+            key: "freeTextQuery",
+            label: {
+                default: "Free Text Query",
+                deDE: "Freitextanfrage",
+                esES: "Consulta de texto libre"
+            },
+            type: "cognigyText",
+            description: {
+                default: "Free text query for the search. For example: query=bild&locale=de,en-us",
+                deDE: "Freitextanfrage für die Suche. Zum Beispiel: query=bild&locale=de,en-us",
+                esES: "Consulta de texto libre para la búsqueda. Por ejemplo: query=bild&locale=de,en-us"
+            },
+            params: {
+                required: false,
+            },
+            condition: {
+                and: [{
+                    key: "useBrandId",
+                    value: false
+                },
+                {
+                    key: "useLocale",
+                    value: false
+                },
+                {
+                    key: "useFreeTextQuery",
+                    value: true
+                },
+                ]
+            }
         },
         {
             key: "storeLocation",
@@ -128,6 +264,12 @@ export const searchArticlesNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "query" },
+        { type: "field", key: "useBrandId" },
+        { type: "field", key: "brandId" },
+        { type: "field", key: "useLocale" },
+        { type: "field", key: "locale" },
+        { type: "field", key: "useFreeTextQuery" },
+        { type: "field", key: "freeTextQuery" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -141,23 +283,53 @@ export const searchArticlesNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: ISearchArticlesParams) => {
         const { api } = cognigy;
-        const { query, connection, storeLocation, contextKey, inputKey } = config;
+        const { query, connection, storeLocation, useBrandId, brandId, useLocale, locale, useFreeTextQuery, freeTextQuery, contextKey, inputKey } = config;
         const { username, password, subdomain } = connection;
+
+        let endpoint = `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search`;
+        let searchParameters;
+        if (useBrandId === true && useLocale === false) {
+            searchParameters = {
+                query: query,
+                brand_id: brandId
+            };
+        } else if (useBrandId === false && useLocale === true) {
+            searchParameters = {
+                query: query,
+                locale: locale
+            };
+        } else if (useBrandId === true && useLocale === true) {
+            searchParameters = {
+                query: query,
+                locale: locale,
+                brand_id: brandId
+            };
+        } else if (useBrandId === false && useLocale === false && useFreeTextQuery === false) {
+            searchParameters = {
+                query: query
+            };
+        } else if (useFreeTextQuery === true) {
+           endpoint = `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search?${freeTextQuery}`;
+        }
+
+        const axiosConfig: AxiosRequestConfig = {
+            params: searchParameters,
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            auth: {
+                username,
+                password
+            }
+        };
 
         try {
 
-            const response = await axios({
-                method: "get",
-                url: `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search?query=${query}`,
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                auth: {
-                    username,
-                    password
-                }
-            });
+            const response: AxiosResponse = await axios.get(
+                endpoint,
+                axiosConfig
+            );
 
             if (response.data?.results?.length === 0) {
                 const onErrorChild = childConfigs.find(child => child.type === "onNotFoundArticles");

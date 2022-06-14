@@ -191,6 +191,16 @@ export const createTicketNode = createNodeDescriptor({
 		const { connection, description, priority, subject, storeLocation, contextKey, inputKey } = config;
 		const { username, password, subdomain } = connection;
 
+		let data = {
+			ticket: {
+				comment: {
+					body: description
+				},
+				priority,
+				subject
+			}
+		}
+
 		try {
 
 			const response = await axios({
@@ -200,15 +210,7 @@ export const createTicketNode = createNodeDescriptor({
 					"Accept": "application/json",
 					"Content-Type": "application/json"
 				},
-				data: {
-					ticket: {
-						comment: {
-							body: description
-						},
-						priority,
-						subject
-					}
-				},
+				data: data,
 				auth: {
 					username,
 					password

@@ -9,20 +9,22 @@ export interface IGetAccountStatusParams extends INodeFunctionBaseParams {
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
+		useDepartmentId: boolean;
+		departmentId: string;
 	};
 }
 export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	type: "checkLiveAgentAvailability",
-    defaultLabel: {
-        default: "Check Agent Availability",
-        deDE: "Überprüfe Agenten Verfügbarkeit",
-        esES: "Verificar la disponibilidad del agente"
-    },
-    summary: {
-        default: "Checks if an agent is available in Zendesk Chat",
-        deDE: "Überprüft ob ein Agent in Zendesk Chat verfügbar ist",
-        esES: "Comprueba si hay un agente disponible en Zendesk Chat"
-    },
+	defaultLabel: {
+		default: "Check Agent Availability",
+		deDE: "Überprüfe Agenten Verfügbarkeit",
+		esES: "Verificar la disponibilidad del agente"
+	},
+	summary: {
+		default: "Checks if an agent is available in Zendesk Chat",
+		deDE: "Überprüft ob ein Agent in Zendesk Chat verfügbar ist",
+		esES: "Comprueba si hay un agente disponible en Zendesk Chat"
+	},
 	fields: [
 		{
 			key: "connection",
@@ -35,6 +37,42 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 			params: {
 				connectionType: "zendesk-chat",
 				required: true
+			}
+		},
+		{
+			key: "useDepartmentId",
+			type: "toggle",
+			label: {
+				default: "Use Department ID",
+				deDE: "Department ID benutzen",
+				esES: "Usar ID de departamento"
+			},
+			description: {
+				default: "Only check availability for a certain department?",
+				deDE: "Prüfe Verfügbarkeit für ein spezifische Department?",
+				esES: "¿Solo consultar disponibilidad para un determinado departamento?"
+			},
+			defaultValue: false
+		},
+		{
+			key: "departmentId",
+			label: {
+				default: "Department ID",
+				deDE: "Department ID",
+				esES: "Department ID"
+			},
+			type: "cognigyText",
+			description: {
+				default: "The department ID you wish to check.",
+				deDE: "Die Department ID, die sie prüfen wollen.",
+				esES: "El ID del departamento que desea verificar."
+			},
+			params: {
+				required: false,
+			},
+			condition: {
+				key: "useDepartmentId",
+				value: true
 			}
 		},
 		{
@@ -63,11 +101,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "inputKey",
 			type: "cognigyText",
-            label: {
-                default: "Input Key to store result",
-                deDE: "Input Key zum Speichern des Ergebnisses",
-                esES: "Input Key para almacenar el resultado"
-            },
+			label: {
+				default: "Input Key to store result",
+				deDE: "Input Key zum Speichern des Ergebnisses",
+				esES: "Input Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.liveAgentAvailability",
 			condition: {
 				key: "storeLocation",
@@ -77,11 +115,11 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		{
 			key: "contextKey",
 			type: "cognigyText",
-            label: {
-                default: "Context Key to store result",
-                deDE: "Context Key zum Speichern des Ergebnisses",
-                esES: "Context Key para almacenar el resultado"
-            },
+			label: {
+				default: "Context Key to store result",
+				deDE: "Context Key zum Speichern des Ergebnisses",
+				esES: "Context Key para almacenar el resultado"
+			},
 			defaultValue: "zendesk.liveAgentAvailability",
 			condition: {
 				key: "storeLocation",
@@ -120,14 +158,20 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config, childConfigs }: IGetAccountStatusParams) => {
 		const { api } = cognigy;
-		const { connection, storeLocation, contextKey, inputKey } = config;
+		const { connection, storeLocation, useDepartmentId, departmentId, contextKey, inputKey } = config;
 		const { accessToken } = connection;
+
+		let endpoint;
+
+		if (useDepartmentId === true) {
+			endpoint =  `https://rtm.zopim.com/stream/agents?department_id=${departmentId}`
+		} else {endpoint = `https://rtm.zopim.com/stream/agents`}
 
 		try {
 
 			const response = await axios({
 				method: "get",
-				url: `https://rtm.zopim.com/stream/agents`,
+				url: endpoint,
 				headers: {
 					"Accept": "application/json",
 					"Content-Type": "application/json",
@@ -136,26 +180,26 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 			});
 
 			if (response.data?.content?.data?.agents_online === 0) {
-                const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
-                api.setNextNode(onOfflineChild.id);
+				const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
+				api.setNextNode(onOfflineChild.id);
 
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data, "simple");
-                } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, response.data);
-                }
-            } else {
-                const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
-                api.setNextNode(onAvailableChild.id);
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, response.data, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, response.data);
+				}
+			} else {
+				const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
+				api.setNextNode(onAvailableChild.id);
 
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data, "simple");
-                } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, response.data);
-                }
-            }
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, response.data, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, response.data);
+				}
+			}
 		} catch (error) {
 
 			if (storeLocation === "context") {
@@ -169,53 +213,53 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 });
 
 export const onAgentAvailable = createNodeDescriptor({
-    type: "onAgentAvailable",
-    parentType: "checkLiveAgentAvailability",
+	type: "onAgentAvailable",
+	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
 		default: "On Online",
 		deDE: "Ist Online",
 		esES: "Está en línea"
 	},
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });
 
 export const onNoAgentAvailable = createNodeDescriptor({
-    type: "onNoAgentAvailable",
-    parentType: "checkLiveAgentAvailability",
+	type: "onNoAgentAvailable",
+	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
 		default: "On Offline",
 		deDE: "Ist Offline",
 		esES: "Está desconectado"
 	},
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: "#61d188",
-        textColor: "white",
-        variant: "mini"
-    }
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini"
+	}
 });

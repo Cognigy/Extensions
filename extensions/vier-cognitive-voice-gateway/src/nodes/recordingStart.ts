@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/stripEmpty';
+import { t } from '../helpers/translations';
 
 type Speaker = 'CUSTOMER' | 'AGENT';
 
@@ -13,8 +14,8 @@ export interface IRecordingStartParams extends INodeFunctionBaseParams {
 
 export const recordingStartNode = createNodeDescriptor({
   type: 'recordingStart',
-  defaultLabel: 'Start Recording',
-  summary: 'Start or resume recording of a call',
+  defaultLabel: t('recordingStart.nodeLabel'),
+  summary: t('recordingStart.nodeSummary'),
   appearance: {
     color: '#e95ba7',
   },
@@ -23,8 +24,8 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'maxDuration',
-      label: 'Maximum Recording Duration (s)',
-      description: 'After maximum recording duration (in seconds), the recording will be stopped automatically.',
+      label: t('recordingStart.inputMaxDurationLabel'),
+      description: t('recordingStart.inputMaxDurationDescription'),
       params: {
         placeholder: 'Value in seconds (e.g. 60)',
       }
@@ -32,13 +33,13 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: 'Recording ID',
-      description: 'An arbitrary string to identify the recording in case multiple recordings are created in the same dialog',
+      label: t('recordingStart.inputRecordingIdLabel'),
+      description: t('recordingStart.inputRecordingIdDescription'),
     },
     {
       type: 'select',
       key: 'speakers',
-      label: 'Speakers to record',
+      label: t('recordingStart.inputSpeakersLabel'),
       params: {
         options: [
           { value: null, label: 'Both Lines' },
@@ -51,7 +52,7 @@ export const recordingStartNode = createNodeDescriptor({
   sections: [
     {
       key: 'additional',
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       fields: ['maxDuration', 'recordingId', 'speakers'],
       defaultCollapsed: true
     }

@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import { t } from '../helpers/translations';
 
 export interface IPlayParams extends INodeFunctionBaseParams {
   config: {
@@ -8,9 +9,9 @@ export interface IPlayParams extends INodeFunctionBaseParams {
 }
 
 export const playNode = createNodeDescriptor({
-  type: 'playAudioFile',
-  defaultLabel: 'Play Audio File',
-  summary: 'Play an audio file to the call',
+  type: 'play',
+  defaultLabel: t('play.nodeLabel'),
+  summary:  t('play.nodeSummary'),
   appearance: {
     color: '#678465'
   },
@@ -19,8 +20,8 @@ export const playNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'url',
-      label: 'Audio URL',
-      description: 'Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.',
+      label: t('play.inputUrlLabel'),
+      description: t('play.inputUrlLabelDescription'),
       params: {
         required: true,
         placeholder: '',
@@ -29,8 +30,8 @@ export const playNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: 'Barge In',
-      description: 'Allows the audio file to be interrupted by the speaker',
+      label: t('play.inputBargeInLabel'),
+      description: t('play.inputBargeInDescription'),
       defaultValue: false,
     }
   ],
@@ -38,13 +39,13 @@ export const playNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['url'],
-      label: 'General Settings',
+      label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['bargeIn'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       defaultCollapsed: true,
     }
   ],

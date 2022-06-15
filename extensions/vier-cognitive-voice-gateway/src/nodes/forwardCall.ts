@@ -1,8 +1,8 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { bakeData, bakeSipHeaders } from '../helpers/bake';
 import { stripEmpty } from '../helpers/stripEmpty';
+import { t } from '../helpers/translations';
 import { commonRedirectFields } from './shared';
-
 export interface IForwardCallParams extends INodeFunctionBaseParams {
   config: {
     destinationNumber: string,
@@ -19,8 +19,8 @@ export interface IForwardCallParams extends INodeFunctionBaseParams {
 
 export const forwardCallNode = createNodeDescriptor({
   type: 'forward',
-  defaultLabel: 'Forward Call',
-  summary: 'Forward the call to a different destination',
+  defaultLabel: t('forward.nodeLabel'),
+  summary:  t('forward.nodeSummary'),
   appearance: {
     color: 'blue'
   },
@@ -29,42 +29,48 @@ export const forwardCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'destinationNumber',
-      label: 'Destination Number',
-      description: 'The phone number to forward to (+E.164 format, e.g. +49721480848680)',
+      label:  t('forward.inputDestinationNumberLabel'),
+      description: t('forward.inputDestinationNumberDescription'),
       params: {
         required: true
       }
     },
     ...commonRedirectFields,
   ],
+
+  preview: {
+		key: "destinationNumber",
+		type: "text"
+	},
+
   sections: [
     {
       key: 'general',
       fields: ['destinationNumber'],
-      label: 'General Settings',
+      label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },{
       key: 'call',
       fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: 'Call Settings',
+      label:  t('forward.sectionCallLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'sipHeaders',
       fields: ['customSipHeaders'],
-      label: 'Custom SIP Headers',
+      label: t('forward.sectionSipHeadersLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'additionalData',
       fields: ['data'],
-      label: 'Data',
+      label: t('forward.sectionAdditionalDataLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'additionalSettings',
       fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       defaultCollapsed: true,
     }
   ],
@@ -90,6 +96,7 @@ export const forwardCallNode = createNodeDescriptor({
       type: 'section',
     }
   ],
+
   function: async ({ cognigy, config }: IForwardCallParams) => {
     const { api } = cognigy;
     let customSipHeaders: object;
@@ -127,7 +134,7 @@ export const forwardCallNode = createNodeDescriptor({
         },
       };
     }
-
+ 
     api.say('', responseData);
 
     if (config.endFlow) {
@@ -135,3 +142,4 @@ export const forwardCallNode = createNodeDescriptor({
     }
   },
 });
+

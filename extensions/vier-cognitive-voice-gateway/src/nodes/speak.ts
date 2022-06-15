@@ -1,24 +1,28 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import { t } from '../helpers/translations';
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
   config: {
-    text: string,
+    ssml: string,
     bargeIn?: boolean,
+    // additionalText: Array<string>,
+    linear?: boolean,
+    loop?: boolean,
   };
 }
 
 export const speakNode = createNodeDescriptor({
   type: 'speak',
-  defaultLabel: 'Speak out (SSML)',
-  summary: 'Speak something out to the caller with SSML Support',
+  defaultLabel: t('speak.nodeLabel'),
+  summary: t('speak.nodeSummary'),
   appearance: {
     color: '#5c48ef'
   },
   tags: ['message'],
   fields: [
     {
-      key: 'text',
-			label: 'Text',
+      key: 'ssml',
+			label: t('speak.inputTextLabel'),
       type: 'cognigyText',
       params: {
         required: true,
@@ -241,27 +245,61 @@ export const speakNode = createNodeDescriptor({
             suffix: '</voice>',
         },
       ],
-      },
+  }
     },
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: 'Barge In',
-      description: 'Allows the message to be interrupted by the speaker',
+      label: t('speak.inputBargeInLabel'),
+      description: t('speak.inputBargeInDescription'),
       defaultValue: false,
     },
+    {
+      key: 'additionalText',
+			label: t('speak.inputAdditionalTextLabel'),
+      type: 'textArray',
+      defaultValue: false,
+    },
+    {
+      key: 'linear',
+      label: 'Linear',
+      type: 'checkbox',
+      defaultValue: false
+    },
+    {
+      key: 'loop',
+      label: 'Loop',
+      type: 'checkbox',
+      defaultValue: false
+    }
   ],
+  preview: {
+		key: "ssml",
+		type: "text"
+	},
   sections: [
     {
       key: 'general',
-      fields: ['text'],
-      label: 'General Settings',
+      fields: ['ssml'],
+      label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },
+    // {
+    //   fields: ['additionalText'],
+    //   key: 'textOptions',
+    //   label: t('speak.sectionTextOptionsLabel'),
+    //   defaultCollapsed: true
+    // },
+    // {
+    //   key: 'sendOptions',
+    //   fields: ['linear', 'loop'],
+    //   label: 'Optionen',
+    //   defaultCollapsed: true,
+    // },
     {
       key: 'additional',
       fields: ['bargeIn'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalDataLabel'),
       defaultCollapsed: true
     }
   ],
@@ -271,21 +309,48 @@ export const speakNode = createNodeDescriptor({
       type: 'section'
     },
     {
+      key: 'textOptions',
+      type: 'section'
+    },
+    // {
+    //   key: 'sendOptions',
+    //   type: 'section'
+    // },
+    {
       key: 'additional',
       type: 'section',
     }
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
-    if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
-      cognigy.api.say(`<speak>${config.text}</speak>`, {
-        interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-      });
-    } else {
-      cognigy.api.say(config.text, {
-        interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-      });
-    }
-  },
-});
+    // const { additionalText, loop, linear } = config;
+    //const execs = cognigy.api.getExecutionAmount(speakNode._id);
+    // let textToTransmit: string;
+
+    // if (!linear) {
+    //   textToTransmit = additionalText[Math.floor(Math.random() * additionalText.length - 1)];
+    // } else {
+    //   if (execs > additionalText.length) {
+    //     if (loop) {
+    //       textToTransmit = additionalText[execs % additionalText.length];
+    //     } else {
+    //       textToTransmit = additionalText[additionalText.length - 1];
+    //     }
+    //   } else {
+    //     textToTransmit = additionalText[execs];
+    //   }
+    // }
+    // cognigy.api.say(`Execution Count: ${execs}, text to say: ${textToTransmit}, linear: ${linear}; loop: ${loop}`);
+      if (!config.ssml.startsWith('<speak>') || !config.ssml.endsWith('</speak>')) {
+        cognigy.api.say(`<speak>${config.ssml}</speak>`, {
+          interpretAs: 'SSML',
+          bargeIn: config.bargeIn,
+        });
+      } else {
+        cognigy.api.say(config.ssml, {
+          interpretAs: 'SSML',
+          bargeIn: config.bargeIn,
+        });
+      }
+    },
+  });
+  

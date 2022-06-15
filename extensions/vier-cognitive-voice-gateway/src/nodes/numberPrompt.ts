@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import { t } from '../helpers/translations';
 import { promptFields } from './shared';
 
 export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
@@ -18,8 +19,8 @@ export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
 
 export const promptForNumberNode = createNodeDescriptor({
   type: 'numberPrompt',
-  defaultLabel: 'Get Number from Caller',
-  summary: 'Say something to the call with a prompt to enter a number',
+  defaultLabel: t('numberPrompt.nodeLabel'), 
+  summary: t('numberPrompt.nodeSummary'),
   appearance: {
     color: '#38eb8c'
   },
@@ -29,14 +30,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useSubmitInputs',
-      label: 'Use Submit Inputs',
-      description: 'Use the Submit Inputs property as a stop condition',
+      label: t('numberPrompt.inputUseSubmitInputsLabel'),
+      description: t('numberPrompt.inputUseSubmitInputsDescription'),
     },
     {
       type: 'textArray',
       key: 'submitInputs',
-      label: 'Submit Inputs',
-      description: 'One or more synonyms to end an number input, such as DTMF_#',
+      label: t('numberPrompt.inputSubmitInputsLabel'),
+      description: t('numberPrompt.inputSubmitInputsDescription'),
       condition: {
         key: 'useSubmitInputs',
         value: true
@@ -45,14 +46,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useMaxDigits',
-      label: 'Use Max Digits',
-      description: 'Use the Maximum Digits property as a stop condition'
+      label: t('numberPrompt.inputUseMaxDigitsLabel'),
+      description: t('numberPrompt.inputUseMaxDigitsDescription'),
     },
     {
       type: 'number',
       key: 'maxDigits',
-      label: 'Maximum Allowed Digits',
-      description: 'The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached',
+      label: t('numberPrompt.inputMaxDigitsLabel'),
+      description: t('numberPrompt.inputMaxDigitsDescription'),
       condition: {
         key: 'useMaxDigits',
         value: true
@@ -66,19 +67,19 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['text', 'timeout'],
-      label: 'General Settings',
+      label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },
     {
       key: 'stopCondition',
       fields: ['useSubmitInputs', 'submitInputs', 'useMaxDigits', 'maxDigits'],
-      label: 'Stop Condition',
+      label: t('numberPrompt.sectionStopConditionLabel'),
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       defaultCollapsed: true,
     }
   ],

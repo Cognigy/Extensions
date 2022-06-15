@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { bakeData } from '../helpers/bake';
+import { t } from '../helpers/translations';
 
 export interface ISendDataParams extends INodeFunctionBaseParams {
   config: {
@@ -9,8 +10,8 @@ export interface ISendDataParams extends INodeFunctionBaseParams {
 
 export const sendDataNode = createNodeDescriptor({
   type: 'sendData',
-  defaultLabel: 'Send Data',
-  summary: 'Attach custom data to a dialog',
+  defaultLabel: 'sendData.nodeLabel',
+  summary: t('sendData.nodeSummary'),
   appearance: {
     color: '#9501c9'
   },
@@ -19,8 +20,8 @@ export const sendDataNode = createNodeDescriptor({
     {
       type: 'json',
       key: 'data',
-      label: 'Custom Data',
-      description: 'This is an object that can have arbitrary properties. Each property is expected to have a string value',
+      label: t('sendData.inputDataLabel'),
+      description: t('sendData.inputDataDescription'),
       params: {
         required: true
       }

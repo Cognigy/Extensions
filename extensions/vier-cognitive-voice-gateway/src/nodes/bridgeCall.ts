@@ -1,6 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { bakeData, bakeSipHeaders } from '../helpers/bake';
 import { stripEmpty } from '../helpers/stripEmpty';
+import { t } from '../helpers/translations';
 import { commonRedirectFields } from './shared';
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
@@ -20,8 +21,8 @@ export interface IBridgeCallParams extends INodeFunctionBaseParams {
 
 export const bridgeCallNode = createNodeDescriptor({
   type: 'bridge',
-  defaultLabel: 'Bridge Call',
-  summary: 'Bridge the call to a different destination for agent assistance',
+  defaultLabel: t('bridge.nodeLabel'),
+  summary: t('bridge.nodeSummary'),
   appearance: {
     color: 'green'
   },
@@ -30,8 +31,8 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'headNumber',
-      label: 'Head Number',
-      description: 'The phone number prefix to bridge to',
+      label: t('bridge.inputHeadNumberLabel'),
+      description: t('bridge.inputHeadNumberDescription'),
       params: {
         required: true,
         placeholder: '+E.164 format, e.g. "+49721480848680"'
@@ -40,8 +41,8 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'extensionLength',
-      label: 'Extension Length',
-      description: 'The range of extensions to choose a number from',
+      label: t('bridge.inputExtensionLengthLabel'),
+      description: t('bridge.inputExtensionLengthDescription'),
       params: {
         required: true,
         min: 0,
@@ -50,35 +51,39 @@ export const bridgeCallNode = createNodeDescriptor({
     },
     ...commonRedirectFields,
   ],
+  preview: {
+		key: "headNumber",
+		type: "text"
+	},
   sections: [
     {
       key: 'general',
       fields: ['headNumber', 'extensionLength'],
-      label: 'General Settings',
+      label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },
     {
       key: 'call',
       fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: 'Call Settings',
+      label: t('forward.sectionCallLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'sipHeaders',
       fields: ['customSipHeaders'],
-      label: 'Custom SIP Headers',
+      label: t('forward.sectionSipHeadersLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'additionalData',
       fields: ['data'],
-      label: 'Data',
+      label: t('forward.sectionAdditionalDataLabel'),
       defaultCollapsed: true,
     },
     {
       key: 'additionalSettings',
       fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       defaultCollapsed: true,
     }
   ],

@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/stripEmpty';
+import { t } from '../helpers/translations';
 
 export interface IRecordingStopParams extends INodeFunctionBaseParams {
   config: {
@@ -10,8 +11,8 @@ export interface IRecordingStopParams extends INodeFunctionBaseParams {
 
 export const recordingStopNode = createNodeDescriptor({
   type: 'recordingStop',
-  defaultLabel: 'Stop Recording',
-  summary: 'Pause or terminate recording of a call',
+  defaultLabel:  t('recordingStop.nodeLabel'),
+  summary: t('recordingStop.nodeSummary'),
   appearance: {
     color: '#b8f66a'
   },
@@ -20,21 +21,21 @@ export const recordingStopNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: 'Recording ID',
-      description: 'An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog',
+      label: t('recordingStop.inputRecordingIdLabel'),
+      description: t('recordingStop.inputRecordingIdDescription'),
     },
     {
       type: 'checkbox',
       key: 'terminate',
-      description: 'Whether the recording should be terminated, rather than just paused',
-      label: 'Terminate Recording'
+      description: t('recordingStop.inputTerminateDescription'),
+      label: t('recordingStop.inputTerminateLabel'),
     },
   ],
   sections: [
     {
       key: 'additional',
       fields: ['recordingId', 'terminate'],
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalSettingsLabel'),
       defaultCollapsed: true,
     }
   ],

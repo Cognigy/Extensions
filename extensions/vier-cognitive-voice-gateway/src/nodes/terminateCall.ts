@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import { t } from '../helpers/translations';
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {
   config: {
@@ -8,8 +9,8 @@ export interface ITerminateCallParams extends INodeFunctionBaseParams {
 
 export const terminateCallNode = createNodeDescriptor({
   type: 'terminate',
-  defaultLabel: 'Terminate Call',
-  summary: 'Drop the call',
+  defaultLabel: t('terminate.nodeLabel'),
+  summary: t('terminate.nodeSummary'),
   tags: ['service'],
   appearance: {
     color: 'red',
@@ -18,15 +19,15 @@ export const terminateCallNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'endFlow',
-      label: 'Quit Flow',
+      label: t('terminate.inputEndFlowLabel'),
       defaultValue: false,
-      description: 'Stop the flow after executing this node'
+      description: t('terminate.inputEndFlowDescription'),
     },
   ],
   sections: [
     {
       key: 'additional',
-      label: 'Additional Settings',
+      label: t('forward.sectionAdditionalDataLabel'),
       fields: ['endFlow'],
       defaultCollapsed: true
     },

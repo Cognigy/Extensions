@@ -1,0 +1,153 @@
+{
+    "sendData": {
+        "nodeLabel": "Daten senden",
+        "nodeSummary": "Anhängen von benutzerdefinierten Daten an einen Dialog",
+        "inputDataLabel": "Benutzerdefinierte Daten",
+        "inputDataDescription": ""
+    },
+
+    "forward": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputDestinationNumberLabel": "",
+        "inputDestinationNumberDescription": "",
+        "sectionGeneralLabel": "GTest",
+        "sectionCallLabel": "",
+        "sectionSipHeadersLabel": "",
+        "sectionAdditionalDataLabel": "",
+        "sectionAdditionalSettingsLabel": ""
+    },
+
+    "bridge": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputUseSubmitInputsLabel": "",
+        "inputUseSubmitInputsDescription": "",
+        "inputSubmitInputsLabel": "",
+        "inputSubmitInputsDescription": "",
+        "inputUseMaxDigitsLabel": "",
+        "inputUseMaxDigitsDescription": "",
+        "inputMaxDigitsLabel": "",
+        "inputMaxDigitsDescription": "",
+        "inputHeadNumberLabel": "",
+        "inputHeadNumberDescription": "",
+        "inputExtensionLengthLabel": "",
+        "inputExtensionLengthDescription": "",
+        "sectionStopConditionLabel": ""
+    },
+
+    "multipleChoicePrompt": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputChoicesLabel": "",
+        "inputChoicesDescription": "",
+        "sectionChoicesSectionLabel": ""
+    },
+
+    "numberPrompt": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputUseSubmitInputsLabel": "",
+        "inputUseSubmitInputsDescription": "",
+        "inputSubmitInputsLabel": "",
+        "inputSubmitInputsDescription": "",
+        "inputUseMaxDigitsLabel": "",
+        "inputUseMaxDigitsDescription": "",
+        "inputMaxDigitsLabel": "",
+        "inputMaxDigitsDescription": "",
+        "sectionStopConditionLabel": ""
+    },
+
+    "play": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputUrlLabel": "",
+        "inputUrlLabelDescription": "",
+        "inputBargeInLabel": "",
+        "inputBargeInDescription": ""
+    },
+
+    "recordingStart": {
+        "nodeLabel": " ",
+        "nodeSummary": " ",
+        "inputMaxDurationLabel": " ",
+        "inputMaxDurationDescription": "",
+        "inputRecordingIdLabel": " ",
+        "inputRecordingIdDescription": " ",
+        "inputSpeakersLabel": " "
+    },
+
+    "recordingStop": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputRecordingIdLabel": "",
+        "inputRecordingIdDescription": "",
+        "inputTerminateLabel": "",
+        "inputTerminateDescription": ""
+    },
+
+    "shared": {
+        "inputTextLabel": "",
+        "inputTextDescription": "",
+        "inputTimeoutLabel": "",
+        "inputTimeoutDescription": "",
+        "inputLanguageLabel": "",
+        "inputLanguageDescription": "",
+        "inputSynthesizersLabel": "",
+        "inputSynthesizersDescription": "",
+        "inputInterpretAsLabel": "",
+        "inputInterpretAsDescription": "",
+        "inputBargeInLabel": "",
+        "inputBargeInDescription": "",
+        "inputCallerIdLabel": "",
+        "inputCallerIdDescription": "",
+        "inputCustomSipHeadersLabel": "",
+        "inputCustomSipHeadersDescription": "",
+        "inputRingTimeoutLabel": "",
+        "inputRingTimeoutDescription": "",
+        "inputAcceptAnsweringMachinesLabel": "",
+        "inputAcceptAnsweringMachinesDescription": "",
+        "inputDataLabel": "",
+        "inputDataDescription": "",
+        "inputEndFlowLabel": "",
+        "inputEndFlowDescription": "",
+        "inputExperimentalEnableRingingToneLabel": "",
+        "inputExperimentalEnableRingingToneDescription": "",
+        "inputWhisperingTextLabel": "",
+        "inputWhisperingTextDescription": "",
+        "inputAdditionalTextLabel": ""
+},
+
+    "speak": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputTextLabel": "",
+        "inputBargeInLabel": "",
+        "inputBargeInDescription": "",
+        "sectionTextOptionsLabel": "",
+        "inputAdditionalTextLabel": ""
+    },
+
+    "terminate": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputEndFlowLabel": "",
+        "inputEndFlowDescription": ""
+    },
+
+    "speechToText": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputServiceLabel": "",
+        "sectionSelectSTTLabel": "",
+        "sectionSelectLanguageLabel": "",
+        "inputLanguageLabel": "",
+        "inputProfileTokenLabel": "",
+        "inputProfileTokenDescription": ""
+    },
+
+    "forwardService": {
+        "nodeLabel": "",
+        "nodeSummary": ""
+    }
+}

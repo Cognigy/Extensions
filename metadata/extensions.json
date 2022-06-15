@@ -1448,7 +1448,7 @@
         },
         {
             "name": "salesforce-service-cloud",
-            "label": "Salesforce Service Cloud",
+            "label": "(Deprecated) Salesforce Service Cloud",
             "version": "4.0.0",
             "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/salesforce-service-cloud-400/salesforce-service-cloud.tar.gz",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360020749080-Salesforce-Service-Cloud-Integrate-Live-Chat-Handover",

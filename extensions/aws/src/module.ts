@@ -20,6 +20,6 @@ export default createExtension({
 	],
 
 	options: {
-		label: "AWS"
+		label: "Amazon Web Services"
 	}
 });

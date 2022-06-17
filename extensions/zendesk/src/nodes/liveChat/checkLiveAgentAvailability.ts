@@ -145,6 +145,8 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
+		{ type: "field", key: "useDepartmentId" },
+		{ type: "field", key: "departmentId" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -164,8 +166,10 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		let endpoint;
 
 		if (useDepartmentId === true) {
-			endpoint =  `https://rtm.zopim.com/stream/agents?department_id=${departmentId}`
-		} else {endpoint = `https://rtm.zopim.com/stream/agents`}
+			endpoint =  `https://rtm.zopim.com/stream/agents?department_id=${departmentId}`;
+		} else {
+			endpoint = `https://rtm.zopim.com/stream/agents`;
+		}
 
 		try {
 
@@ -216,7 +220,7 @@ export const onAgentAvailable = createNodeDescriptor({
 	type: "onAgentAvailable",
 	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
-		default: "On Online",
+		default: "Is Online",
 		deDE: "Ist Online",
 		esES: "Está en línea"
 	},
@@ -242,7 +246,7 @@ export const onNoAgentAvailable = createNodeDescriptor({
 	type: "onNoAgentAvailable",
 	parentType: "checkLiveAgentAvailability",
 	defaultLabel: {
-		default: "On Offline",
+		default: "Is Offline",
 		deDE: "Ist Offline",
 		esES: "Está desconectado"
 	},

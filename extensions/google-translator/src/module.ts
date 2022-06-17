@@ -16,6 +16,6 @@ export default createExtension({
 	],
 
 	options: {
-		label: "Google Translate"
+		label: "Google Translator"
 	}
 });

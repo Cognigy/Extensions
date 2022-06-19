@@ -262,7 +262,7 @@ export const getAllProductsNode = createNodeDescriptor({
         try {
 
             const response = await axios({
-                method: 'POST',
+                method: 'GET',
                 url: `https://api.bigcommerce.com/stores/${storeHash}/v3/catalog/products?brand_id=${brandId}&categories:in=${categoryId}&keyword=${encodeURIComponent(keyword)}`,
                 headers: {
                     'Accept': 'application/json',

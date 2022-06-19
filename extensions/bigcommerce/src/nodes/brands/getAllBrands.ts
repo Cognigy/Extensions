@@ -108,7 +108,7 @@ export const getAllBrandsNode = createNodeDescriptor({
         try {
 
             const response = await axios({
-                method: 'POST',
+                method: 'GET',
                 url: `https://api.bigcommerce.com/stores/${storeHash}/v3/catalog/brands`,
                 headers: {
                     'Accept': 'application/json',

@@ -1,21 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
 import axios from 'axios';
 
-interface IBigCommerceChannel {
-    icon_url: string,
-    is_listable_from_ui: boolean,
-    is_visible: boolean,
-    date_created: string,
-    external_id: string,
-    type: string,
-    platform: string,
-    is_enabled: boolean,
-    date_modified: string,
-    name: string,
-    id: number,
-    status: string
-}
-
 export interface IValidateCustomerParams extends INodeFunctionBaseParams {
     config: {
         connection: {
@@ -29,6 +14,21 @@ export interface IValidateCustomerParams extends INodeFunctionBaseParams {
         contextKey: string;
         inputKey: string;
     };
+}
+
+interface IBigCommerceChannel {
+    icon_url: string,
+    is_listable_from_ui: boolean,
+    is_visible: boolean,
+    date_created: string,
+    external_id: string,
+    type: string,
+    platform: string,
+    is_enabled: boolean,
+    date_modified: string,
+    name: string,
+    id: number,
+    status: string
 }
 
 export const validateCustomerNode = createNodeDescriptor({
@@ -82,6 +82,9 @@ export const validateCustomerNode = createNodeDescriptor({
                 default: 'The channel that is used to validate or login'
             },
             type: 'select',
+            params: {
+                required: true
+            },
             optionsResolver: {
                 dependencies: ["connection"],
                 resolverFunction: async ({ api, config }) => {
@@ -99,7 +102,7 @@ export const validateCustomerNode = createNodeDescriptor({
                         return channelsResponse?.data?.data?.map((channel: IBigCommerceChannel) => {
                             return {
                                 label: channel?.name,
-                                value: channel?.id,
+                                value: channel?.id.toString(),
                             }
                         });
                     } catch (error) {
@@ -168,8 +171,18 @@ export const validateCustomerNode = createNodeDescriptor({
             ]
         }
     ],
+    tokens: [
+        {
+			label: "Customer ID",
+			script: "input.bigcommerce.validation.customer_id",
+			type: "input"
+		},
+    ],
     form: [
         { type: 'field', key: 'connection' },
+        { type: 'field', key: 'email' },
+        { type: 'field', key: 'password' },
+        { type: 'field', key: 'channelId'},
         { type: 'section', key: 'storage' }
     ],
     appearance: {
@@ -198,7 +211,7 @@ export const validateCustomerNode = createNodeDescriptor({
                 data: {
                     email,
                     password,
-                    channel_id: channelId
+                    channel_id: parseInt(channelId)
                 }
             });
 

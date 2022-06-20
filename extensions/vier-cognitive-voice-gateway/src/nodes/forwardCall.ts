@@ -118,6 +118,7 @@ export const forwardCallNode = createNodeDescriptor({
     const onSuccessChild = childConfigs.find(child => child.type === "onForwardSuccess");
     const onTerminateChild = childConfigs.find(child => child.type === "onForwardTermination");
     const onDefaultChild = childConfigs.find(child => child.type === "onForwardDefault");
+    api.setNextNode(onFailureChild.id);
 
     const whisperText = config.whisperingText;
     delete config.whisperingText;
@@ -141,7 +142,6 @@ export const forwardCallNode = createNodeDescriptor({
       ...strippedConfig,
       customSipHeaders,
       data,
-      childConfigs,
     };
 
     if (whisperText) {
@@ -173,8 +173,12 @@ export const forwardCallNode = createNodeDescriptor({
         api.setNextNode(onSuccessChild.id);
     } else {
         api.setNextNode(onFailureChild.id);
-        }   
+        }
 
+      if (responseData && !onSuccessChild) {
+        api.setNextNode(onDefaultChild.id);
+      }
+      
     api.say('', responseData);
 
     if (config.endFlow) {

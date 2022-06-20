@@ -27,6 +27,16 @@ export const bridgeCallNode = createNodeDescriptor({
     color: 'green'
   },
   tags: ['service'],
+  behavior: {
+    entrypoint: true
+    },
+  dependencies: {
+    children: [
+        "onBridgeSuccess",
+        "onBridgeFailure",
+        "onBridgeTermination",
+    ]
+},
   fields: [
     {
       type: 'cognigyText',
@@ -109,10 +119,14 @@ export const bridgeCallNode = createNodeDescriptor({
       type: 'section',
     }
   ],
-  function: async ({ cognigy, config }: IBridgeCallParams) => {
+  function: async ({ cognigy, config, childConfigs }: IBridgeCallParams) => {
     const { api } = cognigy;
     let customSipHeaders: object;
     let data: object;
+
+    const onFailureChild = childConfigs.find(child => child.type === "onBridgeFailure");
+    const onSuccessChild = childConfigs.find(child => child.type === "onBridgeSuccess");
+    const onTerminateChild = childConfigs.find(child => child.type === "onBridgeTermination")
 
     const whisperText = config.whisperingText;
     delete config.whisperingText;
@@ -135,7 +149,7 @@ export const bridgeCallNode = createNodeDescriptor({
       status: 'bridge',
       ...strippedConfig,
       customSipHeaders,
-      data,
+      data
     };
 
     if (whisperText) {
@@ -149,8 +163,81 @@ export const bridgeCallNode = createNodeDescriptor({
 
     api.say('', responseData);
 
+    if (responseData) {
+      api.setNextNode(onSuccessChild.id);
+  } else {
+      api.setNextNode(onFailureChild.id);
+      }   
+
     if (config.endFlow) {
       api.stopExecution();
+      api.setNextNode(onTerminateChild.id);
     }
+  }
+});
+
+export const onBridgeSuccess = createNodeDescriptor({
+  type: "onBridgeSuccess",
+  parentType: "bridge",
+  defaultLabel: "On Success",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+  });
+
+export const onBridgeFailure = createNodeDescriptor({
+  type: "onBridgeFailure",
+  parentType: "bridge",
+  defaultLabel: "On Failure",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+});
+
+export const onBridgeTermination = createNodeDescriptor({
+  type: "onBridgeTermination",
+  parentType: "bridge",
+  defaultLabel: "On Termination",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
   }
 });

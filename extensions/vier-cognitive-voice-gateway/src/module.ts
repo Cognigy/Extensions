@@ -1,7 +1,7 @@
 import { createExtension } from '@cognigy/extension-tools/build';
 import { terminateCallNode } from './nodes/terminateCall';
 import { forwardCallNode, onForwardDefault, onForwardFailure, onForwardSuccess, onForwardTermination } from './nodes/forwardCall';
-import { bridgeCallNode } from './nodes/bridgeCall';
+import { bridgeCallNode, onBridgeFailure, onBridgeSuccess, onBridgeTermination } from './nodes/bridgeCall';
 import { playNode } from './nodes/play';
 import { recordingStartNode } from './nodes/recordingStart';
 import { recordingStopNode } from './nodes/recordingStop';
@@ -27,6 +27,9 @@ export default createExtension({
     onForwardFailure, // child
     onForwardTermination, // child
     onForwardDefault,  // child
+    onBridgeSuccess, // child
+    onBridgeFailure, // child
+    onBridgeTermination, // child
     setSpeechtoTextServiceNode,
   ],
   options: {

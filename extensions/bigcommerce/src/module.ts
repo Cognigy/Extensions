@@ -3,12 +3,13 @@ import { storeAPIConnection } from "./connections/storeAPIConnection";
 import { getAllBrandsNode } from "./nodes/brands/getAllBrands";
 import { getAllCategoriesNode } from "./nodes/categories/getAllCategories";
 import { getCustomerNode } from "./nodes/customer/getCustomer";
+import { getCustomerOrdersNode, onNoOrders, onOrders } from "./nodes/customer/getCustomerOrders";
 import { onInvalid, onValid, validateCustomerNode } from "./nodes/customer/validateCustomer";
 import { getAllProductsNode } from "./nodes/products/getAllProducts";
 
 export default createExtension({
 	nodes: [
-		// getAllProductsNode,
+		getAllProductsNode,
 		getAllBrandsNode,
 		getAllCategoriesNode,
 
@@ -16,7 +17,11 @@ export default createExtension({
 		onValid,
 		onInvalid,
 
-		getCustomerNode
+		getCustomerNode,
+
+		getCustomerOrdersNode,
+		onOrders,
+		onNoOrders
 	],
 
 	connections: [

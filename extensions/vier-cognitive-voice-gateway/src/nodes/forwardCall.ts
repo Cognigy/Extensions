@@ -24,6 +24,18 @@ export const forwardCallNode = createNodeDescriptor({
   appearance: {
     color: 'blue'
   },
+  behavior: {
+    entrypoint: true
+    },
+    
+    dependencies: {
+        children: [
+            "onForwardSuccess",
+            "onForwardFailure",
+            "onForwardTermination",
+            "onForwardDefault",
+        ]
+    },
   tags: ['service'],
   fields: [
     {
@@ -97,10 +109,15 @@ export const forwardCallNode = createNodeDescriptor({
     }
   ],
 
-  function: async ({ cognigy, config }: IForwardCallParams) => {
+  function: async ({ cognigy, config, childConfigs }: IForwardCallParams) => {
     const { api } = cognigy;
     let customSipHeaders: object;
     let data: object;
+
+    const onFailureChild = childConfigs.find(child => child.type === "onForwardFailure");
+    const onSuccessChild = childConfigs.find(child => child.type === "onForwardSuccess");
+    const onTerminateChild = childConfigs.find(child => child.type === "onForwardTermination");
+    const onDefaultChild = childConfigs.find(child => child.type === "onForwardDefault");
 
     const whisperText = config.whisperingText;
     delete config.whisperingText;
@@ -124,6 +141,7 @@ export const forwardCallNode = createNodeDescriptor({
       ...strippedConfig,
       customSipHeaders,
       data,
+      childConfigs,
     };
 
     if (whisperText) {
@@ -134,12 +152,122 @@ export const forwardCallNode = createNodeDescriptor({
         },
       };
     }
- 
+         // Check if the Child Node exists         
+      if (!onSuccessChild) {
+          throw new Error("Unable to find 'onSuccessChild'. Seems its not attached.");
+          }
+      
+      if (!onFailureChild) {
+              throw new Error("Unable to find 'onFailureChild'. Seems its not attached.");
+          }
+
+      if (!onDefaultChild) {
+          throw new Error("Unable to find 'onDefaultChild'. Seems its not attached.");
+      }
+
+      if (!onTerminateChild) {
+          throw new Error("Unable to find 'onTerminateChild'. Seems its not attached.");
+      }
+
+      if (responseData) {
+        api.setNextNode(onSuccessChild.id);
+    } else {
+        api.setNextNode(onFailureChild.id);
+        }   
+
     api.say('', responseData);
 
     if (config.endFlow) {
       api.stopExecution();
+      api.setNextNode(onTerminateChild.id);
     }
   },
 });
 
+export const onForwardSuccess = createNodeDescriptor({
+  type: "onForwardSuccess",
+  parentType: "forward",
+  defaultLabel: "On Success",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+  });
+
+export const onForwardFailure = createNodeDescriptor({
+  type: "onForwardFailure",
+  parentType: "forward",
+  defaultLabel: "On Failure",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+});
+
+export const onForwardTermination = createNodeDescriptor({
+  type: "onForwardTermination",
+  parentType: "forward",
+  defaultLabel: "On Termination",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+});
+
+export const onForwardDefault = createNodeDescriptor({
+  type: "onForwardDefault",
+  parentType: "forward",
+  defaultLabel: "Default",
+  constraints: {
+      editable: false,
+      deletable: false,
+      creatable: false,
+      movable: false,
+      placement: {
+          predecessor: {
+              whitelist: []
+          }
+      }
+  },
+  appearance: {
+      color: "#61d188",
+      textColor: "white",
+      variant: "mini"
+  }
+});

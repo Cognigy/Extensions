@@ -39,7 +39,7 @@ const getTranslation = <T extends typeof en>(translationData: T, keys: Array<str
   }
 
   return fallbackResult?.substr(0, 256) as string | undefined ?? `Key not found: ${keys.join('.')}`;
-}
+};
 
 const t = (key: TranslationType): INodeFieldTranslations => {
   const splits = key.split('.');

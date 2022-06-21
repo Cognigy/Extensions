@@ -13,7 +13,9 @@
   "scripts": {
     "rm": "rm vier_voice.tar.gz",
     "pack": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "lint": "tslint --project .",
+    "lint:fix": "tslint --project . --fix"
   },
   "devDependencies": {
     "@types/node": "^17.0.41"

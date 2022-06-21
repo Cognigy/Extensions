@@ -29,14 +29,14 @@ export const bridgeCallNode = createNodeDescriptor({
   tags: ['service'],
   behavior: {
     entrypoint: true
-    },
+  },
   dependencies: {
     children: [
-        "onBridgeSuccess",
-        "onBridgeFailure",
-        "onBridgeTermination",
+      'onBridgeSuccess',
+      'onBridgeFailure',
+      'onBridgeTermination',
     ]
-},
+  },
   fields: [
     {
       type: 'cognigyText',
@@ -62,9 +62,9 @@ export const bridgeCallNode = createNodeDescriptor({
     ...commonRedirectFields,
   ],
   preview: {
-		key: "headNumber",
-		type: "text"
-	},
+    key: 'headNumber',
+    type: 'text'
+  },
   sections: [
     {
       key: 'general',
@@ -124,9 +124,9 @@ export const bridgeCallNode = createNodeDescriptor({
     let customSipHeaders: object;
     let data: object;
 
-    const onFailureChild = childConfigs.find(child => child.type === "onBridgeFailure");
-    const onSuccessChild = childConfigs.find(child => child.type === "onBridgeSuccess");
-    const onTerminateChild = childConfigs.find(child => child.type === "onBridgeTermination")
+    const onFailureChild = childConfigs.find(child => child.type === 'onBridgeFailure');
+    const onSuccessChild = childConfigs.find(child => child.type === 'onBridgeSuccess');
+    const onTerminateChild = childConfigs.find(child => child.type === 'onBridgeTermination');
 
     const whisperText = config.whisperingText;
     delete config.whisperingText;
@@ -165,9 +165,9 @@ export const bridgeCallNode = createNodeDescriptor({
 
     if (responseData) {
       api.setNextNode(onSuccessChild.id);
-  } else {
+    } else {
       api.setNextNode(onFailureChild.id);
-      }   
+    }
 
     if (config.endFlow) {
       api.stopExecution();
@@ -177,67 +177,67 @@ export const bridgeCallNode = createNodeDescriptor({
 });
 
 export const onBridgeSuccess = createNodeDescriptor({
-  type: "onBridgeSuccess",
-  parentType: "bridge",
-  defaultLabel: "On Success",
+  type: 'onBridgeSuccess',
+  parentType: 'bridge',
+  defaultLabel: 'On Success',
   constraints: {
-      editable: false,
-      deletable: false,
-      creatable: false,
-      movable: false,
-      placement: {
-          predecessor: {
-              whitelist: []
-          }
+    editable: false,
+    deletable: false,
+    creatable: false,
+    movable: false,
+    placement: {
+      predecessor: {
+        whitelist: []
       }
+    }
   },
   appearance: {
-      color: "#61d188",
-      textColor: "white",
-      variant: "mini"
+    color: '#61d188',
+    textColor: 'white',
+    variant: 'mini'
   }
-  });
+});
 
 export const onBridgeFailure = createNodeDescriptor({
-  type: "onBridgeFailure",
-  parentType: "bridge",
-  defaultLabel: "On Failure",
+  type: 'onBridgeFailure',
+  parentType: 'bridge',
+  defaultLabel: 'On Failure',
   constraints: {
-      editable: false,
-      deletable: false,
-      creatable: false,
-      movable: false,
-      placement: {
-          predecessor: {
-              whitelist: []
-          }
+    editable: false,
+    deletable: false,
+    creatable: false,
+    movable: false,
+    placement: {
+      predecessor: {
+        whitelist: []
       }
+    }
   },
   appearance: {
-      color: "#61d188",
-      textColor: "white",
-      variant: "mini"
+    color: '#61d188',
+    textColor: 'white',
+    variant: 'mini'
   }
 });
 
 export const onBridgeTermination = createNodeDescriptor({
-  type: "onBridgeTermination",
-  parentType: "bridge",
-  defaultLabel: "On Termination",
+  type: 'onBridgeTermination',
+  parentType: 'bridge',
+  defaultLabel: 'On Termination',
   constraints: {
-      editable: false,
-      deletable: false,
-      creatable: false,
-      movable: false,
-      placement: {
-          predecessor: {
-              whitelist: []
-          }
+    editable: false,
+    deletable: false,
+    creatable: false,
+    movable: false,
+    placement: {
+      predecessor: {
+        whitelist: []
       }
+    }
   },
   appearance: {
-      color: "#61d188",
-      textColor: "white",
-      variant: "mini"
+    color: '#61d188',
+    textColor: 'white',
+    variant: 'mini'
   }
 });

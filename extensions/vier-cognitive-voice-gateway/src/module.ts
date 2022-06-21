@@ -10,7 +10,7 @@ import { promptForNumberNode } from './nodes/numberPrompt';
 import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
-import { checkForwardResultNode, onForwardDefault, onForwardFailure, onForwardSuccess, onForwardTermination } from './nodes/checkForwardResult';
+import { checkOutboundResultNode, onOutboundDefault, onOutboundFailure, onOutboundSuccess, onOutboundTermination } from './nodes/checkOutboundResult';
 
 export default createExtension({
   nodes: [
@@ -24,11 +24,11 @@ export default createExtension({
     bridgeCallNode,
     terminateCallNode,
     speakNode,
-    checkForwardResultNode,
-    onForwardSuccess, // child
-    onForwardFailure, // child
-    onForwardTermination, // child
-    onForwardDefault,  // child
+    checkOutboundResultNode,
+    onOutboundSuccess, // child
+    onOutboundFailure, // child
+    onOutboundTermination, // child
+    onOutboundDefault,  // child
     onBridgeSuccess, // child
     onBridgeFailure, // child
     onBridgeTermination, // child

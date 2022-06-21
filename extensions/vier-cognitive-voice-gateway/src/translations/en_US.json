@@ -137,7 +137,7 @@
         "inputProfileTokenDescription": "Profile Token",
         "sectionFallback": "Fallback Option"
     },
-    "forwardService": {
+    "outboundService": {
         "nodeLabel": "Check Forward Result",
         "nodeSummary": ""
     }

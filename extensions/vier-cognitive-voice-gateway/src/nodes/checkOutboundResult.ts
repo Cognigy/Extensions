@@ -4,10 +4,10 @@ import {
 } from '@cognigy/extension-tools/build';
 import { t } from '../helpers/translations';
 
-export const checkForwardResultNode = createNodeDescriptor({
-  type: 'forwardService',
-  defaultLabel: t('forwardService.nodeLabel'),
-  summary: t('forwardService.nodeSummary'),
+export const checkOutboundResultNode = createNodeDescriptor({
+  type: 'outboundService',
+  defaultLabel: t('outboundService.nodeLabel'),
+  summary: t('outboundService.nodeSummary'),
   appearance: {
     color: 'blue',
   },
@@ -16,10 +16,10 @@ export const checkForwardResultNode = createNodeDescriptor({
   },
   dependencies: {
     children: [
-      'onForwardSuccess',
-      'onForwardFailure',
-      'onForwardTermination',
-      'onForwardDefault',
+      'onOutboundSuccess',
+      'onOutboundFailure',
+      'onOutboundTermination',
+      'onOutboundDefault',
     ],
   },
 
@@ -27,16 +27,16 @@ export const checkForwardResultNode = createNodeDescriptor({
     const { api } = cognigy;
 
     const onFailureChild = childConfigs.find(
-      (child) => child.type === 'onForwardFailure'
+      (child) => child.type === 'onOutboundFailure'
     );
     const onSuccessChild = childConfigs.find(
-      (child) => child.type === 'onForwardSuccess'
+      (child) => child.type === 'onOutboundSuccess'
     );
     const onTerminateChild = childConfigs.find(
-      (child) => child.type === 'onForwardTermination'
+      (child) => child.type === 'onOutboundTermination'
     );
     const onDefaultChild = childConfigs.find(
-      (child) => child.type === 'onForwardDefault'
+      (child) => child.type === 'onOutboundDefault'
     );
 
     // Check if the Child Node exists
@@ -76,9 +76,9 @@ export const checkForwardResultNode = createNodeDescriptor({
   },
 });
 
-export const onForwardSuccess = createNodeDescriptor({
-  type: 'onForwardSuccess',
-  parentType: 'forward',
+export const onOutboundSuccess = createNodeDescriptor({
+  type: 'onOutboundSuccess',
+  parentType: 'outbound',
   defaultLabel: 'On Success',
   constraints: {
     editable: false,
@@ -98,9 +98,9 @@ export const onForwardSuccess = createNodeDescriptor({
   },
 });
 
-export const onForwardFailure = createNodeDescriptor({
-  type: 'onForwardFailure',
-  parentType: 'forward',
+export const onOutboundFailure = createNodeDescriptor({
+  type: 'onOutboundFailure',
+  parentType: 'outbound',
   defaultLabel: 'On Failure',
   constraints: {
     editable: false,
@@ -120,9 +120,9 @@ export const onForwardFailure = createNodeDescriptor({
   },
 });
 
-export const onForwardTermination = createNodeDescriptor({
-  type: 'onForwardTermination',
-  parentType: 'forward',
+export const onOutboundTermination = createNodeDescriptor({
+  type: 'onOutboundTermination',
+  parentType: 'outbound',
   defaultLabel: 'On Termination',
   constraints: {
     editable: false,
@@ -142,13 +142,13 @@ export const onForwardTermination = createNodeDescriptor({
   },
 });
 
-export const onForwardDefault = createNodeDescriptor({
-  type: 'onForwardDefault',
-  parentType: 'forward',
+export const onOutboundDefault = createNodeDescriptor({
+  type: 'onOutboundDefault',
+  parentType: 'outbound',
   defaultLabel: 'Default',
   constraints: {
     editable: false,
-    deletable: false,
+    deletable: true,
     creatable: false,
     movable: false,
     placement: {

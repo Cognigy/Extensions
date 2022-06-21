@@ -17,5 +17,12 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.41"
-  }
+  },
+  "keywords": [
+    "VIER",
+    "Voice",
+    "Voicebot",
+    "Cognitive Voice Gateway",
+    "Contact Center"
+  ]
 }

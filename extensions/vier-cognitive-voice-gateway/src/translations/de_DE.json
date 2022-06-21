@@ -5,7 +5,6 @@
         "inputDataLabel": "Benutzerdefinierte Daten",
         "inputDataDescription": ""
     },
-
     "forward": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -17,7 +16,6 @@
         "sectionAdditionalDataLabel": "",
         "sectionAdditionalSettingsLabel": ""
     },
-
     "bridge": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -35,7 +33,6 @@
         "inputExtensionLengthDescription": "",
         "sectionStopConditionLabel": ""
     },
-
     "multipleChoicePrompt": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -43,7 +40,6 @@
         "inputChoicesDescription": "",
         "sectionChoicesSectionLabel": ""
     },
-
     "numberPrompt": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -57,7 +53,6 @@
         "inputMaxDigitsDescription": "",
         "sectionStopConditionLabel": ""
     },
-
     "play": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -66,7 +61,6 @@
         "inputBargeInLabel": "",
         "inputBargeInDescription": ""
     },
-
     "recordingStart": {
         "nodeLabel": " ",
         "nodeSummary": " ",
@@ -76,7 +70,6 @@
         "inputRecordingIdDescription": " ",
         "inputSpeakersLabel": " "
     },
-
     "recordingStop": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -85,7 +78,6 @@
         "inputTerminateLabel": "",
         "inputTerminateDescription": ""
     },
-
     "shared": {
         "inputTextLabel": "",
         "inputTextDescription": "",
@@ -116,8 +108,7 @@
         "inputWhisperingTextLabel": "",
         "inputWhisperingTextDescription": "",
         "inputAdditionalTextLabel": ""
-},
-
+    },
     "speak": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -127,25 +118,26 @@
         "sectionTextOptionsLabel": "",
         "inputAdditionalTextLabel": ""
     },
-
     "terminate": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputEndFlowLabel": "",
         "inputEndFlowDescription": ""
     },
-
     "speechToText": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputServiceLabel": "",
+        "inputServiceFallbackLabel": "",
         "sectionSelectSTTLabel": "",
         "sectionSelectLanguageLabel": "",
         "inputLanguageLabel": "",
         "inputProfileTokenLabel": "",
-        "inputProfileTokenDescription": ""
+        "inputProfileTokenFallbackLabel": "",
+        "inputProfileTokenFallbackDescription": "",
+        "inputProfileTokenDescription": "",
+        "sectionFallback": ""
     },
-
     "forwardService": {
         "nodeLabel": "",
         "nodeSummary": ""

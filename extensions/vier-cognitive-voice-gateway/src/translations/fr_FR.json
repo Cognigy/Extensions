@@ -1,23 +1,21 @@
 {
     "sendData": {
-        "nodeLabel": "Daten senden",
-        "nodeSummary": "Anhängen von benutzerdefinierten Daten an einen Dialog",
-        "inputDataLabel": "Benutzerdefinierte Daten",
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputDataLabel": "",
         "inputDataDescription": ""
     },
-
     "forward": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputDestinationNumberLabel": "",
         "inputDestinationNumberDescription": "",
-        "sectionGeneralLabel": "GTest",
+        "sectionGeneralLabel": "",
         "sectionCallLabel": "",
         "sectionSipHeadersLabel": "",
         "sectionAdditionalDataLabel": "",
         "sectionAdditionalSettingsLabel": ""
     },
-
     "bridge": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -33,9 +31,8 @@
         "inputHeadNumberDescription": "",
         "inputExtensionLengthLabel": "",
         "inputExtensionLengthDescription": "",
-        "sectionStopConditionLabel": ""
+        "sectionStopConditionLabel": "Stop Condition"
     },
-
     "multipleChoicePrompt": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -43,7 +40,6 @@
         "inputChoicesDescription": "",
         "sectionChoicesSectionLabel": ""
     },
-
     "numberPrompt": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -57,7 +53,6 @@
         "inputMaxDigitsDescription": "",
         "sectionStopConditionLabel": ""
     },
-
     "play": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -66,17 +61,15 @@
         "inputBargeInLabel": "",
         "inputBargeInDescription": ""
     },
-
     "recordingStart": {
-        "nodeLabel": " ",
-        "nodeSummary": " ",
-        "inputMaxDurationLabel": " ",
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputMaxDurationLabel": "",
         "inputMaxDurationDescription": "",
-        "inputRecordingIdLabel": " ",
-        "inputRecordingIdDescription": " ",
-        "inputSpeakersLabel": " "
+        "inputRecordingIdLabel": "",
+        "inputRecordingIdDescription": "",
+        "inputSpeakersLabel": "Speakers to record"
     },
-
     "recordingStop": {
         "nodeLabel": "",
         "nodeSummary": "",
@@ -85,7 +78,6 @@
         "inputTerminateLabel": "",
         "inputTerminateDescription": ""
     },
-
     "shared": {
         "inputTextLabel": "",
         "inputTextDescription": "",
@@ -115,65 +107,38 @@
         "inputExperimentalEnableRingingToneDescription": "",
         "inputWhisperingTextLabel": "",
         "inputWhisperingTextDescription": ""
-},
-
+    },
     "speak": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputTextLabel": "",
-        "inputEmphasizeLabel": "",
-        "inputStrongLabel": "",
-        "inputModerateLabel": "",
-        "inputReducedLabel": "",
-        "inputPauseLabel": "",
-        "inputMediumPauseLabel": "",
-        "inputStrongPauseLabel": "",
-        "inputExtraStrongPauseLabel": "",
-        "inputNoPauseLabel": "",
-        "inputZeroPointThreeSecondsPauseLabel": "",
-        "inputOneSecondsPauseLabel": "",
-        "inputStructureLabel": "",
-        "inputParagraphLabel": "",
-        "inputSentenceLabel": "",
-        "inputSayAsLabel": "",
-        "inputVerbatimLabel": "",
-        "inputCardinalLabel": "",
-        "inputOrdinalLabel": "",
-        "inputCharactersLabel": "",
-        "inputFractionLabel": "",
-        "inputUnitLabel": "",
-        "inputTimeLabel": "",
-        "inputExpletiveLabel": "",
-        "inputDateLabel": "",
-        "inputSpeechRateLabel": "",
-        "inputSpeechRateSlowLabel": "",
-        "inputSpeechRateMediumLabel": "",
-        "inputSpeechRateFastLabel": "",
-        "inputSpeechRateEightyLabel": "",
-        "inputSpeechRateOnehundredTwentyFiveLabel": "",
-        "inputSpeechVolumeLabel": "",
-        "inputSpeechVolumeLowLabel": "",
-        "inputSpeechVolumeMediumLabel": "",
-        "inputSpeechVolumeHighLabel": "",
-        "inputSpeechVolumeMinusLabel": "",
-        "inputSpeechVolumePlusLabel": "",
-        "inputSpeechPitchLabel": "",
-        "inputSpeechPitchXLowLabel": "",
-        "inputSpeechPitchLowLabel": "",
-        "inputSpeechPitchMediumLabel": "",
-        "inputSpeechPitchHighLabel": "",
-        "inputSpeechPitchXHighLabel": "",
-        "inputPhonemeLabel": "",
-        "inputAudioLabel": "",
-        "inputVoiceLabel": "",
         "inputBargeInLabel": "",
-        "inputBargeInDescription": ""
+        "inputBargeInDescription": "",
+        "sectionTextOptionsLabel": "",
+        "inputAdditionalTextLabel": ""
     },
-
     "terminate": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputEndFlowLabel": "",
         "inputEndFlowDescription": ""
+    },
+    "speechToText": {
+        "nodeLabel": "",
+        "nodeSummary": "",
+        "inputServiceLabel": "",
+        "inputServiceFallbackLabel": "",
+        "sectionSelectSTTLabel": "",
+        "sectionSelectLanguageLabel": "",
+        "inputLanguageLabel": "",
+        "inputProfileTokenLabel": "",
+        "inputProfileTokenFallbackLabel": "",
+        "inputProfileTokenFallbackDescription": "",
+        "inputProfileTokenDescription": "",
+        "sectionFallback": ""
+    },
+    "forwardService": {
+        "nodeLabel": "",
+        "nodeSummary": ""
     }
 }

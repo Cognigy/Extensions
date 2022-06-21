@@ -5,7 +5,6 @@
         "inputDataLabel": "Custom Data",
         "inputDataDescription": "This is an object that can have arbitrary properties. Each property is expected to have a string value"
     },
-
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
@@ -34,7 +33,6 @@
         "inputExtensionLengthDescription": "The range of extensions to choose a number from",
         "sectionStopConditionLabel": "Stop Condition"
     },
-
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
         "nodeSummary": "Say something to the call with a multiple choice prompt",
@@ -42,7 +40,6 @@
         "inputChoicesDescription": "Add and adopt options and their synonyms to your need.",
         "sectionChoicesSectionLabel": "Choices"
     },
-
     "numberPrompt": {
         "nodeLabel": "Get Number from Caller",
         "nodeSummary": "Say something to the call with a prompt to enter a number",
@@ -56,7 +53,6 @@
         "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
         "sectionStopConditionLabel": "Stop Condition"
     },
-
     "play": {
         "nodeLabel": "Play Audio File",
         "nodeSummary": "Play an audio file to the call",
@@ -65,7 +61,6 @@
         "inputBargeInLabel": "Barge In",
         "inputBargeInDescription": "Allows the audio file to be interrupted by the speaker"
     },
-
     "recordingStart": {
         "nodeLabel": "Start Recording",
         "nodeSummary": "Start or resume recording of a call",
@@ -75,7 +70,6 @@
         "inputRecordingIdDescription": "An arbitrary string to identify the recording in case multiple recordings are created in the same dialog",
         "inputSpeakersLabel": "Speakers to record"
     },
-
     "recordingStop": {
         "nodeLabel": "Stop Recording",
         "nodeSummary": "Pause or terminate recording of a call",
@@ -84,7 +78,6 @@
         "inputTerminateLabel": "Terminate Recording",
         "inputTerminateDescription": "Whether the recording should be terminated, rather than just paused"
     },
-
     "shared": {
         "inputTextLabel": "Message",
         "inputTextDescription": "The message to introduce the prompt to the caller",
@@ -115,7 +108,6 @@
         "inputWhisperingTextLabel": "Whisperred Text to the transfered party",
         "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined"
     },
-
     "speak": {
         "nodeLabel": "Speak out (SSML)",
         "nodeSummary": "Speak something out to the caller with SSML Support",
@@ -125,25 +117,26 @@
         "sectionTextOptionsLabel": "Additional Text Section",
         "inputAdditionalTextLabel": "Additional Text"
     },
-
     "terminate": {
         "nodeLabel": "Terminate Call",
         "nodeSummary": "Drop the call",
         "inputEndFlowLabel": "Quit Flow",
         "inputEndFlowDescription": "Stop the flow after executing this node"
     },
-
     "speechToText": {
         "nodeLabel": "Speech-to-Text Services",
         "nodeSummary": "Speech-to-Text services need to be used to transcribe the expected input in the the best possible way",
         "inputServiceLabel": "Speech-to-Text Service",
+        "inputServiceFallbackLabel": "Speech-to-Text Fallback",
         "sectionSelectSTTLabel": "Select Speech-to-Text Services",
         "sectionSelectLanguageLabel": "Select Language",
         "inputLanguageLabel": "Language",
         "inputProfileTokenLabel": "Profile Token",
-        "inputProfileTokenDescription": "Profile Token"
+        "inputProfileTokenFallbackLabel": "Profile Token Fallback",
+        "inputProfileTokenFallbackDescription": "Profile Token Fallback",
+        "inputProfileTokenDescription": "Profile Token",
+        "sectionFallback": "Fallback Option"
     },
-
     "forwardService": {
         "nodeLabel": "Check Forward Result",
         "nodeSummary": ""

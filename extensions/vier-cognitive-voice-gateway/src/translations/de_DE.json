@@ -40,7 +40,7 @@
         "inputChoicesDescription": "",
         "sectionChoicesSectionLabel": ""
     },
-    "numberPrompt": {
+    "promptForNumber": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputUseSubmitInputsLabel": "",

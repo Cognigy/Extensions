@@ -40,7 +40,7 @@
         "inputChoicesDescription": "Add and adopt options and their synonyms to your need.",
         "sectionChoicesSectionLabel": "Choices"
     },
-    "numberPrompt": {
+    "promptForNumber": {
         "nodeLabel": "Get Number from Caller",
         "nodeSummary": "Say something to the call with a prompt to enter a number",
         "inputUseSubmitInputsLabel": "Use Submit Inputs",

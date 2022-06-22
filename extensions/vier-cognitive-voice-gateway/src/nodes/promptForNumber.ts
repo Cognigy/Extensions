@@ -19,8 +19,8 @@ export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
 
 export const promptForNumberNode = createNodeDescriptor({
   type: 'numberPrompt',
-  defaultLabel: t('numberPrompt.nodeLabel'), 
-  summary: t('numberPrompt.nodeSummary'),
+  defaultLabel: t('promptForNumber.nodeLabel'), 
+  summary: t('promptForNumber.nodeSummary'),
   appearance: {
     color: '#38eb8c'
   },
@@ -30,14 +30,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useSubmitInputs',
-      label: t('numberPrompt.inputUseSubmitInputsLabel'),
-      description: t('numberPrompt.inputUseSubmitInputsDescription'),
+      label: t('promptForNumber.inputUseSubmitInputsLabel'),
+      description: t('promptForNumber.inputUseSubmitInputsDescription'),
     },
     {
       type: 'textArray',
       key: 'submitInputs',
-      label: t('numberPrompt.inputSubmitInputsLabel'),
-      description: t('numberPrompt.inputSubmitInputsDescription'),
+      label: t('promptForNumber.inputSubmitInputsLabel'),
+      description: t('promptForNumber.inputSubmitInputsDescription'),
       condition: {
         key: 'useSubmitInputs',
         value: true
@@ -46,14 +46,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useMaxDigits',
-      label: t('numberPrompt.inputUseMaxDigitsLabel'),
-      description: t('numberPrompt.inputUseMaxDigitsDescription'),
+      label: t('promptForNumber.inputUseMaxDigitsLabel'),
+      description: t('promptForNumber.inputUseMaxDigitsDescription'),
     },
     {
       type: 'number',
       key: 'maxDigits',
-      label: t('numberPrompt.inputMaxDigitsLabel'),
-      description: t('numberPrompt.inputMaxDigitsDescription'),
+      label: t('promptForNumber.inputMaxDigitsLabel'),
+      description: t('promptForNumber.inputMaxDigitsDescription'),
       condition: {
         key: 'useMaxDigits',
         value: true
@@ -73,7 +73,7 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       key: 'stopCondition',
       fields: ['useSubmitInputs', 'submitInputs', 'useMaxDigits', 'maxDigits'],
-      label: t('numberPrompt.sectionStopConditionLabel'),
+      label: t('promptForNumber.sectionStopConditionLabel'),
       defaultCollapsed: false,
     },
     {

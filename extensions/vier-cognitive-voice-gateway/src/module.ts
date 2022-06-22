@@ -6,7 +6,7 @@ import { playNode } from './nodes/play';
 import { recordingStartNode } from './nodes/recordingStart';
 import { recordingStopNode } from './nodes/recordingStop';
 import { sendDataNode } from './nodes/data';
-import { promptForNumberNode } from './nodes/numberPrompt';
+import { promptForNumberNode } from './nodes/promptForNumber';
 import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';

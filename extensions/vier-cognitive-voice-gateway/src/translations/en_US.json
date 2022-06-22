@@ -138,7 +138,7 @@
         "sectionFallback": "Fallback Option"
     },
     "outboundService": {
-        "nodeLabel": "Check Forward Result",
+        "nodeLabel": "Check Outbound Result",
         "nodeSummary": ""
     }
 }

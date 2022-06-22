@@ -1,9 +1,11 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import { bakeData } from '../helpers/bake';
 import { t } from '../helpers/translations';
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {
   config: {
-    endFlow?: boolean
+    endFlow?: boolean,
+    data: object,
   };
 }
 
@@ -23,12 +25,21 @@ export const terminateCallNode = createNodeDescriptor({
       defaultValue: false,
       description: t('terminate.inputEndFlowDescription'),
     },
+    {
+      type: 'json',
+      key: 'data',
+      label: t('sendData.inputDataLabel'),
+      description: t('sendData.inputDataDescription'),
+      params: {
+        required: false
+      }
+    }
   ],
   sections: [
     {
       key: 'additional',
       label: t('forward.sectionAdditionalDataLabel'),
-      fields: ['endFlow'],
+      fields: ['endFlow', 'data'],
       defaultCollapsed: true
     },
   ],
@@ -40,8 +51,10 @@ export const terminateCallNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ITerminateCallParams) => {
     const { api } = cognigy;
+    const data = bakeData(config.data);
     api.say('', {
-      status: 'termination',
+      status: 'termination' || 'data',
+      data,
     });
     if (config.endFlow) {
       api.stopExecution();

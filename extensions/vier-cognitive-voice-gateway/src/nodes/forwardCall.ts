@@ -141,7 +141,7 @@ export const forwardCallNode = createNodeDescriptor({
       };
     }
 
-    api.say('${data}status', responseData);
+    api.say('', responseData);
 
     /*
       Example data

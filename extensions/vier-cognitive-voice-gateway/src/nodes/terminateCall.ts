@@ -53,7 +53,7 @@ export const terminateCallNode = createNodeDescriptor({
     const { api } = cognigy;
     const data = bakeData(config.data);
     api.say('', {
-      status: 'termination' || 'data',
+      status: 'termination',
       data,
     });
     if (config.endFlow) {

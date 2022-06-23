@@ -99,6 +99,17 @@ export const promptForNumberNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: INumberPromptNodeParams) => {
     const { api } = cognigy;
+    let submitInputs = [];
+
+    if (config.useSubmitInputs  && Array.isArray(config.submitInputs)) {
+      submitInputs = config.submitInputs.map((input) => {
+        if (input.match(/^DTMF_[1234567890ABCD\*#]{1}$/)) {
+          return input;
+        } else if (input.match(/^[1234567890ABCD\*#]{1}$/)) {
+          return `DTMF_${input}`;
+        }
+      });
+    }
 
     api.say(config.text, {
       status: 'prompt',
@@ -109,7 +120,7 @@ export const promptForNumberNode = createNodeDescriptor({
       bargeIn: config.bargeIn,
       type: {
         name: 'Number',
-        submitInputs: config.useSubmitInputs ? config.submitInputs : null,
+        submitInputs: config.useSubmitInputs ? submitInputs : null,
         maxDigits: config.useMaxDigits ? config.maxDigits : null,
       }
     });

@@ -21,7 +21,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 		{
 			key: "maxScoreDelta",
 			label: "Maximum Score Delta",
-			description: "The maximum difference between to intent scores.",
+			description: "The maximum difference between two intent scores.",
 			type: "number",
 			params: {
 				required: true

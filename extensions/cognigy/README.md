@@ -23,7 +23,7 @@ You need to create a Connection. Name is for example 'Email Connection' or somet
 	- Email Password:
 		- key: **password**
 	   - value: *The password of your Email Account*
-- **froomName**: *The name of the sender*
+- **fromName**: *The name of the sender*
 - **fromEmail**: *The email address of the sender*
 - **to**: *The emails that should receive your message*
 	- You can provide one or more emails by just adding them to the list:

@@ -19,5 +19,9 @@ export default createExtension({
 	connections: [
 		dynamicsConnection,
 		microsoftOnlineConnection
-	]
+	],
+
+	options: {
+		label: "Microsoft Dynamics"
+	}
 });

@@ -30,24 +30,10 @@ export const deleteEntityNode = createNodeDescriptor({
         },
         {
             key: "entityType",
-            type: "select",
+            type: "cognigyText",
             label: "Entity Type",
             defaultValue: "Contact",
             params: {
-                options: [
-                    {
-                        label: "Account",
-                        value: "Account"
-                    },
-                    {
-                        label: "Contact",
-                        value: "Contact"
-                    },
-                    {
-                        label: "Event",
-                        value: "Event"
-                    }
-                ],
                 required: true
             },
         },
@@ -82,7 +68,7 @@ export const deleteEntityNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {
@@ -92,7 +78,7 @@ export const deleteEntityNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce.entity",
             condition: {

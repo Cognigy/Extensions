@@ -16,10 +16,10 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.21.1",
+    "@cognigy/extension-tools": "^0.13.0",
+    "axios": "^0.21.2",
     "juice": "^7.0.0",
-    "moment": "^2.27.0",
+    "moment": "^2.29.2",
     "nodemailer": "^6.4.16",
     "tslint": "^6.1.2"
   },

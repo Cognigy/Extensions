@@ -128,7 +128,7 @@ export const sendMessageToLiveAgentNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "text" },
-		{ type: "section", key: "advanced"},
+		{ type: "section", key: "advanced" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -158,7 +158,7 @@ export const sendMessageToLiveAgentNode = createNodeDescriptor({
 						}
 					}
 				]
-			}
+			};
 		} else {
 			data = {
 				"blocks": [
@@ -170,7 +170,7 @@ export const sendMessageToLiveAgentNode = createNodeDescriptor({
 						}
 					}
 				]
-			}
+			};
 		}
 
 		try {

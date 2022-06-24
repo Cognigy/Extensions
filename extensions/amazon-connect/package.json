@@ -1,0 +1,32 @@
+{
+	"name": "amazon-connect",
+	"version": "4.0.0",
+	"description": "Exposes Helper Functions for Amazon Connect",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz amazon-connect.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"keywords": [
+		"Hangup",
+		"Transfer",
+		"Handover",
+		"Call"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Cognigy GmbH",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^10.17.28",
+		"tslint": "^5.16.0",
+		"typescript": "^3.1.6"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.14.0"
+	}
+}

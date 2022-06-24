@@ -15,5 +15,9 @@ export default createExtension({
 	],
 	connections: [
 		yextConnection
-	]
+	],
+
+	options: {
+		label: "Yext"
+	}
 });

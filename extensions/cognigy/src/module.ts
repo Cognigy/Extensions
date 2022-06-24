@@ -12,7 +12,6 @@ export default createExtension({
 		getConversationNode,
 		intentDisambiguationNode
 	],
-
 	connections: [
 		smtpConnection,
 		cognigyApiConnection

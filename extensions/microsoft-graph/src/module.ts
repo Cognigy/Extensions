@@ -26,5 +26,9 @@ export default createExtension({
 	],
 	connections: [
 		loginConnection
-	]
+	],
+
+	options: {
+		label: "Microsoft Graph"
+	}
 });

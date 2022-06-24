@@ -12,4 +12,8 @@ export default createExtension({
 		decryptNode,
 		encryptNode
 	],
+
+	options: {
+		label: "Crypto"
+	}
 });

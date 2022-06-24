@@ -1,6 +1,6 @@
 {
 	"name": "google-firebase",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "Integrates with the Google Firebase",
 	"main": "build/module.js",
 	"scripts": {
@@ -25,7 +25,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.10.0",
+		"@cognigy/extension-tools": "^0.13.0",
 		"firebase": "^8.2.3"
 	}
 }

@@ -29,7 +29,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "sosl",
-            type: "text",
+            type: "cognigyText",
             label: "Salesforce Object Search (SOSL)",
             defaultValue: 'FIND {John OR Jane} IN Name Fields RETURNING Contact(Id,FirstName,LastName)',
             description: "The SOSL query to run. Refer to Salesforce documentation.",
@@ -58,7 +58,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "inputKey",
-            type: "cognigyText",
+            type: "text",
             label: "Input Key to store Result",
             defaultValue: "salesforce.search",
             condition: {
@@ -68,7 +68,7 @@ export const searchNode = createNodeDescriptor({
         },
         {
             key: "contextKey",
-            type: "cognigyText",
+            type: "text",
             label: "Context Key to store Result",
             defaultValue: "salesforce.search",
             condition: {
@@ -97,7 +97,13 @@ export const searchNode = createNodeDescriptor({
     appearance: {
         color: "#009EDB"
     },
-    function: async ({ cognigy, config }: ISearchParams) => {
+    dependencies: {
+        children: [
+            "onFoundResults",
+            "onEmptyResults"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: ISearchParams) => {
         const { api } = cognigy;
         const { sosl, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
@@ -111,6 +117,14 @@ export const searchNode = createNodeDescriptor({
 
             // Run SOSL query:
             const searchResult = await conn.search(sosl);
+
+            if (searchResult.searchRecords.length === 0) {
+                const onEmptyResultsChild = childConfigs.find(child => child.type === "onEmptyResults");
+                api.setNextNode(onEmptyResultsChild.id);
+            } else {
+                const onFoundChild = childConfigs.find(child => child.type === "onFoundResults");
+                api.setNextNode(onFoundChild.id);
+            }
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, searchResult, "simple");
@@ -127,5 +141,49 @@ export const searchNode = createNodeDescriptor({
                 api.addToInput(inputKey, error.message);
             }
         }
+    }
+});
+
+export const onFoundResults = createNodeDescriptor({
+    type: "onFoundResults",
+    parentType: "salesforceSearch",
+    defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onEmptyResults = createNodeDescriptor({
+    type: "onEmptyResults",
+    parentType: "salesforceSearch",
+    defaultLabel: "On Empty Result",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
     }
 });

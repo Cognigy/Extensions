@@ -14,5 +14,9 @@ export default createExtension({
 
 	connections: [
 		jiraConnection
-	]
+	],
+
+	options: {
+		label: "Jira"
+	}
 });

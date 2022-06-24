@@ -30,28 +30,14 @@ export const updateEntityNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "entityType",
-			type: "select",
-			label: "Entity Type",
-			defaultValue: "Contact",
-			params: {
-				options: [
-					{
-						label: "Account",
-						value: "Account"
-					},
-					{
-						label: "Contact",
-						value: "Contact"
-					},
-					{
-						label: "Event",
-						value: "Event"
-					}
-				],
-				required: true
-			},
-		},
+            key: "entityType",
+            type: "cognigyText",
+            label: "Entity Type",
+            defaultValue: "Contact",
+            params: {
+                required: true
+            },
+        },
 		{
 			key: "entityId",
 			type: "cognigyText",
@@ -92,7 +78,7 @@ export const updateEntityNode = createNodeDescriptor({
 		},
 		{
 			key: "inputKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Input Key to store Result",
 			defaultValue: "salesforce.entity",
 			condition: {
@@ -102,7 +88,7 @@ export const updateEntityNode = createNodeDescriptor({
 		},
 		{
 			key: "contextKey",
-			type: "cognigyText",
+			type: "text",
 			label: "Context Key to store Result",
 			defaultValue: "salesforce.entity",
 			condition: {

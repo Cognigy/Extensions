@@ -10,6 +10,8 @@ export interface IPassControlParams extends INodeFunctionBaseParams {
 		};
 		conversationId: string;
 		switchboardIntegration: string;
+		useMetadata: boolean;
+		metadata: any;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -44,6 +46,30 @@ export const passControlNode = createNodeDescriptor({
 			type: "text",
 			label: "Switchboard Integration Name (pass to)",
 			defaultValue: "next",
+		},
+		{
+			key: "useMetadata",
+			type: "toggle",
+			label: "Use Metadata",
+			defaultValue: false,
+			description: "Whether to send metadata information or not"
+		},
+		{
+			key: "metadata",
+			type: "json",
+			label: "Metadata",
+			description: "Any metadata that should be sent to the handover agent",
+			defaultValue: `{
+	"dataCapture.ticketField.54321": "Blue",
+    "dataCapture.ticketField.98112": "981235",
+    "dataCapture.systemField.requester.name": "Frodo",
+    "dataCapture.systemField.requester.email": "sneaky.hobbit@ringbearers.org",
+    "first_message_id": "603012d7e0a3f9000c879b67"
+}`,
+			condition: {
+				key: "useMetadata",
+				value: true
+			}
 		},
 		{
 			key: "inputKey",
@@ -96,6 +122,15 @@ export const passControlNode = createNodeDescriptor({
 			]
 		},
 		{
+			key: "metadataOption",
+			label: "Metadata",
+			defaultCollapsed: true,
+			fields: [
+				"useMetadata",
+				"metadata"
+			]
+		},
+		{
 			key: "storage",
 			label: "Storage Options",
 			defaultCollapsed: true,
@@ -108,6 +143,7 @@ export const passControlNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
+		{ type: "section", key: "metadataOption" },
 		{ type: "section", key: "sunCon" },
 		{ type: "section", key: "storage" }
 	],
@@ -116,8 +152,21 @@ export const passControlNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IPassControlParams) => {
 		const { api } = cognigy;
-		const { connection, conversationId, switchboardIntegration, storeLocation, contextKey, inputKey } = config;
+		const { connection, conversationId, switchboardIntegration, useMetadata, metadata, storeLocation, contextKey, inputKey } = config;
 		const { keyId, secret, appId } = connection;
+
+		let data: any;
+
+		if (useMetadata) {
+			data = {
+				"switchboardIntegration": switchboardIntegration,
+				metadata
+			};
+		} else {
+			data = {
+				"switchboardIntegration": switchboardIntegration
+			};
+		}
 
 		try {
 			const response = await axios({
@@ -130,9 +179,7 @@ export const passControlNode = createNodeDescriptor({
 				headers: {
 					"Accept": "application/json"
 				},
-				data: {
-					"switchboardIntegration": switchboardIntegration
-				}
+				data
 			});
 
 			if (storeLocation === "context") {

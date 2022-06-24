@@ -10,5 +10,9 @@ export default createExtension({
     ],
     connections: [
         parcellabConnection
-    ]
+    ],
+
+    options: {
+        label: "Parcel Lab"
+    }
 });

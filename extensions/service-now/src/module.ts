@@ -16,6 +16,7 @@ import { orderServiceCatalogItemNode, onSuccessServiceCatalogOrderNow, onErrorSe
 import { snowConnection } from "./connections/snowConnection";
 import { getServiceCatalogItemsNode } from "./nodes/catalog/getServiceCatalogItems";
 import { getArticlesNode } from "./nodes/knowledge/getArticles";
+import { sendEmailNode } from "./nodes/email/sendEmail";
 
 
 export default createExtension({
@@ -45,10 +46,16 @@ export default createExtension({
 		onErrorAddToServiceCatalogCart,
 
 		onSuccessServiceCatalogOrderNow,
-		onErrorServiceCatalogOrderNow
+		onErrorServiceCatalogOrderNow,
+
+		sendEmailNode
 	],
 
 	connections: [
 		snowConnection
-	]
+	],
+
+	options: {
+		label: "Service Now"
+	}
 });

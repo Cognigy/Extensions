@@ -18,12 +18,11 @@
   "author": "Cognigy GmbH",
   "license": "ISC",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.9.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.1",
-    "tslint": "^6.1.2"
+    "tslint": "^5.16.0"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
     "@types/node": "^13.13.15",
     "@types/node-fetch": "^2.5.7",
     "typescript": "^3.9.9"

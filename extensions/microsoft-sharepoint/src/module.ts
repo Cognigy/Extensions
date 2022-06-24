@@ -15,5 +15,9 @@ export default createExtension({
 	connections: [
 		cloudConnection,
 		basicConnection
-	]
+	],
+
+	options: {
+		label: "Microsoft Sharepoint"
+	}
 });

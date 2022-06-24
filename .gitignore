@@ -16,3 +16,4 @@ coverage/
 *.bat
 *.tar.gz
 /**/.DS_Store
+.history

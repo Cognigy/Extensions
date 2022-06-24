@@ -1,6 +1,6 @@
 {
 	"name": "zendesk",
-	"version": "4.1.0",
+	"version": "4.4.2",
 	"description": "Integrates with Zendesk",
 	"main": "build/module.js",
 	"scripts": {
@@ -9,6 +9,12 @@
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
+	"keywords": [
+		"Talk",
+		"Suppot",
+		"Help Center",
+		"Live Chat"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Cognigy/Extensions"
@@ -22,7 +28,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.11.0",
-		"axios": "^0.20.0"
+		"@cognigy/extension-tools": "^0.14.0",
+		"axios": "^0.21.2"
 	}
 }

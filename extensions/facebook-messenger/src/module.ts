@@ -13,5 +13,9 @@ export default createExtension({
 
 	connections: [
 		googleConnection
-	]
+	],
+
+	options: {
+		label: "Facebook Messenger"
+	}
 });

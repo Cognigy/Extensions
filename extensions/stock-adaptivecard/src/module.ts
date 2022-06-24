@@ -5,5 +5,8 @@ import { iexConnection } from "./connections/iexConnection";
 
 export default createExtension({
 	nodes: [stockNode],
-	connections: [iexConnection]
+	connections: [iexConnection],
+	options: {
+		label: "Stock Adaptive Card"
+	}
 });

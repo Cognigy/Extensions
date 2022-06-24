@@ -1,6 +1,6 @@
 {
   "name": "sunshine-conversations",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Perform Sunshine conversations application switchboard actions",
   "main": "build/module.js",
   "scripts": {
@@ -15,8 +15,8 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.19.2",
+    "@cognigy/extension-tools": "^0.13.0",
+    "axios": "^0.21.2",
     "tslint": "^6.1.3"
   },
   "devDependencies": {

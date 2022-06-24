@@ -14,5 +14,9 @@ export default createExtension({
 
 	connections: [
 		azureDevOpsConnection
-	]
+	],
+
+	options: {
+		label: "Microsoft Azure DevOps"
+	}
 });

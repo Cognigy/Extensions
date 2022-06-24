@@ -1,10 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { matchPatternNode } from "./nodes/mathPattern";
+import { matchPatternNode } from "./nodes/matchPattern";
 
 export default createExtension({
 	nodes: [
 		matchPatternNode
 	],
 
-	connections: []
+	options: {
+		label: "Patterns"
+	}
 });

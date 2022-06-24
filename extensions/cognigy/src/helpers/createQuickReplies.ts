@@ -1,5 +1,5 @@
 interface IQuickReply {
-	content_type: string;
+	contentType: string;
 	payload: string;
 	title: string;
 }
@@ -24,14 +24,14 @@ export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[
 	quickReplies.push({
 		title: input.nlu.intentMapperResults.finalIntentDisambiguationSentence,
 		payload: input.nlu.intentMapperResults.finalIntentDisambiguationSentence,
-		content_type: 'text'
+		contentType: 'postback'
 	});
 
 	// Always add the first found intent as second quick reply
 	quickReplies.push({
 		title: intents[0].disambiguationSentence,
 		payload: intents[0].disambiguationSentence,
-		content_type: 'text'
+		contentType: 'postback'
 	});
 
 	switch (intents.length) {
@@ -41,19 +41,19 @@ export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[
 			quickReplies.push({
 				title: intents[1].disambiguationSentence,
 				payload: intents[1].disambiguationSentence,
-				content_type: 'text'
+				contentType: 'postback'
 			});
 			break;
 		default:
 			quickReplies.push({
 				title: intents[1].disambiguationSentence,
 				payload: intents[1].disambiguationSentence,
-				content_type: 'text'
+				contentType: 'postback'
 			});
 			quickReplies.push({
 				title: intents[2].disambiguationSentence,
 				payload: intents[2].disambiguationSentence,
-				content_type: 'text'
+				contentType: 'postback'
 			});
 	}
 

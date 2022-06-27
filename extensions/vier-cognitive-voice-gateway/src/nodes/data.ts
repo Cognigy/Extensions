@@ -20,7 +20,7 @@ export const sendDataNode = createNodeDescriptor({
     {
       type: 'json',
       key: 'data',
-      label: t('sendData.inputDataLabel'),
+      label: t('shared.inputDataLabel'),
       description: t('sendData.inputDataDescription'),
       params: {
         required: true

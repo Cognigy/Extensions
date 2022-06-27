@@ -250,8 +250,8 @@ export const speakNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: t('speak.inputBargeInLabel'),
-      description: t('speak.inputBargeInDescription'),
+      label: t('shared.inputBargeInLabel'),
+      description: t('shared.inputBargeInDescription'),
       defaultValue: false,
     },
     {

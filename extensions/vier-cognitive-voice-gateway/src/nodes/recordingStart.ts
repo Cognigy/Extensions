@@ -33,8 +33,8 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: t('recordingStart.inputRecordingIdLabel'),
-      description: t('recordingStart.inputRecordingIdDescription'),
+      label: t('shared.inputRecordingIdLabel'),
+      description: t('shared.inputRecordingIdDescription'),
     },
     {
       type: 'select',

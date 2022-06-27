@@ -81,7 +81,7 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       key: 'sipHeaders',
       fields: ['customSipHeaders'],
-      label: t('forward.sectionSipHeadersLabel'),
+      label: t('shared.inputCustomSipHeadersLabel'),
       defaultCollapsed: true,
     },
     {

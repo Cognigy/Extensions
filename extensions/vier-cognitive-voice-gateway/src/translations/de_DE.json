@@ -2,7 +2,6 @@
     "sendData": {
         "nodeLabel": "Daten senden",
         "nodeSummary": "Anhängen von benutzerdefinierten Daten an einen Dialog",
-        "inputDataLabel": "Benutzerdefinierte Daten",
         "inputDataDescription": ""
     },
     "forward": {
@@ -12,26 +11,17 @@
         "inputDestinationNumberDescription": "",
         "sectionGeneralLabel": "GTest",
         "sectionCallLabel": "",
-        "sectionSipHeadersLabel": "",
         "sectionAdditionalDataLabel": "",
         "sectionAdditionalSettingsLabel": ""
     },
     "bridge": {
         "nodeLabel": "",
         "nodeSummary": "",
-        "inputUseSubmitInputsLabel": "",
-        "inputUseSubmitInputsDescription": "",
-        "inputSubmitInputsLabel": "",
-        "inputSubmitInputsDescription": "",
-        "inputUseMaxDigitsLabel": "",
-        "inputUseMaxDigitsDescription": "",
-        "inputMaxDigitsLabel": "",
         "inputMaxDigitsDescription": "",
         "inputHeadNumberLabel": "",
         "inputHeadNumberDescription": "",
         "inputExtensionLengthLabel": "",
-        "inputExtensionLengthDescription": "",
-        "sectionStopConditionLabel": ""
+        "inputExtensionLengthDescription": ""
     },
     "multipleChoicePrompt": {
         "nodeLabel": "",
@@ -43,22 +33,14 @@
     "promptForNumber": {
         "nodeLabel": "",
         "nodeSummary": "",
-        "inputUseSubmitInputsLabel": "",
-        "inputUseSubmitInputsDescription": "",
-        "inputSubmitInputsLabel": "",
         "inputSubmitInputsDescription": "",
-        "inputUseMaxDigitsLabel": "",
-        "inputUseMaxDigitsDescription": "",
-        "inputMaxDigitsLabel": "",
-        "inputMaxDigitsDescription": "",
-        "sectionStopConditionLabel": ""
+        "inputMaxDigitsDescription": ""
     },
     "play": {
         "nodeLabel": "",
         "nodeSummary": "",
         "inputUrlLabel": "",
         "inputUrlLabelDescription": "",
-        "inputBargeInLabel": "",
         "inputBargeInDescription": ""
     },
     "recordingStart": {
@@ -66,19 +48,25 @@
         "nodeSummary": " ",
         "inputMaxDurationLabel": " ",
         "inputMaxDurationDescription": "",
-        "inputRecordingIdLabel": " ",
-        "inputRecordingIdDescription": " ",
         "inputSpeakersLabel": " "
     },
     "recordingStop": {
         "nodeLabel": "",
         "nodeSummary": "",
-        "inputRecordingIdLabel": "",
-        "inputRecordingIdDescription": "",
         "inputTerminateLabel": "",
         "inputTerminateDescription": ""
     },
     "shared": {
+        "inputRecordingIdDescription": "",
+        "inputRecordingIdLabel": "",
+        "inputMaxDigitsLabel": "",
+        "sectionStopConditionLabel": "",
+        "inputUseSubmitInputsLabel": "",
+        "inputUseSubmitInputsDescription": "",
+        "inputUseMaxDigitsDescription": "",
+        "inputUseMaxDigitsLabel": "",
+        "inputSubmitInputsLabel": "",
+        "inputSubmitInputsDescription": "",
         "inputTextLabel": "",
         "inputTextDescription": "",
         "inputTimeoutLabel": "",
@@ -113,16 +101,12 @@
         "nodeLabel": "",
         "nodeSummary": "",
         "inputTextLabel": "",
-        "inputBargeInLabel": "",
-        "inputBargeInDescription": "",
         "sectionTextOptionsLabel": "",
         "inputAdditionalTextLabel": ""
     },
     "terminate": {
         "nodeLabel": "",
-        "nodeSummary": "",
-        "inputEndFlowLabel": "",
-        "inputEndFlowDescription": ""
+        "nodeSummary": ""
     },
     "speechToText": {
         "nodeLabel": "",

@@ -21,8 +21,8 @@ export const recordingStopNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: t('recordingStop.inputRecordingIdLabel'),
-      description: t('recordingStop.inputRecordingIdDescription'),
+      label: t('shared.inputRecordingIdLabel'),
+      description: t('shared.inputRecordingIdDescription'),
     },
     {
       type: 'checkbox',

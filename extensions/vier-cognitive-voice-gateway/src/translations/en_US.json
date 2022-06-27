@@ -2,7 +2,6 @@
     "sendData": {
         "nodeLabel": "Send Data",
         "nodeSummary": "Attach custom data to a dialog",
-        "inputDataLabel": "Custom Data",
         "inputDataDescription": "This is an object that can have arbitrary properties. Each property is expected to have a string value"
     },
     "forward": {
@@ -12,26 +11,17 @@
         "inputDestinationNumberDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
         "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
-        "sectionSipHeadersLabel": "Custom SIP Headers",
         "sectionAdditionalDataLabel": "Data",
         "sectionAdditionalSettingsLabel": "Additional Settings"
     },
     "bridge": {
         "nodeLabel": "Bridge Call",
         "nodeSummary": "Bridge the call to a different destination for agent assistance",
-        "inputUseSubmitInputsLabel": "Use Submit Inputs",
-        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
-        "inputSubmitInputsLabel": "Submit Inputs",
-        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
-        "inputUseMaxDigitsLabel": "Use Max Digits",
-        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
-        "inputMaxDigitsLabel": "Maximum Allowed Digits",
         "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
         "inputHeadNumberLabel": "Head Number",
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
-        "inputExtensionLengthDescription": "The range of extensions to choose a number from",
-        "sectionStopConditionLabel": "Stop Condition"
+        "inputExtensionLengthDescription": "The range of extensions to choose a number from"
     },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
@@ -43,22 +33,13 @@
     "promptForNumber": {
         "nodeLabel": "Get Number from Caller",
         "nodeSummary": "Say something to the call with a prompt to enter a number",
-        "inputUseSubmitInputsLabel": "Use Submit Inputs",
-        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
-        "inputSubmitInputsLabel": "Submit Inputs",
-        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
-        "inputUseMaxDigitsLabel": "Use Max Digits",
-        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
-        "inputMaxDigitsLabel": "Maximum Allowed Digits",
-        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
-        "sectionStopConditionLabel": "Stop Condition"
+        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached"
     },
     "play": {
         "nodeLabel": "Play Audio File",
         "nodeSummary": "Play an audio file to the call",
         "inputUrlLabel": "Audio URL",
         "inputUrlLabelDescription": "Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.",
-        "inputBargeInLabel": "Barge In",
         "inputBargeInDescription": "Allows the audio file to be interrupted by the speaker"
     },
     "recordingStart": {
@@ -66,19 +47,25 @@
         "nodeSummary": "Start or resume recording of a call",
         "inputMaxDurationLabel": "Maximum Recording Duration (s)",
         "inputMaxDurationDescription": "After maximum recording duration (in seconds), the recording will be stopped automatically.",
-        "inputRecordingIdLabel": "Recording ID",
-        "inputRecordingIdDescription": "An arbitrary string to identify the recording in case multiple recordings are created in the same dialog",
         "inputSpeakersLabel": "Speakers to record"
     },
     "recordingStop": {
         "nodeLabel": "Stop Recording",
         "nodeSummary": "Pause or terminate recording of a call",
-        "inputRecordingIdLabel": "Recording ID",
-        "inputRecordingIdDescription": "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
         "inputTerminateLabel": "Terminate Recording",
         "inputTerminateDescription": "Whether the recording should be terminated, rather than just paused"
     },
     "shared": {
+        "inputRecordingIdDescription": "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
+        "inputRecordingIdLabel": "Recording ID",
+        "inputMaxDigitsLabel": "Maximum Allowed Digits",
+        "sectionStopConditionLabel": "Stop Condition",
+        "inputUseSubmitInputsLabel": "Use Submit Inputs",
+        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
+        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
+        "inputUseMaxDigitsLabel": "Use Max Digits",
+        "inputSubmitInputsLabel": "Submit Inputs",
+        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
         "inputTextLabel": "Message",
         "inputTextDescription": "The message to introduce the prompt to the caller",
         "inputTimeoutLabel": "Timeout",
@@ -112,16 +99,12 @@
         "nodeLabel": "Speak out (SSML)",
         "nodeSummary": "Speak something out to the caller with SSML Support",
         "inputTextLabel": "Text",
-        "inputBargeInLabel": "Barge In",
-        "inputBargeInDescription": "Allows the message to be interrupted by the speaker",
         "sectionTextOptionsLabel": "Additional Text Section",
         "inputAdditionalTextLabel": "Additional Text"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",
-        "nodeSummary": "Drop the call",
-        "inputEndFlowLabel": "Quit Flow",
-        "inputEndFlowDescription": "Stop the flow after executing this node"
+        "nodeSummary": "Drop the call"
     },
     "speechToText": {
         "nodeLabel": "Speech-to-Text Services",

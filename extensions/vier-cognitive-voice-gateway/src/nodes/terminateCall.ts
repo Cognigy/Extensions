@@ -21,14 +21,14 @@ export const terminateCallNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'endFlow',
-      label: t('terminate.inputEndFlowLabel'),
+      label: t('shared.inputEndFlowLabel'),
       defaultValue: false,
-      description: t('terminate.inputEndFlowDescription'),
+      description: t('shared.inputEndFlowDescription'),
     },
     {
       type: 'json',
       key: 'data',
-      label: t('sendData.inputDataLabel'),
+      label: t('shared.inputDataLabel'),
       description: t('sendData.inputDataDescription'),
       params: {
         required: false

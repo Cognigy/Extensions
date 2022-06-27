@@ -30,7 +30,7 @@ export const playNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: t('play.inputBargeInLabel'),
+      label: t('shared.inputBargeInLabel'),
       description: t('play.inputBargeInDescription'),
       defaultValue: false,
     }

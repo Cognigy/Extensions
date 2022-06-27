@@ -30,14 +30,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useSubmitInputs',
-      label: t('promptForNumber.inputUseSubmitInputsLabel'),
-      description: t('promptForNumber.inputUseSubmitInputsDescription'),
+      label: t('shared.inputUseSubmitInputsLabel'),
+      description: t('shared.inputUseSubmitInputsDescription'),
     },
     {
       type: 'textArray',
       key: 'submitInputs',
-      label: t('promptForNumber.inputSubmitInputsLabel'),
-      description: t('promptForNumber.inputSubmitInputsDescription'),
+      label: t('shared.inputSubmitInputsLabel'),
+      description: t('shared.inputSubmitInputsDescription'),
       condition: {
         key: 'useSubmitInputs',
         value: true
@@ -46,13 +46,13 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useMaxDigits',
-      label: t('promptForNumber.inputUseMaxDigitsLabel'),
-      description: t('promptForNumber.inputUseMaxDigitsDescription'),
+      label: t('shared.inputUseMaxDigitsLabel'),
+      description: t('shared.inputUseMaxDigitsDescription'),
     },
     {
       type: 'number',
       key: 'maxDigits',
-      label: t('promptForNumber.inputMaxDigitsLabel'),
+      label: t('shared.inputMaxDigitsLabel'),
       description: t('promptForNumber.inputMaxDigitsDescription'),
       condition: {
         key: 'useMaxDigits',
@@ -73,7 +73,7 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       key: 'stopCondition',
       fields: ['useSubmitInputs', 'submitInputs', 'useMaxDigits', 'maxDigits'],
-      label: t('promptForNumber.sectionStopConditionLabel'),
+      label: t('shared.sectionStopConditionLabel'),
       defaultCollapsed: false,
     },
     {

@@ -107,7 +107,7 @@
         "nodeSummary": "Drop the call"
     },
     "speechToText": {
-        "nodeLabel": "Speech-to-Text Services",
+        "nodeLabel": "Set Speech-to-Text Service",
         "nodeSummary": "Speech-to-Text services need to be used to transcribe the expected input in the the best possible way",
         "inputServiceLabel": "Speech-to-Text Service",
         "inputServiceFallbackLabel": "Speech-to-Text Fallback",
@@ -117,7 +117,7 @@
         "inputProfileTokenLabel": "Profile Token",
         "inputProfileTokenFallbackLabel": "Profile Token Fallback",
         "inputProfileTokenFallbackDescription": "Profile Token Fallback",
-        "inputProfileTokenDescription": "Profile Token",
+        "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
         "sectionFallback": "Fallback Option"
     },
     "outboundService": {

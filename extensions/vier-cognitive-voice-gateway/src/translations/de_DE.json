@@ -44,7 +44,7 @@
         "inputBargeInDescription": ""
     },
     "recordingStart": {
-        "nodeLabel": " ",
+        "nodeLabel": "Start recording",
         "nodeSummary": " ",
         "inputMaxDurationLabel": " ",
         "inputMaxDurationDescription": "",

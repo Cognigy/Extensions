@@ -99,24 +99,21 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
     const transcriber = [];
 
     if (config.profileToken) {
-      transcriber.push(`${config.profileToken}`);
-    } else {
+      transcriber.push(config.profileToken);
+    } else if (config.transcriber) {
       transcriber.push(config.transcriber);
     }
-    // transcriber.splice(transcriber.length-1, 1);
 
-    if (config.transcriberFallback && config.profileTokenFallback) {
-      transcriber.push(`${config.profileTokenFallback}`);
-    } else if (config.profileTokenFallback) {
-      transcriber.push(`${config.profileTokenFallback}`);
-    } else (config.transcriberFallback); {
-      transcriber.push(`${config.transcriberFallback}`); 
+    if (config.profileTokenFallback) {
+      transcriber.push(config.profileTokenFallback);
+    } else if (config.transcriberFallback) {
+      transcriber.push(config.transcriberFallback);
     }
 
     api.say('' , {
       status: 'transcription-switch',
       language: config.language,
-      transcribers: transcriber,
+      transcribers: transcriber.length == null ? null : transcriber,
     });
   },
 });

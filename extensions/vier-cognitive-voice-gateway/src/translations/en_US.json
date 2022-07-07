@@ -2,7 +2,7 @@
     "sendData": {
         "nodeLabel": "Send Data",
         "nodeSummary": "Attach custom data to a dialog",
-        "inputDataDescription": "This is an object that can have arbitrary properties. Each property is expected to have a string value"
+        "inputDataDescription": "Store custom data. This is an object that can have arbitrary properties. Each property is expected to have a string value."
     },
     "forward": {
         "nodeLabel": "Forward Call",
@@ -118,7 +118,8 @@
         "inputProfileTokenFallbackLabel": "Profile Token Fallback",
         "inputProfileTokenFallbackDescription": "Profile Token Fallback",
         "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
-        "sectionFallback": "Fallback Option"
+        "sectionFallback": "Fallback Option",
+        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token"
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",

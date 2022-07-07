@@ -9,7 +9,7 @@
         "nodeSummary": "",
         "inputDestinationNumberLabel": "",
         "inputDestinationNumberDescription": "",
-        "sectionGeneralLabel": "GTest",
+        "sectionGeneralLabel": "",
         "sectionCallLabel": "",
         "sectionAdditionalDataLabel": "",
         "sectionAdditionalSettingsLabel": ""
@@ -120,7 +120,8 @@
         "inputProfileTokenFallbackLabel": "",
         "inputProfileTokenFallbackDescription": "",
         "inputProfileTokenDescription": "",
-        "sectionFallback": ""
+        "sectionFallback": "",
+        "inputTranscriberDescription": ""
     },
     "outboundService": {
         "nodeLabel": "",

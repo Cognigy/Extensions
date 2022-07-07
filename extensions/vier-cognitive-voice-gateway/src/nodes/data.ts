@@ -10,7 +10,7 @@ export interface ISendDataParams extends INodeFunctionBaseParams {
 
 export const sendDataNode = createNodeDescriptor({
   type: 'sendData',
-  defaultLabel: 'sendData.nodeLabel',
+  defaultLabel: t('sendData.nodeLabel'),
   summary: t('sendData.nodeSummary'),
   appearance: {
     color: '#9501c9'

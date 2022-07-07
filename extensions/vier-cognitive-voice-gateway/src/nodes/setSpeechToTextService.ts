@@ -12,17 +12,13 @@ export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
   };
 }
 
-const generateTranscriberSelect = (key: string, required: boolean, label: INodeFieldTranslations): INodeField => ({
-  type: 'select',
+const generateTranscriberSelect = (key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField => ({
+  type: 'text',
   key,
   label,
+  description,
   params: {
-    required,
-    options: [
-      { value: 'GOOGLE', label: 'Google' },
-      { value: 'MICROSOFT', label: 'Microsoft' },
-      { value: 'IBM', label: 'IBM' },
-    ]
+    required: false,
   }
 });
 
@@ -34,6 +30,10 @@ const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, d
   params: {
     required: false,
     placeholder: '',
+  },
+  condition: {
+    key: 'transcriber',
+    value: ''
   }
 });
 
@@ -45,9 +45,9 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
     color: 'blue'
   },
   fields: [
-    generateTranscriberSelect('transcriber', true, t('speechToText.inputServiceLabel')),
+    generateTranscriberSelect('transcriber', t('speechToText.inputServiceLabel'), t('speechToText.inputTranscriberDescription')),
     generateProfileTokenInput('profileToken', t('speechToText.inputProfileTokenLabel'), t('speechToText.inputProfileTokenDescription')),
-    generateTranscriberSelect('transcriberFallback', false, t('speechToText.inputServiceFallbackLabel')),
+    generateTranscriberSelect('transcriberFallback', t('speechToText.inputServiceFallbackLabel'), t('speechToText.inputTranscriberDescription')),
     generateProfileTokenInput('profileTokenFallback', t('speechToText.inputProfileTokenFallbackLabel'), t('speechToText.inputProfileTokenFallbackDescription')),
     {
       type: 'select',
@@ -62,7 +62,6 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       }
     }
   ],
-
   sections: [
     {
       key: 'selectMainSTT',
@@ -77,6 +76,10 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       defaultCollapsed: true,
     },
   ],
+  preview: {
+    key: 'transcriber',
+    type: 'text'
+  },
   form: [
     {
       key: 'language',
@@ -96,15 +99,18 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
     const transcriber = [];
 
     if (config.profileToken) {
-      transcriber.push(`${config.transcriber}-${config.profileToken}`);
+      transcriber.push(`${config.profileToken}`);
     } else {
       transcriber.push(config.transcriber);
     }
+    // transcriber.splice(transcriber.length-1, 1);
 
     if (config.transcriberFallback && config.profileTokenFallback) {
-      transcriber.push(`${config.transcriberFallback}-${config.profileTokenFallback}`);
-    } else if (config.transcriberFallback) {
-      transcriber.push(`${config.transcriberFallback}`);
+      transcriber.push(`${config.profileTokenFallback}`);
+    } else if (config.profileTokenFallback) {
+      transcriber.push(`${config.profileTokenFallback}`);
+    } else (config.transcriberFallback); {
+      transcriber.push(`${config.transcriberFallback}`); 
     }
 
     api.say('' , {

@@ -3,8 +3,9 @@ import { t } from '../helpers/translations';
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
   config: {
-    ssml: string,
+    text: string,
     bargeIn?: boolean,
+    timeout?: number,
     // additionalText: Array<string>,
     linear?: boolean,
     loop?: boolean,
@@ -21,7 +22,7 @@ export const speakNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     {
-      key: 'ssml',
+      key: 'text',
       label: t('speak.inputTextLabel'),
       type: 'cognigyText',
       params: {
@@ -255,6 +256,16 @@ export const speakNode = createNodeDescriptor({
       defaultValue: false,
     },
     {
+      type: 'number',
+      key: 'timeout',
+      label: t('speak.inactivityTimeoutLabel'),
+      description: t('speak.inactivityTimeoutDescription'),
+      params: {
+        min: 2,
+        max: 20
+      }
+    },
+    {
       key: 'additionalText',
       label: t('speak.inputAdditionalTextLabel'),
       type: 'textArray',
@@ -274,13 +285,13 @@ export const speakNode = createNodeDescriptor({
     }
   ],
   preview: {
-    key: 'ssml',
+    key: 'text',
     type: 'text'
   },
   sections: [
     {
       key: 'general',
-      fields: ['ssml'],
+      fields: ['text'],
       label: t('forward.sectionGeneralLabel'),
       defaultCollapsed: false,
     },
@@ -298,7 +309,7 @@ export const speakNode = createNodeDescriptor({
     // },
     {
       key: 'additional',
-      fields: ['bargeIn'],
+      fields: ['bargeIn', 'timeout'],
       label: t('forward.sectionAdditionalDataLabel'),
       defaultCollapsed: true
     }
@@ -308,10 +319,10 @@ export const speakNode = createNodeDescriptor({
       key: 'general',
       type: 'section'
     },
-    {
-      key: 'textOptions',
-      type: 'section'
-    },
+    // {
+    //   key: 'textOptions',
+    //   type: 'section'
+    // },
     // {
     //   key: 'sendOptions',
     //   type: 'section'
@@ -344,15 +355,17 @@ export const speakNode = createNodeDescriptor({
     //#endregion
 
 
-    if (!config.ssml.startsWith('<speak>') || !config.ssml.endsWith('</speak>')) {
-      cognigy.api.say(`<speak>${config.ssml}</speak>`, {
+    if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
+      cognigy.api.say(`<speak>${config.text}</speak>`, {
         interpretAs: 'SSML',
         bargeIn: config.bargeIn,
+        timeout: config.timeout * 1000,
       });
     } else {
-      cognigy.api.say(config.ssml, {
+      cognigy.api.say(config.text, {
         interpretAs: 'SSML',
         bargeIn: config.bargeIn,
+        timeout: config.timeout * 1000,
       });
     }
   },

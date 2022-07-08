@@ -100,7 +100,9 @@
         "nodeSummary": "Speak something out to the caller with SSML Support",
         "inputTextLabel": "Text",
         "sectionTextOptionsLabel": "Additional Text Section",
-        "inputAdditionalTextLabel": "Additional Text"
+        "inputAdditionalTextLabel": "Additional Text",
+        "inactivityTimeoutLabel": "Inactivity Timeout (s)",
+        "inactivityTimeoutDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",

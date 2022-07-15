@@ -4,7 +4,7 @@ import {
 } from '@cognigy/extension-tools/build';
 import { bakeData, bakeSipHeaders } from '../helpers/bake';
 import { stripEmpty } from '../helpers/stripEmpty';
-import { t } from '../helpers/translations';
+import t from '../translations';
 import { commonRedirectFields } from './shared';
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
@@ -23,8 +23,8 @@ export interface IForwardCallParams extends INodeFunctionBaseParams {
 
 export const forwardCallNode = createNodeDescriptor({
   type: 'forward',
-  defaultLabel: t('forward.nodeLabel'),
-  summary: t('forward.nodeSummary'),
+  defaultLabel: t.forward.nodeLabel,
+  summary: t.forward.nodeSummary,
   appearance: {
     color: 'blue',
   },
@@ -34,8 +34,8 @@ export const forwardCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'destinationNumber',
-      label: t('forward.inputDestinationNumberLabel'),
-      description: t('forward.inputDestinationNumberDescription'),
+      label: t.forward.inputDestinationNumberLabel,
+      description: t.forward.inputDestinationNumberDescription,
       params: {
         required: true,
       },
@@ -52,31 +52,31 @@ export const forwardCallNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['destinationNumber'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     {
       key: 'call',
       fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: t('forward.sectionCallLabel'),
+      label: t.forward.sectionCallLabel,
       defaultCollapsed: true,
     },
     {
       key: 'sipHeaders',
       fields: ['customSipHeaders'],
-      label: t('shared.inputCustomSipHeadersLabel'),
+      label: t.shared.inputCustomSipHeadersLabel,
       defaultCollapsed: true,
     },
     {
       key: 'additionalData',
       fields: ['data'],
-      label: t('forward.sectionAdditionalDataLabel'),
+      label: t.forward.sectionAdditionalDataLabel,
       defaultCollapsed: true,
     },
     {
       key: 'additionalSettings',
       fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
   ],

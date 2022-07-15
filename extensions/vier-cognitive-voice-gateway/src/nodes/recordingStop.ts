@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/stripEmpty';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 export interface IRecordingStopParams extends INodeFunctionBaseParams {
   config: {
@@ -11,8 +11,8 @@ export interface IRecordingStopParams extends INodeFunctionBaseParams {
 
 export const recordingStopNode = createNodeDescriptor({
   type: 'recordingStop',
-  defaultLabel:  t('recordingStop.nodeLabel'),
-  summary: t('recordingStop.nodeSummary'),
+  defaultLabel:  t.recordingStop.nodeLabel,
+  summary: t.recordingStop.nodeSummary,
   appearance: {
     color: '#b8f66a'
   },
@@ -21,21 +21,21 @@ export const recordingStopNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: t('shared.inputRecordingIdLabel'),
-      description: t('shared.inputRecordingIdDescription'),
+      label: t.shared.inputRecordingIdLabel,
+      description: t.shared.inputRecordingIdDescription,
     },
     {
       type: 'checkbox',
       key: 'terminate',
-      description: t('recordingStop.inputTerminateDescription'),
-      label: t('recordingStop.inputTerminateLabel'),
+      description: t.recordingStop.inputTerminateDescription,
+      label: t.recordingStop.inputTerminateLabel,
     },
   ],
   sections: [
     {
       key: 'additional',
       fields: ['recordingId', 'terminate'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     }
   ],

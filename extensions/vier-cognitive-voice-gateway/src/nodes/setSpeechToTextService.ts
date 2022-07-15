@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { INodeField, INodeFieldTranslations } from '@cognigy/extension-tools/build/interfaces/descriptor';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
   config: {
@@ -39,20 +39,20 @@ const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, d
 
 export const setSpeechtoTextServiceNode = createNodeDescriptor({
   type: 'speechToText',
-  defaultLabel: t('speechToText.nodeLabel'),
-  summary:  t('speechToText.nodeSummary'),
+  defaultLabel: t.speechToText.nodeLabel,
+  summary:  t.speechToText.nodeSummary,
   appearance: {
     color: 'blue'
   },
   fields: [
-    generateTranscriberSelect('transcriber', t('speechToText.inputServiceLabel'), t('speechToText.inputTranscriberDescription')),
-    generateProfileTokenInput('profileToken', t('speechToText.inputProfileTokenLabel'), t('speechToText.inputProfileTokenDescription')),
-    generateTranscriberSelect('transcriberFallback', t('speechToText.inputServiceFallbackLabel'), t('speechToText.inputTranscriberDescription')),
-    generateProfileTokenInput('profileTokenFallback', t('speechToText.inputProfileTokenFallbackLabel'), t('speechToText.inputProfileTokenFallbackDescription')),
+    generateTranscriberSelect('transcriber', t.speechToText.inputServiceLabel, t.speechToText.inputTranscriberDescription),
+    generateProfileTokenInput('profileToken', t.speechToText.inputProfileTokenLabel, t.speechToText.inputProfileTokenDescription),
+    generateTranscriberSelect('transcriberFallback', t.speechToText.inputServiceFallbackLabel, t.speechToText.inputTranscriberDescription),
+    generateProfileTokenInput('profileTokenFallback', t.speechToText.inputProfileTokenFallbackLabel, t.speechToText.inputProfileTokenFallbackDescription),
     {
       type: 'select',
       key: 'language',
-      label: t('speechToText.inputLanguageLabel'),
+      label: t.speechToText.inputLanguageLabel,
       params: {
         required: true,
         options: [
@@ -66,13 +66,13 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
     {
       key: 'selectMainSTT',
       fields: ['transcriber', 'profileToken'],
-      label:  t('speechToText.sectionSelectSTTLabel'),
+      label:  t.speechToText.sectionSelectSTTLabel,
       defaultCollapsed: false,
     },
     {
       key: 'selectFallbackSTT',
       fields: ['transcriberFallback', 'profileTokenFallback'],
-      label:  t('speechToText.sectionFallback'),
+      label:  t.speechToText.sectionFallback,
       defaultCollapsed: true,
     },
   ],

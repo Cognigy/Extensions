@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
-import { t } from '../helpers/translations';
+import t from '../translations';
 import { promptFields } from './shared';
 
 export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
@@ -16,8 +16,8 @@ export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
 
 export const promptForMultipleChoice = createNodeDescriptor({
   type: 'multipleChoicePrompt',
-  defaultLabel: t('multipleChoicePrompt.nodeLabel'),
-  summary: t('multipleChoicePrompt.nodeSummary'),
+  defaultLabel: t.multipleChoicePrompt.nodeLabel,
+  summary: t.multipleChoicePrompt.nodeSummary,
   appearance: {
     color: '#9a4a21'
   },
@@ -26,9 +26,9 @@ export const promptForMultipleChoice = createNodeDescriptor({
     ...promptFields,
     {
       type: 'json',
-      label: t('multipleChoicePrompt.inputChoicesLabel'),
+      label: t.multipleChoicePrompt.inputChoicesLabel,
       key: 'choices',
-      description: t('multipleChoicePrompt.inputChoicesDescription'),
+      description: t.multipleChoicePrompt.inputChoicesDescription,
       defaultValue: '{\n\
 \t"yes": [\n\
 \t\t"yes",\n\
@@ -52,19 +52,19 @@ export const promptForMultipleChoice = createNodeDescriptor({
     {
       key: 'general',
       fields: ['text', 'timeout'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false
     },
     {
       key: 'choicesSection',
       fields: ['choices'],
-      label: t('multipleChoicePrompt.sectionChoicesSectionLabel'),
+      label: t.multipleChoicePrompt.sectionChoicesSectionLabel,
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true
     }
   ],

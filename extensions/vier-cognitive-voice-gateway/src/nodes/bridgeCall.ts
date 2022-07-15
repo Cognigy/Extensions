@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { bakeData, bakeSipHeaders } from '../helpers/bake';
 import { stripEmpty } from '../helpers/stripEmpty';
-import { t } from '../helpers/translations';
+import t from '../translations';
 import { commonRedirectFields } from './shared';
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
@@ -21,8 +21,8 @@ export interface IBridgeCallParams extends INodeFunctionBaseParams {
 
 export const bridgeCallNode = createNodeDescriptor({
   type: 'bridge',
-  defaultLabel: t('bridge.nodeLabel'),
-  summary: t('bridge.nodeSummary'),
+  defaultLabel: t.bridge.nodeLabel,
+  summary: t.bridge.nodeSummary,
   appearance: {
     color: 'green'
   },
@@ -41,8 +41,8 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'headNumber',
-      label: t('bridge.inputHeadNumberLabel'),
-      description: t('bridge.inputHeadNumberDescription'),
+      label: t.bridge.inputHeadNumberLabel,
+      description: t.bridge.inputHeadNumberDescription,
       params: {
         required: true,
         placeholder: '+E.164 format, e.g. "+49721480848680"'
@@ -51,8 +51,8 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'extensionLength',
-      label: t('bridge.inputExtensionLengthLabel'),
-      description: t('bridge.inputExtensionLengthDescription'),
+      label: t.bridge.inputExtensionLengthLabel,
+      description: t.bridge.inputExtensionLengthDescription,
       params: {
         required: true,
         min: 0,
@@ -69,31 +69,31 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['headNumber', 'extensionLength'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     {
       key: 'call',
       fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: t('forward.sectionCallLabel'),
+      label: t.forward.sectionCallLabel,
       defaultCollapsed: true,
     },
     {
       key: 'sipHeaders',
       fields: ['customSipHeaders'],
-      label: t('shared.inputCustomSipHeadersLabel'),
+      label: t.shared.inputCustomSipHeadersLabel,
       defaultCollapsed: true,
     },
     {
       key: 'additionalData',
       fields: ['data'],
-      label: t('forward.sectionAdditionalDataLabel'),
+      label: t.forward.sectionAdditionalDataLabel,
       defaultCollapsed: true,
     },
     {
       key: 'additionalSettings',
       fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     }
   ],

@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
   config: {
@@ -14,8 +14,8 @@ export interface ISpeakNodeParams extends INodeFunctionBaseParams {
 
 export const speakNode = createNodeDescriptor({
   type: 'speak',
-  defaultLabel: t('speak.nodeLabel'),
-  summary: t('speak.nodeSummary'),
+  defaultLabel: t.speak.nodeLabel,
+  summary: t.speak.nodeSummary,
   appearance: {
     color: '#5c48ef'
   },
@@ -23,7 +23,7 @@ export const speakNode = createNodeDescriptor({
   fields: [
     {
       key: 'text',
-      label: t('speak.inputTextLabel'),
+      label: t.speak.inputTextLabel,
       type: 'cognigyText',
       params: {
         required: true,
@@ -251,15 +251,15 @@ export const speakNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: t('shared.inputBargeInLabel'),
-      description: t('shared.inputBargeInDescription'),
+      label: t.shared.inputBargeInLabel,
+      description: t.shared.inputBargeInDescription,
       defaultValue: false,
     },
     {
       type: 'number',
       key: 'timeout',
-      label: t('speak.inactivityTimeoutLabel'),
-      description: t('speak.inactivityTimeoutDescription'),
+      label: t.speak.inactivityTimeoutLabel,
+      description: t.speak.inactivityTimeoutDescription,
       params: {
         min: 2,
         max: 20
@@ -267,7 +267,7 @@ export const speakNode = createNodeDescriptor({
     },
     {
       key: 'additionalText',
-      label: t('speak.inputAdditionalTextLabel'),
+      label: t.speak.inputAdditionalTextLabel,
       type: 'textArray',
       defaultValue: false,
     },
@@ -292,13 +292,13 @@ export const speakNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['text'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     // {
     //   fields: ['additionalText'],
     //   key: 'textOptions',
-    //   label: t('speak.sectionTextOptionsLabel'),
+    //   label: t.speak.sectionTextOptionsLabel,
     //   defaultCollapsed: true
     // },
     // {
@@ -310,7 +310,7 @@ export const speakNode = createNodeDescriptor({
     {
       key: 'additional',
       fields: ['bargeIn', 'timeout'],
-      label: t('forward.sectionAdditionalDataLabel'),
+      label: t.forward.sectionAdditionalDataLabel,
       defaultCollapsed: true
     }
   ],

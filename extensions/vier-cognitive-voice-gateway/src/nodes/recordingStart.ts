@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/stripEmpty';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 type Speaker = 'CUSTOMER' | 'AGENT';
 
@@ -14,8 +14,8 @@ export interface IRecordingStartParams extends INodeFunctionBaseParams {
 
 export const recordingStartNode = createNodeDescriptor({
   type: 'recordingStart',
-  defaultLabel: t('recordingStart.nodeLabel'),
-  summary: t('recordingStart.nodeSummary'),
+  defaultLabel: t.recordingStart.nodeLabel,
+  summary: t.recordingStart.nodeSummary,
   appearance: {
     color: '#e95ba7',
   },
@@ -24,8 +24,8 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'maxDuration',
-      label: t('recordingStart.inputMaxDurationLabel'),
-      description: t('recordingStart.inputMaxDurationDescription'),
+      label: t.recordingStart.inputMaxDurationLabel,
+      description: t.recordingStart.inputMaxDurationDescription,
       params: {
         placeholder: 'Value in seconds (e.g. 60)',
       }
@@ -33,13 +33,13 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'recordingId',
-      label: t('shared.inputRecordingIdLabel'),
-      description: t('shared.inputRecordingIdDescription'),
+      label: t.shared.inputRecordingIdLabel,
+      description: t.shared.inputRecordingIdDescription,
     },
     {
       type: 'select',
       key: 'speakers',
-      label: t('recordingStart.inputSpeakersLabel'),
+      label: t.recordingStart.inputSpeakersLabel,
       params: {
         options: [
           { value: null, label: 'Both Lines' },
@@ -52,7 +52,7 @@ export const recordingStartNode = createNodeDescriptor({
   sections: [
     {
       key: 'additional',
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       fields: ['maxDuration', 'recordingId', 'speakers'],
       defaultCollapsed: true
     }

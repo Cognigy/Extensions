@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { t } from '../helpers/translations';
+import t from '../translations';
 import { promptFields } from './shared';
 
 export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
@@ -19,8 +19,8 @@ export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
 
 export const promptForNumberNode = createNodeDescriptor({
   type: 'numberPrompt',
-  defaultLabel: t('promptForNumber.nodeLabel'), 
-  summary: t('promptForNumber.nodeSummary'),
+  defaultLabel: t.promptForNumber.nodeLabel, 
+  summary: t.promptForNumber.nodeSummary,
   appearance: {
     color: '#38eb8c'
   },
@@ -30,14 +30,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useSubmitInputs',
-      label: t('shared.inputUseSubmitInputsLabel'),
-      description: t('shared.inputUseSubmitInputsDescription'),
+      label: t.shared.inputUseSubmitInputsLabel,
+      description: t.shared.inputUseSubmitInputsDescription,
     },
     {
       type: 'textArray',
       key: 'submitInputs',
-      label: t('shared.inputSubmitInputsLabel'),
-      description: t('shared.inputSubmitInputsDescription'),
+      label: t.shared.inputSubmitInputsLabel,
+      description: t.shared.inputSubmitInputsDescription,
       condition: {
         key: 'useSubmitInputs',
         value: true
@@ -46,14 +46,14 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useMaxDigits',
-      label: t('shared.inputUseMaxDigitsLabel'),
-      description: t('shared.inputUseMaxDigitsDescription'),
+      label: t.shared.inputUseMaxDigitsLabel,
+      description: t.shared.inputUseMaxDigitsDescription,
     },
     {
       type: 'number',
       key: 'maxDigits',
-      label: t('shared.inputMaxDigitsLabel'),
-      description: t('promptForNumber.inputMaxDigitsDescription'),
+      label: t.shared.inputMaxDigitsLabel,
+      description: t.promptForNumber.inputMaxDigitsDescription,
       condition: {
         key: 'useMaxDigits',
         value: true
@@ -67,19 +67,19 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['text', 'timeout'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     {
       key: 'stopCondition',
       fields: ['useSubmitInputs', 'submitInputs', 'useMaxDigits', 'maxDigits'],
-      label: t('shared.sectionStopConditionLabel'),
+      label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     }
   ],
@@ -103,10 +103,10 @@ export const promptForNumberNode = createNodeDescriptor({
 
     if (config.useSubmitInputs  && Array.isArray(config.submitInputs)) {
       submitInputs = config.submitInputs.map((input) => {
-        if (input.match(/^DTMF_[1234567890ABCD\*#]{1}$/)) {
+        if (input.match(/^DTMF_[1234567890ABCD*#]$/)) {
           return input;
-        } else if (input.match(/^[1234567890ABCD\*#]{1}$/)) {
-          return `DTMF_${input}`;
+        } else if (input.match(/^[1234567890ABCD*#]$/i)) {
+          return `DTMF_${input.toUpperCase()}`;
         }
       });
     }

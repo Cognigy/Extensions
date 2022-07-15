@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 export interface IPlayParams extends INodeFunctionBaseParams {
   config: {
@@ -10,8 +10,8 @@ export interface IPlayParams extends INodeFunctionBaseParams {
 
 export const playNode = createNodeDescriptor({
   type: 'play',
-  defaultLabel: t('play.nodeLabel'),
-  summary:  t('play.nodeSummary'),
+  defaultLabel: t.play.nodeLabel,
+  summary:  t.play.nodeSummary,
   appearance: {
     color: '#678465'
   },
@@ -20,8 +20,8 @@ export const playNode = createNodeDescriptor({
     {
       type: 'text',
       key: 'url',
-      label: t('play.inputUrlLabel'),
-      description: t('play.inputUrlLabelDescription'),
+      label: t.play.inputUrlLabel,
+      description: t.play.inputUrlLabelDescription,
       params: {
         required: true,
         placeholder: '',
@@ -30,8 +30,8 @@ export const playNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'bargeIn',
-      label: t('shared.inputBargeInLabel'),
-      description: t('play.inputBargeInDescription'),
+      label: t.shared.inputBargeInLabel,
+      description: t.play.inputBargeInDescription,
       defaultValue: false,
     }
   ],
@@ -39,13 +39,13 @@ export const playNode = createNodeDescriptor({
     {
       key: 'general',
       fields: ['url'],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['bargeIn'],
-      label: t('forward.sectionAdditionalSettingsLabel'),
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     }
   ],

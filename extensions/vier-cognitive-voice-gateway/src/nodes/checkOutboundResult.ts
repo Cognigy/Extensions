@@ -2,12 +2,12 @@ import {
   createNodeDescriptor,
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 export const checkOutboundResultNode = createNodeDescriptor({
   type: 'outboundService',
-  defaultLabel: t('outboundService.nodeLabel'),
-  summary: t('outboundService.nodeSummary'),
+  defaultLabel: t.outboundService.nodeLabel,
+  summary: t.outboundService.nodeSummary,
   appearance: {
     color: 'blue',
   },

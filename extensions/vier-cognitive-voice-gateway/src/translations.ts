@@ -1,4 +1,4 @@
-/* tslint:disable */
+/* tslint:disable:quotemark */
 // This code is generated!
 export default {
     bridge: {

@@ -9,6 +9,7 @@ import { sendDataNode } from './nodes/data';
 import { promptForNumberNode } from './nodes/promptForNumber';
 import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
+import { inactivityTimerNode } from './nodes/inactivityTimer';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
 import { checkOutboundResultNode, onOutboundDefault, onOutboundFailure, onOutboundSuccess, onOutboundTermination } from './nodes/checkOutboundResult';
 
@@ -33,6 +34,7 @@ export default createExtension({
     onBridgeFailure, // child
     onBridgeTermination, // child
     setSpeechtoTextServiceNode,
+    inactivityTimerNode,
   ],
   options: {
     label: 'VIER Voice'

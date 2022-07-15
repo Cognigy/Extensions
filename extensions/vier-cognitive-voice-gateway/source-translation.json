@@ -100,9 +100,7 @@
         "nodeSummary": "Speak something out to the caller with SSML Support",
         "inputTextLabel": "Text",
         "sectionTextOptionsLabel": "Additional Text Section",
-        "inputAdditionalTextLabel": "Additional Text",
-        "inactivityTimeoutLabel": "Inactivity Timeout (s)",
-        "inactivityTimeoutDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration"
+        "inputAdditionalTextLabel": "Additional Text"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",
@@ -126,5 +124,14 @@
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
         "nodeSummary": "Check the Result of the Outbound Call"
+    },
+
+    "timer": {
+        "nodeLabel": "Inactivity Timeout",
+        "nodeSummary": "Sets the Inactivity Timeout in (s)",
+        "useStartInputsLabel": "Activate Inactivity Timeout (s) ",
+        "useStopInputsLabel": "Deactivate Inactivity Timeout (s) ",
+        "inputTimeoutStopDescription": "Stops the Inactivity Timeout detection",
+        "inputTimeoutStartDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration"
     }
 }

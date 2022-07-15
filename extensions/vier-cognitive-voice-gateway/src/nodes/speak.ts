@@ -255,34 +255,25 @@ export const speakNode = createNodeDescriptor({
       description: t.shared.inputBargeInDescription,
       defaultValue: false,
     },
-    {
-      type: 'number',
-      key: 'timeout',
-      label: t.speak.inactivityTimeoutLabel,
-      description: t.speak.inactivityTimeoutDescription,
-      params: {
-        min: 2,
-        max: 20
-      }
-    },
-    {
-      key: 'additionalText',
-      label: t.speak.inputAdditionalTextLabel,
-      type: 'textArray',
-      defaultValue: false,
-    },
-    {
-      key: 'linear',
-      label: 'Linear',
-      type: 'checkbox',
-      defaultValue: false
-    },
-    {
-      key: 'loop',
-      label: 'Loop',
-      type: 'checkbox',
-      defaultValue: false
-    }
+    // will be needed for later implementation
+    // {
+    //   key: 'additionalText',
+    //   label: t('speak.inputAdditionalTextLabel'),
+    //   type: 'textArray',
+    //   defaultValue: false,
+    // },
+    // {
+    //   key: 'linear',
+    //   label: 'Linear',
+    //   type: 'checkbox',
+    //   defaultValue: false
+    // },
+    // {
+    //   key: 'loop',
+    //   label: 'Loop',
+    //   type: 'checkbox',
+    //   defaultValue: false
+    // }
   ],
   preview: {
     key: 'text',
@@ -358,14 +349,12 @@ export const speakNode = createNodeDescriptor({
     if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
       cognigy.api.say(`<speak>${config.text}</speak>`, {
         interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-        timeout: config.timeout * 1000,
+        bargeIn: config.bargeIn
       });
     } else {
       cognigy.api.say(config.text, {
         interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-        timeout: config.timeout * 1000,
+        bargeIn: config.bargeIn
       });
     }
   },

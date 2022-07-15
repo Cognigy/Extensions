@@ -91,6 +91,9 @@ export default {
         nodeLabel: {
             'default': "Check Outbound Result",
         },
+        nodeSummary: {
+            'default': "Check the Result of the Outbound Call",
+        },
     },
     play: {
         inputBargeInDescription: {

@@ -125,6 +125,6 @@
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
-        "nodeSummary": ""
+        "nodeSummary": "Check the Result of the Outbound Call"
     }
 }

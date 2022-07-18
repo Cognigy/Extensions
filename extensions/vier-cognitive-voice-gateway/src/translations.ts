@@ -109,12 +109,12 @@ export default {
     },
     outboundService: {
         nodeLabel: {
-            default: "Check Outbound Result",
-            enUS: "Check Outbound Result",
+            default: "Check Outgoing Result",
+            enUS: "Check Outgoing Result",
         },
         nodeSummary: {
-            default: "Check the Result of the Outbound Call",
-            enUS: "Check the Result of the Outbound Call",
+            default: "Check the Result of the Outgoing Call",
+            enUS: "Check the Result of the Outgoing Call",
         },
     },
     play: {
@@ -452,16 +452,18 @@ export default {
             deDE: "Sprache",
         },
         inputProfileTokenDescription: {
-            default: "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
-            enUS: "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
+            default: "Please use the profile token as displayed in VIER Cognitive Voice Gateway, Speech Service Profiles",
+            enUS: "Please use the profile token as displayed in VIER Cognitive Voice Gateway, Speech Service Profiles",
         },
         inputProfileTokenFallbackDescription: {
             default: "Profile Token Fallback",
             enUS: "Profile Token Fallback",
+            deDE: "Profil-Token-Fallback",
         },
         inputProfileTokenFallbackLabel: {
             default: "Profile Token Fallback",
             enUS: "Profile Token Fallback",
+            deDE: "Profil-Token-Fallback",
         },
         inputProfileTokenLabel: {
             default: "Profile Token",
@@ -469,8 +471,9 @@ export default {
             deDE: "Profil-Token",
         },
         inputServiceFallbackLabel: {
-            default: "Speech-to-Text Fallback",
-            enUS: "Speech-to-Text Fallback",
+            default: "Speech-to-Text Service Fallback",
+            enUS: "Speech-to-Text Service Fallback",
+            deDE: "Fallback für Speech-to-Text-Dienst",
         },
         inputServiceLabel: {
             default: "Speech-to-Text Service",
@@ -486,12 +489,13 @@ export default {
             enUS: "Set Speech-to-Text Service",
         },
         nodeSummary: {
-            default: "Speech-to-Text services need to be used to transcribe the expected input in the the best possible way",
-            enUS: "Speech-to-Text services need to be used to transcribe the expected input in the the best possible way",
+            default: "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
+            enUS: "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
         },
         sectionFallback: {
             default: "Fallback Option",
             enUS: "Fallback Option",
+            deDE: "Fallback-Option",
         },
         sectionSelectLanguageLabel: {
             default: "Select Language",
@@ -501,6 +505,7 @@ export default {
         sectionSelectSTTLabel: {
             default: "Select Speech-to-Text Services",
             enUS: "Select Speech-to-Text Services",
+            deDE: "Speech-to-Text-Dienste wählen",
         },
     },
     terminate: {
@@ -517,8 +522,8 @@ export default {
     },
     timer: {
         inputTimeoutStartDescription: {
-            default: "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
-            enUS: "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
+            default: "The Inactivity Timeout can only be set, if not already in the VIER Cognitive Voice Gateway project settings duration",
+            enUS: "The Inactivity Timeout can only be set, if not already in the VIER Cognitive Voice Gateway project settings duration",
         },
         inputTimeoutStopDescription: {
             default: "Stops the Inactivity Timeout detection",
@@ -527,18 +532,21 @@ export default {
         nodeLabel: {
             default: "Inactivity Timeout",
             enUS: "Inactivity Timeout",
+            deDE: "Zeitüberschreitung bei Inaktivität",
         },
         nodeSummary: {
             default: "Sets the Inactivity Timeout in (s)",
             enUS: "Sets the Inactivity Timeout in (s)",
         },
         useStartInputsLabel: {
-            default: "Activate Inactivity Timeout (s) ",
-            enUS: "Activate Inactivity Timeout (s) ",
+            default: "Activate Inactivity Timeout (s)",
+            enUS: "Activate Inactivity Timeout (s)",
+            deDE: "Zeitüberschreitung bei Inaktivität (in s) aktivieren",
         },
         useStopInputsLabel: {
-            default: "Deactivate Inactivity Timeout (s) ",
-            enUS: "Deactivate Inactivity Timeout (s) ",
+            default: "Deactivate Inactivity Timeout (s)",
+            enUS: "Deactivate Inactivity Timeout (s)",
+            deDE: "Zeitüberschreitung bei Inaktivität (in s) deaktivieren",
         },
     },
 };

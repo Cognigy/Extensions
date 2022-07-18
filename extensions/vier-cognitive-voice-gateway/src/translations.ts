@@ -122,7 +122,8 @@ export default {
             'default': "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
         },
         nodeLabel: {
-            'default': "Get Number from Caller",
+            'default': "Get Phone Number from Caller",
+            'de_DE': "Anrufer:in nach Rufnummer fragen",
         },
         nodeSummary: {
             'default': "Say something to the call with a prompt to enter a number",
@@ -327,12 +328,6 @@ export default {
         },
     },
     speak: {
-        inactivityTimeoutDescription: {
-            'default': "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
-        },
-        inactivityTimeoutLabel: {
-            'default': "Inactivity Timeout (s)",
-        },
         inputAdditionalTextLabel: {
             'default': "Additional Text",
         },
@@ -401,6 +396,26 @@ export default {
         nodeSummary: {
             'default': "Cancel the call",
             'de_DE': "Anruf abbrechen",
+        },
+    },
+    timer: {
+        inputTimeoutStartDescription: {
+            'default': "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
+        },
+        inputTimeoutStopDescription: {
+            'default': "Stops the Inactivity Timeout detection",
+        },
+        nodeLabel: {
+            'default': "Inactivity Timeout",
+        },
+        nodeSummary: {
+            'default': "Sets the Inactivity Timeout in (s)",
+        },
+        useStartInputsLabel: {
+            'default': "Activate Inactivity Timeout (s) ",
+        },
+        useStopInputsLabel: {
+            'default': "Deactivate Inactivity Timeout (s) ",
         },
     },
 };

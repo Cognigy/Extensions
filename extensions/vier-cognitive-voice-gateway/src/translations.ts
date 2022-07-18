@@ -442,6 +442,7 @@ export default {
         sectionTextOptionsLabel: {
             default: "Additional Text Section",
             enUS: "Additional Text Section",
+            deDE: "Zusätzlicher Textabschnitt",
         },
     },
     speechToText: {

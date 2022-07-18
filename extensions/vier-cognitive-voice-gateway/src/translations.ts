@@ -422,6 +422,7 @@ export default {
         inputAdditionalTextLabel: {
             default: "Additional Text",
             enUS: "Additional Text",
+            deDE: "Zusätzlicher Text",
         },
         inputTextLabel: {
             default: "Text",

@@ -40,7 +40,7 @@ const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, d
 export const setSpeechtoTextServiceNode = createNodeDescriptor({
   type: 'speechToText',
   defaultLabel: t.speechToText.nodeLabel,
-  summary:  t.speechToText.nodeSummary,
+  summary: t.speechToText.nodeSummary,
   appearance: {
     color: 'blue'
   },

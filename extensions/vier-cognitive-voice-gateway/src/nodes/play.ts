@@ -11,7 +11,7 @@ export interface IPlayParams extends INodeFunctionBaseParams {
 export const playNode = createNodeDescriptor({
   type: 'play',
   defaultLabel: t.play.nodeLabel,
-  summary:  t.play.nodeSummary,
+  summary: t.play.nodeSummary,
   appearance: {
     color: '#678465'
   },

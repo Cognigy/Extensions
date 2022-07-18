@@ -11,7 +11,7 @@ export interface IRecordingStopParams extends INodeFunctionBaseParams {
 
 export const recordingStopNode = createNodeDescriptor({
   type: 'recordingStop',
-  defaultLabel:  t.recordingStop.nodeLabel,
+  defaultLabel: t.recordingStop.nodeLabel,
   summary: t.recordingStop.nodeSummary,
   appearance: {
     color: '#b8f66a'

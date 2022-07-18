@@ -179,7 +179,7 @@ export const bridgeCallNode = createNodeDescriptor({
 export const onBridgeSuccess = createNodeDescriptor({
   type: 'onBridgeSuccess',
   parentType: 'bridge',
-  defaultLabel: 'On Success',
+  defaultLabel: 'On Success', // TODO translate me
   constraints: {
     editable: false,
     deletable: false,
@@ -201,7 +201,7 @@ export const onBridgeSuccess = createNodeDescriptor({
 export const onBridgeFailure = createNodeDescriptor({
   type: 'onBridgeFailure',
   parentType: 'bridge',
-  defaultLabel: 'On Failure',
+  defaultLabel: 'On Failure', // TODO translate me
   constraints: {
     editable: false,
     deletable: false,
@@ -223,7 +223,7 @@ export const onBridgeFailure = createNodeDescriptor({
 export const onBridgeTermination = createNodeDescriptor({
   type: 'onBridgeTermination',
   parentType: 'bridge',
-  defaultLabel: 'On Termination',
+  defaultLabel: 'On Termination', // TODO translate me
   constraints: {
     editable: false,
     deletable: false,

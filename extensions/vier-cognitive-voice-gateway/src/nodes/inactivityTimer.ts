@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { t } from '../helpers/translations';
+import t from '../translations';
 
 
 export interface IInactivityTimerParams extends INodeFunctionBaseParams {
@@ -11,8 +11,8 @@ export interface IInactivityTimerParams extends INodeFunctionBaseParams {
 
 export const inactivityTimerNode = createNodeDescriptor({
   type: 'timer',
-  defaultLabel: t('timer.nodeLabel'),
-  summary: t('timer.nodeSummary'),
+  defaultLabel: t.timer.nodeLabel,
+  summary: t.timer.nodeSummary,
   appearance: {
     color: 'green'
   },
@@ -22,14 +22,14 @@ export const inactivityTimerNode = createNodeDescriptor({
     {
       type: 'checkbox',
       key: 'useStopInputs',
-      label: t('timer.useStopInputsLabel'),
-      description: t('timer.inputTimeoutStopDescription'),
+      label: t.timer.useStopInputsLabel,
+      description: t.timer.inputTimeoutStopDescription,
     },
     {
       type: 'number',
       key: 'timeout',
-      label: t('timer.useStartInputsLabel'),
-      description: t('timer.inputTimeoutStartDescription'),
+      label: t.timer.useStartInputsLabel,
+      description: t.timer.inputTimeoutStartDescription,
       params: {
         min: 2,
         max: 20,
@@ -42,7 +42,7 @@ export const inactivityTimerNode = createNodeDescriptor({
     {
       key: 'general',
       fields: [ 'useStopInputs','timeout' ],
-      label: t('forward.sectionGeneralLabel'),
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     }
   ],

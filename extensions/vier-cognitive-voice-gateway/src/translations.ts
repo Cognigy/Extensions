@@ -262,6 +262,7 @@ export default {
         },
         inputRecordingIdDescription: {
             default: "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
+            deDE: "Geben Sie einen beliebigen String zur Identifizierung der Gesprächsaufzeichnung ein, wenn mehrere Gesprächsaufzeichnungen im selben Dialog erstellt werden.",
         },
         inputRecordingIdLabel: {
             default: "Call Recording ID",
@@ -309,6 +310,7 @@ export default {
         },
         inputUseMaxDigitsDescription: {
             default: "Use the Maximum Digits property as a stop condition",
+            deDE: "Um die Eigenschaft „Maximale Ziffernanzahl“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
         },
         inputUseMaxDigitsLabel: {
             default: "Use Max Digits",
@@ -316,7 +318,7 @@ export default {
         },
         inputUseSubmitInputsDescription: {
             default: "Use the Submit Inputs property as a stop condition",
-            deDE: "Um die Eigenschaft Eingaben übermitteln als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
+            deDE: "Um die Eigenschaft „Eingaben übermitteln“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
         },
         inputUseSubmitInputsLabel: {
             default: "Use Submit Inputs",

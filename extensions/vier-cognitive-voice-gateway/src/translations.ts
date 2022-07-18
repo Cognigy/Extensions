@@ -343,8 +343,8 @@ export default {
             deDE: "Zeitüberschreitung beim Klingeln (s)",
         },
         inputSubmitInputsDescription: {
-            default: "One or more synonyms to end an number input, such as DTMF_#",
-            enUS: "One or more synonyms to end an number input, such as DTMF_#",
+            default: "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
+            enUS: "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
             deDE: "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind Ziffern von 0-9 und die Sonderzeichen * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
         },
         inputSubmitInputsLabel: {
@@ -383,8 +383,8 @@ export default {
             deDE: "Zeitüberschreitung",
         },
         inputUseMaxDigitsDescription: {
-            default: "Use the Maximum Digits property as a stop condition",
-            enUS: "Use the Maximum Digits property as a stop condition",
+            default: "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
+            enUS: "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
             deDE: "Um die Eigenschaft „Maximale Ziffernanzahl“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
         },
         inputUseMaxDigitsLabel: {
@@ -393,8 +393,8 @@ export default {
             deDE: "Maximale Ziffernanzahl verwenden",
         },
         inputUseSubmitInputsDescription: {
-            default: "To use the Submit Inputs property as a stop condition, activate this checkbox.",
-            enUS: "To use the Submit Inputs property as a stop condition, activate this checkbox.",
+            default: "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
+            enUS: "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
             deDE: "Um die Eigenschaft „Eingaben übermitteln“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
         },
         inputUseSubmitInputsLabel: {

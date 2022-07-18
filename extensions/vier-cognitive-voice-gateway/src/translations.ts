@@ -366,6 +366,7 @@ export default {
         },
         inputProfileTokenLabel: {
             'default': "Profile Token",
+            'deDE': "Profil-Token",
         },
         inputServiceFallbackLabel: {
             'default': "Speech-to-Text Fallback",
@@ -388,6 +389,7 @@ export default {
         },
         sectionSelectLanguageLabel: {
             'default': "Select Language",
+            'deDE': "Sprache wählen",
         },
         sectionSelectSTTLabel: {
             'default': "Select Speech-to-Text Services",

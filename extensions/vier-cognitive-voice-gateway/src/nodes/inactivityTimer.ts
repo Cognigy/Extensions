@@ -16,7 +16,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   appearance: {
     color: 'green'
   },
-  
+  tags: ['service'],
   fields: [
 
     {

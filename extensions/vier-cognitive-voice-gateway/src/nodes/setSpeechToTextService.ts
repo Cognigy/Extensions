@@ -44,6 +44,7 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
   appearance: {
     color: 'blue'
   },
+  tags: ['service'],
   fields: [
     generateTranscriberSelect('transcriber', t.speechToText.inputServiceLabel, t.speechToText.inputTranscriberDescription),
     generateProfileTokenInput('profileToken', t.speechToText.inputProfileTokenLabel, t.speechToText.inputProfileTokenDescription),

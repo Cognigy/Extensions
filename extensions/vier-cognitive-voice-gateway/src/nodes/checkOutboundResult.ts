@@ -14,6 +14,7 @@ export const checkOutboundResultNode = createNodeDescriptor({
   behavior: {
     entrypoint: true,
   },
+  tags: ['logic'],
   dependencies: {
     children: [
       'onOutboundSuccess',

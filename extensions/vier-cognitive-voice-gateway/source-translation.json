@@ -21,10 +21,7 @@
         "inputHeadNumberLabel": "Head Number",
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
-        "inputExtensionLengthDescription": "The range of extensions to choose a number from",
-        "bridgeSuccessLabel": "On Success",
-        "bridgeFailureLabel": "On Failure",
-        "bridgeTerminationLabel": "On Termination"
+        "inputExtensionLengthDescription": "The range of extensions to choose a number from"
     },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
@@ -96,7 +93,11 @@
         "inputExperimentalEnableRingingToneLabel": "(EXPERIMENTAL) Enable Ringing Tone",
         "inputExperimentalEnableRingingToneDescription": "Enables the playback of a ringing tone while the call is pending. This option will change in the future.",
         "inputWhisperingTextLabel": "Whisperred Text to the transfered party",
-        "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined"
+        "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined",
+        "childSuccessLabel": "On Success",
+        "childFailureLabel": "On Failure",
+        "childTerminationLabel": "On Termination",
+        "childDefaultLabel": "Default"
     },
     "speak": {
         "nodeLabel": "Speak out (SSML)",
@@ -126,11 +127,7 @@
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
-        "nodeSummary": "Check the Result of the Outbound Call",
-        "outboundSuccess": "On Success",
-        "outboundFailure": "On Failure",
-        "outboundTermination": "On Termination",
-        "outboundDefault": "Default"
+        "nodeSummary": "Check the Result of the Outbound Call"
     },
 
     "timer": {

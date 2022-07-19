@@ -80,7 +80,7 @@ export const checkOutboundResultNode = createNodeDescriptor({
 export const onOutboundSuccess = createNodeDescriptor({
   type: 'onOutboundSuccess',
   parentType: 'outbound',
-  defaultLabel: t.outboundService.outboundSuccess,
+  defaultLabel: t.shared.childSuccessLabel,
   constraints: {
     editable: false,
     deletable: false,
@@ -102,7 +102,7 @@ export const onOutboundSuccess = createNodeDescriptor({
 export const onOutboundFailure = createNodeDescriptor({
   type: 'onOutboundFailure',
   parentType: 'outbound',
-  defaultLabel: t.outboundService.outboundFailure,
+  defaultLabel: t.shared.childFailureLabel,
   constraints: {
     editable: false,
     deletable: false,
@@ -124,7 +124,7 @@ export const onOutboundFailure = createNodeDescriptor({
 export const onOutboundTermination = createNodeDescriptor({
   type: 'onOutboundTermination',
   parentType: 'outbound',
-  defaultLabel: t.outboundService.outboundTermination,
+  defaultLabel: t.shared.childTerminationLabel,
   constraints: {
     editable: false,
     deletable: false,
@@ -146,7 +146,7 @@ export const onOutboundTermination = createNodeDescriptor({
 export const onOutboundDefault = createNodeDescriptor({
   type: 'onOutboundDefault',
   parentType: 'outbound',
-  defaultLabel: t.outboundService.outboundDefault,
+  defaultLabel: t.shared.childDefaultLabel,
   constraints: {
     editable: false,
     deletable: true,

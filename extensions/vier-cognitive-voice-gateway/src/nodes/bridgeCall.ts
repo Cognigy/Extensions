@@ -179,7 +179,7 @@ export const bridgeCallNode = createNodeDescriptor({
 export const onBridgeSuccess = createNodeDescriptor({
   type: 'onBridgeSuccess',
   parentType: 'bridge',
-  defaultLabel: t.bridge.bridgeSuccessLabel,
+  defaultLabel: t.shared.childSuccessLabel,
   constraints: {
     editable: false,
     deletable: false,
@@ -201,7 +201,7 @@ export const onBridgeSuccess = createNodeDescriptor({
 export const onBridgeFailure = createNodeDescriptor({
   type: 'onBridgeFailure',
   parentType: 'bridge',
-  defaultLabel: t.bridge.bridgeFailureLabel,
+  defaultLabel: t.shared.childFailureLabel,
   constraints: {
     editable: false,
     deletable: false,
@@ -223,7 +223,7 @@ export const onBridgeFailure = createNodeDescriptor({
 export const onBridgeTermination = createNodeDescriptor({
   type: 'onBridgeTermination',
   parentType: 'bridge',
-  defaultLabel: t.bridge.bridgeTerminationLabel,
+  defaultLabel: t.shared.childTerminationLabel,
   constraints: {
     editable: false,
     deletable: false,

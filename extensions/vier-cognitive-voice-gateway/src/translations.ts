@@ -29,7 +29,7 @@ export default {
         nodeSummary: {
             'default': "Forward the call to a contact center for agent assistance",
             'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
-        }
+        },
     },
     forward: {
         inputDestinationNumberDescription: {
@@ -95,7 +95,7 @@ export default {
         nodeSummary: {
             'default': "Check the Result of the Previous Call Forwarding",
             'deDE': "Ergebnis der vorherigen Anrufweiterleitung prüfen",
-        }
+        },
     },
     play: {
         inputBargeInDescription: {
@@ -187,6 +187,18 @@ export default {
         },
     },
     shared: {
+        childDefaultLabel: {
+            'default': "Default",
+        },
+        childFailureLabel: {
+            'default': "On Failure",
+        },
+        childSuccessLabel: {
+            'default': "On Success",
+        },
+        childTerminationLabel: {
+            'default': "On Termination",
+        },
         inputAcceptAnsweringMachinesDescription: {
             'default': "The bot accepts answering machines picking up the calls.",
             'deDE': "Der Bot akzeptiert Anrufbeantworter, die die Anrufe entgegennehmen.",

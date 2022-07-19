@@ -125,8 +125,8 @@ export default {
             'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
         nodeLabel: {
-            'default': "Get Phone Number from Caller",
-            'deDE': "Anrufer:in nach Rufnummer fragen",
+            'default': "Get Number from Caller",
+            'deDE': "Nummer von dem:der Anrufer:in erhalten",
         },
         nodeSummary: {
             'default': "Say something to the caller with a prompt to enter a number",

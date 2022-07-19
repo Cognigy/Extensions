@@ -41,7 +41,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   sections: [
     {
       key: 'general',
-      fields: [ 'useStopInputs','timeout' ],
+      fields: [ 'timeout', 'useStopInputs' ],
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     }

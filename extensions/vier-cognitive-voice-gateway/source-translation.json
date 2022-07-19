@@ -21,7 +21,10 @@
         "inputHeadNumberLabel": "Head Number",
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
-        "inputExtensionLengthDescription": "The range of extensions to choose a number from"
+        "inputExtensionLengthDescription": "The range of extensions to choose a number from",
+        "bridgeSuccessLabel": "On Success",
+        "bridgeFailureLabel": "On Failure",
+        "bridgeTerminationLabel": "On Termination"
     },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
@@ -123,7 +126,11 @@
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
-        "nodeSummary": "Check the Result of the Outbound Call"
+        "nodeSummary": "Check the Result of the Outbound Call",
+        "outboundSuccess": "On Success",
+        "outboundFailure": "On Failure",
+        "outboundTermination": "On Termination",
+        "outboundDefault": "Default"
     },
 
     "timer": {

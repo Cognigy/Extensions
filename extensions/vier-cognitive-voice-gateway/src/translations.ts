@@ -30,6 +30,18 @@ export default {
             'default': "Forward the call to a contact center for agent assistance",
             'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
         },
+        bridgeSuccessLabel: {
+            'default': "On Success",
+            'deDE': "",
+        },
+        bridgeFailureLabel: {
+            'default': "On Failure",
+            'deDE': "",
+        },
+        bridgeTerminationLabel: {
+            'default': "On Termination",
+            'deDE': "",
+        },
     },
     forward: {
         inputDestinationNumberDescription: {
@@ -96,6 +108,22 @@ export default {
             'default': "Check the Result of the Previous Call Forwarding",
             'deDE': "Ergebnis der vorherigen Anrufweiterleitung prüfen",
         },
+        outboundSuccess: {
+            'default': "On Success",
+            'deDE': "",
+        },
+        outboundFailure: {
+            'default': "On Failure",
+            'deDE': "",
+        },
+        outboundTermination: {
+            'default': "On Termination",
+            'deDE': "",
+        },
+        outboundDefault: {
+            'default': "On Default",
+            'deDE': "",
+        }
     },
     play: {
         inputBargeInDescription: {

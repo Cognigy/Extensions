@@ -133,8 +133,8 @@
     "timer": {
         "nodeLabel": "Inactivity Timeout",
         "nodeSummary": "Sets the Inactivity Timeout in (s)",
-        "useStartInputsLabel": "Activate Inactivity Timeout (s) ",
-        "useStopInputsLabel": "Deactivate Inactivity Timeout (s) ",
+        "useStartInputsLabel": "Activate Inactivity Timeout",
+        "useStopInputsLabel": "Deactivate Inactivity Timeout",
         "inputTimeoutStopDescription": "Stops the Inactivity Timeout detection",
         "inputTimeoutStartDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
         "selectTimerLabel": "Select Timeout"

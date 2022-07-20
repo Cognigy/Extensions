@@ -75,15 +75,15 @@ export const inactivityTimerNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IInactivityTimerParams) => {
     const { api } = cognigy;
 
-      if (config.useStopInputs) {
+    if (config.useStopInputs) {
         api.say('', {
           status: 'inactivity-stop',
         });
+    } else {
+      api.say('' , {
+        status: 'inactivity-start',
+        timeout: config.timeout * 1000,
+      });
     }
-
-    api.say('' , {
-      status: 'inactivity-start',
-      timeout: config.timeout * 1000,
-    });
   }
 });

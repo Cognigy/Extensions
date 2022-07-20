@@ -12,12 +12,10 @@ export default createExtension({
 		getConversationNode,
 		intentDisambiguationNode
 	],
-
 	connections: [
 		smtpConnection,
 		cognigyApiConnection
 	],
-
 	options: {
 		label: "Cognigy Customs"
 	}

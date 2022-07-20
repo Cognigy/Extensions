@@ -40,6 +40,6 @@ export default createExtension({
 	],
 
 	options: {
-		label: "UiPath"
+		label: "UiPath Orchestrator"
 	}
 });

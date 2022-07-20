@@ -13,6 +13,6 @@ export default createExtension({
     ],
 
     options: {
-        label: "ParcelLab"
+        label: "Parcel Lab"
     }
 });

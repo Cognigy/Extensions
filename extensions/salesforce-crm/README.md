@@ -76,6 +76,9 @@ After signing in the Salesforce user, the following information will be stored t
 All **Salesforce API Fields** are listed in the following PDF File: 
 [Salesforce API Fields](https://resources.docs.salesforce.com/206/latest/en-us/sfdc/pdf/salesforce_field_names_reference.pdf)
 
+### API Version Number
+Some Salesforce fields can only be modified when the API version is defined. You can find these settings by activating **Specify Salesforce API Version**.
+
 ### Entity: Event
 
 Creates an **event** in the Salesforce calendar. The JSON in *record JSON* shows an example.

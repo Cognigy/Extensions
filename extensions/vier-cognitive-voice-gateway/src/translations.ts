@@ -448,6 +448,9 @@ export default {
         nodeSummary: {
             'default': "Sets the Inactivity Timeout in (s)",
         },
+        selectTimerLabel: {
+            'default': "Select Timeout",
+        },
         useStartInputsLabel: {
             'default': "Activate Inactivity Timeout (s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) aktivieren",

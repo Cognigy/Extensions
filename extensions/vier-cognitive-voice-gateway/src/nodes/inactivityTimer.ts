@@ -18,30 +18,50 @@ export const inactivityTimerNode = createNodeDescriptor({
   },
   tags: ['service'],
   fields: [
-
+    {
+      type: 'select',
+      key: 'selectTimer',
+      label: t.timer.selectTimerLabel,
+      params: {
+        required: true,
+        options: [
+          { value: 'Activate Timeout', label: 'Activate Timeout' },
+          { value: 'Deactivate Timeout', label: 'Deactivate Timeout' },
+        ]
+      }
+      },
     {
       type: 'checkbox',
       key: 'useStopInputs',
       label: t.timer.useStopInputsLabel,
       description: t.timer.inputTimeoutStopDescription,
+      condition: {
+        key: 'selectTimer',
+        value: 'Deactivate Timeout'
+      }
     },
     {
       type: 'number',
       key: 'timeout',
       label: t.timer.useStartInputsLabel,
-      description: t.timer.inputTimeoutStartDescription,
       params: {
         min: 2,
         max: 20,
-        required: true,
+      },
+      condition: {
+        key: 'selectTimer',
+        value: 'Activate Timeout'
       }
       },
   ],
-
+  preview: {
+    key: 'selectTimer',
+    type: 'text'
+  },
   sections: [
     {
       key: 'general',
-      fields: [ 'timeout', 'useStopInputs' ],
+      fields: [ 'selectTimer', 'timeout', 'useStopInputs' ],
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     }

@@ -13,6 +13,8 @@ export interface IStartLiveChatParams extends INodeFunctionBaseParams {
 		tags: string;
         useDepartmentId: boolean;
 		departmentId: string;
+        sendInitialMessage: boolean;
+		initialMessage: string;
     };
 }
 export const startLiveChatNode = createNodeDescriptor({
@@ -179,6 +181,37 @@ export const startLiveChatNode = createNodeDescriptor({
 				key: "useDepartmentId",
 				value: true
 			}
+		},
+        {
+			key: "sendInitialMessage",
+			type: "toggle",
+			label: {
+				default: "Send Initial Message to Live Agent",
+				deDE: "Nachricht an Liveagent schicken",
+				esES: "Enviar mensaje inicial a la agente en vivo"
+			},
+			description: {
+				default: "Send a message to the chat, such as a transcript or other information?",
+				deDE: "Senden Sie eine Nachricht an den Chat, z. B. eine Abschrift oder andere Informationen?",
+				esES: "¿Enviar un mensaje al chat, como una transcripción u otra información?"
+			},
+			defaultValue: false
+		},
+		{
+			key: "initialMessage",
+			label: {
+				default: "Initial Message",
+				deDE: "Erste Nachricht",
+				esES: "Mensaje inicial"
+			},
+			type: "cognigyText",
+			params: {
+				required: false,
+			},
+			condition: {
+				key: "sendInitialMessage",
+				value: true
+			}
 		}
     ],
     sections: [
@@ -208,7 +241,9 @@ export const startLiveChatNode = createNodeDescriptor({
 				"addTags",
 				"tags",
                 "useDepartmentId",
-                "departmentId"
+                "departmentId",
+                "sendInitialMessage",
+                "initialMessage"
 			]
 		}
     ],
@@ -223,7 +258,7 @@ export const startLiveChatNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IStartLiveChatParams) => {
         const { api } = cognigy;
-        const { connection, text, displayName, email, phone, addTags, tags, useDepartmentId, departmentId} = config;
+        const { connection, text, displayName, email, phone, addTags, tags, useDepartmentId, departmentId, sendInitialMessage, initialMessage} = config;
         const { accountKey } = connection;
 
         let dataObject = {
@@ -240,6 +275,9 @@ export const startLiveChatNode = createNodeDescriptor({
 		}
         if (useDepartmentId === true) {
             dataObject["id"] = parseInt(departmentId);
+        }
+        if (sendInitialMessage === true) {
+            dataObject["transcript"] = initialMessage;
         }
 
         // Send configuration to Webchat client to start Zendesk Chat

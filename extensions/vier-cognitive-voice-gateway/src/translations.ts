@@ -189,6 +189,7 @@ export default {
     shared: {
         childDefaultLabel: {
             'default': "Default",
+            'deDE': "Standard",
         },
         childFailureLabel: {
             'default': "On Failure",

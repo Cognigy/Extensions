@@ -1,28 +1,33 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
 import axios from 'axios';
 
-export interface IGetTaskByIdParams extends INodeFunctionBaseParams {
+export interface IGetUsersParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             personalAccessToken: string
         };
-        taskId: string;
-        filter: string;
+        workspaceId: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
     };
 }
 
-export const getTicketByIdNode = createNodeDescriptor({
-    type: 'getTicketById',
+export interface IAsanaWorkspace {
+    gid: string;
+    name: string;
+    resource_type: string;
+}
+
+export const getUsersNode = createNodeDescriptor({
+    type: 'getUsersNode',
     defaultLabel: {
-        default: 'Get Task Details',
-        deDE: 'Erhalte Aufgabendetails'
+        default: 'Get Users',
+        deDE: 'Erhalte Alle Nutzer'
     },
     summary: {
-        default: 'Retrievs information about a task based on a given ID',
-        deDE: 'Ruft Informationen zu einer Aufgabe basierend auf einer bestimmten ID ab',
+        default: 'Retrievs all users from Asana',
+        deDE: 'Ruft alle Nutzer:innen ab',
     },
     fields: [
         {
@@ -37,18 +42,43 @@ export const getTicketByIdNode = createNodeDescriptor({
             }
         },
         {
-            key: 'taskId',
+            key: "workspaceId",
             label: {
-                default: 'Task ID',
-                deDE: 'ID der Aufgabe'
+                default: "Workspace",
+                deDE: "Workspace"
             },
             description: {
-                default: 'The reference id of the task',
-                deDE: 'Die Referenznummer der Aufgabe',
+                default: "The ID of the Asana workspace",
+                deDE: "Die ID des Asana Workspaces",
             },
-            type: 'cognigyText',
+            type: "select",
             params: {
-                required: true
+                required: true,
+            },
+            optionsResolver: {
+                dependencies: ["connection"],
+                resolverFunction: async ({ api, config }) => {
+                    try {
+                        const workspacesResponse = await api.httpRequest({
+                            method: 'get',
+                            url:  `https://app.asana.com/api/1.0/workspaces`,
+                            headers: {
+                                "Accept": "application/json",
+                                "Authorization": `Bearer ${config?.connection?.personalAccessToken}`
+                            }
+                        });
+
+                        // map file list to "options array"
+                        return workspacesResponse?.data?.data?.map((workspace: IAsanaWorkspace) => {
+                            return {
+                                label: workspace?.name,
+                                value: workspace?.gid,
+                            };
+                        });
+                    } catch (error) {
+                        throw new Error(error);
+                    }
+                }
             }
         },
         {
@@ -80,7 +110,7 @@ export const getTicketByIdNode = createNodeDescriptor({
                 default: 'Input Key to store Result',
                 deDE: 'Input Key zum Speichern des Ergebnisses'
             },
-            defaultValue: 'asana.task',
+            defaultValue: 'asana.users',
             condition: {
                 key: 'storeLocation',
                 value: 'input',
@@ -93,7 +123,7 @@ export const getTicketByIdNode = createNodeDescriptor({
                 default: 'Context Key to store Result',
                 deDE: 'Context Key zum Speichern des Ergebnisses'
             },
-            defaultValue: 'asana.task',
+            defaultValue: 'asana.users',
             condition: {
                 key: 'storeLocation',
                 value: 'context',
@@ -117,28 +147,22 @@ export const getTicketByIdNode = createNodeDescriptor({
     ],
     form: [
         { type: 'field', key: 'connection' },
-        { type: 'field', key: 'taskId' },
+        { type: 'field', key: 'workspaceId' },
         { type: 'section', key: 'storage' }
     ],
     appearance: {
         color: '#F95A7A'
     },
-    dependencies: {
-        children: [
-            'onFoundTask',
-            'onNotFoundTask'
-        ]
-    },
-    function: async ({ cognigy, config, childConfigs }: IGetTaskByIdParams) => {
+    function: async ({ cognigy, config }: IGetUsersParams) => {
         const { api } = cognigy;
-        const { connection, taskId, storeLocation, contextKey, inputKey } = config;
+        const { connection, workspaceId, storeLocation, contextKey, inputKey } = config;
         const { personalAccessToken } = connection;
 
         try {
 
             const response = await axios({
-                method: 'GET',
-                url: `https://app.asana.com/api/1.0/tasks/${taskId}`,
+                method: 'get',
+                url: `https://app.asana.com/api/1.0/users?workspace=${workspaceId}`,
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${personalAccessToken}`
@@ -152,68 +176,8 @@ export const getTicketByIdNode = createNodeDescriptor({
                 api.addToInput(inputKey, response?.data?.data);
             }
 
-            if (response?.data?.data?.gid) {
-                const onFoundChild = childConfigs.find(child => child.type === 'onFoundTask');
-                api.setNextNode(onFoundChild.id);
-            } else {
-                const onNotFoundChild = childConfigs.find(child => child.type === 'onNotFoundTask');
-                api.setNextNode(onNotFoundChild.id);
-            }
-
         } catch (error) {
             api.log('error', error.message);
-            const onNotFoundChild = childConfigs.find(child => child.type === 'onNotFoundTask');
-            api.setNextNode(onNotFoundChild.id);
         }
-    }
-});
-
-export const onFoundTask = createNodeDescriptor({
-    type: 'onFoundTask',
-    parentType: 'getTicketById',
-    defaultLabel: {
-        default: 'On Found',
-        deDE: 'Gefunden',
-    },
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: '#61d188',
-        textColor: 'white',
-        variant: 'mini'
-    }
-});
-
-export const onNotFoundTask = createNodeDescriptor({
-    type: 'onNotFoundTask',
-    parentType: 'getTicketById',
-    defaultLabel: {
-        default: 'On Not Found',
-        deDE: 'Nicht gefunden'
-    },
-    constraints: {
-        editable: false,
-        deletable: false,
-        creatable: false,
-        movable: false,
-        placement: {
-            predecessor: {
-                whitelist: []
-            }
-        }
-    },
-    appearance: {
-        color: '#cf142b',
-        textColor: 'white',
-        variant: 'mini'
     }
 });

@@ -2457,6 +2457,58 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "asana",
+            "label": "Asana",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/asana400/asana.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/asana",
+            "description": "Integrates with Asana",
+            "longDescription": "With the FedEx integration, a virtual agent can provide detailed information about existing shipments to the user on chat or voice channels.",
+            "tags": [
+                "Team",
+                "Board",
+                "Scrum",
+                "Tasks"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "getProjects",
+                    "defaultLabel": "Get Projects",
+                    "description": "Retrievs all projects from Asana",
+                    "tags": [
+                        "project"
+                    ]
+                },
+                {
+                    "type": "getUsers",
+                    "defaultLabel": "Get Users",
+                    "description": "Retrievs all users from Asana",
+                    "tags": [
+                        "users"
+                    ]
+                },
+                {
+                    "type": "getUserTasks",
+                    "defaultLabel": "Get User Tasks",
+                    "description": "Retrievs information about user tasks",
+                    "tags": [
+                        "user",
+                        "task"
+                    ]
+                },
+                {
+                    "type": "getTaskDetails",
+                    "defaultLabel": "Get Task Details",
+                    "description": "Retrievs all details for a given task",
+                    "tags": [
+                        "task",
+                        "details"
+                    ]
+                }
+            ]
         }
     ]
 }

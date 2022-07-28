@@ -57,7 +57,7 @@ export const startLiveChatNode = createNodeDescriptor({
             },
             type: "cognigyText",
             params: {
-                required: true
+                required: false
             }
         },
         {

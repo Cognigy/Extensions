@@ -212,90 +212,91 @@ export const getConversationNode = createNodeDescriptor({
 		// Log the URL, but obscure a chunk of the apiKey:
 		LOG("Request URL:" + reqUrl.substring(0, reqUrl.length - 20) + " <...apiKey>");
 
-		const response = await axios.get(reqUrl);
+		try {
+			const response = await axios.get(reqUrl);
 
-		LOG(`Got response: statusCode:${response.status}, body(partial):${opretty(response.data).substr(0, 2000)}`);
+			LOG(`Got response: statusCode:${response.status}, body(partial):${opretty(response.data).substr(0, 2000)}`);
 
-		// Safe defaults:
-		const returnVal = {
-			status: "UNKNOWN",
-			statusMessage: "",
-			channel: 'unknown' as string,
-			transcript: [],
-			html: '',
-		};
+			// Safe defaults:
+			const returnVal = {
+				status: "UNKNOWN",
+				statusMessage: "",
+				channel: 'unknown' as string,
+				transcript: [],
+				html: '',
+			};
 
-		if (response.status !== 200 || !Array.isArray(response.data.value)) {
-			returnVal.status = "ERROR";
-			returnVal.statusMessage = response.data;
-		} else {
-			returnVal.status = "OK";
+			if (response.status !== 200 || !Array.isArray(response.data.value)) {
+				returnVal.status = "ERROR";
+				returnVal.statusMessage = response.data;
+			} else {
+				returnVal.status = "OK";
 
-			/** Collection of mappings of QRs: payload -> title */
-			const QRs: IStringProps = {};
+				/** Collection of mappings of QRs: payload -> title */
+				const QRs: IStringProps = {};
 
-			returnVal.transcript = response.data.value.map((event: IStringProps) => {
+				returnVal.transcript = response.data.value.map((event: IStringProps) => {
 
-				// Just pull out a few select values:
-				const { type, source, channel, inputText, inputData: inputDataString, timestamp, sessionId: dataSessionId } = event;
-				const inputData = inputDataString && JSON.parse(inputDataString);
-				// LOG("Input data: " + pretty(inputData));
+					// Just pull out a few select values:
+					const { type, source, channel, inputText, inputData: inputDataString, timestamp, sessionId: dataSessionId } = event;
+					const inputData = inputDataString && JSON.parse(inputDataString);
+					// LOG("Input data: " + pretty(inputData));
 
 
-				/** By default, use the plain inputText: */
-				let textTranscript = inputText;
-				// But there could be channel customisations:
-				// Fairly limited logic supported for now:
-				if (channel === 'adminconsole') {
-					textTranscript = inputText
-						|| inputData?._cognigy?._webchat?.message?.text
-						|| inputData?._cognigy?._facebook?.message?.text;
-				} else if (channel.startsWith('webchat')) {
+					/** By default, use the plain inputText: */
+					let textTranscript = inputText;
+					// But there could be channel customisations:
+					// Fairly limited logic supported for now:
+					if (channel === 'adminconsole') {
+						textTranscript = inputText
+							|| inputData?._cognigy?._webchat?.message?.text
+							|| inputData?._cognigy?._facebook?.message?.text;
+					} else if (channel.startsWith('webchat')) {
 
-					textTranscript = inputData?._cognigy?._webchat?.message?.text
-						|| inputData?._cognigy?._facebook?.message?.text
-						|| inputText;
-				}
-
-				if (channel === 'adminconsole' || channel.startsWith('webchat')) {
-					// Store any QR's we see, so we can map 'payload' to 'title' in transcript:
-					for (let qr of
-						inputData?._cognigy?._webchat?.message?.quick_replies ||
-						inputData?._cognigy?._facebook?.message?.quick_replies ||
-						[]) {
-						QRs[qr.payload] = qr.title;
-					}
-					// Check if user 'input' matches a QR payload:
-					if (textTranscript && (textTranscript.includes(':') || textTranscript.includes('_'))) {
-						const qrTitle = QRs[textTranscript];
-						if (qrTitle) textTranscript = `(${qrTitle})`;
+						textTranscript = inputData?._cognigy?._webchat?.message?.text
+							|| inputData?._cognigy?._facebook?.message?.text
+							|| inputText;
 					}
 
-				}
+					if (channel === 'adminconsole' || channel.startsWith('webchat')) {
+						// Store any QR's we see, so we can map 'payload' to 'title' in transcript:
+						for (let qr of
+							inputData?._cognigy?._webchat?.message?.quick_replies ||
+							inputData?._cognigy?._facebook?.message?.quick_replies ||
+							[]) {
+							QRs[qr.payload] = qr.title;
+						}
+						// Check if user 'input' matches a QR payload:
+						if (textTranscript && (textTranscript.includes(':') || textTranscript.includes('_'))) {
+							const qrTitle = QRs[textTranscript];
+							if (qrTitle) textTranscript = `(${qrTitle})`;
+						}
+
+					}
 
 
-				// Set overall channel to first non-null channel:
-				if (returnVal.channel === 'unknown' && channel) returnVal.channel = channel;
+					// Set overall channel to first non-null channel:
+					if (returnVal.channel === 'unknown' && channel) returnVal.channel = channel;
 
-				const item: any = { type, source, text: textTranscript, data: inputData, timestamp };
-				if (dataSessionId) {
-					item.sessionId = dataSessionId;
-					item.channel = channel;
-				}
-				return item;
+					const item: any = { type, source, text: textTranscript, data: inputData, timestamp };
+					if (dataSessionId) {
+						item.sessionId = dataSessionId;
+						item.channel = channel;
+					}
+					return item;
 
-			});
-		}
-		LOG(`Return value (partial):${opretty(returnVal).substr(0, 2000)}`);
+				});
+			}
+			LOG(`Return value (partial):${opretty(returnVal).substr(0, 2000)}`);
 
 
-		if (outputType === 'html') {
-			//
-			// If requested, convert the transcript to nice HTML:
-			//
+			if (outputType === 'html') {
+				//
+				// If requested, convert the transcript to nice HTML:
+				//
 
-			// Default styles, can be over-ridden by user via 'input.GetConversationStyles':
-			const styles = cognigy.input.GetConversationStyles || `
+				// Default styles, can be over-ridden by user via 'input.GetConversationStyles':
+				const styles = cognigy.input.GetConversationStyles || `
 					<style>
 						table { font-family: arial; border-collapse: collapse; outline:thin solid; }
 						tr { padding: 8; }
@@ -311,57 +312,60 @@ export const getConversationNode = createNodeDescriptor({
 					</style>
 				`;
 
-			// Default time format, can be over-ridden by user via 'ci.GetConversationTimeFormat':
-			const timeFormat = cognigy.input.GetConversationTimeFormat || '[(]HH:mm:ss[)]';
+				// Default time format, can be over-ridden by user via 'ci.GetConversationTimeFormat':
+				const timeFormat = cognigy.input.GetConversationTimeFormat || '[(]HH:mm:ss[)]';
 
-			const htmlContent: string[] = [];
-			//
-			// NOTE: Email clients deal with whitespace between tags inconsistently, so:
-			//  ENSURE NO STRAY WHITESPACE IN ANY OF THE TABLE TAGS BELOW:
-			//
-			htmlContent.push(`<table>`);
-			let lastSource = '';
-			for (let entry of returnVal.transcript) {
-				// Not sure if this combo of .utc() and .utcOffset() works: To Be Tested:
-				const time = moment.utc(entry.timestamp).utcOffset(tzOffset);
+				const htmlContent: string[] = [];
+				//
+				// NOTE: Email clients deal with whitespace between tags inconsistently, so:
+				//  ENSURE NO STRAY WHITESPACE IN ANY OF THE TABLE TAGS BELOW:
+				//
+				htmlContent.push(`<table>`);
+				let lastSource = '';
+				for (let entry of returnVal.transcript) {
+					// Not sure if this combo of .utc() and .utcOffset() works: To Be Tested:
+					const time = moment.utc(entry.timestamp).utcOffset(tzOffset);
 
-				if (entry.text && entry.text.startsWith('cIntent:')) {
-					console.warn(`###### Ignoring entry.text with "cIntent:". Entry details:\n` + opretty(entry));
-				} else if (!entry.text) {
-					console.warn(`###### Ignoring falsy entry.text. Entry details:\n` + opretty(entry));
-				} else {
+					if (entry.text && entry.text.startsWith('cIntent:')) {
+						console.warn(`###### Ignoring entry.text with "cIntent:". Entry details:\n` + opretty(entry));
+					} else if (!entry.text) {
+						console.warn(`###### Ignoring falsy entry.text. Entry details:\n` + opretty(entry));
+					} else {
 
-					const sourceShow = (entry.source === lastSource) ? '' : entry.source;
-					lastSource = entry.source;
+						const sourceShow = (entry.source === lastSource) ? '' : entry.source;
+						lastSource = entry.source;
 
-					// NOTE: ENSURE NO WHITESPACE BETWEEN TAGS HERE :
-					htmlContent.push(`<tr class='${entry.source}'>`);
-					htmlContent.push(`<td class='${entry.source}-time'>${time.format(timeFormat)}</td>`);
-					htmlContent.push(`<td class='${entry.source}-source'>${sourceShow}</td>`);
-					htmlContent.push(`<td class='${entry.source}-text'>${entry.text}</td>`);
-					htmlContent.push(`</tr>`);
+						// NOTE: ENSURE NO WHITESPACE BETWEEN TAGS HERE :
+						htmlContent.push(`<tr class='${entry.source}'>`);
+						htmlContent.push(`<td class='${entry.source}-time'>${time.format(timeFormat)}</td>`);
+						htmlContent.push(`<td class='${entry.source}-source'>${sourceShow}</td>`);
+						htmlContent.push(`<td class='${entry.source}-text'>${entry.text}</td>`);
+						htmlContent.push(`</tr>`);
+					}
 				}
+				htmlContent.push(`</table>`);
+				const html = htmlContent.join('');
+
+				// Force the styles inline, via Juice, and store in our return value:
+				returnVal.html = cssInliner(styles + html).trim();
+				// And clobber the raw-ish data:
+				delete returnVal.transcript;
 			}
-			htmlContent.push(`</table>`);
-			const html = htmlContent.join('');
 
-			// Force the styles inline, via Juice, and store in our return value:
-			returnVal.html = cssInliner(styles + html).trim();
-			// And clobber the raw-ish data:
-			delete returnVal.transcript;
+
+			if (config.storeLocation === 'context') {
+				cognigy.context[contextKey] = returnVal;
+			} else {
+				cognigy.input[inputKey] = returnVal;
+			}
+		} catch (error) {
+
+			if (config.storeLocation === 'context') {
+				cognigy.context[contextKey] = error.message;
+			} else {
+				cognigy.input[inputKey] = error.message;
+			}
 		}
 
-
-		if (config.storeLocation === 'context') {
-			cognigy.context[contextKey] = returnVal;
-		} else {
-			cognigy.input[inputKey] = returnVal;
-		}
-
-		if (storeLocation === "context") {
-			cognigy.context[contextKey] = returnVal;
-		} else {
-			cognigy.input[inputKey] = returnVal;
-		}
 	}
 });

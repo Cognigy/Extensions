@@ -1,5 +1,5 @@
 {
-	"name": "8x8",
+	"name": "eightbyeight",
 	"version": "4.0.0",
 	"description": "Integrates with 8x8",
 	"main": "build/module.js",

@@ -9,7 +9,6 @@ export interface IGetCustomerParams extends INodeFunctionBaseParams {
             password: string;
             tenant: string;
         };
-        option: string;
         email: string;
         storeLocation: string;
         contextKey: string;
@@ -32,32 +31,12 @@ export const getCustomerNode = createNodeDescriptor({
             }
         },
         {
-            key: "option",
-            label: "Filter Option",
-            type: "select",
-            description: "The field that should be used to find the customer",
-            defaultValue: "email",
-            params: {
-                required: true,
-                options: [
-                    {
-                        label: "E-Mail Address",
-                        value: "email"
-                    }
-                ]
-            }
-        },
-        {
             key: "email",
             label: "E-Mail Address",
             type: "cognigyText",
             description: "The customer's email addres",
             params: {
                 required: true
-            },
-            condition: {
-                key: "option",
-                value: "email"
             }
         },
         {
@@ -123,9 +102,15 @@ export const getCustomerNode = createNodeDescriptor({
     appearance: {
         color: "#ff0050"
     },
+    dependencies: {
+        children: [
+            "onFoundCustomer",
+            "onNotFoundCustomer"
+        ]
+    },
     function: async ({ cognigy, config, childConfigs }: IGetCustomerParams) => {
         const { api, input } = cognigy;
-        const { connection, option, email, storeLocation, contextKey, inputKey } = config;
+        const { connection, email, storeLocation, contextKey, inputKey } = config;
         const { username, password, tenant } = connection;
 
         try {
@@ -139,16 +124,24 @@ export const getCustomerNode = createNodeDescriptor({
                 }
             });
 
-            parseString(response.data, (error, result) => {
+            parseString(response.data, (error: any, result: any) => {
                 if (error) {
                     api.log("error", error.message);
                 }
 
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, result[username.toUpperCase()]["REPLY"][0]["ITEM"], "simple");
+                if (result[username.toUpperCase()]["REPLY"][0]["ITEM"]) {
+                    const onFoundCustomer = childConfigs.find(child => child.type === 'onFoundCustomer');
+                    api.setNextNode(onFoundCustomer.id);
+
+                    if (storeLocation === "context") {
+                        api.addToContext(contextKey, result[username.toUpperCase()]["REPLY"][0]["ITEM"], "simple");
+                    } else {
+                        // @ts-ignore
+                        api.addToInput(inputKey, result[username.toUpperCase()]["REPLY"][0]["ITEM"]);
+                    }
                 } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, result[username.toUpperCase()]["REPLY"][0]["ITEM"]);
+                    const onNotFoundCustomer = childConfigs.find(child => child.type === 'onNotFoundCustomer');
+                    api.setNextNode(onNotFoundCustomer.id);
                 }
             });
 
@@ -156,6 +149,54 @@ export const getCustomerNode = createNodeDescriptor({
 
         } catch (error) {
             api.log("error", error.message);
+            const onNotFoundCustomer = childConfigs.find(child => child.type === 'onNotFoundCustomer');
+            api.setNextNode(onNotFoundCustomer.id);
         }
+    }
+});
+
+
+
+export const onFoundCustomer = createNodeDescriptor({
+    type: 'onFoundCustomer',
+    parentType: 'getCustomer',
+    defaultLabel: "On Found Customer",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: '#61d188',
+        textColor: 'white',
+        variant: 'mini'
+    }
+});
+
+export const onNotFoundCustomer = createNodeDescriptor({
+    type: 'onNotFoundCustomer',
+    parentType: 'getCustomer',
+    defaultLabel: "On Not Found Customer",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: '#61d188',
+        textColor: 'white',
+        variant: 'mini'
     }
 });

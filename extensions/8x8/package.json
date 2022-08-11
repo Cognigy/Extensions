@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.14.0",
-		"axios": "^0.26.1"
+		"axios": "^0.26.1",
+		"xml2js": "^0.4.23"
 	}
 }

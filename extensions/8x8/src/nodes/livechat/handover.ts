@@ -15,7 +15,6 @@ export interface IHandoverToAgentParams extends INodeFunctionBaseParams {
         name: string;
         email: string;
         company: string;
-        documentId: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;

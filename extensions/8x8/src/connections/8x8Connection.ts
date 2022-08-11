@@ -1,7 +1,7 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const connection: IConnectionSchema = {
-	type: "8x8",
+	type: "eightbyeight",
 	label: "8x8 OAuth",
 	fields: [
 		{ fieldName: "username" },

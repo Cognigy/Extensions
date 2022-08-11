@@ -1,11 +1,11 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { connection } from "./connections/8x8Connection";
-import { handoverToAgentNode } from "./nodes/handoverToAgent";
+import { handoverToEightByEightNode } from "./nodes/handover";
 
 export default createExtension({
 
     nodes: [
-        handoverToAgentNode
+        handoverToEightByEightNode
     ],
 
     connections: [

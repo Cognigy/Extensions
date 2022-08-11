@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
+import qs from "qs";
 
 export interface IHandoverToAgentParams extends INodeFunctionBaseParams {
     config: {
@@ -33,23 +34,17 @@ interface I8x8ChannelResponse {
     };
 }
 
-export const handoverToAgentNode = createNodeDescriptor({
-    type: "handoverToAgent",
-    defaultLabel: {
-        default: "Handover To Agent"
-    },
-    summary: {
-        default: "Retrieves the results of the uploaded document"
-    },
+export const handoverToEightByEightNode = createNodeDescriptor({
+    type: "handoverToEightByEight",
+    defaultLabel: "Handover To Agent",
+    summary: "Forwards a conversation to the 8x8 Agent Desktop",
     fields: [
         {
             key: "connection",
-            label: {
-                default: "8x8 OAuth Connection"
-            },
+            label: "8x8 OAuth Connection",
             type: "connection",
             params: {
-                connectionType: "8x8",
+                connectionType: "eightbyeight",
                 required: true
             }
         },
@@ -64,12 +59,8 @@ export const handoverToAgentNode = createNodeDescriptor({
         },
         {
             key: "channelId",
-            label: {
-                default: "Channel ID"
-            },
-            description: {
-                default: "The ID of the 8x8 Channel"
-            },
+            label: "Channel ID",
+            description: "The ID of the 8x8 Channel",
             type: "select",
             params: {
                 required: true,
@@ -79,36 +70,39 @@ export const handoverToAgentNode = createNodeDescriptor({
                 resolverFunction: async ({ api, config }) => {
                     try {
 
-                        // Authenticate 8x8 requests
-                        // Docs: https://developer.8x8.com/contactcenter/reference/createaccesstoken
-                        const authenticationResponse = await axios({
-                            method: "POST",
-                            url: "https://api.8x8.com/oauth/v2/token",
-                            headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/x-www-form-urlencoded",
-                                // @ts-ignore
-                                "Authorization": `Basic ${new Buffer.from(`${config.connection.username}:${config.connection.password}`).toString("base64")}`
-                            },
-                            data: "grant_type=client_credentials"
-                        });
+                    // Authenticate 8x8 requests
+                    // Docs: https://developer.8x8.com/contactcenter/reference/createaccesstoken
+                    const data = qs.stringify({
+                        "grant_type": "client_credentials"
+                    });
+                    const authenticationResponse = await api.httpRequest({
+                        method: "POST",
+                        url: "https://api.8x8.com/oauth/v2/token",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            // @ts-ignore
+                            "Authorization": `Basic ${Buffer.from(config.connection.username + ":" + config.connection.password).toString('base64')}`
+                        },
+                        data
+                    });
 
-                        const channelsResponse = await api.httpRequest({
-                            method: "GET",
-                            url: `https://api.8x8.com/vcc/${config.connection.region}/chat/v2/tenant/${config.connection.tenant}/channels`,
-                            headers: {
-                                "Accept": "application/json",
-                                "Authorization": `Bearer ${authenticationResponse?.data?.access_token}`
-                            }
-                        });
+                    const channelsResponse = await api.httpRequest({
+                        method: "GET",
+                        url: `https://api.8x8.com/vcc/${config.connection.region}/chat/v2/tenant/${config.connection.tenant}/channels`,
+                        headers: {
+                            "Accept": "application/json",
+                            "Authorization": `Bearer ${authenticationResponse?.data?.access_token}`
+                        }
+                    });
 
-                        // map file list to "options array"
-                        return channelsResponse?.data?.data?.map((channel: I8x8ChannelResponse) => {
-                            return {
-                                label: channel?.name,
-                                value: channel?.id,
-                            };
-                        });
+                    // map file list to "options array"
+                    return channelsResponse?.data?.data.map((channel: I8x8ChannelResponse) => {
+                        return {
+                            label: channel?.name,
+                            value: channel?.id,
+                        };
+                    });
                     } catch (error) {
                         throw new Error(error);
                     }
@@ -117,54 +111,36 @@ export const handoverToAgentNode = createNodeDescriptor({
         },
         {
             key: "language",
-            label: {
-                default: "Language"
-            },
-            description: {
-                default: "The user's language"
-            },
+            label: "Language",
+            description: "The user's language",
             type: "cognigyText",
             defaultValue: "en"
         },
         {
             key: "name",
-            label: {
-                default: "Name"
-            },
-            description: {
-                default: "The user's full name"
-            },
+            label: "Name",
+            description: "The user's full name",
             type: "cognigyText",
             defaultValue: "Cognigy User"
         },
         {
             key: "email",
-            label: {
-                default: "Email Address"
-            },
-            description: {
-                default: "The user's email address"
-            },
+            label: "Email Address",
+            description: "The user's email address",
             type: "cognigyText",
             defaultValue: "user@cognigy.com"
         },
         {
             key: "company",
-            label: {
-                default: "Company"
-            },
-            description: {
-                default: "The user's company"
-            },
+            label: "Company",
+            description: "The user's company",
             type: "cognigyText",
             defaultValue: "External"
         },
         {
             key: "storeLocation",
             type: "select",
-            label: {
-                default: "Where to store the result"
-            },
+            label: "Where to store the result",
             defaultValue: "input",
             params: {
                 options: [
@@ -183,9 +159,7 @@ export const handoverToAgentNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "cognigyText",
-            label: {
-                default: "Input Key to store Result"
-            },
+            label: "Input Key to store Result",
             defaultValue: "livechat",
             condition: {
                 key: "storeLocation",
@@ -208,10 +182,7 @@ export const handoverToAgentNode = createNodeDescriptor({
     sections: [
         {
             key: "storage",
-            label: {
-                default: "Storage Option",
-                deDE: "Speicheroption"
-            },
+            label: "Storage Option",
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -221,9 +192,7 @@ export const handoverToAgentNode = createNodeDescriptor({
         },
         {
             key: "customer",
-            label: {
-                default: "User Details"
-            },
+            label: "User Details",
             defaultCollapsed: true,
             fields: [
                 "language",
@@ -235,18 +204,13 @@ export const handoverToAgentNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "projectId" },
+        { type: "field", key: "handoverAcceptMessage" },
+        { type: "field", key: "channelId" },
         { type: "section", key: "customer" },
         { type: "section", key: "storage" }
     ],
     appearance: {
         color: "#ff0050"
-    },
-    dependencies: {
-        children: [
-            "onProcessing",
-            "onExtracted"
-        ]
     },
     function: async ({ cognigy, config, childConfigs }: IHandoverToAgentParams) => {
         const { api, input } = cognigy;

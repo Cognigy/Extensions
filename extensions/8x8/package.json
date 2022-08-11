@@ -21,13 +21,12 @@
 	"devDependencies": {
 		"@types/axios": "^0.14.0",
 		"@types/node": "^10.17.28",
+		"@types/qs": "^6.9.7",
 		"tslint": "^5.16.0",
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.14.0",
-		"axios": "^0.26.1",
-		"form-data": "^4.0.0",
-		"qs": "^6.11.0"
+		"axios": "^0.26.1"
 	}
 }

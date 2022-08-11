@@ -1,6 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
-import qs from "qs";
 
 export interface IHandoverToAgentParams extends INodeFunctionBaseParams {
     config: {
@@ -72,9 +71,6 @@ export const handoverToEightByEightNode = createNodeDescriptor({
 
                     // Authenticate 8x8 requests
                     // Docs: https://developer.8x8.com/contactcenter/reference/createaccesstoken
-                    const data = qs.stringify({
-                        "grant_type": "client_credentials"
-                    });
                     const authenticationResponse = await api.httpRequest({
                         method: "POST",
                         url: "https://api.8x8.com/oauth/v2/token",
@@ -84,7 +80,8 @@ export const handoverToEightByEightNode = createNodeDescriptor({
                             // @ts-ignore
                             "Authorization": `Basic ${Buffer.from(config.connection.username + ":" + config.connection.password).toString('base64')}`
                         },
-                        data
+                        // @ts-ignore
+                        data: "grant_type=client_credentials"
                     });
 
                     const channelsResponse = await api.httpRequest({

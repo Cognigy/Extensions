@@ -1,6 +1,7 @@
 ﻿{
   "compileOnSave": true,
   "compilerOptions": {
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2017", 

@@ -118,4 +118,4 @@ You can include a **query** to search in your **Contacts**, such as the full nam
 
 # Node: createEngagement
 
-Currently allows you to create a new TASK in Hubspot and associate it to a Contact VID
+Currently allows you to create a new TASK or NOTE in Hubspot and associate it to a Contact VID or Company VID

@@ -1,6 +1,6 @@
 {
   "name": "hubspot",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "Integrates Cognigy.AI with Hubspot.",
   "main": "build/module.js",
   "scripts": {

@@ -6,10 +6,12 @@ const EXTENSION_TIMEOUT = 10000;
 interface ICreateEngagementConfigParams {
 	engagementType: string;
 	owner: string;
+	noteBody: string;
 	taskBody: string;
 	taskSubject: string;
 	taskStatus: string;
-	taskAssociatedContact: string;
+	associatedContact: string;
+	associatedCompany: string;
 	connection: {
 		accessToken: string;
 	};
@@ -25,6 +27,7 @@ export interface ICreateEngagement extends INodeFunctionBaseParams {
 export const createEngagementNode = createNodeDescriptor({
 	type: "createEngagement",
 	defaultLabel: "Create Engagement",
+	summary: "Creates an Engagement for a Contact or Company in Hubspot",
 	fields: [
 		{
 			key: "connection",
@@ -45,6 +48,10 @@ export const createEngagementNode = createNodeDescriptor({
 					{
 						label: "Task",
 						value: "TASK"
+					},
+					{
+						label: "Note",
+						value: "NOTE"
 					}
 				],
 				required: true
@@ -60,12 +67,29 @@ export const createEngagementNode = createNodeDescriptor({
 			}
 		},
 		{
+			key: "noteBody",
+			label: "Note Body",
+			type: "cognigyText",
+			params: {
+				multiline: true,
+				rows: 3
+			},
+			condition: {
+				key: "engagementType",
+				value: "NOTE"
+			}
+		},
+		{
 			key: "taskBody",
 			label: "Task Body",
 			type: "cognigyText",
 			params: {
 				multiline: true,
 				rows: 3
+			},
+			condition: {
+				key: "engagementType",
+				value: "TASK"
 			}
 		},
 		{
@@ -74,6 +98,10 @@ export const createEngagementNode = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true
+			},
+			condition: {
+				key: "engagementType",
+				value: "TASK"
 			}
 		},
 		{
@@ -94,14 +122,20 @@ export const createEngagementNode = createNodeDescriptor({
 				],
 				required: true
 			},
+			condition: {
+				key: "engagementType",
+				value: "TASK"
+			}
 		},
 		{
-			key: "taskAssociatedContact",
+			key: "associatedContact",
 			label: "Associated Contact ID",
-			type: "cognigyText",
-			params: {
-				required: true
-			}
+			type: "cognigyText"
+		},
+		{
+			key: "associatedCompany",
+			label: "Associated Company ID",
+			type: "cognigyText"
 		},
 		{
 			key: "storeLocation",
@@ -170,8 +204,10 @@ export const createEngagementNode = createNodeDescriptor({
 		{ type: "field", key: "owner" },
 		{ type: "field", key: "taskSubject" },
 		{ type: "field", key: "taskBody" },
+		{ type: "field", key: "noteBody" },
 		{ type: "field", key: "taskStatus" },
-		{ type: "field", key: "taskAssociatedContact" },
+		{ type: "field", key: "associatedContact" },
+		{ type: "field", key: "associatedCompany" },
 		{ type: "section", key: "storage" },
 		{ type: "section", key: "advanced" },
 	],
@@ -189,12 +225,6 @@ export const createEngagementNode = createNodeDescriptor({
 			storeLocation,
 			contextKey,
 			inputKey,
-			taskAssociatedContact,
-			taskStatus,
-			taskSubject,
-			taskBody,
-			owner,
-			engagementType,
 			connection
 		} = config;
 		const { accessToken } = connection;
@@ -237,28 +267,41 @@ async function createEngagement(config: ICreateEngagementConfigParams, accessTok
 		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
 
 		try {
-			const response = await hubspot.engagements.create(
-				{
-				  "engagement": {
-					  "active": true,
-					  "ownerId": config.owner,
-					  "type": config.engagementType,
-					  "timestamp": new Date().getTime()
-				  },
-				  "associations": {
-					  "contactIds": [config.taskAssociatedContact],
-					  "companyIds": [ ],
-					  "dealIds": [ ],
-					  "ownerIds": [ ],
-					  "ticketIds": [ ],
-				  },
-				  "metadata": {
-					  "body": config.taskBody,
-					  "subject": config.taskSubject,
-					  "status": config.taskStatus,
-					  "forObjectType": "CONTACT"
-				  }
-			  });
+			let data = {
+				"engagement": {
+					"active": true,
+					"ownerId": config.owner,
+					"type": config.engagementType,
+					"timestamp": new Date().getTime()
+				},
+				"associations": {
+				  	"contactIds": config.associatedContact ? [ config.associatedContact ] : [],
+				  	"companyIds": config.associatedCompany ? [ config.associatedCompany ] : [],
+					"dealIds": [ ],
+					"ownerIds": [ ],
+					"ticketIds": [ ],
+				},
+				"metadata": null
+			};
+
+			switch (config.engagementType) {
+				case "TASK":
+					data.metadata = {
+						  	"body": config.taskBody,
+						  	"subject": config.taskSubject,
+						  	"status": config.taskStatus,
+						  	"forObjectType": "CONTACT"
+					};
+					break;
+
+				case "NOTE":
+					data.metadata = {
+						  	"body": config.noteBody,
+					};
+					break;
+			}
+
+			const response = await hubspot.engagements.create(data);
 
 			const engagement = response.engagement;
 

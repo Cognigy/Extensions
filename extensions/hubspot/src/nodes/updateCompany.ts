@@ -8,7 +8,7 @@ export interface IUpdateCompanyParams extends INodeFunctionBaseParams {
 		data: any;
 		companyId: number;
 		connection: {
-			apikey: string;
+			accessToken: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -127,13 +127,13 @@ export const updateCompanyNode = createNodeDescriptor({
 			data,
 			connection
 		} = config;
-		const { apikey } = connection;
+		const { accessToken } = connection;
 
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
 			const result = await Promise.race([
-				updateCompany(companyId, data, apikey),
+				updateCompany(companyId, data, accessToken),
 				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT))
 			]);
 
@@ -160,14 +160,14 @@ export const updateCompanyNode = createNodeDescriptor({
  * Updates a company in Hubspot
  * @param companyId the company id
  * @param data The update contact data
- * @param apiKey The apiKey to use
+ * @param accessToken The accessToken to use
  */
-async function updateCompany(companyId: number, data: any, apiKey: string): Promise<any> {
+async function updateCompany(companyId: number, data: any, accessToken: string): Promise<any> {
 	if (!companyId) return Promise.reject("No company id defined.");
 	if (!data) return Promise.reject("No contact update data defined.");
 
 	try {
-		const hubspot = new Hubspot({ apiKey });
+		const hubspot = new Hubspot({ accessToken });
 		// @ts-ignore
 		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
 

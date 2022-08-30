@@ -8,7 +8,7 @@ export interface IFindContactParams extends INodeFunctionBaseParams {
 		query: string;
 		properties: string;
 		connection: {
-			apikey: string;
+			accessToken: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -128,13 +128,13 @@ export const findContactNode = createNodeDescriptor({
 			properties,
 			connection
 		} = config;
-		const { apikey } = connection;
+		const { accessToken } = connection;
 
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
 			const result = await Promise.race([
-				findContact(query, properties, apikey),
+				findContact(query, properties, accessToken),
 				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT))
 			]);
 
@@ -161,13 +161,13 @@ export const findContactNode = createNodeDescriptor({
  * Finds a contact in Hubspot
  * @param query The email address to find
  * @param props The properties to return (e.g. firstname, lastname)
- * @param apiKey The apiKey to use
+ * @param accessToken The accessToken to use
  */
-async function findContact(query: string, props: string, apiKey: string): Promise<any> {
+async function findContact(query: string, props: string, accessToken: string): Promise<any> {
 	if (!query) return Promise.reject("No query defined.");
 
 	try {
-		const hubspot = new Hubspot({ apiKey });
+		const hubspot = new Hubspot({ accessToken });
 		// @ts-ignore
 		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
 		let result = {};

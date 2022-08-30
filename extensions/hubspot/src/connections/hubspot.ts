@@ -7,8 +7,8 @@ import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const hubspotConnection: IConnectionSchema = {
     type: "hubspot",
-    label: "Hubspot API Key",
+    label: "Hubspot Access Token",
     fields: [
-        { fieldName: "apikey" }
+        { fieldName: "accessToken" }
     ]
 };

@@ -14,6 +14,7 @@ import { getProductsNode } from "./nodes/products/getProducts";
 import { getChargesNode, onChargesFound, OnNoChargesFound } from "./nodes/refunds/getCharges";
 import { createRefundNode, onErrorRefund, onSuccessRefund } from "./nodes/refunds/createRefund";
 import { createPromotionCodeNode } from "./nodes/promotion/createPromotionCode";
+import { CreatePaymentLinkNode } from "./nodes/createPaymentLink";
 
 
 export default createExtension({
@@ -62,7 +63,9 @@ export default createExtension({
 		onSuccessRefund,
 		onErrorRefund,
 
-		createPromotionCodeNode
+		createPromotionCodeNode,
+
+		CreatePaymentLinkNode
 	],
 
 	connections: [

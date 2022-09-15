@@ -7,7 +7,7 @@ export interface IGetOrderShipmentsParams extends INodeFunctionBaseParams {
             accessToken: string;
             storeHash: string;
         };
-        orderId: number;
+        orderId: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -37,7 +37,7 @@ export const getOrderShipmentsNode = createNodeDescriptor({
         {
             key: 'orderId',
             label: {
-                default: 'Ordre ID'
+                default: 'Order ID'
             },
             type: "cognigyText",
             description: {
@@ -109,7 +109,7 @@ export const getOrderShipmentsNode = createNodeDescriptor({
     ],
     form: [
         { type: 'field', key: 'connection' },
-        { type: 'field', key: 'customerId' },
+        { type: 'field', key: 'orderId' },
         { type: 'section', key: 'storage' }
     ],
     appearance: {
@@ -138,11 +138,11 @@ export const getOrderShipmentsNode = createNodeDescriptor({
             });
 
             if (response?.data[0]?.id) {
-                const onOrdersChild = childConfigs.find(child => child.type === "onShipments");
-                api.setNextNode(onOrdersChild.id);
+                const onShipmentsChild = childConfigs.find(child => child.type === "onShipments");
+                api.setNextNode(onShipmentsChild.id);
             } else {
-                const onNoOrdersChild = childConfigs.find(child => child.type === "onNoShipments");
-                api.setNextNode(onNoOrdersChild.id);
+                const onNoShipmentsChild = childConfigs.find(child => child.type === "onNoShipments");
+                api.setNextNode(onNoShipmentsChild.id);
             }
 
             if (storeLocation === 'context') {
@@ -154,8 +154,8 @@ export const getOrderShipmentsNode = createNodeDescriptor({
 
         } catch (error) {
             api.log('error', error.message);
-            const onNoOrdersChild = childConfigs.find(child => child.type === "onNoShipments");
-            api.setNextNode(onNoOrdersChild.id);
+            const onNoShipmentsChild = childConfigs.find(child => child.type === "onNoShipments");
+            api.setNextNode(onNoShipmentsChild.id);
         }
     }
 });

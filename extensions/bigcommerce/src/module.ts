@@ -5,6 +5,7 @@ import { getAllCategoriesNode } from "./nodes/categories/getAllCategories";
 import { getCustomerNode } from "./nodes/customer/getCustomer";
 import { getCustomerOrdersNode, onNoOrders, onOrders } from "./nodes/customer/getCustomerOrders";
 import { onInvalid, onValid, validateCustomerNode } from "./nodes/customer/validateCustomer";
+import { getOrderShipmentsNode, onNoShipments, onShipments } from "./nodes/orders/getOrderShipments";
 import { getAllProductsNode } from "./nodes/products/getAllProducts";
 
 export default createExtension({
@@ -21,7 +22,11 @@ export default createExtension({
 
 		getCustomerOrdersNode,
 		onOrders,
-		onNoOrders
+		onNoOrders,
+
+		getOrderShipmentsNode,
+		onShipments,
+		onNoShipments
 	],
 
 	connections: [

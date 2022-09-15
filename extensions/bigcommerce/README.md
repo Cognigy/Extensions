@@ -20,3 +20,4 @@ must be provided within the Connetion.
 - [Get All Brands](https://developer.bigcommerce.com/api-reference/c2610608c20c8-get-all-brands)
 - [Get All Categories](https://developer.bigcommerce.com/api-reference/9cc3a53863922-get-all-categories)
 - [Get All Products](https://developer.bigcommerce.com/api-reference/4101d472a814d-get-all-products)
+- [Get Order Shipments](https://developer.bigcommerce.com/api-reference/ff860667cfc4e-get-order-shipments)

@@ -5,6 +5,7 @@ import { findContactByEmailNode } from "./nodes/findContactByEmail";
 import { updateContactNode } from "./nodes/updateContact";
 import { createContactNode } from "./nodes/createContact";
 import { findContactNode } from "./nodes/findContact";
+import { createEngagementNode } from "./nodes/createEngagement";
 
 /* import all connections */
 import { hubspotConnection } from "./connections/hubspot";
@@ -18,7 +19,8 @@ export default createExtension({
 		updateContactNode,
 		createContactNode,
 		createCompanyNode,
-		updateCompanyNode
+		updateCompanyNode,
+		createEngagementNode
 	],
 
 	connections: [

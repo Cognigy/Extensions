@@ -10,6 +10,8 @@ export interface ICreateEntityParams extends INodeFunctionBaseParams {
         };
         entityType: string,
         entityRecord: object;
+        apiVersion: string;
+        specifyApi: boolean;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -45,6 +47,21 @@ export const createEntityNode = createNodeDescriptor({
             params: {
                 required: true
             }
+        },
+        {
+            key: "specifyApi",
+            type: "toggle",
+            label: "Specify Salesforce API Version",
+            defaultValue: false
+        },
+        {
+            key: "apiVersion",
+            type: "cognigyText",
+            label: "Salesforce API Version",
+            defaultValue: "54.0",
+            params: {
+                required: false
+            },
         },
         {
             key: "storeLocation",
@@ -96,12 +113,26 @@ export const createEntityNode = createNodeDescriptor({
                 "inputKey",
                 "contextKey",
             ]
+        },
+        {
+            key: "apiVersionSection",
+            label: "API Version Settings",
+            defaultCollapsed: true,
+            condition: {
+                key: "specifyApi",
+                value: true
+            },
+            fields: [
+                "apiVersion"
+            ]
         }
     ],
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "entityType" },
         { type: "field", key: "entityRecord" },
+        { type: "field", key: "specifyApi" },
+        { type: "section", key: "apiVersionSection" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -115,14 +146,26 @@ export const createEntityNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: ICreateEntityParams) => {
         const { api } = cognigy;
-        const { entityType, entityRecord, connection, storeLocation, contextKey, inputKey } = config;
+        const { entityType, entityRecord, specifyApi, apiVersion, connection, storeLocation, contextKey, inputKey } = config;
         const { username, password, loginUrl } = connection;
+
+        let connectionInfo;
+
+        if (specifyApi === true) {
+            connectionInfo = {
+                loginUrl,
+                version: apiVersion
+            };
+        } else {
+            connectionInfo = {
+                loginUrl
+            };
+        }
 
         try {
 
-            const conn = new jsforce.Connection({
-                loginUrl
-            });
+            const conn = new jsforce.Connection(
+                connectionInfo);
 
             const userInfo = await conn.login(username, password);
 

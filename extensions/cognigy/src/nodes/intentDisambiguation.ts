@@ -1,10 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { createQuickReplies } from "../helpers/createQuickReplies";
+import { createList, createPlainText } from "../helpers/createList";
+import { isBreakOrContinueStatement } from "typescript";
 
 export interface intentDisambiguationParams extends INodeFunctionBaseParams {
 	config: {
 		maxScoreDelta: number,
 		disambiguationQuestion: string;
+		replyType: string;
+		punctuation: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -17,7 +21,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 		{
 			key: "maxScoreDelta",
 			label: "Maximum Score Delta",
-			description: "The maximum difference between to intent scores.",
+			description: "The maximum difference between two intent scores.",
 			type: "number",
 			params: {
 				required: true
@@ -31,6 +35,60 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			params: {
 				required: true
 			}
+		},
+		{
+			key: "replyType",
+			label: "Reply Type",
+            description: "What type of reply should be used?",
+			type: "select",
+			params: {
+				options: [
+					{
+						label: "Quick Replies",
+						value: "quickReplies"
+					},
+					{
+						label: "List",
+						value: "list"
+					},
+					{
+						label: "Plain Text",
+						value: "plainText"
+					},
+					{
+						label: "Data Only",
+						value: "dataOnly"
+					},
+				]
+			},
+			defaultValue: "quickReplies"
+		},
+		{
+			key: "punctuation",
+			label: "Punctuation",
+            description: "How to end the sentence",
+			type: "select",
+			params: {
+				options: [
+					{
+						label: ".",
+						value: "."
+					},
+					{
+						label: "?",
+						value: "?"
+					},
+					{
+						label: "!",
+						value: "!"
+					}
+				]
+			},
+			condition: {
+				key: "replyType",
+				value: "plainText"
+			},
+			defaultValue: "?"
 		},
 		{
 			key: "storeLocation",
@@ -87,11 +145,21 @@ export const intentDisambiguationNode = createNodeDescriptor({
 	form: [
 		{ type: "field", key: "maxScoreDelta" },
 		{ type: "field", key: "disambiguationQuestion"},
+		{ type: "field", key: "replyType"},
+		{ type: "field", key: "punctuation"},
+		{ type: "field", key: "butStatement"},
 		{ type: "section", key: "storage" },
+	],
+	tokens: [
+		{
+			label: "First Intent",
+			script: "input.nlu.intentMapperResults.finalIntentDisambiguationSentence",
+			type: "input"
+		}
 	],
 	function: async ({ cognigy, config }: intentDisambiguationParams) => {
 		const { input, api } = cognigy;
-		const { maxScoreDelta, disambiguationQuestion, storeLocation, contextKey, inputKey } = config;
+		const { maxScoreDelta, disambiguationQuestion, replyType, punctuation, storeLocation, contextKey, inputKey} = config;
 
 		try {
 			let similarIntents = [];
@@ -118,26 +186,45 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			};
 
 			if (output.count > 0) {
-				api.say('', {
-					"_cognigy": {
-						"_fallbackText": disambiguationQuestion,
-						"_default": {
-							"message": {
-								"quick_replies": createQuickReplies(input, array),
-								"text": disambiguationQuestion
+				switch (replyType) {
+					case "quickReplies":
+						api.say('', {
+							"_cognigy": {
+								"_fallbackText": disambiguationQuestion,
+								"_default": {
+									"_quickReplies": {
+										"type": "quick_replies",
+										"quickReplies": createQuickReplies(input, array),
+										"text": disambiguationQuestion
+									}
+								}
 							}
-						}
-					}
-				});
-			}
-
-
-if (storeLocation === "context") {
-	api.addToContext(contextKey, output, "simple");
-} else {
-	// @ts-ignore
-	api.addToInput(inputKey, output);
-}
+						});
+						break;
+					case "list":
+						api.say(disambiguationQuestion, '');
+						api.say('', {
+							"_cognigy": {
+    							"_default": {
+      								"_list": {
+        								"type": "list",
+        								"items": createList(input, array),
+        								"button": { "title": "", "type": "", "payload": "", "condition": "" }
+      								}
+    							}
+  							}
+						});
+						break;
+					case "plainText":
+						api.say(disambiguationQuestion + createPlainText(input, array) + punctuation, '');
+				}
+				}
+	if (storeLocation === "context") {
+		api.addToContext(contextKey, output, "simple");
+		} else {
+					// @ts-ignore
+			api.addToInput(inputKey, output);
+		}
 		} catch (error) {
 	if (storeLocation === "context") {
 		api.addToContext(contextKey, error, "simple");

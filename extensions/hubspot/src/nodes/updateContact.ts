@@ -8,7 +8,7 @@ export interface IUpdateContactParams extends INodeFunctionBaseParams {
 		data: any;
 		vid: number;
 		connection: {
-			apikey: string;
+			accessToken: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -132,13 +132,13 @@ export const updateContactNode = createNodeDescriptor({
 			data,
 			connection
 		} = config;
-		const { apikey } = connection;
+		const { accessToken } = connection;
 
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
 			const result = await Promise.race([
-				updateContact(vid, data, apikey),
+				updateContact(vid, data, accessToken),
 				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT))
 			]);
 
@@ -165,14 +165,14 @@ export const updateContactNode = createNodeDescriptor({
  * Updates a contact in Hubspot
  * @param vid The email hubspot contact id
  * @param data The update contact data
- * @param apiKey The apiKey to use
+ * @param accessToken The accessToken to use
  */
-async function updateContact(vid: number, data: any, apiKey: string): Promise<any> {
+async function updateContact(vid: number, data: any, accessToken: string): Promise<any> {
 	if (!vid) return Promise.reject("No contact id defined.");
 	if (!data) return Promise.reject("No contact update data defined.");
 
 	try {
-		const hubspot = new Hubspot({ apiKey });
+		const hubspot = new Hubspot({ accessToken });
 		// @ts-ignore
 		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
 

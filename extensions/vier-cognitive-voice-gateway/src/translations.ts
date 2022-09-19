@@ -180,7 +180,6 @@ export default {
         nodeLabel: {
             'default': "Send Data",
             'deDE': "Daten senden",
-            'frFR': "Test French",
         },
         nodeSummary: {
             'default': "Attach custom data to a dialog",

@@ -9,7 +9,7 @@ export interface IPlayParams extends INodeFunctionBaseParams {
 }
 
 export const playNode = createNodeDescriptor({
-  type: 'play',
+  type: 'playAudioFile',
   defaultLabel: t.play.nodeLabel,
   summary: t.play.nodeSummary,
   appearance: {

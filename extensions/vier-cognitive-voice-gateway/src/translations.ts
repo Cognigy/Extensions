@@ -351,7 +351,7 @@ export default {
         },
         sectionStopConditionLabel: {
             'default': "Stop Condition",
-            'deDE': "Stopbedingung",
+            'deDE': "Stoppbedingung",
         },
     },
     speak: {

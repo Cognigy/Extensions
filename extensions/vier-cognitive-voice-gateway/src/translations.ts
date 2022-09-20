@@ -130,6 +130,7 @@ export default {
         },
         nodeSummary: {
             'default': "Say something to the caller with a prompt to enter a number",
+            'deDE': "Dem:Der Anrufer:in etwas mitteilen und ihn:sie auffordern, eine Nummer einzugeben",
         },
     },
     recordingStart: {
@@ -193,12 +194,15 @@ export default {
         },
         childFailureLabel: {
             'default': "On Failure",
+            'deDE': "Bei Misserfolg",
         },
         childSuccessLabel: {
             'default': "On Success",
+            'deDE': "Bei Erfolg",
         },
         childTerminationLabel: {
             'default': "On Termination",
+            'deDE': "Bei Beendigung",
         },
         inputAcceptAnsweringMachinesDescription: {
             'default': "The bot accepts answering machines picking up the calls.",
@@ -382,6 +386,7 @@ export default {
         },
         inputProfileTokenDescription: {
             'default': "Please use the profile token as displayed in VIER Cognitive Voice Gateway, Speech Service Profiles",
+            'deDE': "Bitte verwenden Sie das Profiltoken, wie es in VIER Cognitive Voice Gateway, Sprachdienst-Profile, angezeigt wird",
         },
         inputProfileTokenFallbackDescription: {
             'default': "Profile Token Fallback",
@@ -405,12 +410,15 @@ export default {
         },
         inputTranscriberDescription: {
             'default': "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token",
+            'deDE': "Geben Sie einen der folgenden Speech-to-Text-Dienste ein: 'GOOGLE', 'IBM', 'MICROSOFT' oder lassen Sie das Feld leer, um über das Profiltoken einen Dienst festzulegen",
         },
         nodeLabel: {
             'default': "Set Speech-to-Text Service",
+            'deDE': "Speech-to-Text-Dienst festlegen",
         },
         nodeSummary: {
             'default': "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
+            'deDE': "Speech-to-Text-Dienste müssen verwendet werden, um die erwartete Eingabe bestmöglich zu transkribieren",
         },
         sectionFallback: {
             'default': "Fallback Option",
@@ -438,9 +446,11 @@ export default {
     timer: {
         inputTimeoutStartDescription: {
             'default': "The Inactivity Timeout can only be set, if not already in the VIER Cognitive Voice Gateway project settings duration",
+            'deDE': "Die Zeitüberschreitung bei Inaktivität kann nur eingestellt werden, wenn sie nicht bereits in den Projekteinstellungen von VIER Cognitive Voice Gateway hinterlegt ist",
         },
         inputTimeoutStopDescription: {
             'default': "Stops the Inactivity Timeout detection",
+            'deDE': "Stoppt die Zeitüberschreitungs-Erkennung bei Inaktivität",
         },
         nodeLabel: {
             'default': "Inactivity Timeout",
@@ -448,6 +458,7 @@ export default {
         },
         nodeSummary: {
             'default': "Sets the Inactivity Timeout in (s)",
+            'deDE': "Legt die Zeitüberschreitung bei Inaktivität (s) fest",
         },
         selectTimerLabel: {
             'default': "Select Timeout",

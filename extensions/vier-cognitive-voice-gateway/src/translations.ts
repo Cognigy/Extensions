@@ -451,6 +451,7 @@ export default {
         },
         selectTimerLabel: {
             'default': "Select Timeout",
+            'deDE': "Zeitüberschreitung einstellen",
         },
         useStartInputsLabel: {
             'default': "Activate Inactivity Timeout (s)",

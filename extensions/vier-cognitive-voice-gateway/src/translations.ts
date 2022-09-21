@@ -140,7 +140,7 @@ export default {
         },
         inputMaxDurationLabel: {
             'default': "Maximum Call Recording Duration (s)",
-            'deDE': "Maximale Dauer der Gesprächsaufzeichnung",
+            'deDE': "Maximale Dauer der Gesprächsaufzeichnung (in s)",
         },
         inputSpeakersLabel: {
             'default': "Speakers to record",

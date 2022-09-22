@@ -100,7 +100,7 @@ export default {
     play: {
         inputBargeInDescription: {
             'default': "To let the speaker interrupt the audio file, activate this checkbox.",
-            'deDE': "Um den:die Sprechend:e die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
+            'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
         },
         inputUrlLabel: {
             'default': "Audio URL",
@@ -190,19 +190,19 @@ export default {
     shared: {
         childDefaultLabel: {
             'default': "Default",
-            'deDE': "Standard",
+            'deDE': "Default",
         },
         childFailureLabel: {
             'default': "On Failure",
-            'deDE': "Bei Misserfolg",
+            'deDE': "On Failure",
         },
         childSuccessLabel: {
             'default': "On Success",
-            'deDE': "Bei Erfolg",
+            'deDE': "On Success",
         },
         childTerminationLabel: {
             'default': "On Termination",
-            'deDE': "Bei Beendigung",
+            'deDE': "On Termination",
         },
         inputAcceptAnsweringMachinesDescription: {
             'default': "The bot accepts answering machines picking up the calls.",
@@ -214,7 +214,7 @@ export default {
         },
         inputBargeInDescription: {
             'default': "To let the speaker interrupt the audio file, activate this checkbox.",
-            'deDE': "Um den:die Sprechend:e die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
+            'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
         },
         inputBargeInLabel: {
             'default': "Barge In",

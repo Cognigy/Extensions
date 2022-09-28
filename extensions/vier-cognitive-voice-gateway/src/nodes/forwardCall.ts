@@ -2,8 +2,13 @@ import {
   createNodeDescriptor,
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
-import { bakeData, bakeSipHeaders } from '../helpers/bake';
-import { stripEmpty } from '../helpers/stripEmpty';
+import {
+  normalizeData,
+  normalizeSipHeaders,
+  convertWhisperText,
+  normalizeText,
+  convertRingTimeout
+} from '../helpers/bake';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
 
@@ -105,43 +110,23 @@ export const forwardCallNode = createNodeDescriptor({
 
   function: async ({ cognigy, config }: IForwardCallParams) => {
     const { api } = cognigy;
-    let customSipHeaders: object;
-    let data: object;
-
-    const whisperText = config.whisperingText;
-    delete config.whisperingText;
-
-    if (config.customSipHeaders) {
-      customSipHeaders = bakeSipHeaders(config.customSipHeaders);
-    }
-
-    if (config.data) {
-      data = bakeData(config.data);
-    }
 
     if (config.ringTimeout) {
       config.ringTimeout = config.ringTimeout * 1000;
     }
 
-    const strippedConfig = stripEmpty(config);
-
-    let responseData: object = {
+    const payload = {
       status: 'forward',
-      ...strippedConfig,
-      customSipHeaders,
-      data,
+      destinationNumber: normalizeText(config.destinationNumber),
+      callerId: normalizeText(config.callerId),
+      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      ringTimeout: convertRingTimeout(config.ringTimeout),
+      acceptAnsweringMachines: config.acceptAnsweringMachines,
+      data: normalizeData(config.data),
+      whispering: convertWhisperText(config.whisperingText),
     };
 
-    if (whisperText) {
-      responseData = {
-        ...responseData,
-        whispering: {
-          text: whisperText,
-        },
-      };
-    }
-
-    api.say('', responseData);
+    api.say('', payload);
 
     /*
       Example data

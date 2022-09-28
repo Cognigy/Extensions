@@ -1,6 +1,11 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData, bakeSipHeaders } from '../helpers/bake';
-import { stripEmpty } from '../helpers/stripEmpty';
+import {
+  convertRingTimeout,
+  convertWhisperText,
+  normalizeData,
+  normalizeSipHeaders,
+  normalizeText
+} from '../helpers/bake';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
 
@@ -29,13 +34,6 @@ export const bridgeCallNode = createNodeDescriptor({
   tags: ['service'],
   behavior: {
     entrypoint: true
-  },
-  dependencies: {
-    children: [
-      'onBridgeSuccess',
-      'onBridgeFailure',
-      'onBridgeTermination',
-    ]
   },
   fields: [
     {
@@ -121,123 +119,23 @@ export const bridgeCallNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config, childConfigs }: IBridgeCallParams) => {
     const { api } = cognigy;
-    let customSipHeaders: object;
-    let data: object;
 
-    const onFailureChild = childConfigs.find(child => child.type === 'onBridgeFailure');
-    const onSuccessChild = childConfigs.find(child => child.type === 'onBridgeSuccess');
-    const onTerminateChild = childConfigs.find(child => child.type === 'onBridgeTermination');
-
-    const whisperText = config.whisperingText;
-    delete config.whisperingText;
-
-    if (config.customSipHeaders) {
-      customSipHeaders = bakeSipHeaders(config.customSipHeaders);
-    }
-
-    if (config.data) {
-      data = bakeData(config.data);
-    }
-
-    if (config.ringTimeout) {
-      config.ringTimeout = config.ringTimeout * 1000;
-    }
-
-    const strippedConfig = stripEmpty(config);
-
-    let responseData: object = {
+    const payload = {
       status: 'bridge',
-      ...strippedConfig,
-      customSipHeaders,
-      data
+      headNumber: normalizeText(config.headNumber),
+      extensionLength: config.extensionLength,
+      callerId: normalizeText(config.callerId),
+      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      ringTimeout: convertRingTimeout(config.ringTimeout),
+      acceptAnsweringMachines: config.acceptAnsweringMachines,
+      data: normalizeData(config.data),
+      whispering: convertWhisperText(config.whisperingText),
     };
 
-    if (whisperText) {
-      responseData = {
-        ...responseData,
-        whispering: {
-          text: whisperText,
-        }
-      };
-    }
-
-    api.say('', responseData);
-
-    if (responseData) {
-      api.setNextNode(onSuccessChild.id);
-    } else {
-      api.setNextNode(onFailureChild.id);
-    }
+    api.say('', payload);
 
     if (config.endFlow) {
       api.stopExecution();
-      api.setNextNode(onTerminateChild.id);
     }
-  }
-});
-
-export const onBridgeSuccess = createNodeDescriptor({
-  type: 'onBridgeSuccess',
-  parentType: 'bridge',
-  defaultLabel: t.shared.childSuccessLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: []
-      }
-    }
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini'
-  }
-});
-
-export const onBridgeFailure = createNodeDescriptor({
-  type: 'onBridgeFailure',
-  parentType: 'bridge',
-  defaultLabel: t.shared.childFailureLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: []
-      }
-    }
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini'
-  }
-});
-
-export const onBridgeTermination = createNodeDescriptor({
-  type: 'onBridgeTermination',
-  parentType: 'bridge',
-  defaultLabel: t.shared.childTerminationLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: []
-      }
-    }
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini'
   }
 });

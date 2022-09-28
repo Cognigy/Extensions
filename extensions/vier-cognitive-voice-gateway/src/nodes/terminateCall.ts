@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData } from '../helpers/bake';
+import { normalizeData } from '../helpers/bake';
 import t from '../translations';
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {
@@ -51,7 +51,7 @@ export const terminateCallNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ITerminateCallParams) => {
     const { api } = cognigy;
-    const data = bakeData(config.data);
+    const data = normalizeData(config.data);
     api.say('', {
       status: 'termination',
       data,

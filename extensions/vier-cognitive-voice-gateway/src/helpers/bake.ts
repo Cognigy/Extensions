@@ -1,30 +1,71 @@
-export function bakeData(obj: object) {
-  return Object.entries(obj).map(([key, value]): [string, string] => {
-    return [key, value.toString()];
-  })
-  .reduce((previous, [key, value]) => {
-    return {
-      ...previous,
-      [key]: value
-    };
-  }, {});
+export function normalizeText(text) {
+  if (!text) {
+    return undefined;
+  }
+  const trimmed = !text.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  return trimmed;
 }
 
-export function bakeSipHeaders(obj: object) {
-  let allHeaders = Object.entries(obj);
-  if (allHeaders.every(([key]) => !key.startsWith('X-'))) {
-    allHeaders = allHeaders.map(([key, value]) => [`X-${key}`, value]);
+export function convertWhisperText(text) {
+  if (!text) {
+    return undefined;
   }
-  return allHeaders.map(([key, value]): [string, Array<string>] => {
+  text = text.trim();
+  if (!text) {
+    return undefined;
+  }
+  return {
+    text: text,
+  };
+}
+
+export function convertRingTimeout(timeout: number | undefined) {
+  if (!timeout) {
+    return undefined;
+  }
+  return timeout * 1000;
+}
+
+export function normalizeData(dataObject: object | undefined) {
+  if (!dataObject) {
+    return dataObject;
+  }
+
+  let entries = Object.entries(dataObject);
+  if (entries.length == 0) {
+    return undefined;
+  }
+
+  let output = {};
+  for (const [key, value] of entries) {
+    output[key] = `${value}`;
+  }
+  return output;
+}
+
+export function normalizeSipHeaders(headersObject: object | undefined) {
+  if (!headersObject) {
+    return headersObject;
+  }
+
+  let headerPairs = Object.entries(headersObject);
+  if (headerPairs.length == 0) {
+    return undefined;
+  }
+
+  let hasPrefixes = headerPairs.some(([name]) => name.startsWith('X-'));
+  const headerPrefix = hasPrefixes ? '' : 'X-';
+  let headers = {};
+  for (const [name, value] of headerPairs) {
+    const fullName = `${headerPrefix}${name}`;
     if (Array.isArray(value)) {
-      return [key, [...value.map((val) => val.toString())]];
+      headers[fullName] = value.map((val) => `${val}`);
+    } else {
+      headers[fullName] = [`${value}`];
     }
-    return [key, [value.toString()]];
-  })
-  .reduce((previous, [key, value]) => {
-    return {
-      ...previous,
-      [key]: value
-    };
-  }, {});
+  }
+  return headers;
 }

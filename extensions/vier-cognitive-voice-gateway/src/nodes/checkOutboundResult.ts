@@ -27,43 +27,20 @@ export const checkOutboundResultNode = createNodeDescriptor({
   function: async ({ cognigy, childConfigs }: INodeFunctionBaseParams) => {
     const { api } = cognigy;
 
-    const onFailureChild = childConfigs.find(
-      (child) => child.type === 'onOutboundFailure'
-    );
-    const onSuccessChild = childConfigs.find(
-      (child) => child.type === 'onOutboundSuccess'
-    );
-    const onTerminateChild = childConfigs.find(
-      (child) => child.type === 'onOutboundTermination'
-    );
-    const onDefaultChild = childConfigs.find(
-      (child) => child.type === 'onOutboundDefault'
-    );
-
-    // Check if the Child Node exists
-    if (!onSuccessChild) {
-      throw new Error(
-        'Unable to find \'onSuccessChild\'. Seems its not attached.'
-      );
+    function childByType(type: string) {
+      const child = childConfigs.find((child) => child.type === type);
+      if (!child) {
+        throw new Error(
+          `Unable to find \'${child}\'. Seems its not attached.`
+        );
+      }
+      return child;
     }
 
-    if (!onFailureChild) {
-      throw new Error(
-        'Unable to find \'onFailureChild\'. Seems its not attached.'
-      );
-    }
-
-    if (!onDefaultChild) {
-      throw new Error(
-        'Unable to find \'onDefaultChild\'. Seems its not attached.'
-      );
-    }
-
-    if (!onTerminateChild) {
-      throw new Error(
-        'Unable to find \'onTerminateChild\'. Seems its not attached.'
-      );
-    }
+    const onFailureChild = childByType('onOutboundFailure');
+    const onSuccessChild = childByType('onOutboundSuccess');
+    const onTerminateChild = childByType('onOutboundTermination');
+    const onDefaultChild = childByType('onOutboundDefault');
 
     if (cognigy.input.data.status === 'outbound-success') {
       api.setNextNode(onSuccessChild.id);

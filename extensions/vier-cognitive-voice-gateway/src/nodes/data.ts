@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData } from '../helpers/bake';
+import { normalizeData } from '../helpers/bake';
 import t from '../translations';
 
 export interface ISendDataParams extends INodeFunctionBaseParams {
@@ -29,7 +29,7 @@ export const sendDataNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config } : ISendDataParams) => {
     const { api } = cognigy;
-    const data = bakeData(config.data);
+    const data = normalizeData(config.data);
 
     api.say('', {
       status: 'data',

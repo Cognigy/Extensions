@@ -30,9 +30,7 @@ export const checkOutboundResultNode = createNodeDescriptor({
     function childByType(type: string) {
       const child = childConfigs.find((child) => child.type === type);
       if (!child) {
-        throw new Error(
-          `Unable to find \'${child}\'. Seems its not attached.`
-        );
+        throw new Error(`Unable to find '${child}'. Seems its not attached.`);
       }
       return child;
     }

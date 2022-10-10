@@ -9,7 +9,7 @@ export default {
         inputExtensionLengthLabel: {
             'default': "Extension Length",
             'deDE': "Durchwahl-Länge",
-            'frFR': "Longueur de l'extension",
+            'esES': "Longueur de l'extension",
         },
         inputHeadNumberDescription: {
             'default': "Enter the prefix of the phone number the call should be forwarded to.",
@@ -26,12 +26,12 @@ export default {
         nodeLabel: {
             'default': "Forward Call to a Contact Center",
             'deDE': "Anruf an ein Contact Center weiterleiten",
-            'frFR': "Transférer l'appel vers un centre de contact",
+            'esES': "Transférer l'appel vers un centre de contact",
         },
         nodeSummary: {
             'default': "Forward the call to a contact center for agent assistance",
             'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
-            'frFR': "Transférer l'appel vers un centre de contact pour l'assistance d'un agent",
+            'esES': "Transférer l'appel vers un centre de contact pour l'assistance d'un agent",
         },
     },
     forward: {
@@ -42,37 +42,37 @@ export default {
         inputDestinationNumberLabel: {
             'default': "Destination Phone Number",
             'deDE': "Ziel-Rufnummer",
-            'frFR': "Numéro d'appel cible",
+            'esES': "Numéro d'appel cible",
         },
         nodeLabel: {
             'default': "Forward Call",
             'deDE': "Anruf weiterleiten",
-            'frFR': "Transférer l'appel",
+            'esES': "Transférer l'appel",
         },
         nodeSummary: {
             'default': "Forward the call to a different destination",
             'deDE': "Anruf an ein anderes Ziel weiterleiten",
-            'frFR': "Transférer l'appel vers une autre destination",
+            'esES': "Transférer l'appel vers une autre destination",
         },
         sectionAdditionalDataLabel: {
             'default': "Data",
             'deDE': "Daten",
-            'frFR': "Données",
+            'esES': "Données",
         },
         sectionAdditionalSettingsLabel: {
             'default': "Additional Settings",
             'deDE': "Zusätzliche Einstellungen",
-            'frFR': "Paramètres supplémentaires",
+            'esES': "Paramètres supplémentaires",
         },
         sectionCallLabel: {
             'default': "Call Settings",
             'deDE': "Anruf-Einstellungen",
-            'frFR': "Paramètres d'appel",
+            'esES': "Paramètres d'appel",
         },
         sectionGeneralLabel: {
             'default': "General Settings",
             'deDE': "Allgemeine Einstellungen",
-            'frFR': "Paramètres généraux",
+            'esES': "Paramètres généraux",
         },
     },
     multipleChoicePrompt: {
@@ -115,7 +115,7 @@ export default {
         inputUrlLabel: {
             'default': "Audio URL",
             'deDE': "Audio-URL",
-            'frFR': "URL audio",
+            'esES': "URL audio",
         },
         inputUrlLabelDescription: {
             'default': "Enter the location of the audio file. \nAllowed formats: Linear PCM with signed 16 bits (8 kHz or 16 kHz), A-law or µ-law 8 kHz.",
@@ -124,12 +124,12 @@ export default {
         nodeLabel: {
             'default': "Play Audio File",
             'deDE': "Audiodatei abspielen",
-            'frFR': "Lire le fichier audio\n",
+            'esES': "Lire le fichier audio\n",
         },
         nodeSummary: {
             'default': "Play an audio file to the call",
             'deDE': "Audiodatei für den Anruf abspielen",
-            'frFR': "Lire un fichier audio lors de l'appel",
+            'esES': "Lire un fichier audio lors de l'appel",
         },
     },
     promptForNumber: {
@@ -194,7 +194,7 @@ export default {
         nodeLabel: {
             'default': "Send Data",
             'deDE': "Daten senden",
-            'frFR': "Envoyer des données",
+            'esES': "Envoyer des données",
         },
         nodeSummary: {
             'default': "Attach custom data to a dialog",
@@ -205,7 +205,7 @@ export default {
         childDefaultLabel: {
             'default': "Default",
             'deDE': "Default",
-            'frFR': "Par défaut",
+            'esES': "Par défaut",
         },
         childFailureLabel: {
             'default': "On Failure",
@@ -290,7 +290,7 @@ export default {
         inputLanguageLabel: {
             'default': "Language",
             'deDE': "Sprache",
-            'frFR': "Langue",
+            'esES': "Langue",
         },
         inputMaxDigitsLabel: {
             'default': "Maximum Allowed Digits",
@@ -303,7 +303,7 @@ export default {
         inputRecordingIdLabel: {
             'default': "Call Recording ID",
             'deDE': "Gesprächsaufzeichnungs-ID",
-            'frFR': "Identifiant d’enregistrement d’appel",
+            'esES': "Identifiant d’enregistrement d’appel",
         },
         inputRingTimeoutDescription: {
             'default': "Enter the maximum time in seconds that the call should ring before the call attempt is canceled.",
@@ -328,7 +328,7 @@ export default {
         inputSynthesizersLabel: {
             'default': "Text-to-Speech Profiles",
             'deDE': "Text-to-Speech-Profile",
-            'frFR': "Profils de synthèse texte-parole",
+            'esES': "Profils de synthèse texte-parole",
         },
         inputTextDescription: {
             'default': "Enter the message to introduce the prompt to the caller.",
@@ -337,7 +337,7 @@ export default {
         inputTextLabel: {
             'default': "Message",
             'deDE': "Nachricht",
-            'frFR': "Message",
+            'esES': "Message",
         },
         inputTimeoutDescription: {
             'default': "Enter the duration in seconds after which the prompt should be cancelled.",
@@ -346,7 +346,7 @@ export default {
         inputTimeoutLabel: {
             'default': "Timeout",
             'deDE': "Zeitüberschreitung",
-            'frFR': "Temporisation",
+            'esES': "Temporisation",
         },
         inputUseMaxDigitsDescription: {
             'default': "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
@@ -371,7 +371,7 @@ export default {
         inputWhisperingTextLabel: {
             'default': "Whispering Announcement",
             'deDE': "Whispering-Ansage",
-            'frFR': "Annonce d'appel",
+            'esES': "Annonce d'appel",
         },
         sectionStopConditionLabel: {
             'default': "Stop Condition",
@@ -382,12 +382,12 @@ export default {
         inputAdditionalTextLabel: {
             'default': "Additional Text",
             'deDE': "Zusätzlicher Text",
-            'frFR': "Texte supplémentaire",
+            'esES': "Texte supplémentaire",
         },
         inputTextLabel: {
             'default': "Text",
             'deDE': "Text",
-            'frFR': "Texte",
+            'esES': "Texte",
         },
         nodeLabel: {
             'default': "Speak (with SSML formatting)",
@@ -400,14 +400,14 @@ export default {
         sectionTextOptionsLabel: {
             'default': "Additional Text Section",
             'deDE': "Zusätzlicher Textabschnitt",
-            'frFR': "Section de texte supplémentaire",
+            'esES': "Section de texte supplémentaire",
         },
     },
     speechToText: {
         inputLanguageLabel: {
             'default': "Language",
             'deDE': "Sprache",
-            'frFR': "Langue",
+            'esES': "Langue",
         },
         inputProfileTokenDescription: {
             'default': "Please use the profile token as displayed in VIER Cognitive Voice Gateway, Speech Service Profiles",
@@ -424,7 +424,7 @@ export default {
         inputProfileTokenLabel: {
             'default': "Profile Token",
             'deDE': "Profil-Token",
-            'frFR': "Jeton de profil",
+            'esES': "Jeton de profil",
         },
         inputServiceFallbackLabel: {
             'default': "Speech-to-Text Service Fallback",
@@ -433,7 +433,7 @@ export default {
         inputServiceLabel: {
             'default': "Speech-to-Text Service",
             'deDE': "Speech-to-Text-Dienst",
-            'frFR': "Service de transcription de la parole",
+            'esES': "Service de transcription de la parole",
         },
         inputTranscriberDescription: {
             'default': "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token",
@@ -454,24 +454,24 @@ export default {
         sectionSelectLanguageLabel: {
             'default': "Select Language",
             'deDE': "Sprache wählen",
-            'frFR': "Sélectionner la langue",
+            'esES': "Sélectionner la langue",
         },
         sectionSelectSTTLabel: {
             'default': "Select Speech-to-Text Services",
             'deDE': "Speech-to-Text-Dienste wählen",
-            'frFR': "Sélectionner les services de transcription de la parole",
+            'esES': "Sélectionner les services de transcription de la parole",
         },
     },
     terminate: {
         nodeLabel: {
             'default': "End Call",
             'deDE': "Anruf beenden",
-            'frFR': "Terminer l'appel",
+            'esES': "Terminer l'appel",
         },
         nodeSummary: {
             'default': "Cancel the call",
             'deDE': "Anruf abbrechen",
-            'frFR': "Annuler l'appel",
+            'esES': "Annuler l'appel",
         },
     },
     timer: {

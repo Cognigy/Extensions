@@ -5,10 +5,10 @@ This extension is based on node-hubspot (https://www.npmjs.com/package/hubspot)
 Please note the Hubspot API calls will sometimes not return a result. In that case we will abort after 10000ms.
 
 ### Connection
-This extension needs a Connection to be defined and passed to the Nodes. The Connection must have the following keys:
+This extension needs a Connection to be defined and passed to the Nodes. The Connection must use an access token created in a [Hubspot Private App](https://developers.hubspot.com/docs/api/private-apps):
 
-- key: apiKey
-- value: Your Hubspot API KEY
+- accessToken: accessToken
+- value: Your Hubspot app Access Token
 
 **Properties**
 
@@ -115,3 +115,7 @@ You can include a **query** to search in your **Contacts**, such as the full nam
     ]
   }
 ```
+
+# Node: createEngagement
+
+Currently allows you to create a new TASK or NOTE in Hubspot and associate it to a Contact VID or Company VID

@@ -1,11 +1,11 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import {
   convertRingTimeout,
-  convertWhisperText,
+  convertWhisperText, delay,
   normalizeData,
   normalizeSipHeaders,
   normalizeText
-} from '../helpers/bake';
+} from '../helpers/util';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
 
@@ -117,7 +117,7 @@ export const bridgeCallNode = createNodeDescriptor({
       type: 'section',
     }
   ],
-  function: async ({ cognigy, config, childConfigs }: IBridgeCallParams) => {
+  function: async ({ cognigy, config }: IBridgeCallParams) => {
     const { api } = cognigy;
 
     const payload = {
@@ -132,10 +132,11 @@ export const bridgeCallNode = createNodeDescriptor({
       whispering: convertWhisperText(config.whisperingText),
     };
 
-    api.say('', payload);
-
-    if (config.endFlow) {
-      api.stopExecution();
-    }
+    return delay(100, () => {
+      api.say('', payload);
+      if (config.endFlow) {
+        api.stopExecution();
+      }
+    });
   }
 });

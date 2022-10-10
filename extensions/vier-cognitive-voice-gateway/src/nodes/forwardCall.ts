@@ -126,7 +126,15 @@ export const forwardCallNode = createNodeDescriptor({
       whispering: convertWhisperText(config.whisperingText),
     };
 
-    api.say('', payload);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        api.say('', payload);
+        if (config.endFlow) {
+          api.stopExecution();
+        }
+        resolve();
+      }, 500);
+    });
 
     /*
       Example data
@@ -145,8 +153,5 @@ export const forwardCallNode = createNodeDescriptor({
       }
     */
     // cognigy.api.setNextNode(nodeId);
-    if (config.endFlow) {
-      api.stopExecution();
-    }
   },
 });

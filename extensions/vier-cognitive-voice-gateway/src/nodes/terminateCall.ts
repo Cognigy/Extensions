@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { normalizeData } from '../helpers/bake';
+import { normalizeData } from '../helpers/util';
 import t from '../translations';
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {

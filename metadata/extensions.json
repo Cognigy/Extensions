@@ -336,9 +336,9 @@
         {
             "name": "cognigy",
             "label": "Cognigy Customs",
-            "version": "4.1.1",
+            "version": "4.1.5",
             "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/cognigy",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy411/cognigy.tar.gz",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy415/cognigy.tar.gz",
             "description": "Contains various Cognigy Flow Node extensions",
             "longDescription": "Next to the natively provided Flow Nodes in Cognigy.AI, this Extension exposes custom functions which use Cognigy-related APIs and systems.",
             "tags": [
@@ -858,16 +858,17 @@
         {
             "name": "hubspot",
             "label": "Hubspot",
-            "version": "4.0.1",
+            "version": "4.0.3",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360021247139-Hubspot-Maintain-Contact-Information",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hubspot401/hubspot.tar.gz",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/hubspot402/hubspot.tar.gz",
             "description": "Find and update contacts or companies in Hubspot",
             "longDescription": "HubSpot is an American developer and marketer of software products for inbound marketing, sales, and customer service. Its products and services aim to provide tools for customer relationship management, social media marketing, content management, lead generation, web analytics, search engine optimization, live chat, and customer support.",
             "tags": [
                 "hubspot",
                 "crm",
                 "contact",
-                "company"
+                "company",
+                "task"
             ],
             "icon": "data:image/png;base64,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",
             "nodes": [
@@ -925,6 +926,15 @@
                     "tags": [
                         "update",
                         "contact"
+                    ]
+                },
+                {
+                    "type": "createEngagement",
+                    "defaultLabel": "Create Engagement",
+                    "description": "Creates an Engagement for a Contact or Company in Hubspot",
+                    "tags": [
+                        "task",
+                        "engagement"
                     ]
                 }
             ]
@@ -1718,7 +1728,7 @@
             "label": "UIPath Orchestrator",
             "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/uipath420/uipath-orchestrator.tar.gz",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360020578359-UiPath-Intro",
-            "version": "4.2.0",
+            "version": "4.2.1",
             "description": "Provides functions for the interaction with UiPath Orchestraor",
             "longDescription": "Provides functions for the interaction with UiPath Orchestraor.",
             "tags": [
@@ -2454,6 +2464,85 @@
                     "description": "Tracks an existing shipment based on the tracking number",
                     "tags": [
                         "tracking number"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "asana",
+            "label": "Asana",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/asana400/asana.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/asana",
+            "description": "Integrates with Asana",
+            "longDescription": "From the small stuff to the big picture, Asana organizes work so teams know what to do, why it matters, and how to get it done. (Source: https://asana.com/). Use this Extension in order to speed up internal work in any unified communications channel your company is using.",
+            "tags": [
+                "Team",
+                "Board",
+                "Scrum",
+                "Tasks"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "getProjects",
+                    "defaultLabel": "Get Projects",
+                    "description": "Retrievs all projects from Asana",
+                    "tags": [
+                        "project"
+                    ]
+                },
+                {
+                    "type": "getUsers",
+                    "defaultLabel": "Get Users",
+                    "description": "Retrievs all users from Asana",
+                    "tags": [
+                        "users"
+                    ]
+                },
+                {
+                    "type": "getUserTasks",
+                    "defaultLabel": "Get User Tasks",
+                    "description": "Retrievs information about user tasks",
+                    "tags": [
+                        "user",
+                        "task"
+                    ]
+                },
+                {
+                    "type": "getTaskDetails",
+                    "defaultLabel": "Get Task Details",
+                    "description": "Retrievs all details for a given task",
+                    "tags": [
+                        "task",
+                        "details"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cognigy-live-agent",
+            "label": "Cognigy Live Agent",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy-live-agent400/cognigy-live-agent.tar.gz",
+            "infoUrl": "https://docs.cognigy.com/live-agent/overview/",
+            "description": "Helper Functions for the Cognigy Live Agent",
+            "longDescription": "Elevate customer experience and increase team productivity with an enterprise-ready agent platform that enables service teams to communicate in real-time and asynchronously with customers and employees. It provides Contact Centers with an AI-powered, fully integrated toolset that enables better customer services at scale. (source: https://www.cognigy.com/products/cognigy-live-agent)",
+            "tags": [
+                "Live Chat",
+                "Agent",
+                "Support"
+            ],
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADNElEQVR4nO2aXYhMYRzGf7OL9R35COUrSbQlSoQLkRKJKBKRlRZJKSU3lCKU2tJebEouEBfalG3LDYmUyEqItk3UppDPWNbMcXFm1zHO+f/P18x5433qbU4z/+f/PO8zc+bMed8BCwsLCwsLCwsLCwuL/xA5YIbwegfQVSEvQZgNDBFefwh8SCLgCGNOksYpYBTuGyB5PJJEoCqhwXJjO1CTQo0IUz8B1cCrAF+lY3MSIVMDWCv4Kh13kwiZGsCNAE9BY25cIRMDqFV8+Y1zccVMDKBJ8eU3vgOjowqZeBUYBmyKwesH1EclmRhAHTAwJrce6BOVZNIpkAPaBT/dQIvieV1UUZMCWKH4uQjMUmpuRhU1KYBWxc+CYt0tpW5mFFFTApgKFAQvDzy164U6BzgdRdiUABoUL3We2r5Ap1D7FRgeVtiEAAbj3tIG+XgHDCjhHBTqHWBfWHETAtip+DjuwxkD/BA4HYS8zJsQwGPBQx6YGMA7L/AcYGUY8awDWKx4aBa48xTutTAGsg6gWfGwROHfE7gFYJpmIMsAJgA/Bf0nIXpsEfgOcEprkGUAxxT9XSF61ABvhB6fkBdVMwugP/BW0P6Ie3kMg6NCHwfYLZGzCmCrot0Qodd45FPpqUTOKoD7gm4B96dxFFwW+jnA0iBiFgHMV3RbY/RcpPS8EkTMIoALiu7ymH0fCT3zwCQ/UqUD0H7CtuMujMRBvdDXAU74kSodwCFFc2+C3oOA90Jvv5uqigag3cZ+wV0UTYKTQn8H2OYtzhWfDEIb8DmmkUbgUslzG3DP/yA0ATti6vVgCvCc4DvBNtxltV5IacUdedxrcyluK7zayNP1x1VFZ6G3uBwBtPiY0hYzryefdy+WKVp/fDLLEcAqH1NnFM6a5PPuRQ54Jmh1A+N6itOefCd/b06MAL4JnJe42+FpYo/i83BPYdoB+P1jY7/COZDSpL0YivsFHqT5Gnc7LdXJF4DJJUaqgRcCpwsYmebMPWhU/G4k5MTCDr8lqNUK52yKEy7FdEX7Tg4YqzQp8HvDwvvod9xdPPaiCnl1Nl/klguRN0stLCwsLCwsLCwsLP59/AJa1FnY/ylXLwAAAABJRU5ErkJggg==",
+            "nodes": [
+                {
+                    "type": "checkLiveAgentAvailability",
+                    "defaultLabel": "Check Agent Availability",
+                    "description": "Checks if an agent is available in Live Agent",
+                    "tags": [
+                        "available",
+                        "check",
+                        "online"
                     ]
                 }
             ]

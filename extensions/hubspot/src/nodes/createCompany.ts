@@ -7,7 +7,7 @@ export interface ICreateCompanyParams extends INodeFunctionBaseParams {
 	config: {
 		data: any;
 		connection: {
-			apikey: string;
+			accessToken: string;
 		};
 		storeLocation: string;
 		contextKey: string;
@@ -112,13 +112,13 @@ export const createCompanyNode = createNodeDescriptor({
 			data,
 			connection
 		} = config;
-		const { apikey } = connection;
+		const { accessToken } = connection;
 
 		try {
 			if (storeLocation === "context") api.deleteContext(contextKey);
 
 			const result = await Promise.race([
-				createCompany(data, apikey),
+				createCompany(data, accessToken),
 				new Promise((resolve, reject) => setTimeout(() => resolve({ "error": "timeout" }), EXTENSION_TIMEOUT))
 			]);
 
@@ -144,13 +144,13 @@ export const createCompanyNode = createNodeDescriptor({
 /**
  * Creates a contact in Hubspot
  * @param data The create company data
- * @param apiKey The apiKey to use
+ * @param accessToken The accessToken to use
  */
-async function createCompany(data: any, apiKey: string): Promise<any> {
+async function createCompany(data: any, accessToken: string): Promise<any> {
 	if (!data) return Promise.reject("No company create data defined.");
 
 	try {
-		const hubspot = new Hubspot({ apiKey });
+		const hubspot = new Hubspot({ accessToken });
 		// @ts-ignore
 		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
 

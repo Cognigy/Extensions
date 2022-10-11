@@ -69,3 +69,22 @@ export function normalizeSipHeaders(headersObject: object | undefined) {
   }
   return headers;
 }
+
+export const stripEmpty = (data: object) => {
+  const filtered = Object.entries(data).filter(([key, value]) => value !== '');
+  return filtered.reduce((previous, [key, value]) => {
+    return {
+      ...previous,
+      [key]: value,
+    };
+  }, {});
+};
+
+export function delay(durationMillis: number, block: () => void): Promise<void> {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      block();
+      resolve();
+    }, durationMillis);
+  });
+}

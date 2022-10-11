@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { stripEmpty } from '../helpers/stripEmpty';
+import { stripEmpty } from '../helpers/util';
 import t from '../translations';
 
 type Speaker = 'CUSTOMER' | 'AGENT';

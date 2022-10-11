@@ -7,8 +7,8 @@ import {
   normalizeSipHeaders,
   convertWhisperText,
   normalizeText,
-  convertRingTimeout
-} from '../helpers/bake';
+  convertRingTimeout, delay
+} from '../helpers/util';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
 
@@ -126,27 +126,11 @@ export const forwardCallNode = createNodeDescriptor({
       whispering: convertWhisperText(config.whisperingText),
     };
 
-    api.say('', payload);
-
-    /*
-      Example data
-      cognigy.input.data = {
-        "status": "outbound-failure" | "outbound-success", 
-        "dialogId": "78ed3949-f224-4662-8480-b8a92fdd0ee2",
-        "projectContext": {
-          "projectToken": "315e0c5b-0ee3-4fbf-85be-b9c86616ea86",
-          "resellerToken": "ff5df9cd-c0dc-41ef-abbe-2d0f4ff5c036"
-        },
-        "timestamp": "2022-06-21T07:47:56.272Z",
-        "ringTime": 0,
-        "ringStartTimestamp": null,
-        "reason": "ALREADY_BRIDGED",
-        "message": "The call has already been bridged.",
+    return delay(100, () => {
+      api.say('', payload);
+      if (config.endFlow) {
+        api.stopExecution();
       }
-    */
-    // cognigy.api.setNextNode(nodeId);
-    if (config.endFlow) {
-      api.stopExecution();
-    }
+    });
   },
 });

@@ -111,10 +111,6 @@ export const forwardCallNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IForwardCallParams) => {
     const { api } = cognigy;
 
-    if (config.ringTimeout) {
-      config.ringTimeout = config.ringTimeout * 1000;
-    }
-
     const payload = {
       status: 'forward',
       destinationNumber: normalizeText(config.destinationNumber),

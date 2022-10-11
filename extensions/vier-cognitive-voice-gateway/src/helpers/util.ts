@@ -2,7 +2,7 @@ export function normalizeText(text) {
   if (!text) {
     return undefined;
   }
-  const trimmed = !text.trim();
+  const trimmed = text.trim();
   if (!trimmed) {
     return undefined;
   }
@@ -31,7 +31,7 @@ export function convertRingTimeout(timeout: number | undefined) {
 
 export function normalizeData(dataObject: object | undefined) {
   if (!dataObject) {
-    return dataObject;
+    return undefined;
   }
 
   let entries = Object.entries(dataObject);
@@ -48,7 +48,7 @@ export function normalizeData(dataObject: object | undefined) {
 
 export function normalizeSipHeaders(headersObject: object | undefined) {
   if (!headersObject) {
-    return headersObject;
+    return undefined;
   }
 
   let headerPairs = Object.entries(headersObject);
@@ -71,7 +71,7 @@ export function normalizeSipHeaders(headersObject: object | undefined) {
 }
 
 export const stripEmpty = (data: object) => {
-  const filtered = Object.entries(data).filter(([key, value]) => value !== '');
+  const filtered = Object.entries(data).filter(([, value]) => value !== '');
   return filtered.reduce((previous, [key, value]) => {
     return {
       ...previous,

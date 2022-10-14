@@ -112,6 +112,12 @@ export default {
             'default': "To let the speaker interrupt the audio file, activate this checkbox.",
             'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
         },
+        inputFallbackTextDescription: {
+            'default': "The fallback text is used when the audio playback did not succeed.",
+        },
+        inputFallbackTextLabel: {
+            'default': "Fallback Text",
+        },
         inputUrlLabel: {
             'default': "Audio URL",
             'deDE': "Audio-URL",

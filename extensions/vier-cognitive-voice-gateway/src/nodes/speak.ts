@@ -3,17 +3,26 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
-import { normalizeText } from "../helpers/util";
+import {
+  convertBargeIn,
+  normalizeText,
+} from "../helpers/util";
+import {
+  bargeInFieldKeys,
+  bargeInFields,
+  BargeInInputs,
+} from "./shared";
+
+interface ISpeakNodeInputs extends BargeInInputs {
+  text: string,
+  timeout?: number,
+  // additionalText: Array<string>,
+  linear?: boolean,
+  loop?: boolean,
+}
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
-  config: {
-    text: string,
-    bargeIn?: boolean,
-    timeout?: number,
-    // additionalText: Array<string>,
-    linear?: boolean,
-    loop?: boolean,
-  };
+  config: ISpeakNodeInputs;
 }
 
 export const speakNode = createNodeDescriptor({
@@ -252,13 +261,7 @@ export const speakNode = createNodeDescriptor({
         ],
       },
     },
-    {
-      type: 'checkbox',
-      key: 'bargeIn',
-      label: t.shared.inputBargeInLabel,
-      description: t.shared.inputBargeInDescription,
-      defaultValue: false,
-    },
+    ...bargeInFields,
     // will be needed for later implementation
     // {
     //   key: 'additionalText',
@@ -304,7 +307,7 @@ export const speakNode = createNodeDescriptor({
     // },
     {
       key: 'additional',
-      fields: ['bargeIn', 'timeout'],
+      fields: [...bargeInFieldKeys, 'timeout'],
       label: t.forward.sectionAdditionalDataLabel,
       defaultCollapsed: true,
     },
@@ -361,7 +364,7 @@ export const speakNode = createNodeDescriptor({
 
     const payload = {
       interpretAs: 'SSML',
-      bargeIn: !!config.bargeIn,
+      bargeIn: convertBargeIn(config),
     };
     cognigy.api.say(text, payload);
   },

@@ -40,7 +40,6 @@
         "nodeSummary": "Play an audio file to the call",
         "inputUrlLabel": "Audio URL",
         "inputUrlLabelDescription": "Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.",
-        "inputBargeInDescription": "Allows the audio file to be interrupted by the speaker",
         "inputFallbackTextLabel": "Fallback Text",
         "inputFallbackTextDescription": "The fallback text is used when the audio playback did not succeed."
     },
@@ -78,8 +77,6 @@
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
         "inputInterpretAsLabel": "Interpret as",
         "inputInterpretAsDescription": "Explicitly states what the given text should be interpreted as.",
-        "inputBargeInLabel": "Barge-In on Speech",
-        "inputBargeInDescription": "Allows the audio to be interrupted by the speaker",
         "inputBargeInOnSpeechLabel": "Barge-In on Speech",
         "inputBargeInOnSpeechDescription": "Allows the audio to be interrupted by the speaker",
         "inputBargeInOnDtmfLabel": "Barge-In on DTMF",

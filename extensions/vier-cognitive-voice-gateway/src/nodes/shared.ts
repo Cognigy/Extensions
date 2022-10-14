@@ -97,6 +97,30 @@ export function languageSelectField(key: string, required: boolean, label: INode
   };
 }
 
+export type BargeInInputs = {
+  bargeInOnSpeech?: boolean,
+  bargeInOnDtmf?: boolean,
+}
+
+export const bargeInFields: Array<INodeField> = [
+  {
+    type: 'checkbox',
+    key: 'bargeInOnSpeech',
+    label: t.shared.inputBargeInOnSpeechLabel,
+    description: t.shared.inputBargeInOnSpeechDescription,
+    defaultValue: false,
+  },
+  {
+    type: 'checkbox',
+    key: 'bargeInOnDtmf',
+    label: t.shared.inputBargeInOnDtmfLabel,
+    description: t.shared.inputBargeInOnDtmfDescription,
+    defaultValue: false,
+  },
+];
+
+export const bargeInFieldKeys: readonly string[] = bargeInFields.map(field => field.key);
+
 export const promptFields: Array<INodeField> = [
   {
     type: 'cognigyText',
@@ -141,13 +165,7 @@ export const promptFields: Array<INodeField> = [
       ],
     },
   },
-  {
-    type: 'checkbox',
-    key: 'bargeIn',
-    label: t.shared.inputBargeInLabel,
-    description: t.shared.inputBargeInDescription,
-    defaultValue: false,
-  },
+  ...bargeInFields,
 ];
 
 export const commonRedirectFields: Array<INodeField> = [

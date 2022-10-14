@@ -3,14 +3,23 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
-import { normalizeText } from "../helpers/util";
+import {
+  convertBargeIn,
+  normalizeText,
+} from "../helpers/util";
+import {
+  bargeInFieldKeys,
+  bargeInFields,
+  BargeInInputs,
+} from "./shared";
 
-export interface IPlayParams extends INodeFunctionBaseParams {
-  config: {
-    url: string,
-    bargeIn?: boolean,
-    fallbackText?: string,
-  };
+interface IPlayNodeInputs extends BargeInInputs {
+  url: string,
+  fallbackText?: string,
+}
+
+export interface IPlayNodeParams extends INodeFunctionBaseParams {
+  config: IPlayNodeInputs;
 }
 
 export const playNode = createNodeDescriptor({
@@ -42,13 +51,7 @@ export const playNode = createNodeDescriptor({
         placeholder: '',
       },
     },
-    {
-      type: 'checkbox',
-      key: 'bargeIn',
-      label: t.shared.inputBargeInLabel,
-      description: t.play.inputBargeInDescription,
-      defaultValue: false,
-    },
+    ...bargeInFields,
   ],
   sections: [
     {
@@ -59,7 +62,7 @@ export const playNode = createNodeDescriptor({
     },
     {
       key: 'additional',
-      fields: ['bargeIn', 'fallbackText'],
+      fields: [...bargeInFieldKeys, 'fallbackText'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -74,13 +77,13 @@ export const playNode = createNodeDescriptor({
       type: 'section',
     },
   ],
-  function: async ({ cognigy, config }: IPlayParams) => {
+  function: async ({ cognigy, config }: IPlayNodeParams) => {
     const { api } = cognigy;
 
     const payload = {
       status: 'play',
       url: config.url,
-      bargeIn: !!config.bargeIn,
+      bargeIn: convertBargeIn(config),
       fallbackText: normalizeText(config.fallbackText),
     };
 

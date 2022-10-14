@@ -3,22 +3,30 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
-import { promptFields } from './shared';
-import { convertDuration } from "../helpers/util";
+import {
+  bargeInFieldKeys,
+  BargeInInputs,
+  promptFields,
+} from './shared';
+import {
+  convertBargeIn,
+  convertDuration,
+} from "../helpers/util";
+
+interface INumberPromptNodeInputs extends BargeInInputs {
+  text: string,
+  timeout: number,
+  language?: string,
+  synthesizers?: Array<string>,
+  interpretAs?: string,
+  submitInputs?: Array<string>,
+  maxDigits?: number,
+  useSubmitInputs: boolean,
+  useMaxDigits: boolean
+}
 
 export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
-  config: {
-    text: string,
-    timeout: number,
-    language?: string,
-    synthesizers?: Array<string>,
-    interpretAs?: string,
-    bargeIn?: boolean,
-    submitInputs?: Array<string>,
-    maxDigits?: number,
-    useSubmitInputs: boolean,
-    useMaxDigits: boolean
-  };
+  config: INumberPromptNodeInputs;
 }
 
 export const promptForNumberNode = createNodeDescriptor({
@@ -82,7 +90,7 @@ export const promptForNumberNode = createNodeDescriptor({
     },
     {
       key: 'additional',
-      fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
+      fields: ['language', 'synthesizers', 'interpretAs', ...bargeInFieldKeys],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -120,7 +128,7 @@ export const promptForNumberNode = createNodeDescriptor({
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
       interpretAs: config.interpretAs,
-      bargeIn: !!config.bargeIn,
+      bargeIn: convertBargeIn(config),
       type: {
         name: 'Number',
         submitInputs: config.useSubmitInputs ? submitInputs : undefined,

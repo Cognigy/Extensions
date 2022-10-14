@@ -109,11 +109,6 @@ export default {
         },
     },
     play: {
-        inputBargeInDescription: {
-            'default': "To let the speaker interrupt the audio file, activate this checkbox.",
-            'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
-            'esES': "Pour permettre au locuteur d'interrompre le fichier audio, activez cette case à cocher.",
-        },
         inputFallbackTextDescription: {
             'default': "The fallback text is used when the audio playback did not succeed.",
             'deDE': "Der Fallback-Text wird verwendet, wenn das Audio-File nicht abgespielt werden kann.",
@@ -242,12 +237,6 @@ export default {
         inputAcceptAnsweringMachinesLabel: {
             'default': "Accept Answering Machines",
             'deDE': "Anrufbeantworter akzeptieren",
-        },
-        inputBargeInDescription: {
-            'default': "Allows the audio to be interrupted by the speaker",
-        },
-        inputBargeInLabel: {
-            'default': "Barge-In on Speech",
         },
         inputBargeInOnDtmfDescription: {
             'default': "Allows the audio to be interrupted by pressing keys",

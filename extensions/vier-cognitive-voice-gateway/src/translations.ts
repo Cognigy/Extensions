@@ -358,7 +358,7 @@ export default {
         },
         inputUseSubmitInputsDescription: {
             'default': "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
-            'deDE': "Um die Eigenschaft „Eingaben übermitteln“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
+            'deDE': "Um die Eigenschaft „Eingaben übermitteln” als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
         },
         inputUseSubmitInputsLabel: {
             'default': "Use Submit Inputs",

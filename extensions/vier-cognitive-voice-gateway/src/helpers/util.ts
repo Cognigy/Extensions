@@ -89,7 +89,7 @@ export type BargeInOptions = { onSpeech: boolean, onDtmf: boolean };
 
 export function convertBargeIn(inputs: BargeInInputs): BargeInOptions {
   return {
-    onSpeech: !!inputs.onSpeech,
-    onDtmf: !!inputs.onDtmf,
+    onSpeech: !!inputs.bargeInOnSpeech,
+    onDtmf: !!inputs.bargeInOnDtmf,
   };
 }

@@ -244,12 +244,22 @@ export default {
             'deDE': "Anrufbeantworter akzeptieren",
         },
         inputBargeInDescription: {
-            'default': "To let the speaker interrupt the audio file, activate this checkbox.",
-            'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
+            'default': "Allows the audio to be interrupted by the speaker",
         },
         inputBargeInLabel: {
-            'default': "Barge In",
-            'deDE': "Unterbrechen",
+            'default': "Barge-In on Speech",
+        },
+        inputBargeInOnDtmfDescription: {
+            'default': "Allows the audio to be interrupted by pressing keys",
+        },
+        inputBargeInOnDtmfLabel: {
+            'default': "Barge-In on DTMF",
+        },
+        inputBargeInOnSpeechDescription: {
+            'default': "Allows the audio to be interrupted by the speaker",
+        },
+        inputBargeInOnSpeechLabel: {
+            'default': "Barge-In on Speech",
         },
         inputCallerIdDescription: {
             'default': "Enter the phone number that should be displayed to the callee. (This is a best-effort option. A correct display can not be guaranteed.)",

@@ -18,6 +18,7 @@ export default {
         inputHeadNumberLabel: {
             'default': "Phone Number Prefix",
             'deDE': "Rufnummernvorwahl",
+            'esES': "Préfixe du numéro de téléphone",
         },
         inputMaxDigitsDescription: {
             'default': "Enter the maximum amount of digits the phone number can have. If set, the input ends once the maximum has been reached.",
@@ -111,6 +112,7 @@ export default {
         inputBargeInDescription: {
             'default': "To let the speaker interrupt the audio file, activate this checkbox.",
             'deDE': "Um den:die Sprechende:n die Audiodatei unterbrechen zu lassen, aktivieren Sie diese Checkbox.",
+            'esES': "Pour permettre au locuteur d'interrompre le fichier audio, activez cette case à cocher.",
         },
         inputFallbackTextDescription: {
             'default': "The fallback text is used when the audio playback did not succeed.",
@@ -130,7 +132,7 @@ export default {
         nodeLabel: {
             'default': "Play Audio File",
             'deDE': "Audiodatei abspielen",
-            'esES': "Lire le fichier audio\n",
+            'esES': "Lire le fichier audio",
         },
         nodeSummary: {
             'default': "Play an audio file to the call",
@@ -168,6 +170,7 @@ export default {
         nodeLabel: {
             'default': "Start Call Recording",
             'deDE': "Gesprächsaufzeichnung starten",
+            'esES': "Démarrer l'enregistrement d'appel",
         },
         nodeSummary: {
             'default': "Start or resume recording of a call",
@@ -178,18 +181,22 @@ export default {
         inputTerminateDescription: {
             'default': "To stop the call recording rather than to pause, activate this checkbox.",
             'deDE': "Um die Gesprächsaufzeichnung zu beenden und nicht zu unterbrechen, aktivieren Sie diese Checkbox.",
+            'esES': "Pour arrêter l'enregistrement d'appel plutôt que de le mettre en pause, activez cette case à cocher.",
         },
         inputTerminateLabel: {
             'default': "Stop Call Recording",
             'deDE': "Gesprächsaufzeichnung stoppen",
+            'esES': "Arrêter l'enregistrement d'appel",
         },
         nodeLabel: {
             'default': "Stop Call Recording",
             'deDE': "Gesprächsaufzeichnung stoppen",
+            'esES': "Arrêter l'enregistrement d'appel",
         },
         nodeSummary: {
             'default': "Pause or stop recording of a call",
             'deDE': "Gesprächsaufzeichnung anhalten oder beenden",
+            'esES': "Pause ou arrêt de l'enregistrement d'un appel",
         },
     },
     sendData: {
@@ -205,6 +212,7 @@ export default {
         nodeSummary: {
             'default': "Attach custom data to a dialog",
             'deDE': "Benutzerdefinierte Daten an einen Dialog anhängen",
+            'esES': "Attacher des données personnalisées à un dialogue",
         },
     },
     shared: {

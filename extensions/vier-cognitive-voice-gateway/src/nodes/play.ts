@@ -1,10 +1,12 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import t from '../translations';
+import {normalizeText} from "../helpers/util";
 
 export interface IPlayParams extends INodeFunctionBaseParams {
   config: {
     url: string,
-    bargeIn?: boolean
+    bargeIn?: boolean,
+    fallbackText?: string,
   };
 }
 
@@ -24,6 +26,16 @@ export const playNode = createNodeDescriptor({
       description: t.play.inputUrlLabelDescription,
       params: {
         required: true,
+        placeholder: '',
+      }
+    },
+    {
+      type: 'text',
+      key: 'fallbackText',
+      label: t.play.inputFallbackTextLabel,
+      description: t.play.inputFallbackTextDescription,
+      params: {
+        required: false,
         placeholder: '',
       }
     },
@@ -62,9 +74,13 @@ export const playNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IPlayParams) => {
     const { api } = cognigy;
 
-    api.say('', {
+    const payload = {
       status: 'play',
-      ...config,
-    });
+      url: config.url,
+      bargeIn: !!config.bargeIn,
+      fallbackText: normalizeText(config.fallbackText),
+    }
+
+    api.say('', payload);
   }
 });

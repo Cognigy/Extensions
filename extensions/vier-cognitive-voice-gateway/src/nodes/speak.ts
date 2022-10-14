@@ -3,6 +3,7 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
+import { normalizeText } from "../helpers/util";
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
   config: {
@@ -327,6 +328,7 @@ export const speakNode = createNodeDescriptor({
     },
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
+    const { api } = cognigy;
     //#region Future Functionality (Need to be able to determine the global execution amount of the node)
     // const { additionalText, loop, linear } = config;
     //const execs = cognigy.api.getExecutionAmount(speakNode._id);
@@ -348,18 +350,20 @@ export const speakNode = createNodeDescriptor({
     // cognigy.api.say(`Execution Count: ${execs}, text to say: ${textToTransmit}, linear: ${linear}; loop: ${loop}`);
     //#endregion
 
-
-    if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
-      cognigy.api.say(`<speak>${config.text}</speak>`, {
-        interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-      });
-    } else {
-      cognigy.api.say(config.text, {
-        interpretAs: 'SSML',
-        bargeIn: config.bargeIn,
-      });
+    const normalizedText = normalizeText(config.text);
+    if (!normalizedText) {
+      api.log("error", "The text given to the speak out node should not be empty!")
+      return;
     }
+
+    const speakTagMissing = !normalizedText.startsWith('<speak>') || !normalizedText.endsWith('</speak>');
+    const text = speakTagMissing ? `<speak>${normalizedText}</speak>` : normalizedText;
+
+    const payload = {
+      interpretAs: 'SSML',
+      bargeIn: !!config.bargeIn,
+    };
+    cognigy.api.say(text, payload);
   },
 });
 

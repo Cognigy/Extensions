@@ -7,7 +7,7 @@ import {
   normalizeSipHeaders,
   convertWhisperText,
   normalizeText,
-  convertRingTimeout, delay
+  convertDuration, delay
 } from '../helpers/util';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
@@ -116,7 +116,7 @@ export const forwardCallNode = createNodeDescriptor({
       destinationNumber: normalizeText(config.destinationNumber),
       callerId: normalizeText(config.callerId),
       customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
-      ringTimeout: convertRingTimeout(config.ringTimeout),
+      ringTimeout: convertDuration(config.ringTimeout),
       acceptAnsweringMachines: config.acceptAnsweringMachines,
       data: normalizeData(config.data),
       whispering: convertWhisperText(config.whisperingText),

@@ -22,8 +22,8 @@ export function convertWhisperText(text) {
   };
 }
 
-export function convertRingTimeout(timeout: number | undefined) {
-  if (!timeout) {
+export function convertDuration(timeout: number | undefined) {
+  if (!timeout || timeout < 0) {
     return undefined;
   }
   return timeout * 1000;

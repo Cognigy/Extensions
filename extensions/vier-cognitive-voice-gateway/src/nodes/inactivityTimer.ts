@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
 import t from '../translations';
+import { convertDuration } from "../helpers/util";
 
 
 export interface IInactivityTimerParams extends INodeFunctionBaseParams {
@@ -29,7 +30,7 @@ export const inactivityTimerNode = createNodeDescriptor({
           { value: 'Deactivate Timeout', label: 'Deactivate Timeout' },
         ]
       }
-      },
+    },
     {
       type: 'checkbox',
       key: 'useStopInputs',
@@ -52,7 +53,7 @@ export const inactivityTimerNode = createNodeDescriptor({
         key: 'selectTimer',
         value: 'Activate Timeout'
       }
-      },
+    },
   ],
   preview: {
     key: 'selectTimer',
@@ -61,7 +62,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   sections: [
     {
       key: 'general',
-      fields: [ 'selectTimer', 'timeout', 'useStopInputs' ],
+      fields: ['selectTimer', 'timeout', 'useStopInputs'],
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     }
@@ -76,14 +77,22 @@ export const inactivityTimerNode = createNodeDescriptor({
     const { api } = cognigy;
 
     if (config.useStopInputs) {
-        api.say('', {
-          status: 'inactivity-stop',
-        });
+      const payload = {
+        status: 'inactivity-stop',
+      };
+      api.say('', payload);
     } else {
-      api.say('' , {
+      const timeout = convertDuration(config.timeout);
+      if (!timeout) {
+        api.log("error", "a timeout must be set to a positive number of seconds when starting the inactivity detection!")
+        return;
+      }
+
+      const payload = {
         status: 'inactivity-start',
-        timeout: config.timeout * 1000,
-      });
+        timeout: timeout,
+      };
+      api.say('', payload);
     }
   }
 });

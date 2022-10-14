@@ -40,14 +40,14 @@ export function normalizeData(dataObject: object | undefined): Data | undefined 
     return undefined;
   }
 
-  let output = {};
+  let output: Data = {};
   for (const [key, value] of entries) {
     output[key] = `${value}`;
   }
   return output;
 }
 
-export type CustomSipHeaders = { [name: string]: string };
+export type CustomSipHeaders = { [name: string]: Array<string> };
 
 export function normalizeSipHeaders(headersObject: object | undefined): CustomSipHeaders | undefined {
   if (!headersObject) {
@@ -61,7 +61,7 @@ export function normalizeSipHeaders(headersObject: object | undefined): CustomSi
 
   let hasPrefixes = headerPairs.some(([name]) => name.startsWith('X-'));
   const headerPrefix = hasPrefixes ? '' : 'X-';
-  let headers = {};
+  let headers: CustomSipHeaders = {};
   for (const [name, value] of headerPairs) {
     const fullName = `${headerPrefix}${name}`;
     if (Array.isArray(value)) {

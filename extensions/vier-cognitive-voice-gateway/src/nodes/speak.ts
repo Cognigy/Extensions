@@ -352,7 +352,7 @@ export const speakNode = createNodeDescriptor({
 
     const normalizedText = normalizeText(config.text);
     if (!normalizedText) {
-      api.log("error", "The text given to the speak out node should not be empty!")
+      api.log("error", "The text given to the speak out node should not be empty!");
       return;
     }
 

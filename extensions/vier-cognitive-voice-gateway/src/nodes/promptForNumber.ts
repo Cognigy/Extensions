@@ -110,7 +110,7 @@ export const promptForNumberNode = createNodeDescriptor({
         if (input.match(/^[1234567890ABCD*#]$/i)) {
           return `DTMF_${input.toUpperCase()}`;
         }
-        return input
+        return input;
       });
     }
 

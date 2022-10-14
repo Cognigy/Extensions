@@ -8,6 +8,79 @@ import {
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 
+/**
+ * This list is sorted lexicographically, with 4 exceptions:
+ *   1. en-US
+ *   2. en-GB
+ *   3. de-DE
+ *   4. fr-FR
+ * These have been moved to the start of the list as they are likely going to be the most used languages.
+ */
+const supportedLanguages: readonly string[] = [
+  'en-US',
+  'en-GB',
+  'de-DE',
+  'fr-FR',
+  'ar-EG',
+  'ar-SA',
+  'bg-BG',
+  'bn-IN',
+  'ca-ES',
+  'cs-CZ',
+  'da-DK',
+  'de-AT',
+  'de-CH',
+  'el-GR',
+  'en-AU',
+  'en-IN',
+  'es-ES',
+  'es-MX',
+  'es-US',
+  'et-EE',
+  'fi-FI',
+  'fil-PH',
+  'fr-BE',
+  'fr-CA',
+  'fr-CH',
+  'gu-IN',
+  'he-IL',
+  'hi-IN',
+  'hr-HR',
+  'hu-HU',
+  'id-ID',
+  'is-IS',
+  'it-IT',
+  'ja-JP',
+  'kn-IN',
+  'ko-KR',
+  'lt-LT',
+  'lv-LV',
+  'ml-IN',
+  'ms-MY',
+  'nb-NO',
+  'nl-BE',
+  'nl-NL',
+  'pl-PL',
+  'pt-BR',
+  'pt-PT',
+  'ro-RO',
+  'ru-RU',
+  'sk-SK',
+  'sl-SI',
+  'sr-RS',
+  'sv-SE',
+  'ta-IN',
+  'te-IN',
+  'th-TH',
+  'tr-TR',
+  'uk-UA',
+  'vi-VN',
+  'yue-Hant-HK',
+  'zh',
+  'zh-HK',
+  'zh-TW',
+];
+
 export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
   config: {
     language?: string,
@@ -62,10 +135,9 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       label: t.speechToText.inputLanguageLabel,
       params: {
         required: true,
-        options: [
-          { value: 'en-US', label: 'en-US' },
-          { value: 'de-DE', label: 'de-DE' },
-        ],
+        options: supportedLanguages.map(lang => {
+          return { value: lang, label: lang };
+        }),
       },
     },
   ],
@@ -117,10 +189,11 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       transcriber.push(config.transcriberFallback);
     }
 
-    api.say('', {
+    const payload = {
       status: 'transcription-switch',
       language: config.language,
-      transcribers: transcriber.length == null ? null : transcriber,
-    });
+      transcribers: transcriber.length ? transcriber : null,
+    };
+    api.say('', payload);
   },
 });

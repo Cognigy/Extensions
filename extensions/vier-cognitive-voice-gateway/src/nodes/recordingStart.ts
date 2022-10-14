@@ -2,7 +2,10 @@ import {
   createNodeDescriptor,
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
-import { stripEmpty } from '../helpers/util';
+import {
+  convertDuration,
+  normalizeText,
+} from '../helpers/util';
 import t from '../translations';
 
 type Speaker = 'CUSTOMER' | 'AGENT';
@@ -11,7 +14,7 @@ export interface IRecordingStartParams extends INodeFunctionBaseParams {
   config: {
     maxDuration?: number,
     recordingId?: string,
-    speakers?: Speaker | Array<Speaker>,
+    speakers?: Speaker | null,
   };
 }
 
@@ -69,20 +72,14 @@ export const recordingStartNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IRecordingStartParams) => {
     const { api } = cognigy;
 
-    // Convert to ms
-    if (config.maxDuration) {
-      config.maxDuration = config.maxDuration * 1000;
-    }
+    const speakers: Array<Speaker> = config.speakers ? [config.speakers] : ['CUSTOMER', 'AGENT'];
 
-    if (config.speakers) {
-      config.speakers = [config.speakers] as Array<Speaker>;
-    }
-
-    const strippedConfig = stripEmpty(config);
-
-    api.say('', {
+    const payload = {
       status: 'recording-start',
-      ...strippedConfig,
-    });
+      maxDuration: convertDuration(config.maxDuration),
+      recordingId: normalizeText(config.recordingId),
+      speakers: speakers,
+    };
+    api.say('', payload);
   },
 });

@@ -2,7 +2,9 @@ import {
   createNodeDescriptor,
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
-import { stripEmpty } from '../helpers/util';
+import {
+  normalizeText,
+} from '../helpers/util';
 import t from '../translations';
 
 export interface IRecordingStopParams extends INodeFunctionBaseParams {
@@ -51,11 +53,11 @@ export const recordingStopNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IRecordingStopParams) => {
     const { api } = cognigy;
 
-    const strippedConfig = stripEmpty(config);
-
-    api.say('', {
+    const payload = {
       status: 'recording-stop',
-      ...strippedConfig,
-    });
+      recordingId: normalizeText(config.recordingId),
+      terminate: !!config.terminate,
+    };
+    api.say('', payload);
   },
 });

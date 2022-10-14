@@ -32,11 +32,10 @@ export const sendDataNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ISendDataParams) => {
     const { api } = cognigy;
-    const data = normalizeData(config.data);
-
-    api.say('', {
+    const payload = {
       status: 'data',
-      data,
-    });
+      data: normalizeData(config.data) ?? {},
+    };
+    api.say('', payload);
   },
 });

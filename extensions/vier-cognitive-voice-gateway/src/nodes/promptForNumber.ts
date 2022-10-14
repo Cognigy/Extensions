@@ -4,6 +4,7 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import { promptFields } from './shared';
+import { convertDuration } from "../helpers/util";
 
 export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
   config: {
@@ -102,30 +103,30 @@ export const promptForNumberNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: INumberPromptNodeParams) => {
     const { api } = cognigy;
-    let submitInputs = [];
+    let submitInputs = undefined;
 
-    if (config.useSubmitInputs && Array.isArray(config.submitInputs)) {
+    if (Array.isArray(config.submitInputs)) {
       submitInputs = config.submitInputs.map((input) => {
-        if (input.match(/^DTMF_[1234567890ABCD*#]$/)) {
-          return input;
-        } else if (input.match(/^[1234567890ABCD*#]$/i)) {
+        if (input.match(/^[1234567890ABCD*#]$/i)) {
           return `DTMF_${input.toUpperCase()}`;
         }
+        return input
       });
     }
 
-    api.say(config.text, {
+    const payload = {
       status: 'prompt',
-      timeout: config.timeout * 1000,
+      timeout: convertDuration(config.timeout),
       language: config.language || null,
-      synthesizers: config.synthesizers.length === 0 ? null : config.synthesizers,
-      interpretAs: config.interpretAs || null,
-      bargeIn: config.bargeIn,
+      synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
+      interpretAs: config.interpretAs,
+      bargeIn: !!config.bargeIn,
       type: {
         name: 'Number',
-        submitInputs: config.useSubmitInputs ? submitInputs : null,
-        maxDigits: config.useMaxDigits ? config.maxDigits : null,
+        submitInputs: config.useSubmitInputs ? submitInputs : undefined,
+        maxDigits: config.useMaxDigits ? config.maxDigits : undefined,
       },
-    });
+    };
+    api.say(config.text, payload);
   },
 });

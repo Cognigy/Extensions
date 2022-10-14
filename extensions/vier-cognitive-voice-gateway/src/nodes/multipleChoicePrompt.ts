@@ -3,15 +3,19 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools';
 import t from '../translations';
-import { promptFields } from './shared';
+import {
+  InterpretAs,
+  promptFields,
+} from './shared';
+import { convertDuration } from "../helpers/util";
 
 export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
   config: {
     text: string,
     timeout: number,
-    language?: string,
+    language?: string | null,
     synthesizers?: Array<string>,
-    interpretAs?: string,
+    interpretAs?: InterpretAs,
     bargeIn?: boolean,
     choices: object,
   };
@@ -88,17 +92,18 @@ export const promptForMultipleChoice = createNodeDescriptor({
   function: async ({ cognigy, config }: IMultipleChoicePromptParams) => {
     const { api } = cognigy;
 
-    api.say(config.text, {
+    const payload = {
       status: 'prompt',
-      timeout: config.timeout * 1000,
+      timeout: convertDuration(config.timeout),
       language: config.language || null,
-      synthesizers: config.synthesizers.length === 0 ? null : config.synthesizers,
-      interpretAs: config.interpretAs || null,
-      bargeIn: config.bargeIn,
+      synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
+      interpretAs: config.interpretAs,
+      bargeIn: !!config.bargeIn,
       type: {
         name: 'MultipleChoice',
         choices: config.choices,
       },
-    });
+    };
+    api.say(config.text, payload);
   },
 });

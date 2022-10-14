@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/util';
 import t from '../translations';
 
@@ -14,7 +17,7 @@ export const recordingStopNode = createNodeDescriptor({
   defaultLabel: t.recordingStop.nodeLabel,
   summary: t.recordingStop.nodeSummary,
   appearance: {
-    color: '#b8f66a'
+    color: '#b8f66a',
   },
   tags: ['basic', 'service'],
   fields: [
@@ -37,13 +40,13 @@ export const recordingStopNode = createNodeDescriptor({
       fields: ['recordingId', 'terminate'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
-    }
+    },
   ],
   form: [
     {
       key: 'additional',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: IRecordingStopParams) => {
     const { api } = cognigy;
@@ -54,5 +57,5 @@ export const recordingStopNode = createNodeDescriptor({
       status: 'recording-stop',
       ...strippedConfig,
     });
-  }
+  },
 });

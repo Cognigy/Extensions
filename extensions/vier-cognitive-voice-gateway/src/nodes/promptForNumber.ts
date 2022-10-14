@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import t from '../translations';
 import { promptFields } from './shared';
 
@@ -19,10 +22,10 @@ export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
 
 export const promptForNumberNode = createNodeDescriptor({
   type: 'numberPrompt',
-  defaultLabel: t.promptForNumber.nodeLabel, 
+  defaultLabel: t.promptForNumber.nodeLabel,
   summary: t.promptForNumber.nodeSummary,
   appearance: {
-    color: '#38eb8c'
+    color: '#38eb8c',
   },
   tags: ['message'],
   fields: [
@@ -40,8 +43,8 @@ export const promptForNumberNode = createNodeDescriptor({
       description: t.shared.inputSubmitInputsDescription,
       condition: {
         key: 'useSubmitInputs',
-        value: true
-      }
+        value: true,
+      },
     },
     {
       type: 'checkbox',
@@ -56,11 +59,11 @@ export const promptForNumberNode = createNodeDescriptor({
       description: t.promptForNumber.inputMaxDigitsDescription,
       condition: {
         key: 'useMaxDigits',
-        value: true
+        value: true,
       },
       params: {
-        min: 1
-      }
+        min: 1,
+      },
     },
   ],
   sections: [
@@ -81,27 +84,27 @@ export const promptForNumberNode = createNodeDescriptor({
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
-    }
+    },
   ],
   form: [
     {
       key: 'general',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'stopCondition',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'additional',
-      type: 'section'
-    }
+      type: 'section',
+    },
   ],
   function: async ({ cognigy, config }: INumberPromptNodeParams) => {
     const { api } = cognigy;
     let submitInputs = [];
 
-    if (config.useSubmitInputs  && Array.isArray(config.submitInputs)) {
+    if (config.useSubmitInputs && Array.isArray(config.submitInputs)) {
       submitInputs = config.submitInputs.map((input) => {
         if (input.match(/^DTMF_[1234567890ABCD*#]$/)) {
           return input;
@@ -122,7 +125,7 @@ export const promptForNumberNode = createNodeDescriptor({
         name: 'Number',
         submitInputs: config.useSubmitInputs ? submitInputs : null,
         maxDigits: config.useMaxDigits ? config.maxDigits : null,
-      }
+      },
     });
-  }
+  },
 });

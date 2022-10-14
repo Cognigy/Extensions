@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import { normalizeData } from '../helpers/util';
 import t from '../translations';
 
@@ -31,23 +34,23 @@ export const terminateCallNode = createNodeDescriptor({
       label: t.shared.inputDataLabel,
       description: t.sendData.inputDataDescription,
       params: {
-        required: false
-      }
-    }
+        required: false,
+      },
+    },
   ],
   sections: [
     {
       key: 'additional',
       label: t.forward.sectionAdditionalDataLabel,
       fields: ['endFlow', 'data'],
-      defaultCollapsed: true
+      defaultCollapsed: true,
     },
   ],
   form: [
     {
       key: 'additional',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: ITerminateCallParams) => {
     const { api } = cognigy;
@@ -59,5 +62,5 @@ export const terminateCallNode = createNodeDescriptor({
     if (config.endFlow) {
       api.stopExecution();
     }
-  }
+  },
 });

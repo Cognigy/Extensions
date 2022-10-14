@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import t from '../translations';
 import { convertDuration } from "../helpers/util";
 
@@ -15,7 +18,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   defaultLabel: t.timer.nodeLabel,
   summary: t.timer.nodeSummary,
   appearance: {
-    color: 'green'
+    color: 'green',
   },
   tags: ['service'],
   fields: [
@@ -28,8 +31,8 @@ export const inactivityTimerNode = createNodeDescriptor({
         options: [
           { value: 'Activate Timeout', label: 'Activate Timeout' },
           { value: 'Deactivate Timeout', label: 'Deactivate Timeout' },
-        ]
-      }
+        ],
+      },
     },
     {
       type: 'checkbox',
@@ -38,8 +41,8 @@ export const inactivityTimerNode = createNodeDescriptor({
       description: t.timer.inputTimeoutStopDescription,
       condition: {
         key: 'selectTimer',
-        value: 'Deactivate Timeout'
-      }
+        value: 'Deactivate Timeout',
+      },
     },
     {
       type: 'number',
@@ -51,13 +54,13 @@ export const inactivityTimerNode = createNodeDescriptor({
       },
       condition: {
         key: 'selectTimer',
-        value: 'Activate Timeout'
-      }
+        value: 'Activate Timeout',
+      },
     },
   ],
   preview: {
     key: 'selectTimer',
-    type: 'text'
+    type: 'text',
   },
   sections: [
     {
@@ -65,13 +68,13 @@ export const inactivityTimerNode = createNodeDescriptor({
       fields: ['selectTimer', 'timeout', 'useStopInputs'],
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
-    }
+    },
   ],
   form: [
     {
       key: 'general',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: IInactivityTimerParams) => {
     const { api } = cognigy;
@@ -84,7 +87,7 @@ export const inactivityTimerNode = createNodeDescriptor({
     } else {
       const timeout = convertDuration(config.timeout);
       if (!timeout) {
-        api.log("error", "a timeout must be set to a positive number of seconds when starting the inactivity detection!")
+        api.log("error", "a timeout must be set to a positive number of seconds when starting the inactivity detection!");
         return;
       }
 
@@ -94,5 +97,5 @@ export const inactivityTimerNode = createNodeDescriptor({
       };
       api.say('', payload);
     }
-  }
+  },
 });

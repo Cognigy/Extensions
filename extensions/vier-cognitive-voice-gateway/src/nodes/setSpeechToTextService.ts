@@ -1,5 +1,11 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { INodeField, INodeFieldTranslations } from '@cognigy/extension-tools/build/interfaces/descriptor';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import {
+  INodeField,
+  INodeFieldTranslations,
+} from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 
 export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
@@ -19,7 +25,7 @@ const generateTranscriberSelect = (key: string, label: INodeFieldTranslations, d
   description,
   params: {
     required: false,
-  }
+  },
 });
 
 const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField => ({
@@ -33,8 +39,8 @@ const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, d
   },
   condition: {
     key: 'transcriber',
-    value: ''
-  }
+    value: '',
+  },
 });
 
 export const setSpeechtoTextServiceNode = createNodeDescriptor({
@@ -42,7 +48,7 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
   defaultLabel: t.speechToText.nodeLabel,
   summary: t.speechToText.nodeSummary,
   appearance: {
-    color: 'blue'
+    color: 'blue',
   },
   tags: ['service'],
   fields: [
@@ -59,27 +65,27 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
         options: [
           { value: 'en-US', label: 'en-US' },
           { value: 'de-DE', label: 'de-DE' },
-        ]
-      }
-    }
+        ],
+      },
+    },
   ],
   sections: [
     {
       key: 'selectMainSTT',
       fields: ['transcriber', 'profileToken'],
-      label:  t.speechToText.sectionSelectSTTLabel,
+      label: t.speechToText.sectionSelectSTTLabel,
       defaultCollapsed: false,
     },
     {
       key: 'selectFallbackSTT',
       fields: ['transcriberFallback', 'profileTokenFallback'],
-      label:  t.speechToText.sectionFallback,
+      label: t.speechToText.sectionFallback,
       defaultCollapsed: true,
     },
   ],
   preview: {
     key: 'transcriber',
-    type: 'text'
+    type: 'text',
   },
   form: [
     {
@@ -93,7 +99,7 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
     {
       key: 'selectFallbackSTT',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: ISetSpeechToTextServiceParams) => {
     const { api } = cognigy;
@@ -111,7 +117,7 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       transcriber.push(config.transcriberFallback);
     }
 
-    api.say('' , {
+    api.say('', {
       status: 'transcription-switch',
       language: config.language,
       transcribers: transcriber.length == null ? null : transcriber,

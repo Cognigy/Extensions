@@ -9,7 +9,7 @@ export const promptFields: Array<INodeField> = [
     description: t.shared.inputTextDescription,
     params: {
       required: true,
-    }
+    },
   },
   {
     type: 'number',
@@ -17,8 +17,8 @@ export const promptFields: Array<INodeField> = [
     label: t.shared.inputTimeoutLabel,
     description: t.shared.inputTimeoutDescription,
     params: {
-      required: true
-    }
+      required: true,
+    },
   },
   {
     type: 'text',
@@ -41,14 +41,14 @@ export const promptFields: Array<INodeField> = [
       options: [
         {
           value: 'SSML',
-          label: 'SSML'
+          label: 'SSML',
         },
         {
           value: 'TEXT',
-          label: 'Text'
-        }
-      ]
-    }
+          label: 'Text',
+        },
+      ],
+    },
   },
   {
     type: 'checkbox',
@@ -66,8 +66,8 @@ export const commonRedirectFields: Array<INodeField> = [
     label: t.shared.inputCallerIdLabel,
     description: t.shared.inputCallerIdDescription,
     params: {
-      placeholder: '+E.164 format, e.g. "+49721480848680"'
-    }
+      placeholder: '+E.164 format, e.g. "+49721480848680"',
+    },
   },
   {
     type: 'json',
@@ -84,7 +84,7 @@ export const commonRedirectFields: Array<INodeField> = [
     params: {
       placeholder: 'Value in Seconds, e.g. 60 for 1 minute',
       min: 10,
-      max: 120
+      max: 120,
     },
   },
   {
@@ -97,7 +97,7 @@ export const commonRedirectFields: Array<INodeField> = [
   {
     type: 'json',
     key: 'data',
-    label:  t.shared.inputDataLabel,
+    label: t.shared.inputDataLabel,
     description: t.shared.inputDataDescription,
   },
   {
@@ -119,5 +119,5 @@ export const commonRedirectFields: Array<INodeField> = [
     key: 'whisperingText',
     label: t.shared.inputWhisperingTextLabel,
     description: t.shared.inputWhisperingTextDescription,
-  }
+  },
 ];

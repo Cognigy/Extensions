@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import { stripEmpty } from '../helpers/util';
 import t from '../translations';
 
@@ -28,7 +31,7 @@ export const recordingStartNode = createNodeDescriptor({
       description: t.recordingStart.inputMaxDurationDescription,
       params: {
         placeholder: 'Value in seconds (e.g. 60)',
-      }
+      },
     },
     {
       type: 'text',
@@ -44,26 +47,26 @@ export const recordingStartNode = createNodeDescriptor({
         options: [
           { value: null, label: 'Both Lines' },
           { value: 'CUSTOMER', label: 'Customer' },
-          { value: 'AGENT', label: 'Agent' }
-        ]
-      }
-    }
+          { value: 'AGENT', label: 'Agent' },
+        ],
+      },
+    },
   ],
   sections: [
     {
       key: 'additional',
       label: t.forward.sectionAdditionalSettingsLabel,
       fields: ['maxDuration', 'recordingId', 'speakers'],
-      defaultCollapsed: true
-    }
+      defaultCollapsed: true,
+    },
   ],
   form: [
     {
       key: 'additional',
       type: 'section',
-    }
+    },
   ],
-  function: async ({ cognigy, config}: IRecordingStartParams) => {
+  function: async ({ cognigy, config }: IRecordingStartParams) => {
     const { api } = cognigy;
 
     // Convert to ms
@@ -81,5 +84,5 @@ export const recordingStartNode = createNodeDescriptor({
       status: 'recording-start',
       ...strippedConfig,
     });
-  }
+  },
 });

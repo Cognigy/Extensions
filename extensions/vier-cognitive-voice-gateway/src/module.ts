@@ -11,7 +11,13 @@ import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
 import { inactivityTimerNode } from './nodes/inactivityTimer';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
-import { checkOutboundResultNode, onOutboundDefault, onOutboundFailure, onOutboundSuccess, onOutboundTermination } from './nodes/checkOutboundResult';
+import {
+  checkOutboundResultNode,
+  onOutboundDefault,
+  onOutboundFailure,
+  onOutboundSuccess,
+  onOutboundTermination,
+} from './nodes/checkOutboundResult';
 
 export default createExtension({
   nodes: [
@@ -34,6 +40,6 @@ export default createExtension({
     inactivityTimerNode,
   ],
   options: {
-    label: 'VIER Voice'
-  }
+    label: 'VIER Voice',
+  },
 });

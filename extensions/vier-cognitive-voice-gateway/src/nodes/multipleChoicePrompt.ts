@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools';
 import t from '../translations';
 import { promptFields } from './shared';
 
@@ -19,7 +22,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
   defaultLabel: t.multipleChoicePrompt.nodeLabel,
   summary: t.multipleChoicePrompt.nodeSummary,
   appearance: {
-    color: '#9a4a21'
+    color: '#9a4a21',
   },
   tags: ['message'],
   fields: [
@@ -45,15 +48,15 @@ export const promptForMultipleChoice = createNodeDescriptor({
 }',
       params: {
         required: true,
-      }
-    }
+      },
+    },
   ],
   sections: [
     {
       key: 'general',
       fields: ['text', 'timeout'],
       label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false
+      defaultCollapsed: false,
     },
     {
       key: 'choicesSection',
@@ -65,22 +68,22 @@ export const promptForMultipleChoice = createNodeDescriptor({
       key: 'additional',
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
       label: t.forward.sectionAdditionalSettingsLabel,
-      defaultCollapsed: true
-    }
+      defaultCollapsed: true,
+    },
   ],
   form: [
     {
       key: 'general',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'choicesSection',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'additional',
-      type: 'section'
-    }
+      type: 'section',
+    },
   ],
   function: async ({ cognigy, config }: IMultipleChoicePromptParams) => {
     const { api } = cognigy;
@@ -95,7 +98,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       type: {
         name: 'MultipleChoice',
         choices: config.choices,
-      }
+      },
     });
-  }
+  },
 });

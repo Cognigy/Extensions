@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import { normalizeData } from '../helpers/util';
 import t from '../translations';
 
@@ -13,7 +16,7 @@ export const sendDataNode = createNodeDescriptor({
   defaultLabel: t.sendData.nodeLabel,
   summary: t.sendData.nodeSummary,
   appearance: {
-    color: '#9501c9'
+    color: '#9501c9',
   },
   tags: ['service'],
   fields: [
@@ -23,11 +26,11 @@ export const sendDataNode = createNodeDescriptor({
       label: t.sendData.nodeLabel,
       description: t.sendData.inputDataDescription,
       params: {
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   ],
-  function: async ({ cognigy, config } : ISendDataParams) => {
+  function: async ({ cognigy, config }: ISendDataParams) => {
     const { api } = cognigy;
     const data = normalizeData(config.data);
 

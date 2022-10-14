@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import t from '../translations';
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
@@ -17,7 +20,7 @@ export const speakNode = createNodeDescriptor({
   defaultLabel: t.speak.nodeLabel,
   summary: t.speak.nodeSummary,
   appearance: {
-    color: '#5c48ef'
+    color: '#5c48ef',
   },
   tags: ['message'],
   fields: [
@@ -246,7 +249,7 @@ export const speakNode = createNodeDescriptor({
             suffix: '</voice>',
           },
         ],
-      }
+      },
     },
     {
       type: 'checkbox',
@@ -277,7 +280,7 @@ export const speakNode = createNodeDescriptor({
   ],
   preview: {
     key: 'text',
-    type: 'text'
+    type: 'text',
   },
   sections: [
     {
@@ -302,13 +305,13 @@ export const speakNode = createNodeDescriptor({
       key: 'additional',
       fields: ['bargeIn', 'timeout'],
       label: t.forward.sectionAdditionalDataLabel,
-      defaultCollapsed: true
-    }
+      defaultCollapsed: true,
+    },
   ],
   form: [
     {
       key: 'general',
-      type: 'section'
+      type: 'section',
     },
     // {
     //   key: 'textOptions',
@@ -321,7 +324,7 @@ export const speakNode = createNodeDescriptor({
     {
       key: 'additional',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
     //#region Future Functionality (Need to be able to determine the global execution amount of the node)
@@ -349,12 +352,12 @@ export const speakNode = createNodeDescriptor({
     if (!config.text.startsWith('<speak>') || !config.text.endsWith('</speak>')) {
       cognigy.api.say(`<speak>${config.text}</speak>`, {
         interpretAs: 'SSML',
-        bargeIn: config.bargeIn
+        bargeIn: config.bargeIn,
       });
     } else {
       cognigy.api.say(config.text, {
         interpretAs: 'SSML',
-        bargeIn: config.bargeIn
+        bargeIn: config.bargeIn,
       });
     }
   },

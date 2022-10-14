@@ -7,7 +7,8 @@ import {
   normalizeSipHeaders,
   convertWhisperText,
   normalizeText,
-  convertDuration, delay
+  convertDuration,
+  delay,
 } from '../helpers/util';
 import t from '../translations';
 import { commonRedirectFields } from './shared';

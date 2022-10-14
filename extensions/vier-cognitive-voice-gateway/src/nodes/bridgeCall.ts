@@ -1,10 +1,14 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
 import {
   convertDuration,
-  convertWhisperText, delay,
+  convertWhisperText,
+  delay,
   normalizeData,
   normalizeSipHeaders,
-  normalizeText
+  normalizeText,
 } from '../helpers/util';
 import t from '../translations';
 import { commonRedirectFields } from './shared';
@@ -29,11 +33,11 @@ export const bridgeCallNode = createNodeDescriptor({
   defaultLabel: t.bridge.nodeLabel,
   summary: t.bridge.nodeSummary,
   appearance: {
-    color: 'green'
+    color: 'green',
   },
   tags: ['service'],
   behavior: {
-    entrypoint: true
+    entrypoint: true,
   },
   fields: [
     {
@@ -43,8 +47,8 @@ export const bridgeCallNode = createNodeDescriptor({
       description: t.bridge.inputHeadNumberDescription,
       params: {
         required: true,
-        placeholder: '+E.164 format, e.g. "+49721480848680"'
-      }
+        placeholder: '+E.164 format, e.g. "+49721480848680"',
+      },
     },
     {
       type: 'number',
@@ -61,7 +65,7 @@ export const bridgeCallNode = createNodeDescriptor({
   ],
   preview: {
     key: 'headNumber',
-    type: 'text'
+    type: 'text',
   },
   sections: [
     {
@@ -93,7 +97,7 @@ export const bridgeCallNode = createNodeDescriptor({
       fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
-    }
+    },
   ],
   form: [
     {
@@ -115,7 +119,7 @@ export const bridgeCallNode = createNodeDescriptor({
     {
       key: 'additionalSettings',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: IBridgeCallParams) => {
     const { api } = cognigy;
@@ -138,5 +142,5 @@ export const bridgeCallNode = createNodeDescriptor({
         api.stopExecution();
       }
     });
-  }
+  },
 });

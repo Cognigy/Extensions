@@ -54,11 +54,11 @@ export const terminateCallNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ITerminateCallParams) => {
     const { api } = cognigy;
-    const data = normalizeData(config.data);
-    api.say('', {
+    const payload = {
       status: 'termination',
-      data,
-    });
+      data: normalizeData(config.data),
+    };
+    api.say('', payload);
     if (config.endFlow) {
       api.stopExecution();
     }

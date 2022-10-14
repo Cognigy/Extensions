@@ -22,14 +22,15 @@ export function convertWhisperText(text) {
   };
 }
 
-export function convertDuration(timeout: number | undefined) {
+export function convertDuration(timeout: number | undefined): number | undefined {
   if (!timeout || timeout < 0) {
     return undefined;
   }
   return timeout * 1000;
 }
 
-export function normalizeData(dataObject: object | undefined) {
+export type Data = { [key: string]: string }
+export function normalizeData(dataObject: object | undefined): Data | undefined {
   if (!dataObject) {
     return undefined;
   }
@@ -46,7 +47,9 @@ export function normalizeData(dataObject: object | undefined) {
   return output;
 }
 
-export function normalizeSipHeaders(headersObject: object | undefined) {
+export type CustomSipHeaders = { [name: string]: string };
+
+export function normalizeSipHeaders(headersObject: object | undefined): CustomSipHeaders | undefined {
   if (!headersObject) {
     return undefined;
   }

@@ -20,7 +20,7 @@ export const playNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     {
-      type: 'text',
+      type: 'cognigyText',
       key: 'url',
       label: t.play.inputUrlLabel,
       description: t.play.inputUrlLabelDescription,
@@ -30,7 +30,7 @@ export const playNode = createNodeDescriptor({
       }
     },
     {
-      type: 'text',
+      type: 'cognigyText',
       key: 'fallbackText',
       label: t.play.inputFallbackTextLabel,
       description: t.play.inputFallbackTextDescription,

@@ -30,6 +30,7 @@ export function convertDuration(timeout: number | undefined): number | undefined
 }
 
 export type Data = { [key: string]: string }
+
 export function normalizeData(dataObject: object | undefined): Data | undefined {
   if (!dataObject) {
     return undefined;

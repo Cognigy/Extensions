@@ -56,7 +56,7 @@ export const playNode = createNodeDescriptor({
     },
     {
       key: 'additional',
-      fields: ['bargeIn'],
+      fields: ['bargeIn', 'fallbackText'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     }

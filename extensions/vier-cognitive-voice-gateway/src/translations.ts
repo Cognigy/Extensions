@@ -284,7 +284,7 @@ export default {
         },
         inputExperimentalEnableRingingToneDescription: {
             'default': "To play a ringing tone during a pending call, activate this checkbox. This setting will change in the future.",
-            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, ein Kingelton abzuspielen, aktivieren Sie diese Checkbox. Diese Einstellung wird sich in Zukunft ändern.",
+            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, einen Kingelton abzuspielen, aktivieren Sie diese Checkbox. Hinweis! Diese Einstellung wird sich in Zukunft ändern.",
         },
         inputExperimentalEnableRingingToneLabel: {
             'default': "(EXPERIMENTAL) Enable Ringing Tone",

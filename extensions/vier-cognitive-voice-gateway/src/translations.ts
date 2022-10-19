@@ -325,8 +325,8 @@ export default {
             'deDE': "Geben Sie die maximale Zeit in Sekunden ein, die der Anruf läuten soll, bevor der Anrufversuch abgebrochen wird.",
         },
         inputRingTimeoutLabel: {
-            'default': "Ring Timeout (s)",
-            'deDE': "Zeitüberschreitung beim Klingeln (s)",
+            'default': "Ring Timeout (in s)",
+            'deDE': "Zeitüberschreitung beim Klingeln (in s)",
         },
         inputSubmitInputsDescription: {
             'default': "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
@@ -503,19 +503,19 @@ export default {
             'deDE': "Zeitüberschreitung bei Inaktivität",
         },
         nodeSummary: {
-            'default': "Sets the Inactivity Timeout in (s)",
-            'deDE': "Legt die Zeitüberschreitung bei Inaktivität (s) fest",
+            'default': "Sets the Inactivity Timeout in seconds",
+            'deDE': "Legt die Zeitüberschreitung bei Inaktivität in Sekunden fest",
         },
         selectTimerLabel: {
             'default': "Select Timeout",
             'deDE': "Zeitüberschreitung einstellen",
         },
         useStartInputsLabel: {
-            'default': "Activate Inactivity Timeout (s)",
+            'default': "Activate Inactivity Timeout (in s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) aktivieren",
         },
         useStopInputsLabel: {
-            'default': "Deactivate Inactivity Timeout (s)",
+            'default': "Deactivate Inactivity Timeout (in s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) deaktivieren",
         },
     },

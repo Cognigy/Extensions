@@ -22,7 +22,7 @@ export default {
         },
         inputMaxDigitsDescription: {
             'default': "Enter the maximum amount of digits the phone number can have. If set, the input ends once the maximum has been reached.",
-            'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
+            'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, dann endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
         nodeLabel: {
             'default': "Forward Call to a Contact Center",
@@ -231,8 +231,8 @@ export default {
             'deDE': "On Termination",
         },
         inputAcceptAnsweringMachinesDescription: {
-            'default': "The bot accepts answering machines picking up the calls.",
-            'deDE': "Der Bot akzeptiert Anrufbeantworter, die die Anrufe entgegennehmen.",
+            'default': "If enabled, the bot will accept answering machines picking up the calls.",
+            'deDE': "Wenn diese Option aktiviert ist, dann akzeptiert der Bot Anrufbeantworter, die die Anrufe entgegennehmen.",
         },
         inputAcceptAnsweringMachinesLabel: {
             'default': "Accept Answering Machines",

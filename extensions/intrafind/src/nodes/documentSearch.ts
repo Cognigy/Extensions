@@ -7,7 +7,6 @@ export interface IdocumentSearchParams extends INodeFunctionBaseParams {
         searchURL: string;
         searchTerm: string;
         listSize: number;
-        listOffset: number;
         specifyFields: boolean;
         queryFields: string[];
         indexName: boolean;
@@ -30,7 +29,7 @@ export const documentSearchNode = createNodeDescriptor({
             key: "searchURL",
             label: "Search URL",
             type: "cognigyText",
-            description: "The URL for the Intrafind server",
+            description: "The URL for the Intrafind server. Ex.: http://companyname.server.com\search",
         },
         {
             key: "searchTerm",
@@ -52,16 +51,6 @@ export const documentSearchNode = createNodeDescriptor({
             }
         },
         {
-            key: "listOffset",
-            label: "List Offset",
-            type: "number",
-            defaultValue: 0,
-            params: {
-                required: true,
-                max: 50
-            }
-        },
-        {
             key: "specifyFields",
             type: "toggle",
             label: "Specify Fields",
@@ -72,7 +61,7 @@ export const documentSearchNode = createNodeDescriptor({
             key: "queryFields",
             type: "textArray",
             label: "Filter Queries",
-            description: "Add filter queries to search",
+            description: "Add filter queries to search. Ex.: _facet.indexname:Sharepoint",
             defaultValue: false
         },
         {
@@ -190,7 +179,6 @@ export const documentSearchNode = createNodeDescriptor({
         { type: "field", key: "searchURL" },
         { type: "field", key: "searchTerm" },
         { type: "field", key: "listSize" },
-        { type: "field", key: "listOffset" },
         { type: "field", key: "specifyFields" },
         { type: "field", key: "indexName" },
         { type: "field", key: "strBody" },
@@ -203,12 +191,16 @@ export const documentSearchNode = createNodeDescriptor({
     appearance: {
         color: "#ab191c"
     },
-    function: async ({ cognigy, config }: IdocumentSearchParams) => {
+    dependencies: {
+        children: [
+            "onFoundResults",
+            "onEmptyResults"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: IdocumentSearchParams) => {
         const { api } = cognigy;
-        const { searchURL, searchTerm, listSize, listOffset, specifyFields, indexName, strBody, strTitle, strURL, strLanguage, storeLocation, queryFields, inputKey, contextKey } = config;
+        const { searchURL, searchTerm, listSize, specifyFields, indexName, strBody, strTitle, strURL, strLanguage, storeLocation, queryFields, inputKey, contextKey } = config;
         // const { apiKey } = apiConnection;
-
-        const queryFieldsMod = queryFields.join(' AND ');
 
         const fields = [];
         if (indexName === true) {
@@ -229,18 +221,17 @@ export const documentSearchNode = createNodeDescriptor({
 
         const endpoint = searchURL;
 
-        const fieldsMod = fields.join(',');
-
         const searchParameters = {
             'method': 'search',
             'param0': searchTerm,
-            'hits.list.size': listSize,
-            'hits.list.offset': listOffset,
+            'hits.list.size': listSize
         };
         if (specifyFields === true) {
+            const fieldsMod = fields.join(',');
             searchParameters["return.fields"] = fieldsMod;
         }
         if (queryFields.length > 0) {
+            const queryFieldsMod = queryFields.join(' AND ');
             searchParameters["filter.query"] = queryFieldsMod;
         }
 
@@ -253,6 +244,15 @@ export const documentSearchNode = createNodeDescriptor({
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
+
+            if (result.data.documents.length === 0) {
+                const onEmptyResultsChild = childConfigs.find(child => child.type === "onEmptyResults");
+                api.setNextNode(onEmptyResultsChild.id);
+            } else {
+                const onFoundChild = childConfigs.find(child => child.type === "onFoundResults");
+                api.setNextNode(onFoundChild.id);
+            }
+
             if (storeLocation === 'context') {
                 api.addToContext(contextKey, result.data, 'simple');
             } else {
@@ -267,5 +267,49 @@ export const documentSearchNode = createNodeDescriptor({
                 api.addToInput(inputKey, { error: error.message });
             }
         }
+    }
+});
+
+export const onFoundResults = createNodeDescriptor({
+    type: "onFoundResults",
+    parentType: "documentSearch",
+    defaultLabel: "On Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onEmptyResults = createNodeDescriptor({
+    type: "onEmptyResults",
+    parentType: "documentSearch",
+    defaultLabel: "On Empty Result",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
     }
 });

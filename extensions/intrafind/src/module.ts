@@ -1,10 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
 // import { intrafindAuthData } from './connections/intrafindAuth';
-import { documentSearchNode } from './nodes/documentSearch';
+import { onEmptyResults, onFoundResults, documentSearchNode } from './nodes/documentSearch';
 
 export default createExtension({
 	nodes: [
-		documentSearchNode
+		documentSearchNode,
+		onFoundResults,
+		onEmptyResults
 	],
 	options: {
 		label: "Intrafind"

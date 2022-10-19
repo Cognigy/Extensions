@@ -11,7 +11,6 @@ This node can retrieve meta data on documents based on a specific search term de
 - Search URL: The URL of the Intrafind search application. 
 - Search Term: The term to search for in the documents.
 - List Size: The amount of results to be returned in the list. 
-- List Offset: If >0 the amount of documents to be skipped in the results (for example the results normally in position 0 will not be shown if set to 1 etc.)
 - Specify Fields: Should only specific fields be returned in the results. 
 - Filter Queries: Additional fields to add filter queries based to the search. For example, if you only want results from Sharepoint you would add the query '_facet.indexname:Sharepoint'  
 - Where to Store the Result: The selection, where to store the list (either in `context` or `input`)

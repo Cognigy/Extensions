@@ -84,10 +84,12 @@ export default {
         inputChoicesLabel: {
             'default': "Choices",
             'deDE': "Auswahlmöglichkeiten",
+            'esES': "Choix",
         },
         nodeLabel: {
             'default': "Get Multiple Choice Answer from Caller",
             'deDE': "Multiple-Choice-Antwort von dem:der Anrufer:in erhalten",
+            'esES': "Obtenir une réponse à choix multiple de l'appelant",
         },
         nodeSummary: {
             'default': "Say something to the call with a multiple choice prompt",
@@ -96,6 +98,7 @@ export default {
         sectionChoicesSectionLabel: {
             'default': "Choices",
             'deDE': "Auswahlmöglichkeiten",
+            'esES': "Choix",
         },
     },
     outboundService: {
@@ -116,11 +119,12 @@ export default {
         inputFallbackTextLabel: {
             'default': "Fallback Text",
             'deDE': "Fallback-Text",
+            'esES': "Texte de secours",
         },
         inputUrlLabel: {
             'default': "Audio file URL",
             'deDE': "Audiodatei-URL",
-            'esES': "URL audio",
+            'esES': "URL du fichier audio",
         },
         inputUrlLabelDescription: {
             'default': "Enter the location of the audio file. \nAllowed formats: Linear PCM with signed 16 bits (8 kHz or 16 kHz), A-law or µ-law 8 kHz.",
@@ -301,6 +305,7 @@ export default {
         inputInterpretAsLabel: {
             'default': "Interpret as",
             'deDE': "Interpretieren als",
+            'esES': "Interpréter comme",
         },
         inputLanguageDescription: {
             'default': "To overwrite the Text-to-Speech language for specific messages, enter the language you want.",
@@ -314,6 +319,7 @@ export default {
         inputMaxDigitsLabel: {
             'default': "Maximum Allowed Digits",
             'deDE': "Maximal erlaubte Ziffernanzahl",
+            'esES': "Chiffres maximums autorisés",
         },
         inputRecordingIdDescription: {
             'default': "Enter an arbitrary string to identify the call recording if multiple call recordings are created in the same dialog.",
@@ -370,6 +376,7 @@ export default {
         inputUseMaxDigitsDescription: {
             'default': "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
             'deDE': "Um die Eigenschaft „Maximale Ziffernanzahl“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
+            'esES': "Pour utiliser la propriété \"Chiffres maximums autorisés\" comme condition d'arrêt, activez cette case à cocher.",
         },
         inputUseMaxDigitsLabel: {
             'default': "Use Maximum Digits",
@@ -395,6 +402,7 @@ export default {
         sectionStopConditionLabel: {
             'default': "Stop Condition",
             'deDE': "Stoppbedingung",
+            'esES': "Condition d'arrêt",
         },
     },
     speak: {
@@ -511,7 +519,7 @@ export default {
             'deDE': "Legt die Zeitüberschreitung bei Inaktivität in Sekunden fest",
         },
         selectTimerLabel: {
-            'default': "Select Timeout",
+            'default': "Set Timeout",
             'deDE': "Zeitüberschreitung einstellen",
         },
         useStartInputsLabel: {

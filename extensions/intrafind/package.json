@@ -1,0 +1,26 @@
+{
+  "name": "intrafind",
+  "version": "4.0.0",
+  "description": "Use Intrafind search",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz intrafind.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Intrafind",
+    "Document search",
+    "Search"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "axios": "^0.21.1",
+    "qs": "^6.10.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3"
+  }
+}

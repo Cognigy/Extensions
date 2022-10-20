@@ -239,13 +239,13 @@ export default {
             'deDE': "Anrufbeantworter akzeptieren",
         },
         inputBargeInOnDtmfDescription: {
-            'default': "Allows the audio to be interrupted by pressing keys",
+            'default': "To allow the caller to interrupt the audio by pressing keys, activate this checkbox.",
         },
         inputBargeInOnDtmfLabel: {
             'default': "Barge-In on DTMF",
         },
         inputBargeInOnSpeechDescription: {
-            'default': "Allows the audio to be interrupted by the speaker",
+            'default': "To allow the speaker to interrupt the audio, activate this checkbox.",
         },
         inputBargeInOnSpeechLabel: {
             'default': "Barge-In on Speech",

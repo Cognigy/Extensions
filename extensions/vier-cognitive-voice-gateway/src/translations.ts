@@ -110,16 +110,16 @@ export default {
     },
     play: {
         inputFallbackTextDescription: {
-            'default': "The fallback text is used when the audio playback did not succeed.",
-            'deDE': "Der Fallback-Text wird verwendet, wenn die Audiodatei nicht abgespielt werden kann.",
+            'default': "Enter the text to be announced when the audio file cannot be played.",
+            'deDE': "Geben Sie den Text ein, der verwendet werden soll, wenn die Audiodatei nicht abgespielt werden kann.",
         },
         inputFallbackTextLabel: {
             'default': "Fallback Text",
             'deDE': "Fallback-Text",
         },
         inputUrlLabel: {
-            'default': "Audio URL",
-            'deDE': "Audio-URL",
+            'default': "Audio file URL",
+            'deDE': "Audiodatei-URL",
             'esES': "URL audio",
         },
         inputUrlLabelDescription: {
@@ -157,12 +157,12 @@ export default {
             'deDE': "Wählen Sie die maximale Dauer der Gesprächsaufzeichnung in Sekunden, nach der die Gesprächsaufzeichnung automatisch beendet werden soll.",
         },
         inputMaxDurationLabel: {
-            'default': "Maximum Call Recording Duration (s)",
-            'deDE': "Maximale Dauer der Gesprächsaufzeichnung (in s)",
+            'default': "Maximum Call Recording Duration (in s)",
+            'deDE': "Maximaldauer der Gesprächsaufzeichnung (in s)",
         },
         inputSpeakersLabel: {
-            'default': "Speakers to record",
-            'deDE': "Aufzuzeichnende Sprecher:innen",
+            'default': "Speaker to record",
+            'deDE': "Aufzuzeichnende:r Sprecher:in",
         },
         nodeLabel: {
             'default': "Start Call Recording",
@@ -239,16 +239,20 @@ export default {
             'deDE': "Anrufbeantworter akzeptieren",
         },
         inputBargeInOnDtmfDescription: {
-            'default': "To allow the caller to interrupt the audio by pressing keys, activate this checkbox.",
+            'default': "To allow the caller to interrupt the audio file by pressing keys, activate this checkbox.",
+            'deDE': "Damit der:die Anrufer:in die Audiodatei durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
         },
         inputBargeInOnDtmfLabel: {
-            'default': "Barge-In on DTMF",
+            'default': "Allow the caller to interrupt the audio file by pressing keys",
+            'deDE': "Dem:Der Anrufer:in erlauben, die Audiodatei durch Drücken von Tasten zu unterbrechen",
         },
         inputBargeInOnSpeechDescription: {
-            'default': "To allow the speaker to interrupt the audio, activate this checkbox.",
+            'default': "To allow the speaker to interrupt the audio file, activate this checkbox.",
+            'deDE': "Damit der:die Sprecher:in die Audiodatei unterbrechen kann, aktivieren Sie diese Checkbox.",
         },
         inputBargeInOnSpeechLabel: {
-            'default': "Barge-In on Speech",
+            'default': "Allow the speaker to interrupt the audio file by speaking",
+            'deDE': "Dem:Der Sprecher:in erlauben, die Audiodatei durch Sprechen zu unterbrechen",
         },
         inputCallerIdDescription: {
             'default': "Enter the phone number that should be displayed to the callee. (This is a best-effort option. A correct display can not be guaranteed.)",
@@ -326,7 +330,7 @@ export default {
         },
         inputRingTimeoutLabel: {
             'default': "Ring Timeout (in s)",
-            'deDE': "Zeitüberschreitung beim Klingeln (in s)",
+            'deDE': "Zeitüberschreitung beim Klingeln (in s)",
         },
         inputSubmitInputsDescription: {
             'default': "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
@@ -425,8 +429,8 @@ export default {
             'esES': "Langue",
         },
         inputProfileTokenDescription: {
-            'default': "Please use the profile token as displayed in VIER Cognitive Voice Gateway, Speech Service Profiles",
-            'deDE': "Bitte verwenden Sie das Profiltoken, wie es in VIER Cognitive Voice Gateway, Sprachdienst-Profile, angezeigt wird",
+            'default': "Use the profile token as displayed in VIER Cognitive Voice Gateway under Speech service profiles > Profile token.",
+            'deDE': "Verwenden Sie das Profiltoken, wie es in VIER Cognitive Voice Gateway unter Sprachdienst-Profile > Profiltoken angezeigt wird.",
         },
         inputProfileTokenFallbackDescription: {
             'default': "Profile Token Fallback",
@@ -451,8 +455,8 @@ export default {
             'esES': "Service de transcription de la parole",
         },
         inputTranscriberDescription: {
-            'default': "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token",
-            'deDE': "Geben Sie einen der folgenden Speech-to-Text-Dienste ein: 'GOOGLE', 'IBM', 'MICROSOFT' oder lassen Sie das Feld leer, um über das Profiltoken einen Dienst festzulegen",
+            'default': "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.",
+            'deDE': "Geben Sie einen der folgenden Speech-to-Text-Dienste ein: 'GOOGLE', 'IBM', 'MICROSOFT' oder lassen Sie das Feld leer, um über das Profiltoken einen Dienst festzulegen.",
         },
         nodeLabel: {
             'default': "Set Speech-to-Text Service",
@@ -491,8 +495,8 @@ export default {
     },
     timer: {
         inputTimeoutStartDescription: {
-            'default': "The Inactivity Timeout can only be set, if not already in the VIER Cognitive Voice Gateway project settings duration",
-            'deDE': "Die Zeitüberschreitung bei Inaktivität kann nur eingestellt werden, wenn sie nicht bereits in den Projekteinstellungen von VIER Cognitive Voice Gateway hinterlegt ist",
+            'default': "You can set the Inactivity Timeout only if it is not already set in the VIER Cognitive Voice Gateway project settings.",
+            'deDE': "Sie können die Inaktivitätszeitüberschreitung nur einstellen, wenn sie noch nicht in den Projekteinstellungen von VIER Cognitive Voice Gateway festgelegt wurde.",
         },
         inputTimeoutStopDescription: {
             'default': "Stops the Inactivity Timeout detection",

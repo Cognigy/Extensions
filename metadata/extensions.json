@@ -992,7 +992,7 @@
             "label": "Intrafind",
             "version": "4.0.0",
             "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/intrafind400/intrafind.tar.gz",
-            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/jira",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/intrafind",
             "description": "Perform document search via Intrafind",
             "longDescription": "People can use Intrafind's enterprise search and document intelligence products to quickly find and link existing information in their company, ensuring that they always have the right insights for their tasks and decisions. This extension contains functionality for document searching",
             "tags": [

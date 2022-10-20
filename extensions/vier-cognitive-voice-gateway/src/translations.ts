@@ -111,7 +111,7 @@ export default {
     play: {
         inputFallbackTextDescription: {
             'default': "The fallback text is used when the audio playback did not succeed.",
-            'deDE': "Der Fallback-Text wird verwendet, wenn das Audio-File nicht abgespielt werden kann.",
+            'deDE': "Der Fallback-Text wird verwendet, wenn die Audiodatei nicht abgespielt werden kann.",
         },
         inputFallbackTextLabel: {
             'default': "Fallback Text",

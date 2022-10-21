@@ -380,7 +380,7 @@ export default {
         },
         inputUseMaxDigitsLabel: {
             'default': "Use Maximum Digits",
-            'deDE': "Maximale Ziffernanzahl verwenden",
+            'deDE': "„Maximale Ziffernanzahl“ verwenden",
         },
         inputUseSubmitInputsDescription: {
             'default': "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
@@ -388,7 +388,7 @@ export default {
         },
         inputUseSubmitInputsLabel: {
             'default': "Use Submit Inputs",
-            'deDE': "Eingaben übermitteln verwenden",
+            'deDE': "„Eingaben übermitteln“ verwenden",
         },
         inputWhisperingTextDescription: {
             'default': "Enter the text that should be announced to the agent the call is transfered to before the call parties are connected.",

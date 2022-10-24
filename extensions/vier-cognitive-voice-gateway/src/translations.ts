@@ -502,6 +502,9 @@ export default {
         },
     },
     timer: {
+        enableTimerDescription: {
+            'default': "Check this option to enable the inactivity timer, uncheck it to disable the timer.",
+        },
         enableTimerLabel: {
             'default': "Check this to enable the inactivity timer, uncheck it to disable the timer.",
         },
@@ -521,18 +524,9 @@ export default {
             'default': "Sets the Inactivity Timeout in seconds",
             'deDE': "Legt die Zeitüberschreitung bei Inaktivität in Sekunden fest",
         },
-        selectTimerLabel: {
-            'default': "a",
-            'deDE': "Select Timeout",
-            'esES': "b",
-        },
         useStartInputsLabel: {
             'default': "Activate Inactivity Timeout (in s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) aktivieren",
-        },
-        useStopInputsLabel: {
-            'default': "Deactivate Inactivity Timeout (in s)",
-            'deDE': "Zeitüberschreitung bei Inaktivität (in s) deaktivieren",
         },
     },
 };

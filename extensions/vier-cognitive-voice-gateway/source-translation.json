@@ -140,6 +140,6 @@
         "useStopInputsLabel": "Deactivate Inactivity Timeout",
         "inputTimeoutStopDescription": "Stops the Inactivity Timeout detection",
         "inputTimeoutStartDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
-        "selectTimerLabel": "Select Timeout"
+        "enableTimerLabel": "Check this to enable the inactivity timer, uncheck it to disable the timer."
     }
 }

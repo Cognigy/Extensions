@@ -442,15 +442,15 @@ export default {
         },
         inputProfileTokenFallbackDescription: {
             'default': "Profile Token Fallback",
-            'deDE': "Profil-Token-Fallback",
+            'deDE': "Profiltoken-Fallback",
         },
         inputProfileTokenFallbackLabel: {
             'default': "Profile Token Fallback",
-            'deDE': "Profil-Token-Fallback",
+            'deDE': "Profiltoken-Fallback",
         },
         inputProfileTokenLabel: {
             'default': "Profile Token",
-            'deDE': "Profil-Token",
+            'deDE': "Profiltoken",
             'esES': "Jeton de profil",
         },
         inputServiceFallbackLabel: {
@@ -484,9 +484,9 @@ export default {
             'esES': "Sélectionner la langue",
         },
         sectionSelectSTTLabel: {
-            'default': "Select Speech-to-Text Services",
-            'deDE': "Speech-to-Text-Dienste wählen",
-            'esES': "Sélectionner les services de transcription de la parole",
+            'default': "Select Speech-to-Text Service",
+            'deDE': "Speech-to-Text-Dienst wählen",
+            'esES': "Sélectionner le service de transcription de la parole",
         },
     },
     terminate: {

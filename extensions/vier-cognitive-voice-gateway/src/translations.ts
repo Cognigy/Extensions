@@ -502,6 +502,9 @@ export default {
         },
     },
     timer: {
+        enableTimerLabel: {
+            'default': "Check this to enable the inactivity timer, uncheck it to disable the timer.",
+        },
         inputTimeoutStartDescription: {
             'default': "You can set the Inactivity Timeout only if it is not already set in the VIER Cognitive Voice Gateway project settings.",
             'deDE': "Sie können die Inaktivitätszeitüberschreitung nur einstellen, wenn sie noch nicht in den Projekteinstellungen von VIER Cognitive Voice Gateway festgelegt wurde.",
@@ -530,9 +533,6 @@ export default {
         useStopInputsLabel: {
             'default': "Deactivate Inactivity Timeout (in s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) deaktivieren",
-        },
-        enableTimerLabel: {
-            'deDE': "Check this to enable the inactivity timer, uncheck it to disable the timer.",
         },
     },
 };

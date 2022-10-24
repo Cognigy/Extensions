@@ -13,6 +13,8 @@ export type InterpretAs = 'SSML' | 'TEXT';
  *   3. de-DE
  *   4. fr-FR
  * These have been moved to the start of the list as they are likely going to be the most used languages.
+ *
+ * TODO replace this by an option resolver
  */
 const supportedLanguages: readonly string[] = [
   'en-US',

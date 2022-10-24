@@ -16,7 +16,8 @@
     "pack": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json",
     "build": "tsc -p .",
     "lint": "eslint --ext .",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "rebuild": "npm run-script rm && npm run-script build && npm run-script pack"
   },
   "devDependencies": {},
   "keywords": [

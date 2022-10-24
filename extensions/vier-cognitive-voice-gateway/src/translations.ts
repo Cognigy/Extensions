@@ -506,7 +506,7 @@ export default {
             'default': "Check this option to enable the inactivity timer, uncheck it to disable the timer.",
         },
         enableTimerLabel: {
-            'default': "Check this to enable the inactivity timer, uncheck it to disable the timer.",
+            'default': "Enable or disable the timer",
         },
         inputTimeoutStartDescription: {
             'default': "You can set the Inactivity Timeout only if it is not already set in the VIER Cognitive Voice Gateway project settings.",

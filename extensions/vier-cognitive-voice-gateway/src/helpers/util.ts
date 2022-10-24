@@ -1,4 +1,4 @@
-import { BargeInInputs } from "../nodes/shared";
+import { BargeInInputs } from "../common/shared";
 
 export function normalizeText(text) {
   if (!text) {

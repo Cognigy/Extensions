@@ -30,26 +30,16 @@ export const recordingStopNode = createNodeDescriptor({
       description: t.shared.inputRecordingIdDescription,
     },
     {
-      type: 'checkbox',
+      type: 'toggle',
       key: 'terminate',
       description: t.recordingStop.inputTerminateDescription,
       label: t.recordingStop.inputTerminateLabel,
     },
   ],
-  sections: [
-    {
-      key: 'additional',
-      fields: ['recordingId', 'terminate'],
-      label: t.forward.sectionAdditionalSettingsLabel,
-      defaultCollapsed: true,
-    },
-  ],
-  form: [
-    {
-      key: 'additional',
-      type: 'section',
-    },
-  ],
+  preview: {
+    type: 'text',
+    key: 'recordingId',
+  },
   function: async ({ cognigy, config }: IRecordingStopParams) => {
     const { api } = cognigy;
 

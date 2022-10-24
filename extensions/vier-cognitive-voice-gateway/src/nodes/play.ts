@@ -11,7 +11,7 @@ import {
   bargeInFieldKeys,
   bargeInFields,
   BargeInInputs,
-} from "./shared";
+} from "../common/shared";
 
 interface IPlayNodeInputs extends BargeInInputs {
   url: string,

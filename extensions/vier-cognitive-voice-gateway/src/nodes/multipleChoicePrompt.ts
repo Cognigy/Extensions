@@ -6,7 +6,7 @@ import t from '../translations';
 import {
   InterpretAs,
   promptFields,
-} from './shared';
+} from '../common/shared';
 import { convertDuration } from "../helpers/util";
 
 export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {

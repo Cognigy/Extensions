@@ -4,12 +4,17 @@ import {
 } from '@cognigy/extension-tools/build';
 import { normalizeData } from '../helpers/util';
 import t from '../translations';
+import {
+  endFlowField,
+  EndFlowInputs,
+} from "../common/shared";
+
+interface ITerminateCallInputs extends EndFlowInputs {
+  data?: object,
+}
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {
-  config: {
-    endFlow?: boolean,
-    data: object,
-  };
+  config: ITerminateCallInputs;
 }
 
 export const terminateCallNode = createNodeDescriptor({
@@ -21,13 +26,7 @@ export const terminateCallNode = createNodeDescriptor({
     color: 'red',
   },
   fields: [
-    {
-      type: 'checkbox',
-      key: 'endFlow',
-      label: t.shared.inputEndFlowLabel,
-      defaultValue: false,
-      description: t.shared.inputEndFlowDescription,
-    },
+    endFlowField,
     {
       type: 'json',
       key: 'data',
@@ -42,7 +41,7 @@ export const terminateCallNode = createNodeDescriptor({
     {
       key: 'additional',
       label: t.forward.sectionAdditionalDataLabel,
-      fields: ['endFlow', 'data'],
+      fields: [endFlowField.key, 'data'],
       defaultCollapsed: true,
     },
   ],

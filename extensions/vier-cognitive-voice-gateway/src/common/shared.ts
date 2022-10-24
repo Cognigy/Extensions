@@ -104,14 +104,14 @@ export type BargeInInputs = {
 
 export const bargeInFields: Array<INodeField> = [
   {
-    type: 'checkbox',
+    type: 'toggle',
     key: 'bargeInOnSpeech',
     label: t.shared.inputBargeInOnSpeechLabel,
     description: t.shared.inputBargeInOnSpeechDescription,
     defaultValue: false,
   },
   {
-    type: 'checkbox',
+    type: 'toggle',
     key: 'bargeInOnDtmf',
     label: t.shared.inputBargeInOnDtmfLabel,
     description: t.shared.inputBargeInOnDtmfDescription,
@@ -120,6 +120,21 @@ export const bargeInFields: Array<INodeField> = [
 ];
 
 export const bargeInFieldKeys: readonly string[] = bargeInFields.map(field => field.key);
+
+export interface EndFlowInputs {
+  endFlow: boolean,
+}
+
+export const endFlowField: INodeField = {
+  type: 'toggle',
+  key: 'endFlow',
+  label: t.shared.inputEndFlowLabel,
+  defaultValue: false,
+  description: t.shared.inputEndFlowDescription,
+  params: {
+    required: true,
+  },
+};
 
 export const promptFields: Array<INodeField> = [
   {
@@ -168,65 +183,3 @@ export const promptFields: Array<INodeField> = [
   ...bargeInFields,
 ];
 
-export const commonRedirectFields: Array<INodeField> = [
-  {
-    type: 'cognigyText',
-    key: 'callerId',
-    label: t.shared.inputCallerIdLabel,
-    description: t.shared.inputCallerIdDescription,
-    params: {
-      placeholder: '+E.164 format, e.g. "+49721480848680"',
-    },
-  },
-  {
-    type: 'json',
-    key: 'customSipHeaders',
-    label: t.shared.inputCustomSipHeadersLabel,
-    description: t.shared.inputCustomSipHeadersDescription,
-  },
-  {
-    type: 'number',
-    key: 'ringTimeout',
-    label: t.shared.inputRingTimeoutLabel,
-    description: t.shared.inputRingTimeoutDescription,
-    defaultValue: 15,
-    params: {
-      placeholder: 'Value in Seconds, e.g. 60 for 1 minute',
-      min: 10,
-      max: 120,
-    },
-  },
-  {
-    type: 'checkbox',
-    key: 'acceptAnsweringMachines',
-    label: t.shared.inputAcceptAnsweringMachinesLabel,
-    description: t.shared.inputAcceptAnsweringMachinesDescription,
-    defaultValue: false,
-  },
-  {
-    type: 'json',
-    key: 'data',
-    label: t.shared.inputDataLabel,
-    description: t.shared.inputDataDescription,
-  },
-  {
-    type: 'checkbox',
-    key: 'endFlow',
-    label: t.shared.inputEndFlowLabel,
-    defaultValue: false,
-    description: t.shared.inputEndFlowDescription,
-  },
-  {
-    type: 'checkbox',
-    key: 'experimentalEnableRingingTone',
-    label: t.shared.inputExperimentalEnableRingingToneLabel,
-    description: t.shared.inputExperimentalEnableRingingToneDescription,
-    defaultValue: false,
-  },
-  {
-    type: 'cognigyText',
-    key: 'whisperingText',
-    label: t.shared.inputWhisperingTextLabel,
-    description: t.shared.inputWhisperingTextDescription,
-  },
-];

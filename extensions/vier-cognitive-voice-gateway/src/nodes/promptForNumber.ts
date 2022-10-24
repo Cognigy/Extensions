@@ -7,7 +7,7 @@ import {
   bargeInFieldKeys,
   BargeInInputs,
   promptFields,
-} from './shared';
+} from '../common/shared';
 import {
   convertBargeIn,
   convertDuration,
@@ -40,7 +40,7 @@ export const promptForNumberNode = createNodeDescriptor({
   fields: [
     ...promptFields,
     {
-      type: 'checkbox',
+      type: 'toggle',
       key: 'useSubmitInputs',
       label: t.shared.inputUseSubmitInputsLabel,
       description: t.shared.inputUseSubmitInputsDescription,
@@ -56,7 +56,7 @@ export const promptForNumberNode = createNodeDescriptor({
       },
     },
     {
-      type: 'checkbox',
+      type: 'toggle',
       key: 'useMaxDigits',
       label: t.shared.inputUseMaxDigitsLabel,
       description: t.shared.inputUseMaxDigitsDescription,

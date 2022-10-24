@@ -55,20 +55,10 @@ export const recordingStartNode = createNodeDescriptor({
       },
     },
   ],
-  sections: [
-    {
-      key: 'additional',
-      label: t.forward.sectionAdditionalSettingsLabel,
-      fields: ['maxDuration', 'recordingId', 'speakers'],
-      defaultCollapsed: true,
-    },
-  ],
-  form: [
-    {
-      key: 'additional',
-      type: 'section',
-    },
-  ],
+  preview: {
+    type: 'text',
+    key: 'recordingId',
+  },
   function: async ({ cognigy, config }: IRecordingStartParams) => {
     const { api } = cognigy;
 

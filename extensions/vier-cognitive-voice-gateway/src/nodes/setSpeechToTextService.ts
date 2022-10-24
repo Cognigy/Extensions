@@ -7,7 +7,7 @@ import {
   INodeFieldTranslations,
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
-import { languageSelectField } from "./shared";
+import { languageSelectField } from "../common/shared";
 
 export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
   config: {

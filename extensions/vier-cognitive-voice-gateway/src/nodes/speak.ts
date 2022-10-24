@@ -11,7 +11,7 @@ import {
   bargeInFieldKeys,
   bargeInFields,
   BargeInInputs,
-} from "./shared";
+} from "../common/shared";
 
 interface ISpeakNodeInputs extends BargeInInputs {
   text: string,
@@ -140,7 +140,7 @@ export const speakNode = createNodeDescriptor({
               },
               {
                 label: 'time',
-                prefix: '<say-as interpret-as="time format="hms24">',
+                prefix: '<say-as interpret-as="time" format="hms24">',
                 suffix: '</say-as>',
               },
               {
@@ -272,13 +272,13 @@ export const speakNode = createNodeDescriptor({
     // {
     //   key: 'linear',
     //   label: 'Linear',
-    //   type: 'checkbox',
+    //   type: 'toggle',
     //   defaultValue: false
     // },
     // {
     //   key: 'loop',
     //   label: 'Loop',
-    //   type: 'checkbox',
+    //   type: 'toggle',
     //   defaultValue: false
     // }
   ],

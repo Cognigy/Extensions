@@ -11,20 +11,19 @@ import {
   delay,
 } from '../helpers/util';
 import t from '../translations';
-import { commonRedirectFields } from './shared';
+import {
+  transferCallFields,
+  transferCallForm,
+  TransferCallInputs,
+  transferCallSections,
+} from "../common/transferCall";
+
+interface IForwardCallInputs extends TransferCallInputs {
+  destinationNumber: string
+}
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
-  config: {
-    destinationNumber: string;
-    callerId?: string;
-    customSipHeaders?: object;
-    ringTimeout?: number;
-    acceptAnsweringMachines?: boolean;
-    data?: object;
-    experimentalEnableRingingTone?: boolean;
-    endFlow?: boolean;
-    whisperingText?: string;
-  };
+  config: IForwardCallInputs
 }
 
 export const forwardCallNode = createNodeDescriptor({
@@ -46,7 +45,7 @@ export const forwardCallNode = createNodeDescriptor({
         required: true,
       },
     },
-    ...commonRedirectFields,
+    ...transferCallFields,
   ],
 
   preview: {
@@ -61,52 +60,14 @@ export const forwardCallNode = createNodeDescriptor({
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
-    {
-      key: 'call',
-      fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: t.forward.sectionCallLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'sipHeaders',
-      fields: ['customSipHeaders'],
-      label: t.shared.inputCustomSipHeadersLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalData',
-      fields: ['data'],
-      label: t.forward.sectionAdditionalDataLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalSettings',
-      fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: t.forward.sectionAdditionalSettingsLabel,
-      defaultCollapsed: true,
-    },
+    ...transferCallSections,
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
-    {
-      key: 'call',
-      type: 'section',
-    },
-    {
-      key: 'sipHeaders',
-      type: 'section',
-    },
-    {
-      key: 'additionalData',
-      type: 'section',
-    },
-    {
-      key: 'additionalSettings',
-      type: 'section',
-    },
+    ...transferCallForm,
   ],
 
   function: async ({ cognigy, config }: IForwardCallParams) => {

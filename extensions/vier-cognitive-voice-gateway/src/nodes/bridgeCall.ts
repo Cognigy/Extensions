@@ -11,21 +11,20 @@ import {
   normalizeText,
 } from '../helpers/util';
 import t from '../translations';
-import { commonRedirectFields } from './shared';
+import {
+  transferCallFields,
+  transferCallForm,
+  TransferCallInputs,
+  transferCallSections,
+} from "../common/transferCall";
+
+interface IBridgeCallInputs extends TransferCallInputs {
+  headNumber: string
+  extensionLength: number
+}
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
-  config: {
-    headNumber: string,
-    extensionLength: number,
-    callerId?: string,
-    customSipHeaders?: object,
-    ringTimeout?: number,
-    acceptAnsweringMachines?: boolean,
-    data?: object,
-    experimentalEnableRingingTone?: boolean,
-    endFlow?: boolean,
-    whisperingText?: string
-  };
+  config: IBridgeCallInputs
 }
 
 export const bridgeCallNode = createNodeDescriptor({
@@ -55,13 +54,14 @@ export const bridgeCallNode = createNodeDescriptor({
       key: 'extensionLength',
       label: t.bridge.inputExtensionLengthLabel,
       description: t.bridge.inputExtensionLengthDescription,
+      defaultValue: 1,
       params: {
         required: true,
         min: 0,
         max: 5,
       },
     },
-    ...commonRedirectFields,
+    ...transferCallFields,
   ],
   preview: {
     key: 'headNumber',
@@ -74,52 +74,14 @@ export const bridgeCallNode = createNodeDescriptor({
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
-    {
-      key: 'call',
-      fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: t.forward.sectionCallLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'sipHeaders',
-      fields: ['customSipHeaders'],
-      label: t.shared.inputCustomSipHeadersLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalData',
-      fields: ['data'],
-      label: t.forward.sectionAdditionalDataLabel,
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalSettings',
-      fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: t.forward.sectionAdditionalSettingsLabel,
-      defaultCollapsed: true,
-    },
+    ...transferCallSections,
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
-    {
-      key: 'call',
-      type: 'section',
-    },
-    {
-      key: 'sipHeaders',
-      type: 'section',
-    },
-    {
-      key: 'additionalData',
-      type: 'section',
-    },
-    {
-      key: 'additionalSettings',
-      type: 'section',
-    },
+    ...transferCallForm,
   ],
   function: async ({ cognigy, config }: IBridgeCallParams) => {
     const { api } = cognigy;

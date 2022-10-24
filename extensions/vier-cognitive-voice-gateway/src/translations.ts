@@ -441,8 +441,8 @@ export default {
             'deDE': "Verwenden Sie das Profiltoken, wie es in VIER Cognitive Voice Gateway unter Sprachdienst-Profile > Profiltoken angezeigt wird.",
         },
         inputProfileTokenFallbackDescription: {
-            'default': "Profile Token Fallback",
-            'deDE': "Profiltoken-Fallback",
+            'default': "Use the profile token as fallback, as displayed in VIER Cognitive Voice Gateway under Speech service profiles > Profile token.",
+            'deDE': "Verwenden Sie das Profiltoken als Fallback, wie es in VIER Cognitive Voice Gateway unter Sprachdienst-Profile > Profiltoken angezeigt wird.",
         },
         inputProfileTokenFallbackLabel: {
             'default': "Profile Token Fallback",

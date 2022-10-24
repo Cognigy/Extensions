@@ -14,9 +14,11 @@ export interface IRecordingStartParams extends INodeFunctionBaseParams {
   config: {
     maxDuration?: number,
     recordingId?: string,
-    speakers?: Speaker | null,
+    speakers: Speaker | 'BOTH',
   };
 }
+
+const defaultSpeaker = 'BOTH';
 
 export const recordingStartNode = createNodeDescriptor({
   type: 'recordingStart',
@@ -46,11 +48,13 @@ export const recordingStartNode = createNodeDescriptor({
       type: 'select',
       key: 'speakers',
       label: t.recordingStart.inputSpeakersLabel,
+      defaultValue: defaultSpeaker,
       params: {
+        required: true,
         options: [
-          { value: null, label: 'Both Lines' },
-          { value: 'CUSTOMER', label: 'Customer' },
-          { value: 'AGENT', label: 'Agent' },
+          { value: defaultSpeaker, label: t.recordingStart.inputSpeakersBothLabel },
+          { value: 'CUSTOMER', label: t.recordingStart.inputSpeakersCustomerLabel },
+          { value: 'AGENT', label: t.recordingStart.inputSpeakersAgentLabel },
         ],
       },
     },
@@ -62,7 +66,18 @@ export const recordingStartNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IRecordingStartParams) => {
     const { api } = cognigy;
 
-    const speakers: Array<Speaker> = config.speakers ? [config.speakers] : ['CUSTOMER', 'AGENT'];
+    let speakers: Array<Speaker>;
+    switch (config.speakers ?? defaultSpeaker) {
+      case 'CUSTOMER':
+        speakers = ['CUSTOMER'];
+        break;
+      case 'AGENT':
+        speakers = ['AGENT'];
+        break;
+      default:
+        speakers = ['CUSTOMER', 'AGENT']
+        break;
+    }
 
     const payload = {
       status: 'recording-start',

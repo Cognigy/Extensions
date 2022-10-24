@@ -9,11 +9,13 @@ export interface IdocumentSearchParams extends INodeFunctionBaseParams {
         listSize: number;
         specifyFields: boolean;
         queryFields: string[];
+        strBodyTeaser: boolean;
         indexName: boolean;
         strBody: boolean;
         strTitle: boolean;
         strURL: boolean;
         strLanguage: boolean;
+        strImage: boolean;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
@@ -51,13 +53,6 @@ export const documentSearchNode = createNodeDescriptor({
             }
         },
         {
-            key: "specifyFields",
-            type: "toggle",
-            label: "Specify Fields",
-            description: "Specify which fields to return in the search",
-            defaultValue: false
-        },
-        {
             key: "queryFields",
             type: "textArray",
             label: "Filter Queries",
@@ -65,11 +60,29 @@ export const documentSearchNode = createNodeDescriptor({
             defaultValue: false
         },
         {
+            key: "specifyFields",
+            type: "toggle",
+            label: "Specify Fields",
+            description: "Specify which fields to return in the search",
+            defaultValue: true
+        },
+        {
+            key: "strBodyTeaser",
+            description: "A short teaser of the text in the found document returned as an array. Use this if the results are too large for the input or context objects.",
+            type: "checkbox",
+            label: "Text Teaser",
+            defaultValue: true,
+            condition: {
+                key: "specifyFields",
+                value: true
+            }
+        },
+        {
             key: "indexName",
             description: "The name of the index the file can be found in",
             type: "checkbox",
             label: "Index Name",
-            defaultValue: false,
+            defaultValue: true,
             condition: {
                 key: "specifyFields",
                 value: true
@@ -78,7 +91,7 @@ export const documentSearchNode = createNodeDescriptor({
         {
             key: "strBody",
             type: "checkbox",
-            label: "Text of Document",
+            label: "Full Text of Document",
             defaultValue: false,
             condition: {
                 key: "specifyFields",
@@ -89,7 +102,7 @@ export const documentSearchNode = createNodeDescriptor({
             key: "strTitle",
             type: "checkbox",
             label: "Document Name",
-            defaultValue: false,
+            defaultValue: true,
             condition: {
                 key: "specifyFields",
                 value: true
@@ -99,7 +112,7 @@ export const documentSearchNode = createNodeDescriptor({
             key: "strURL",
             type: "checkbox",
             label: "Document URL",
-            defaultValue: false,
+            defaultValue: true,
             condition: {
                 key: "specifyFields",
                 value: true
@@ -109,6 +122,16 @@ export const documentSearchNode = createNodeDescriptor({
             key: "strLanguage",
             type: "checkbox",
             label: "Language of Document",
+            defaultValue: true,
+            condition: {
+                key: "specifyFields",
+                value: true
+            }
+        },
+        {
+            key: "strImage",
+            type: "checkbox",
+            label: "Image",
             defaultValue: false,
             condition: {
                 key: "specifyFields",
@@ -180,11 +203,13 @@ export const documentSearchNode = createNodeDescriptor({
         { type: "field", key: "searchTerm" },
         { type: "field", key: "listSize" },
         { type: "field", key: "specifyFields" },
+        { type: "field", key: "strBodyTeaser" },
         { type: "field", key: "indexName" },
         { type: "field", key: "strBody" },
         { type: "field", key: "strTitle" },
         { type: "field", key: "strURL" },
         { type: "field", key: "strLanguage" },
+        { type: "field", key: "strImage" },
         { type: "section", key: "queryFieldsDropdown" },
         { type: "section", key: "storageOption" }
     ],
@@ -199,10 +224,11 @@ export const documentSearchNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IdocumentSearchParams) => {
         const { api } = cognigy;
-        const { searchURL, searchTerm, listSize, specifyFields, indexName, strBody, strTitle, strURL, strLanguage, storeLocation, queryFields, inputKey, contextKey } = config;
+        const { searchURL, searchTerm, listSize, specifyFields, indexName, strBody, strTitle, strURL, strLanguage, strImage, strBodyTeaser, queryFields, storeLocation, inputKey, contextKey } = config;
         // const { apiKey } = apiConnection;
 
         const fields = [];
+
         if (indexName === true) {
             fields.push("_facet.indexname");
         }
@@ -218,17 +244,31 @@ export const documentSearchNode = createNodeDescriptor({
         if (strLanguage === true) {
             fields.push("_str.languages");
         }
+        if (strImage === true) {
+            fields.push("_str.image");
+        }
+
+        const teaserFields = [];
+
+        if (strBodyTeaser === true) {
+            teaserFields.push("_str.body");
+        }
 
         const endpoint = searchURL;
 
         const searchParameters = {
             'method': 'search',
             'param0': searchTerm,
-            'hits.list.size': listSize
+            'hits.list.size': listSize,
         };
+
         if (specifyFields === true) {
             const fieldsMod = fields.join(',');
             searchParameters["return.fields"] = fieldsMod;
+        }
+        if (strBodyTeaser === true) {
+            const teaserFieldsMod = teaserFields.join(',');
+            searchParameters["return.teaser.fields"] = teaserFieldsMod;
         }
         if (queryFields.length > 0) {
             const queryFieldsMod = queryFields.join(' AND ');

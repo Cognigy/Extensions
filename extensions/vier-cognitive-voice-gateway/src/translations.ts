@@ -164,6 +164,15 @@ export default {
             'default': "Maximum Call Recording Duration (in s)",
             'deDE': "Maximaldauer der Gesprächsaufzeichnung (in s)",
         },
+        inputSpeakersAgentLabel: {
+            'default': "Agent",
+        },
+        inputSpeakersBothLabel: {
+            'default': "Both Lines",
+        },
+        inputSpeakersCustomerLabel: {
+            'default': "Customer",
+        },
         inputSpeakersLabel: {
             'default': "Speaker to record",
             'deDE': "Aufzuzeichnende:r Sprecher:in",

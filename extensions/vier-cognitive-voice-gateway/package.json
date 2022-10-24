@@ -7,9 +7,9 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.14.0",
-    "@types/node": "^18.8.3",
-    "eslint": "^8.25.0",
-    "typescript": "^4.6.4"
+    "@types/node": "^18.11.4",
+    "eslint": "^8.26.0",
+    "typescript": "^4.8.4"
   },
   "scripts": {
     "rm": "rm vier_voice.tar.gz",

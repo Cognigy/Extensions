@@ -26,6 +26,7 @@ export const inactivityTimerNode = createNodeDescriptor({
       type: 'toggle',
       key: 'enable',
       label: t.timer.enableTimerLabel,
+      description: t.timer.enableTimerDescription,
       defaultValue: true,
       params: {
         required: true
@@ -39,6 +40,7 @@ export const inactivityTimerNode = createNodeDescriptor({
         min: 2,
         max: 20,
       },
+      defaultValue: 10,
       condition: {
         key: 'enable',
         value: true,

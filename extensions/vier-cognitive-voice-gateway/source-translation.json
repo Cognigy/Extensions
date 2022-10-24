@@ -48,7 +48,10 @@
         "nodeSummary": "Start or resume recording of a call",
         "inputMaxDurationLabel": "Maximum Recording Duration (s)",
         "inputMaxDurationDescription": "After maximum recording duration (in seconds), the recording will be stopped automatically.",
-        "inputSpeakersLabel": "Speakers to record"
+        "inputSpeakersLabel": "Speakers to record",
+        "inputSpeakersBothLabel": "Both Lines",
+        "inputSpeakersCustomerLabel": "Customer",
+        "inputSpeakersAgentLabel": "Agent"
     },
     "recordingStop": {
         "nodeLabel": "Stop Recording",

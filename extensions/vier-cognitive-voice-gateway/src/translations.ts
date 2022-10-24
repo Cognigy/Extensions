@@ -519,8 +519,9 @@ export default {
             'deDE': "Legt die Zeitüberschreitung bei Inaktivität in Sekunden fest",
         },
         selectTimerLabel: {
-            'default': "Set Timeout",
-            'deDE': "Zeitüberschreitung einstellen",
+            'default': "a",
+            'deDE': "Select Timeout",
+            'esES': "b",
         },
         useStartInputsLabel: {
             'default': "Activate Inactivity Timeout (in s)",
@@ -529,6 +530,9 @@ export default {
         useStopInputsLabel: {
             'default': "Deactivate Inactivity Timeout (in s)",
             'deDE': "Zeitüberschreitung bei Inaktivität (in s) deaktivieren",
+        },
+        enableTimerLabel: {
+            'deDE': "Check this to enable the inactivity timer, uncheck it to disable the timer.",
         },
     },
 };

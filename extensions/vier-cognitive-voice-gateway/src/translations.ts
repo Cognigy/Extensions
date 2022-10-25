@@ -300,12 +300,12 @@ export default {
             'deDE': "Flow beenden",
         },
         inputExperimentalEnableRingingToneDescription: {
-            'default': "To play a ringing tone during a pending call, activate this checkbox. This setting will change in the future.",
-            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, einen Kingelton abzuspielen, aktivieren Sie diese Checkbox. Hinweis! Diese Einstellung wird sich in Zukunft ändern.",
+            'default': "To play a ringing tone during a pending call, activate this checkbox. This setting may change in the future.",
+            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, einen Klingelton abzuspielen, aktivieren Sie diese Checkbox. Hinweis! Diese Einstellung kann sich in Zukunft ändern.",
         },
         inputExperimentalEnableRingingToneLabel: {
-            'default': "(EXPERIMENTAL) Enable Ringing Tone",
-            'deDE': "(EXPERIMENTAL) Klingelton aktivieren",
+            'default': "Enable Ringing Tone",
+            'deDE': "Klingelton aktivieren",
         },
         inputInterpretAsDescription: {
             'default': "Specify whether the text should be interpreted as text or SSML markup.",

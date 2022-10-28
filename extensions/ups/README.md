@@ -38,7 +38,7 @@ This Flow Node takes a valid UPS Tracking Number as parameter and returns the de
                 "endTime": "123123123"
               },
               "activity": [
-                  },
+                  {
                   "status": {
                     "type": "M",
                     "description": "Shipper created a label, UPS has not received the package yet. ",

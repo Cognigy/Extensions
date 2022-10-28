@@ -166,12 +166,15 @@ export default {
         },
         inputSpeakersAgentLabel: {
             'default': "Agent",
+            'deDE': "Agent:in",
         },
         inputSpeakersBothLabel: {
-            'default': "Both Lines",
+            'default': "Both Call Partners",
+            'deDE': "Beide Gesprächspartner:innen",
         },
         inputSpeakersCustomerLabel: {
             'default': "Customer",
+            'deDE': "Kund:in",
         },
         inputSpeakersLabel: {
             'default': "Speaker to record",
@@ -400,8 +403,8 @@ export default {
             'deDE': "„Eingaben übermitteln“ verwenden",
         },
         inputWhisperingTextDescription: {
-            'default': "Enter the text that should be announced to the agent the call is transfered to before the call parties are connected.",
-            'deDE': "Geben Sie den Text ein, der dem:der Agent:in bei der Weiterleitung angesagt werden soll, bevor die Gesprächsteilnehmer:innen verbunden werden.",
+            'default': "Enter the text that should be announced to the agent the call is transfered to before the call partners are connected.",
+            'deDE': "Geben Sie den Text ein, der dem:der Agent:in bei der Weiterleitung angesagt werden soll, bevor die Gesprächspartner:innen verbunden werden.",
         },
         inputWhisperingTextLabel: {
             'default': "Whispering Announcement",
@@ -512,10 +515,12 @@ export default {
     },
     timer: {
         enableTimerDescription: {
-            'default': "Check this option to enable the inactivity timer, uncheck it to disable the timer.",
+            'default': "To activate the Inactivity Timeout, activate this switch.",
+            'deDE': "Um die Zeitüberschreitung bei Inaktivität zu aktivieren, aktivieren Sie diesen Schalter.",
         },
         enableTimerLabel: {
-            'default': "Enable or disable the timer",
+            'default': "Enable or disable the inactivity timer",
+            'deDE': "Inaktivitätstimer aktivieren oder deaktivieren",
         },
         inputTimeoutStartDescription: {
             'default': "You can set the Inactivity Timeout only if it is not already set in the VIER Cognitive Voice Gateway project settings.",

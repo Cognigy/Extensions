@@ -2573,6 +2573,30 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "ups",
+            "label": "UPS",
+            "version": "4.0.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/ups400/ups.tar.gz",
+            "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/ups",
+            "description": "Integrates with UPS",
+            "longDescription": "With this Extension the Cognigy.AI Virtual Agent can provide detailed information about UPS shipments based on a given tracking number.",
+            "tags": [
+                "Tracking",
+                "Shipment",
+                "Parcel",
+                "Delivery"
+            ],
+            "icon": "data:image/png;base64,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",
+            "nodes": [
+                {
+                    "type": "trackShipment",
+                    "defaultLabel": "Track Shipment",
+                    "description": "Tracks the shipment by a given number",
+                    "tags": []
+                }
+            ]
         }
     ]
 }

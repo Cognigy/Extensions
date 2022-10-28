@@ -167,6 +167,7 @@ export default {
         inputSpeakersAgentLabel: {
             'default': "Agent",
             'deDE': "Agent:in",
+            'esES': "Agent",
         },
         inputSpeakersBothLabel: {
             'default': "Both Call Partners",
@@ -175,6 +176,7 @@ export default {
         inputSpeakersCustomerLabel: {
             'default': "Customer",
             'deDE': "Kund:in",
+            'esES': "Client",
         },
         inputSpeakersLabel: {
             'default': "Speaker to record",

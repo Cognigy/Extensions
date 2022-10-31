@@ -24,7 +24,7 @@ export interface IGetShiftStatusParams extends INodeFunctionBaseParams {
             accessToken: string;
             accessTokenSecret: string;
         };
-        skillId: number;
+        skillId: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -75,8 +75,8 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                         const { username, appKey, secret, accessToken, accessTokenSecret, accountId } = config.connection;
 
                         // First login to be authenticated
-                        const authResponse = await axios({
-                            method: "post",
+                        const authResponse = await api.httpRequest({
+                            method: "POST",
                             url: `https://sy.agentvep.liveperson.net/api/account/${accountId}/login?v=1.3`,
                             headers: {
                                 "Accept": "application/json",
@@ -93,19 +93,18 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 
                         const skillsResponse = await api.httpRequest({
                             method: "GET",
-                            url: `https://api.cloud.hypatos.ai/v1/projects`,
+                            url: `https://sy.ac.liveperson.net/api/account/${accountId}/configuration/le-users/skills`,
                             headers: {
                                 "Accept": "application/json",
-                                "Content-Type": "application/json",
                                 "Authorization": `Bearer ${authResponse?.data?.bearer}`
                             }
                         });
 
                         // map file list to "options array"
-                        return skillsResponse?.data?.data?.map((skill: ILivepersonSkill) => {
+                        return skillsResponse?.data?.map((skill: ILivepersonSkill) => {
                             return {
                                 label: skill?.name,
-                                value: skill?.id,
+                                value: skill?.id?.toString(),
                             };
                         });
                     } catch (error) {
@@ -180,7 +179,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "skillId"},
+        { type: "field", key: "skillId" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -230,21 +229,19 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
             // Loop through all skills and check the shift of the configured one
             let skills: ILivePersonSkill[] = response?.data;
             for (let skill of skills) {
-                if (skill?.skillId === skillId.toString()) {
-                    api.say(JSON.stringify(skill));
+                if (skill?.skillId === skillId) {
+
+                    if (storeLocation === "context") {
+                        api.addToContext(contextKey, skill, "simple");
+                    } else {
+                        // @ts-ignore
+                        api.addToInput(inputKey, skill);
+                    }
 
                     const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
-                    api.setNextNode(onAvailableChild.id);
+                    return api.setNextNode(onAvailableChild.id);
 
-                    if (storeLocation === "context") {
-                        api.addToContext(contextKey, response.data, "simple");
-                    } else {
-                        // @ts-ignore
-                        api.addToInput(inputKey, response.data);
-                    }
                 } else {
-                    const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
-                    api.setNextNode(onOfflineChild.id);
 
                     if (storeLocation === "context") {
                         api.addToContext(contextKey, response.data, "simple");
@@ -252,10 +249,16 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                         // @ts-ignore
                         api.addToInput(inputKey, response.data);
                     }
+
+                    const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
+                    return api.setNextNode(onOfflineChild.id);
                 }
             }
 
         } catch (error) {
+
+            const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
+            api.setNextNode(onOfflineChild.id);
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, { error: error }, "simple");

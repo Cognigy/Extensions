@@ -77,7 +77,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                         // First login to be authenticated
                         const authResponse = await api.httpRequest({
                             method: "POST",
-                            url: `https://sy.agentvep.liveperson.net/api/account/${accountId}/login?v=1.3`,
+                            url: `https://lo.agentvep.liveperson.net/api/account/${accountId}/login?v=1.3`,
                             headers: {
                                 "Accept": "application/json",
                                 "Content-Type": "application/json"
@@ -93,7 +93,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 
                         const skillsResponse = await api.httpRequest({
                             method: "GET",
-                            url: `https://sy.ac.liveperson.net/api/account/${accountId}/configuration/le-users/skills`,
+                            url: `https://lo.ac.liveperson.net/api/account/${accountId}/configuration/le-users/skills`,
                             headers: {
                                 "Accept": "application/json",
                                 "Authorization": `Bearer ${authResponse?.data?.bearer}`
@@ -201,7 +201,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
             // First login to be authenticated
             const authResponse = await axios({
                 method: "post",
-                url: `https://sy.agentvep.liveperson.net/api/account/${accountId}/login?v=1.3`,
+                url: `https://lo.agentvep.liveperson.net/api/account/${accountId}/login?v=1.3`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -218,7 +218,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
             // Get the all skills and their status
             const response = await axios({
                 method: "get",
-                url: `https://sy.msg.liveperson.net/api/account/${accountId}/shift-status`,
+                url: `https://lo.msg.liveperson.net/api/account/${accountId}/shift-status`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -229,7 +229,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
             // Loop through all skills and check the shift of the configured one
             let skills: ILivePersonSkill[] = response?.data;
             for (let skill of skills) {
-                if (skill?.skillId === skillId) {
+                if (skill?.skillId?.toString() === skillId?.toString() && skill?.onShift) {
 
                     if (storeLocation === "context") {
                         api.addToContext(contextKey, skill, "simple");
@@ -239,7 +239,9 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                     }
 
                     const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
-                    return api.setNextNode(onAvailableChild.id);
+                    api.setNextNode(onAvailableChild.id);
+
+                    break;
 
                 } else {
 
@@ -251,7 +253,9 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                     }
 
                     const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
-                    return api.setNextNode(onOfflineChild.id);
+                    api.setNextNode(onOfflineChild.id);
+
+                    break;
                 }
             }
 

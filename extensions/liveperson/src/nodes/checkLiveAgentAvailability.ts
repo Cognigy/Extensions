@@ -226,37 +226,27 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
                 }
             });
 
+            api.log('info', `Checking agent availability for skill with ID: ${skillId}`);
+
+            let isAvailable: boolean = false;
+
             // Loop through all skills and check the shift of the configured one
             let skills: ILivePersonSkill[] = response?.data;
             for (let skill of skills) {
-                if (skill?.skillId?.toString() === skillId?.toString() && skill?.onShift) {
-
-                    if (storeLocation === "context") {
-                        api.addToContext(contextKey, skill, "simple");
-                    } else {
-                        // @ts-ignore
-                        api.addToInput(inputKey, skill);
-                    }
-
-                    const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
-                    api.setNextNode(onAvailableChild.id);
-
-                    break;
-
+                api.log('debug', `Skill: ${JSON.stringify(skill)} (${typeof skill?.skillId})`);
+                if (skill?.skillId === skillId && skill?.onShift) {
+                    isAvailable = true;
                 } else {
-
-                    if (storeLocation === "context") {
-                        api.addToContext(contextKey, response.data, "simple");
-                    } else {
-                        // @ts-ignore
-                        api.addToInput(inputKey, response.data);
-                    }
-
-                    const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
-                    api.setNextNode(onOfflineChild.id);
-
-                    break;
+                    isAvailable = false;
                 }
+            }
+
+            if (isAvailable) {
+                const onAvailableChild = childConfigs.find(child => child.type === "onAgentAvailable");
+                api.setNextNode(onAvailableChild.id);
+            } else if (!isAvailable) {
+                const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
+                api.setNextNode(onOfflineChild.id);
             }
 
         } catch (error) {

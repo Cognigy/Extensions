@@ -317,7 +317,7 @@ export default {
         },
         inputCustomSipHeadersLabel: {
             'default': "Custom SIP Headers",
-            'deDE': "Benutzerdefinierte SIP-Header",
+            'deDE': "Custom-SIP-Header",
             'esES': "En-tête SIP défini par l'utilisateur",
         },
         inputDataDescription: {

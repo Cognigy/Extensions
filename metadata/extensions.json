@@ -1392,8 +1392,8 @@
         {
             "name": "salesforce-crm",
             "label": "Salesforce CRM",
-            "version": "4.2.2",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/salesforce-crm422/salesforce-crm.tar.gz",
+            "version": "4.2.3",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/salesforce-crm423/salesforce-crm.tar.gz",
             "infoUrl": "https://support.cognigy.com/hc/en-us/articles/360021037640-Salesforce-Maintain-Contacts-Accounts-and-more",
             "description": "Perform Salesforce CRM operations",
             "longDescription": "The Salesforce Sales Cloud in cooperation with the Cognigy Salesforce CRM Extension provides the maintenance of Contacts, Accounts, Events, Products, and more. Therefore, the virtual agent is able to search for helpful knowledge articles and create or retrieve an entity, such as a case in order to use the same processes as the human agents.",

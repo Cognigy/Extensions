@@ -1,9 +1,9 @@
 # VIER Cognitive Voice Gateway
 
-Enable phone bots with VIER Cognitive Voice Gateway (CVG).
+Enable phone bots with VIER Cognitive Voice Gateway (CVG) and integration in various contact centers.
 
 This extension needs 
-* an account at VIER Cognitive Voice Gateway
+* an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
 * a link between the project in  CVG and the endpoint in Cognigy to be set up in CVG.
 
 See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html for further information.
@@ -100,9 +100,77 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 			<td style="border: 1px solid #ddd; padding: 8px;">https://url.to.audiofile.com/audio/prerecorded.wav</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge In</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the speaker to interrupt the audio file by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the audio file by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Fallback text</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text to be announced when the audio file cannot be played.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Welcome at VIER! </td>
+		</tr>
+	</tbody>
+</table>
+
+
+## Node: Set Inactivity Timeout
+
+> Start inactivity detection with a specified timeout.
+
+The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available.
+
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enable or disable the timer</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Check this option to enable the inactivity timer, uncheck it to disable the timer. If checked a timeout (in seconds) has to be entered.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Disabled</td>
+		</tr>
+	</tbody>
+</table>
+
+## Node: Set Speech-to-Text Service
+
+> Sets the Speech-to-Text Service for transcription of voice input
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Language*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The language to be used for Speech-to-Text</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">de-DE</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Microsoft </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service Fallback</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Fallback if main Speech-to-Text Service is not available. One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Google </td>
 		</tr>
 	</tbody>
 </table>
@@ -263,7 +331,7 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Destination Number</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Destination Phone Number</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The phone number to forward the call to. Must be in +E.164 format or a SIP address.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">+4921123456789 or sip:+4921123456789@sip.cognitivevoice.io</td>
 		</tr>
@@ -287,6 +355,16 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Whispering Announcement</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text that should be announced to the agent the call is transfered to before the call parties are connected</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Next call: Flight cancelation</td>
+		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Quit Flow</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Wether the flow should be terminated after this node did execute</td>
@@ -300,9 +378,9 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</tbody>
 </table>
 
-## Node: Bridge Call
+## Node: Forward Call to a Contact Center
 
-> Bridges the call to a different destination for agent assistance.
+> Forwards the call to a contact center destination for agent assistance.
 
 The called number is constructed by appending a random n-digit number to `Head Number` (where n ist the `Extension Length`).
 After a successful bridge, the bot will not receive further messages and will not be able to send any commands. Recordings will be stopped automatically if there are any running.
@@ -318,7 +396,7 @@ After a successful bridge, the bot will not receive further messages and will no
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Head Number</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phone Number Prefix</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The base phone number that is used to construct the complete phone number. Needs to be in +E.164 format</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">+49721123456</td>
 		</tr>
@@ -347,6 +425,16 @@ After a successful bridge, the bot will not receive further messages and will no
 			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a </i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Whispering Announcement</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text that should be announced to the agent the call is transfered to before the call parties are connected</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Next call: Flight cancelation</td>
+		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Quit Flow</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Wether the flow should be terminated after this node did execute</td>
@@ -360,9 +448,36 @@ After a successful bridge, the bot will not receive further messages and will no
 	</tbody>
 </table>
 
+## Node: Check Call Forwarding Result
+ 
+> Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.
+
+### Arguments
+<i>None.</i>
+
 ## Node: Terminate Call
  
 > Hangs up the call.
 
 ### Arguments
-*None*
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Quit Flow</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Wether the flow should be terminated after this node did execute</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+		</tr>
+	</tbody>
+</table>

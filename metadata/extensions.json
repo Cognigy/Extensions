@@ -1136,8 +1136,8 @@
         {
             "name": "microsoft-azure",
             "label": "Microsoft Azure",
-            "version": "4.0.0",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/azure400/microsoft-azure.tar.gz",
+            "version": "4.1.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/azure410/microsoft-azure.tar.gz",
             "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/microsoft-azure",
             "description": "Intrates with the Microsoft Azure Cognitive Services",
             "longDescription": "Microsoft Azure, often referred to as Azure, is a cloud computing service operated by Microsoft for application management via Microsoft-managed data centers. It provides software as a service, platform as a service and infrastructure as a service and supports many different programming languages, tools, and frameworks, including both Microsoft-specific and third-party software and systems.",
@@ -1148,7 +1148,9 @@
                 "sentiment",
                 "analysis",
                 "language",
-                "nlu"
+                "nlu",
+                "whatsapp",
+                "voice message"
             ],
             "icon": "data:image/png;base64,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",
             "nodes": [

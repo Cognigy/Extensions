@@ -8,6 +8,14 @@ This Extension needs several **Connections** to be defined and passed to the Nod
 
 You will require the following Secrets for the respective Nodes:
 
+- **Transcribe WhatsApp Voice Message**
+  1.
+    - key: key
+    - value: Cognitive Services Speech API Key
+  2.
+    - key: region
+    - value: Azure Region
+
 - **Spellcheck**
   - key: key
   - value: Cognitive Services API Key
@@ -22,6 +30,13 @@ You will require the following Secrets for the respective Nodes:
     - value: Azure Region
   
 
+## Node: Transcribe WhatsApp Voice Message
+
+This Flow Node transcribes a WhatsApp voice message the user sent to the virtual agent. It is mandatory, that one configured a "File Storage" provider inside of the WhatsApp Endpoint. The transcription will be stored in the Input or Context object so that one can use a Say Node with: 
+
+- Interesting, I understood the following: _"{{context.transcription}}"_
+
+Last but not least, one has to provide the language in the Edit menu of the Flow Node as different languages could be transcribed. 
 
 ## Node: Spell Check
  [Resource](https://docs.microsoft.com/de-de/azure/cognitive-services/bing-spell-check/quickstarts/nodejs) 

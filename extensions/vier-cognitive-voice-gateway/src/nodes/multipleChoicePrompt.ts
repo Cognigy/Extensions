@@ -1,13 +1,21 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools';
-import { promptFields } from './shared';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools';
+import t from '../translations';
+import {
+  InterpretAs,
+  promptFields,
+} from '../common/shared';
+import { convertDuration } from "../helpers/util";
 
 export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
   config: {
     text: string,
     timeout: number,
-    language?: string,
+    language?: string | null,
     synthesizers?: Array<string>,
-    interpretAs?: string,
+    interpretAs?: InterpretAs,
     bargeIn?: boolean,
     choices: object,
   };
@@ -15,19 +23,19 @@ export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
 
 export const promptForMultipleChoice = createNodeDescriptor({
   type: 'multipleChoicePrompt',
-  defaultLabel: 'Get Multiple Choice Answer from Caller',
-  summary: 'Say something to the call with a multiple choice prompt',
+  defaultLabel: t.multipleChoicePrompt.nodeLabel,
+  summary: t.multipleChoicePrompt.nodeSummary,
   appearance: {
-    color: '#9a4a21'
+    color: '#9a4a21',
   },
   tags: ['message'],
   fields: [
     ...promptFields,
     {
       type: 'json',
-      label: 'Choices',
+      label: t.multipleChoicePrompt.inputChoicesLabel,
       key: 'choices',
-      description: 'Add and adopt options and their synonyms to your need.',
+      description: t.multipleChoicePrompt.inputChoicesDescription,
       defaultValue: '{\n\
 \t"yes": [\n\
 \t\t"yes",\n\
@@ -44,57 +52,58 @@ export const promptForMultipleChoice = createNodeDescriptor({
 }',
       params: {
         required: true,
-      }
-    }
+      },
+    },
   ],
   sections: [
     {
       key: 'general',
       fields: ['text', 'timeout'],
-      label: 'General Settings',
-      defaultCollapsed: false
+      label: t.forward.sectionGeneralLabel,
+      defaultCollapsed: false,
     },
     {
       key: 'choicesSection',
       fields: ['choices'],
-      label: 'Choices',
+      label: t.multipleChoicePrompt.sectionChoicesSectionLabel,
       defaultCollapsed: false,
     },
     {
       key: 'additional',
       fields: ['language', 'synthesizers', 'interpretAs', 'bargeIn'],
-      label: 'Additional Settings',
-      defaultCollapsed: true
-    }
+      label: t.forward.sectionAdditionalSettingsLabel,
+      defaultCollapsed: true,
+    },
   ],
   form: [
     {
       key: 'general',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'choicesSection',
-      type: 'section'
+      type: 'section',
     },
     {
       key: 'additional',
-      type: 'section'
-    }
+      type: 'section',
+    },
   ],
   function: async ({ cognigy, config }: IMultipleChoicePromptParams) => {
     const { api } = cognigy;
 
-    api.say(config.text, {
+    const payload = {
       status: 'prompt',
-      timeout: config.timeout * 1000,
+      timeout: convertDuration(config.timeout),
       language: config.language || null,
-      synthesizers: config.synthesizers.length === 0 ? null : config.synthesizers,
-      interpretAs: config.interpretAs || null,
-      bargeIn: config.bargeIn,
+      synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
+      interpretAs: config.interpretAs,
+      bargeIn: !!config.bargeIn,
       type: {
         name: 'MultipleChoice',
         choices: config.choices,
-      }
-    });
-  }
+      },
+    };
+    api.say(config.text, payload);
+  },
 });

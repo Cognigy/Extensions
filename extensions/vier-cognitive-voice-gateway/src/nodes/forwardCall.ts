@@ -1,137 +1,94 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData, bakeSipHeaders } from '../helpers/bake';
-import { stripEmpty } from '../helpers/stripEmpty';
-import { commonRedirectFields } from './shared';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import {
+  normalizeData,
+  normalizeSipHeaders,
+  convertWhisperText,
+  normalizeText,
+  convertDuration,
+  delay,
+} from '../helpers/util';
+import t from '../translations';
+import {
+  transferCallFields,
+  transferCallForm,
+  TransferCallInputs,
+  transferCallSections,
+} from "../common/transferCall";
+
+interface IForwardCallInputs extends TransferCallInputs {
+  destinationNumber: string
+}
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
-  config: {
-    destinationNumber: string,
-    callerId?: string,
-    customSipHeaders?: object,
-    ringTimeout?: number,
-    acceptAnsweringMachines?: boolean,
-    data?: object,
-    experimentalEnableRingingTone?: boolean,
-    endFlow?: boolean,
-    whisperingText?: string,
-  };
+  config: IForwardCallInputs
 }
 
 export const forwardCallNode = createNodeDescriptor({
   type: 'forward',
-  defaultLabel: 'Forward Call',
-  summary: 'Forward the call to a different destination',
+  defaultLabel: t.forward.nodeLabel,
+  summary: t.forward.nodeSummary,
   appearance: {
-    color: 'blue'
+    color: 'blue',
   },
+
   tags: ['service'],
   fields: [
     {
       type: 'cognigyText',
       key: 'destinationNumber',
-      label: 'Destination Number',
-      description: 'The phone number to forward to (+E.164 format, e.g. +49721480848680)',
+      label: t.forward.inputDestinationNumberLabel,
+      description: t.forward.inputDestinationNumberDescription,
       params: {
-        required: true
-      }
+        required: true,
+      },
     },
-    ...commonRedirectFields,
+    ...transferCallFields,
   ],
+
+  preview: {
+    key: 'destinationNumber',
+    type: 'text',
+  },
+
   sections: [
     {
       key: 'general',
       fields: ['destinationNumber'],
-      label: 'General Settings',
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
-    },{
-      key: 'call',
-      fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: 'Call Settings',
-      defaultCollapsed: true,
     },
-    {
-      key: 'sipHeaders',
-      fields: ['customSipHeaders'],
-      label: 'Custom SIP Headers',
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalData',
-      fields: ['data'],
-      label: 'Data',
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalSettings',
-      fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: 'Additional Settings',
-      defaultCollapsed: true,
-    }
+    ...transferCallSections,
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
-    {
-      key: 'call',
-      type: 'section',
-    },
-    {
-      key: 'sipHeaders',
-      type: 'section',
-    },
-    {
-      key: 'additionalData',
-      type: 'section',
-    },
-    {
-      key: 'additionalSettings',
-      type: 'section',
-    }
+    ...transferCallForm,
   ],
+
   function: async ({ cognigy, config }: IForwardCallParams) => {
     const { api } = cognigy;
-    let customSipHeaders: object;
-    let data: object;
 
-    const whisperText = config.whisperingText;
-    delete config.whisperingText;
-
-    if (config.customSipHeaders) {
-      customSipHeaders = bakeSipHeaders(config.customSipHeaders);
-    }
-
-    if (config.data) {
-      data = bakeData(config.data);
-    }
-
-    if (config.ringTimeout) {
-      config.ringTimeout = config.ringTimeout * 1000;
-    }
-
-    const strippedConfig = stripEmpty(config);
-
-    let responseData: object = {
+    const payload = {
       status: 'forward',
-      ...strippedConfig,
-      customSipHeaders,
-      data,
+      destinationNumber: normalizeText(config.destinationNumber),
+      callerId: normalizeText(config.callerId),
+      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      ringTimeout: convertDuration(config.ringTimeout),
+      acceptAnsweringMachines: config.acceptAnsweringMachines,
+      data: normalizeData(config.data),
+      whispering: convertWhisperText(config.whisperingText),
     };
 
-    if (whisperText) {
-      responseData = {
-        ...responseData,
-        whispering: {
-          text: whisperText,
-        },
-      };
-    }
-
-    api.say('', responseData);
-
-    if (config.endFlow) {
-      api.stopExecution();
-    }
+    return delay(100, () => {
+      api.say('', payload);
+      if (config.endFlow) {
+        api.stopExecution();
+      }
+    });
   },
 });

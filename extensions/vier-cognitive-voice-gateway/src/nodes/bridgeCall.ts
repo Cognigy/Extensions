@@ -1,151 +1,108 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData, bakeSipHeaders } from '../helpers/bake';
-import { stripEmpty } from '../helpers/stripEmpty';
-import { commonRedirectFields } from './shared';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import {
+  convertDuration,
+  convertWhisperText,
+  delay,
+  normalizeData,
+  normalizeSipHeaders,
+  normalizeText,
+} from '../helpers/util';
+import t from '../translations';
+import {
+  transferCallFields,
+  transferCallForm,
+  TransferCallInputs,
+  transferCallSections,
+} from "../common/transferCall";
+
+interface IBridgeCallInputs extends TransferCallInputs {
+  headNumber: string
+  extensionLength: number
+}
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
-  config: {
-    headNumber: string,
-    extensionLength: number,
-    callerId?: string,
-    customSipHeaders?: object,
-    ringTimeout?: number,
-    acceptAnsweringMachines?: boolean,
-    data?: object,
-    experimentalEnableRingingTone?: boolean,
-    endFlow?: boolean,
-    whisperingText?: string
-  };
+  config: IBridgeCallInputs
 }
 
 export const bridgeCallNode = createNodeDescriptor({
   type: 'bridge',
-  defaultLabel: 'Bridge Call',
-  summary: 'Bridge the call to a different destination for agent assistance',
+  defaultLabel: t.bridge.nodeLabel,
+  summary: t.bridge.nodeSummary,
   appearance: {
-    color: 'green'
+    color: 'green',
   },
   tags: ['service'],
+  behavior: {
+    entrypoint: true,
+  },
   fields: [
     {
       type: 'cognigyText',
       key: 'headNumber',
-      label: 'Head Number',
-      description: 'The phone number prefix to bridge to',
+      label: t.bridge.inputHeadNumberLabel,
+      description: t.bridge.inputHeadNumberDescription,
       params: {
         required: true,
-        placeholder: '+E.164 format, e.g. "+49721480848680"'
-      }
+        placeholder: '+E.164 format, e.g. "+49721480848680"',
+      },
     },
     {
       type: 'number',
       key: 'extensionLength',
-      label: 'Extension Length',
-      description: 'The range of extensions to choose a number from',
+      label: t.bridge.inputExtensionLengthLabel,
+      description: t.bridge.inputExtensionLengthDescription,
+      defaultValue: 1,
       params: {
         required: true,
         min: 0,
         max: 5,
       },
     },
-    ...commonRedirectFields,
+    ...transferCallFields,
   ],
+  preview: {
+    key: 'headNumber',
+    type: 'text',
+  },
   sections: [
     {
       key: 'general',
       fields: ['headNumber', 'extensionLength'],
-      label: 'General Settings',
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
-    {
-      key: 'call',
-      fields: ['callerId', 'ringTimeout', 'acceptAnsweringMachines'],
-      label: 'Call Settings',
-      defaultCollapsed: true,
-    },
-    {
-      key: 'sipHeaders',
-      fields: ['customSipHeaders'],
-      label: 'Custom SIP Headers',
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalData',
-      fields: ['data'],
-      label: 'Data',
-      defaultCollapsed: true,
-    },
-    {
-      key: 'additionalSettings',
-      fields: ['whisperingText', 'endFlow', 'experimentalEnableRingingTone'],
-      label: 'Additional Settings',
-      defaultCollapsed: true,
-    }
+    ...transferCallSections,
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
-    {
-      key: 'call',
-      type: 'section',
-    },
-    {
-      key: 'sipHeaders',
-      type: 'section',
-    },
-    {
-      key: 'additionalData',
-      type: 'section',
-    },
-    {
-      key: 'additionalSettings',
-      type: 'section',
-    }
+    ...transferCallForm,
   ],
   function: async ({ cognigy, config }: IBridgeCallParams) => {
     const { api } = cognigy;
-    let customSipHeaders: object;
-    let data: object;
 
-    const whisperText = config.whisperingText;
-    delete config.whisperingText;
-
-    if (config.customSipHeaders) {
-      customSipHeaders = bakeSipHeaders(config.customSipHeaders);
-    }
-
-    if (config.data) {
-      data = bakeData(config.data);
-    }
-
-    if (config.ringTimeout) {
-      config.ringTimeout = config.ringTimeout * 1000;
-    }
-
-    const strippedConfig = stripEmpty(config);
-
-    let responseData: object = {
+    const payload = {
       status: 'bridge',
-      ...strippedConfig,
-      customSipHeaders,
-      data,
+      headNumber: normalizeText(config.headNumber),
+      extensionLength: config.extensionLength,
+      callerId: normalizeText(config.callerId),
+      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      ringTimeout: convertDuration(config.ringTimeout),
+      acceptAnsweringMachines: config.acceptAnsweringMachines,
+      data: normalizeData(config.data),
+      whispering: convertWhisperText(config.whisperingText),
     };
 
-    if (whisperText) {
-      responseData = {
-        ...responseData,
-        whispering: {
-          text: whisperText,
-        }
-      };
-    }
-
-    api.say('', responseData);
-
-    if (config.endFlow) {
-      api.stopExecution();
-    }
-  }
+    return delay(100, () => {
+      api.say('', payload);
+      if (config.endFlow) {
+        api.stopExecution();
+      }
+    });
+  },
 });

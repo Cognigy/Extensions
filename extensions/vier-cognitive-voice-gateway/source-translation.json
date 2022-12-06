@@ -1,0 +1,148 @@
+{
+    "sendData": {
+        "nodeLabel": "Send Data",
+        "nodeSummary": "Attach custom data to a dialog",
+        "inputDataDescription": "Store custom data. This is an object that can have arbitrary properties. Each property is expected to have a string value."
+    },
+    "forward": {
+        "nodeLabel": "Forward Call",
+        "nodeSummary": "Forward the call to a different destination",
+        "inputDestinationNumberLabel": "Destination Number",
+        "inputDestinationNumberDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
+        "sectionGeneralLabel": "General Settings",
+        "sectionCallLabel": "Call Settings",
+        "sectionAdditionalDataLabel": "Data",
+        "sectionAdditionalSettingsLabel": "Additional Settings"
+    },
+    "bridge": {
+        "nodeLabel": "Bridge Call",
+        "nodeSummary": "Bridge the call to a different destination for agent assistance",
+        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
+        "inputHeadNumberLabel": "Head Number",
+        "inputHeadNumberDescription": "The phone number prefix to bridge to",
+        "inputExtensionLengthLabel": "Extension Length",
+        "inputExtensionLengthDescription": "The range of extensions to choose a number from"
+    },
+    "multipleChoicePrompt": {
+        "nodeLabel": "Get Multiple Choice Answer from Caller",
+        "nodeSummary": "Say something to the call with a multiple choice prompt",
+        "inputChoicesLabel": "Choices",
+        "inputChoicesDescription": "Add and adopt options and their synonyms to your need.",
+        "sectionChoicesSectionLabel": "Choices"
+    },
+    "promptForNumber": {
+        "nodeLabel": "Get Number from Caller",
+        "nodeSummary": "Say something to the call with a prompt to enter a number",
+        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached"
+    },
+    "play": {
+        "nodeLabel": "Play Audio File",
+        "nodeSummary": "Play an audio file to the call",
+        "inputUrlLabel": "Audio URL",
+        "inputUrlLabelDescription": "Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.",
+        "inputFallbackTextLabel": "Fallback Text",
+        "inputFallbackTextDescription": "The fallback text is used when the audio playback did not succeed."
+    },
+    "recordingStart": {
+        "nodeLabel": "Start Recording",
+        "nodeSummary": "Start or resume recording of a call",
+        "inputMaxDurationLabel": "Maximum Recording Duration (s)",
+        "inputMaxDurationDescription": "After maximum recording duration (in seconds), the recording will be stopped automatically.",
+        "inputSpeakersLabel": "Speakers to record",
+        "inputSpeakersBothLabel": "Both Lines",
+        "inputSpeakersCustomerLabel": "Customer",
+        "inputSpeakersAgentLabel": "Agent"
+    },
+    "recordingStop": {
+        "nodeLabel": "Stop Recording",
+        "nodeSummary": "Pause or terminate recording of a call",
+        "inputTerminateLabel": "Terminate Recording",
+        "inputTerminateDescription": "Whether the recording should be terminated, rather than just paused"
+    },
+    "shared": {
+        "inputRecordingIdDescription": "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
+        "inputRecordingIdLabel": "Recording ID",
+        "inputMaxDigitsLabel": "Maximum Allowed Digits",
+        "sectionStopConditionLabel": "Stop Condition",
+        "inputUseSubmitInputsLabel": "Use Submit Inputs",
+        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
+        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
+        "inputUseMaxDigitsLabel": "Use Max Digits",
+        "inputSubmitInputsLabel": "Submit Inputs",
+        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
+        "inputTextLabel": "Message",
+        "inputTextDescription": "The message to introduce the prompt to the caller",
+        "inputTimeoutLabel": "Timeout",
+        "inputTimeoutDescription": "The duration in seconds after which the prompt will be cancelled",
+        "inputLanguageLabel": "Language",
+        "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
+        "inputSynthesizersLabel": "Synthesizers",
+        "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
+        "inputInterpretAsLabel": "Interpret as",
+        "inputInterpretAsDescription": "Explicitly states what the given text should be interpreted as.",
+        "inputBargeInOnSpeechLabel": "Barge-In on Speech",
+        "inputBargeInOnSpeechDescription": "Allows the audio to be interrupted by the speaker",
+        "inputBargeInOnDtmfLabel": "Barge-In on DTMF",
+        "inputBargeInOnDtmfDescription": "Allows the audio to be interrupted by pressing keys",
+        "inputCallerIdLabel": "Displayed Caller ID",
+        "inputCallerIdDescription": "The phone number displayed to the callee. (This is a best-effort option, correct display can not be guaranteed)",
+        "inputCustomSipHeadersLabel": "Custom SIP Headers",
+        "inputCustomSipHeadersDescription": "An object where each property is the name of a header, and the value is a list of strings. All header names must begin with X-.",
+        "inputRingTimeoutLabel": "Ring Timeout (s)",
+        "inputRingTimeoutDescription": "The maximum time (in seconds) the call will be ringing before the attempt will be cancelled",
+        "inputAcceptAnsweringMachinesLabel": "Accept Answering Machines",
+        "inputAcceptAnsweringMachinesDescription": "Wether the bot should accept answering machines picking up.",
+        "inputDataLabel": "Custom Data",
+        "inputDataDescription": "An object with key-value pairs to be attached as custom data to the dialog",
+        "inputEndFlowLabel": "Quit Flow",
+        "inputEndFlowDescription": "Stop the flow after executing this node",
+        "inputExperimentalEnableRingingToneLabel": "(EXPERIMENTAL) Enable Ringing Tone",
+        "inputExperimentalEnableRingingToneDescription": "Enables the playback of a ringing tone while the call is pending. This option will change in the future.",
+        "inputWhisperingTextLabel": "Whisperred Text to the transfered party",
+        "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined",
+        "childSuccessLabel": "On Success",
+        "childFailureLabel": "On Failure",
+        "childTerminationLabel": "On Termination",
+        "childDefaultLabel": "Default"
+    },
+    "speak": {
+        "nodeLabel": "Speak out (SSML)",
+        "nodeSummary": "Speak something out to the caller with SSML Support",
+        "inputTextLabel": "Text",
+        "sectionTextOptionsLabel": "Additional Text Section",
+        "inputAdditionalTextLabel": "Additional Text"
+    },
+    "terminate": {
+        "nodeLabel": "Terminate Call",
+        "nodeSummary": "Drop the call"
+    },
+    "speechToText": {
+        "nodeLabel": "Set Speech-to-Text Service",
+        "nodeSummary": "Speech-to-Text services need to be used to transcribe the expected input in the the best possible way",
+        "inputServiceLabel": "Speech-to-Text Service",
+        "inputServiceFallbackLabel": "Speech-to-Text Fallback",
+        "sectionSelectSTTLabel": "Select Speech-to-Text Services",
+        "sectionSelectLanguageLabel": "Select Language",
+        "inputLanguageLabel": "Language",
+        "inputProfileTokenLabel": "Profile Token",
+        "inputProfileTokenFallbackLabel": "Profile Token Fallback",
+        "inputProfileTokenFallbackDescription": "Profile Token Fallback",
+        "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
+        "sectionFallback": "Fallback Option",
+        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token"
+    },
+    "outboundService": {
+        "nodeLabel": "Check Outbound Result",
+        "nodeSummary": "Check the Result of the Outbound Call"
+    },
+
+    "timer": {
+        "nodeLabel": "Inactivity Timeout",
+        "nodeSummary": "Sets the Inactivity Timeout in (s)",
+        "useStartInputsLabel": "Activate Inactivity Timeout",
+        "inputTimeoutStopDescription": "Stops the Inactivity Timeout detection",
+        "inputTimeoutStartDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
+        "enableTimerLabel": "Enable or disable the timer",
+        "enableTimerDescription": "Check this option to enable the inactivity timer, uncheck it to disable the timer."
+    }
+}

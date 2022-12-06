@@ -1,5 +1,9 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { bakeData } from '../helpers/bake';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import { normalizeData } from '../helpers/util';
+import t from '../translations';
 
 export interface ISendDataParams extends INodeFunctionBaseParams {
   config: {
@@ -9,30 +13,29 @@ export interface ISendDataParams extends INodeFunctionBaseParams {
 
 export const sendDataNode = createNodeDescriptor({
   type: 'sendData',
-  defaultLabel: 'Send Data',
-  summary: 'Attach custom data to a dialog',
+  defaultLabel: t.sendData.nodeLabel,
+  summary: t.sendData.nodeSummary,
   appearance: {
-    color: '#9501c9'
+    color: '#9501c9',
   },
   tags: ['service'],
   fields: [
     {
       type: 'json',
       key: 'data',
-      label: 'Custom Data',
-      description: 'This is an object that can have arbitrary properties. Each property is expected to have a string value',
+      label: t.sendData.nodeLabel,
+      description: t.sendData.inputDataDescription,
       params: {
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   ],
-  function: async ({ cognigy, config } : ISendDataParams) => {
+  function: async ({ cognigy, config }: ISendDataParams) => {
     const { api } = cognigy;
-    const data = bakeData(config.data);
-
-    api.say('', {
+    const payload = {
       status: 'data',
-      data,
-    });
+      data: normalizeData(config.data) ?? {},
+    };
+    api.say('', payload);
   },
 });

@@ -1,49 +1,65 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import { normalizeData } from '../helpers/util';
+import t from '../translations';
+import {
+  endFlowField,
+  EndFlowInputs,
+} from "../common/shared";
+
+interface ITerminateCallInputs extends EndFlowInputs {
+  data?: object,
+}
 
 export interface ITerminateCallParams extends INodeFunctionBaseParams {
-  config: {
-    endFlow?: boolean
-  };
+  config: ITerminateCallInputs;
 }
 
 export const terminateCallNode = createNodeDescriptor({
   type: 'terminate',
-  defaultLabel: 'Terminate Call',
-  summary: 'Drop the call',
+  defaultLabel: t.terminate.nodeLabel,
+  summary: t.terminate.nodeSummary,
   tags: ['service'],
   appearance: {
     color: 'red',
   },
   fields: [
+    endFlowField,
     {
-      type: 'checkbox',
-      key: 'endFlow',
-      label: 'Quit Flow',
-      defaultValue: false,
-      description: 'Stop the flow after executing this node'
+      type: 'json',
+      key: 'data',
+      label: t.shared.inputDataLabel,
+      description: t.sendData.inputDataDescription,
+      params: {
+        required: false,
+      },
     },
   ],
   sections: [
     {
       key: 'additional',
-      label: 'Additional Settings',
-      fields: ['endFlow'],
-      defaultCollapsed: true
+      label: t.forward.sectionAdditionalDataLabel,
+      fields: [endFlowField.key, 'data'],
+      defaultCollapsed: true,
     },
   ],
   form: [
     {
       key: 'additional',
       type: 'section',
-    }
+    },
   ],
   function: async ({ cognigy, config }: ITerminateCallParams) => {
     const { api } = cognigy;
-    api.say('', {
+    const payload = {
       status: 'termination',
-    });
+      data: normalizeData(config.data),
+    };
+    api.say('', payload);
     if (config.endFlow) {
       api.stopExecution();
     }
-  }
+  },
 });

@@ -19,7 +19,7 @@
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.1",
-    "qs": "^6.10.1",
+    "qs": "^6.10.3",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

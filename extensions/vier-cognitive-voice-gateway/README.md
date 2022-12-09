@@ -10,6 +10,38 @@ See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.h
 
 Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html#from-cvg-to-cognigy-events) that needs to be handled by your flow. Some of the nodes below initiate the generation of such events.
 
+## Node: Speak (with SSML formatting)
+
+> The bot says the given text. SSML formatting is supported with a simple editor.
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller. To insert SSML tags mark the text and use the commands of the editor (Emphasize, Pause, Structure, Say as, Speech Rate, Speech Volume, Speech Pitch, Phoneme, Audio, Voice) </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Your contract &lt;say-as interpret-as=&quot;characters&quot;&gt;{{context.contractno}}&lt;/say-as&gt; is beeing updated. &lt;break time=&quot;300ms&quot;&gt;Thank you.</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+	</tbody>
+</table>
+
 ## Node: Start Recording
 
 > Starts or resumes a recording of a call. You can record the caller, the agent (bot), or both. If you record both lines, you will get a stereo recording.
@@ -214,10 +246,15 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Explicitly state how the text should be interpreted, by default SSML is assumed</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">SSML or TEXT</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge In</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the text spoken by the bot to be interrupted by the caller</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Use Submit Inputs</td>
@@ -281,10 +318,15 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Explicitly state how the text should be interpreted, by default SSML is assumed</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>SSML</i> or <i>TEXT</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge In</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the text spoken by the bot to be interrupted by the caller</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Choices</td>

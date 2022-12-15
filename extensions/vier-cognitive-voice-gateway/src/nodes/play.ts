@@ -1,52 +1,71 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import t from '../translations';
+import {
+  convertBargeIn,
+  normalizeText,
+} from "../helpers/util";
+import {
+  bargeInFieldKeys,
+  bargeInFields,
+  BargeInInputs,
+} from "../common/shared";
 
-export interface IPlayParams extends INodeFunctionBaseParams {
-  config: {
-    url: string,
-    bargeIn?: boolean
-  };
+interface IPlayNodeInputs extends BargeInInputs {
+  url: string,
+  fallbackText?: string,
+}
+
+export interface IPlayNodeParams extends INodeFunctionBaseParams {
+  config: IPlayNodeInputs;
 }
 
 export const playNode = createNodeDescriptor({
   type: 'playAudioFile',
-  defaultLabel: 'Play Audio File',
-  summary: 'Play an audio file to the call',
+  defaultLabel: t.play.nodeLabel,
+  summary: t.play.nodeSummary,
   appearance: {
-    color: '#678465'
+    color: '#678465',
   },
   tags: ['message'],
   fields: [
     {
-      type: 'text',
+      type: 'cognigyText',
       key: 'url',
-      label: 'Audio URL',
-      description: 'Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.',
+      label: t.play.inputUrlLabel,
+      description: t.play.inputUrlLabelDescription,
       params: {
         required: true,
         placeholder: '',
-      }
+      },
     },
     {
-      type: 'checkbox',
-      key: 'bargeIn',
-      label: 'Barge In',
-      description: 'Allows the audio file to be interrupted by the speaker',
-      defaultValue: false,
-    }
+      type: 'cognigyText',
+      key: 'fallbackText',
+      label: t.play.inputFallbackTextLabel,
+      description: t.play.inputFallbackTextDescription,
+      params: {
+        required: false,
+        placeholder: '',
+      },
+    },
+    ...bargeInFields,
   ],
   sections: [
     {
       key: 'general',
       fields: ['url'],
-      label: 'General Settings',
+      label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
     {
       key: 'additional',
-      fields: ['bargeIn'],
-      label: 'Additional Settings',
+      fields: [...bargeInFieldKeys, 'fallbackText'],
+      label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
-    }
+    },
   ],
   form: [
     {
@@ -55,15 +74,19 @@ export const playNode = createNodeDescriptor({
     },
     {
       key: 'additional',
-      type: 'section'
-    }
+      type: 'section',
+    },
   ],
-  function: async ({ cognigy, config }: IPlayParams) => {
+  function: async ({ cognigy, config }: IPlayNodeParams) => {
     const { api } = cognigy;
 
-    api.say('', {
+    const payload = {
       status: 'play',
-      ...config,
-    });
-  }
+      url: config.url,
+      bargeIn: convertBargeIn(config),
+      fallbackText: normalizeText(config.fallbackText),
+    };
+
+    api.say('', payload);
+  },
 });

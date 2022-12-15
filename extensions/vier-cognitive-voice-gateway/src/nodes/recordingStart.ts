@@ -1,5 +1,12 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from '@cognigy/extension-tools/build';
-import { stripEmpty } from '../helpers/stripEmpty';
+import {
+  createNodeDescriptor,
+  INodeFunctionBaseParams,
+} from '@cognigy/extension-tools/build';
+import {
+  convertDuration,
+  normalizeText,
+} from '../helpers/util';
+import t from '../translations';
 
 type Speaker = 'CUSTOMER' | 'AGENT';
 
@@ -7,14 +14,16 @@ export interface IRecordingStartParams extends INodeFunctionBaseParams {
   config: {
     maxDuration?: number,
     recordingId?: string,
-    speakers?: Speaker | Array<Speaker>,
+    speakers: Speaker | 'BOTH',
   };
 }
 
+const defaultSpeaker = 'BOTH';
+
 export const recordingStartNode = createNodeDescriptor({
   type: 'recordingStart',
-  defaultLabel: 'Start Recording',
-  summary: 'Start or resume recording of a call',
+  defaultLabel: t.recordingStart.nodeLabel,
+  summary: t.recordingStart.nodeSummary,
   appearance: {
     color: '#e95ba7',
   },
@@ -23,62 +32,59 @@ export const recordingStartNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'maxDuration',
-      label: 'Maximum Recording Duration (s)',
-      description: 'After maximum recording duration (in seconds), the recording will be stopped automatically.',
+      label: t.recordingStart.inputMaxDurationLabel,
+      description: t.recordingStart.inputMaxDurationDescription,
       params: {
         placeholder: 'Value in seconds (e.g. 60)',
-      }
+      },
     },
     {
       type: 'text',
       key: 'recordingId',
-      label: 'Recording ID',
-      description: 'An arbitrary string to identify the recording in case multiple recordings are created in the same dialog',
+      label: t.shared.inputRecordingIdLabel,
+      description: t.shared.inputRecordingIdDescription,
     },
     {
       type: 'select',
       key: 'speakers',
-      label: 'Speakers to record',
+      label: t.recordingStart.inputSpeakersLabel,
+      defaultValue: defaultSpeaker,
       params: {
+        required: true,
         options: [
-          { value: null, label: 'Both Lines' },
-          { value: 'CUSTOMER', label: 'Customer' },
-          { value: 'AGENT', label: 'Agent' }
-        ]
-      }
-    }
+          { value: defaultSpeaker, label: t.recordingStart.inputSpeakersBothLabel },
+          { value: 'CUSTOMER', label: t.recordingStart.inputSpeakersCustomerLabel },
+          { value: 'AGENT', label: t.recordingStart.inputSpeakersAgentLabel },
+        ],
+      },
+    },
   ],
-  sections: [
-    {
-      key: 'additional',
-      label: 'Additional Settings',
-      fields: ['maxDuration', 'recordingId', 'speakers'],
-      defaultCollapsed: true
-    }
-  ],
-  form: [
-    {
-      key: 'additional',
-      type: 'section',
-    }
-  ],
-  function: async ({ cognigy, config}: IRecordingStartParams) => {
+  preview: {
+    type: 'text',
+    key: 'recordingId',
+  },
+  function: async ({ cognigy, config }: IRecordingStartParams) => {
     const { api } = cognigy;
 
-    // Convert to ms
-    if (config.maxDuration) {
-      config.maxDuration = config.maxDuration * 1000;
+    let speakers: Array<Speaker>;
+    switch (config.speakers ?? defaultSpeaker) {
+      case 'CUSTOMER':
+        speakers = ['CUSTOMER'];
+        break;
+      case 'AGENT':
+        speakers = ['AGENT'];
+        break;
+      default:
+        speakers = ['CUSTOMER', 'AGENT']
+        break;
     }
 
-    if (config.speakers) {
-      config.speakers = [config.speakers] as Array<Speaker>;
-    }
-
-    const strippedConfig = stripEmpty(config);
-
-    api.say('', {
+    const payload = {
       status: 'recording-start',
-      ...strippedConfig,
-    });
-  }
+      maxDuration: convertDuration(config.maxDuration),
+      recordingId: normalizeText(config.recordingId),
+      speakers: speakers,
+    };
+    api.say('', payload);
+  },
 });

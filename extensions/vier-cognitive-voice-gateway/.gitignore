@@ -1,0 +1,4 @@
+.history
+build
+node_modules
+*.iml

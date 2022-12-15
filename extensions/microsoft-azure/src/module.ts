@@ -5,18 +5,25 @@ import { textanalyticsConnection } from "./connections/textanalyticsConnection";
 import { recognizeLanguageNode } from "./nodes/recognizeLanguage";
 import { namedEntityRecognitionNode } from "./nodes/namedEntityRecognition";
 import { sentimentAnalysisNode } from "./nodes/sentimentAnalysis";
+import { onTranscriptionError, onTranscriptionSuccess, transcribeWhatsAppVoiceMessageNode } from "./nodes/transcribeWhatsAppVoiceMessage";
+import { speechServiceConnection } from "./connections/speechServiceConnection";
 
 export default createExtension({
 	nodes: [
 		spellCheckNode,
 		recognizeLanguageNode,
 		namedEntityRecognitionNode,
-		sentimentAnalysisNode
+		sentimentAnalysisNode,
+
+		transcribeWhatsAppVoiceMessageNode,
+		onTranscriptionSuccess,
+		onTranscriptionError
 	],
 
 	connections: [
 		spellcheckConnection,
-		textanalyticsConnection
+		textanalyticsConnection,
+		speechServiceConnection
 	],
 
 	options: {

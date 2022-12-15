@@ -9,5 +9,8 @@
     "moduleResolution": "node",
     "watch": false,
     "strict": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true
   }
 }

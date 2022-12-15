@@ -17,33 +17,23 @@ Please find more information here: https://developers.liveperson.com/login-servi
 
 ## Node: Check Agent Availability
 
-This Flow Node checks the so-called "Shif Status".
+This Flow Node checks the so-called "Shift Status" API,
 
 <blockquote>
 This API allows clients to check whether the requested skill, or all skills of the account, are currently in an active shift — based on the skill's configuration (whether defined on the account level via the account shift scheduler or overriden by the skill's configuration) (2022, https://developers.liveperson.com/shift-status-api-overview.html).
 </blockquote>
 
-In order to do so, the Skill that should be checked, must be selected from a dropdown list. If there is someone available, the following information will be stored to the Input or Context in JSON format:
+as well as whether there is an Agent online and available for that specific skill using the "Agent Status" API.
 
+<blockquote>
+Returns the current state of logged in agents that are handling messaging conversations with all its related data, including status, number of open conversations, load, skills etc. (2022, https://developers.liveperson.com/agent-metrics-api-methods-agent-status.html).
+</blockquote>
 
-```json
-{
-  "liveperson": {
-    "liveAgentAvailability": {
-      "skillId": "123123",
-      "onShift": true,
-      "nextOn": null,
-      "nextOff": null
-    }
-  }
-}
-```
+In order to do so, the Skill that should be checked, must be selected from a dropdown list. If there is someone available, the "On Online" path will be used, otherwise the "On Offline". In case of an error, the error is saved in the specified storage location.
 
 ## Node: Handover To Agent
 
-This Flow Node takes three paramers,
-1. the message that should be sent to the user as soon as the handover is requested. For example, "I will now try to forward you to a human agent. One moment, please."
-2. the name of the Skill that should be transfered to and
-3. the message that should be sent if there was an error.
+This Flow Node takes one parameter:
+- The name of the Skill that should be transfered to
 
 This Flow Node will request the handover in the LIVEPERSON Agent Desktop.

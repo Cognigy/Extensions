@@ -11,7 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "memoize-one": "^5.0.4",
-    "parcel": "^1.12.3",
+    "parcel": "^2.8.2",
     "react": "^16.8.6"
   }
 }

@@ -242,7 +242,7 @@ export const documentSearchNode = createNodeDescriptor({
             fields.push("_str.url");
         }
         if (strLanguage === true) {
-            fields.push("_str.languages");
+            fields.push("_str.language");
         }
         if (strImage === true) {
             fields.push("_str.image");

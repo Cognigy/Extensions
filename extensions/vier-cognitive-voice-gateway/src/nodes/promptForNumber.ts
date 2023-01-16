@@ -11,6 +11,7 @@ import {
 import {
   convertBargeIn,
   convertDuration,
+  normalizeText,
 } from "../helpers/util";
 
 interface INumberPromptNodeInputs extends BargeInInputs {
@@ -127,7 +128,7 @@ export const promptForNumberNode = createNodeDescriptor({
       timeout: convertDuration(config.timeout),
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      interpretAs: config.interpretAs,
+      interpretAs: normalizeText(config.interpretAs),
       bargeIn: convertBargeIn(config),
       type: {
         name: 'Number',

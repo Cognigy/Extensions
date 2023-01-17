@@ -172,12 +172,16 @@ export const promptFields: Array<INodeField> = [
     params: {
       options: [
         {
+          value: undefined,
+          label: t.shared.inputInterpretAsAutoDetect,
+        },
+        {
           value: 'SSML',
-          label: 'SSML',
+          label: t.shared.inputInterpretAsSsml,
         },
         {
           value: 'TEXT',
-          label: 'Text',
+          label: t.shared.inputInterpretAsText,
         },
       ],
     },

@@ -284,9 +284,6 @@ export default {
             'default': "Enable Ringing Tone",
             'deDE': "Klingelton aktivieren",
         },
-        inputInterpretAsAutoDetect: {
-            'default': "Auto-Detect",
-        },
         inputInterpretAsDescription: {
             'default': "Specify whether the text should be interpreted as text or SSML markup.",
             'deDE': "Legen Sie fest, ob der Text als Text oder SSML-Auszeichnung interpretiert werden soll.",

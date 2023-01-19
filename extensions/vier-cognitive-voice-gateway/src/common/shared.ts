@@ -4,8 +4,6 @@ import {
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 
-export type InterpretAs = 'SSML' | 'TEXT';
-
 /**
  * This list is sorted lexicographically, with 4 exceptions:
  *   1. en-US
@@ -163,24 +161,6 @@ export const promptFields: Array<INodeField> = [
     key: 'synthesizers',
     label: t.shared.inputSynthesizersLabel,
     description: t.shared.inputSynthesizersDescription,
-  },
-  {
-    type: 'select',
-    key: 'interpretAs',
-    label: t.shared.inputInterpretAsLabel,
-    description: t.shared.inputInterpretAsDescription,
-    params: {
-      options: [
-        {
-          value: 'SSML',
-          label: t.shared.inputInterpretAsSsml,
-        },
-        {
-          value: 'TEXT',
-          label: t.shared.inputInterpretAsText,
-        },
-      ],
-    },
   },
   ...bargeInFields,
 ];

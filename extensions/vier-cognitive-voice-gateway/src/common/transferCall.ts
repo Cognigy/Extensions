@@ -54,7 +54,7 @@ const acceptAnsweringMachinesField: INodeField = {
   key: 'acceptAnsweringMachines',
   label: t.shared.inputAcceptAnsweringMachinesLabel,
   description: t.shared.inputAcceptAnsweringMachinesDescription,
-  defaultValue: false,
+  defaultValue: true,
 };
 
 const dataField: INodeField = {

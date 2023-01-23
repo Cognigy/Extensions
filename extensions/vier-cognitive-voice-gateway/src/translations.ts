@@ -452,6 +452,7 @@ export default {
     stopPlay: {
         inputUrlLabel: {
             'default': "Audio URL",
+            'deDE': "Audio-URL",
         },
         inputUrlLabelDescription: {
             'default': "The URL must be exactly the one specified in the \"Play Audio File\" node.",

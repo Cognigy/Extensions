@@ -149,6 +149,28 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</tbody>
 </table>
 
+## Node: Stop Audio Playback
+
+> Stops the audio playback started using the "Play Audio File" node. 
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The exact URL of the audio file started with the "Play Audio File" node.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
+		</tr>
+	</tbody>
+</table>
+
 
 ## Node: Set Inactivity Timeout
 

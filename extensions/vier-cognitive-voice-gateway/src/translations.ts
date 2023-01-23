@@ -449,6 +449,20 @@ export default {
             'deDE': "Speech-to-Text-Dienst wählen",
         },
     },
+    stopPlay: {
+        inputUrlLabel: {
+            'default': "Audio URL",
+        },
+        inputUrlLabelDescription: {
+            'default': "The URL must be exactly the one specified in the \"Play Audio File\" node.",
+        },
+        nodeLabel: {
+            'default': "Stop Audio Playback",
+        },
+        nodeSummary: {
+            'default': "Stops the audio playback started using the \"Play Audio File\" node",
+        },
+    },
     terminate: {
         nodeLabel: {
             'default': "End Call",

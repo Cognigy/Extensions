@@ -46,7 +46,6 @@
     "stopPlay": {
         "nodeLabel": "Stop Audio Playback",
         "nodeSummary": "Stops the audio playback started using the \"Play Audio File\" node",
-        "inputUrlLabel": "Audio URL",
         "inputUrlLabelDescription": "The URL must be exactly the one specified in the \"Play Audio File\" node."
     },
     "recordingStart": {

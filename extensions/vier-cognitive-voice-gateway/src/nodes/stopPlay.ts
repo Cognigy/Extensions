@@ -24,7 +24,7 @@ export const stopPlayNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'url',
-      label: t.stopPlay.inputUrlLabel,
+      label: t.play.inputUrlLabel,
       description: t.stopPlay.inputUrlLabelDescription,
       params: {
         required: true,

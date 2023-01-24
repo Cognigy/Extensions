@@ -450,9 +450,6 @@ export default {
         },
     },
     stopPlay: {
-        inputUrlLabel: {
-            'default': "Audio URL",
-        },
         inputUrlLabelDescription: {
             'default': "Enter exactly the same audio file URL as the one entered in the \"Play Audio File\" node.",
             'deDE': "Geben Sie exakt die gleiche Audiodatei-URL an wie die URL, die im Knoten „Audiodatei abspielen“ eingetragen ist.",

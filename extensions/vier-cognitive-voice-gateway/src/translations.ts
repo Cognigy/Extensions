@@ -459,7 +459,8 @@ export default {
             'deDE': "Audiowiedergabe stoppen",
         },
         nodeSummary: {
-            'default': "Stops the audio playback started using the \"Play Audio File\" node",
+            'default': "Stop the audio playback started using the \"Play Audio File\" node",
+            'deDE': "Audiowiedergabe stoppen , die über den Knoten „Audiodatei abspielen“ gestartet wurde",
         },
     },
     terminate: {

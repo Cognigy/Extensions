@@ -4,8 +4,8 @@
         {
             "name": "zendesk",
             "label": "Zendesk",
-            "version": "4.4.2",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk442/zendesk.tar.gz",
+            "version": "4.5.0",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk450/zendesk.tar.gz",
             "description": "Integrates Cognigy.AI with Zendesk Support, Chat, and Talk",
             "longDescription": "Zendesk develops and markets software for customer service, sales, and other customer interactions. This integration exposes several functions that enables the virtual agent to maintain support tickets, request callbacks in Talk or handover a Webchat conversation to Zendesk Chat.",
             "infoUrl": "https://support.cognigy.com/hc/en-us/sections/4409850326418-Zendesk",

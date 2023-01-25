@@ -2146,10 +2146,10 @@
         {
             "name": "vier-voice",
             "label": "VIER Voice",
-            "version": "4.2.0",
+            "version": "4.3.0",
             "description": "Enable phone bots with VIER Cognitive Voice Gateway",
             "longDescription": "Enable phone bots with VIER Cognitive Voice Gateway.",
-            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vier-voice420/vier_voice.tar.gz",
+            "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vier-voice430/vier_voice.tar.gz",
             "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/vier-cognitive-voice-gateway",
             "tags": [
                 "voice",

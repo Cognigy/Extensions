@@ -9,6 +9,12 @@ export interface IStartLiveChatParams extends INodeFunctionBaseParams {
         displayName: string;
         phone: string;
         email: string;
+        addTags: boolean;
+		tags: string;
+        useDepartmentId: boolean;
+		departmentId: string;
+        sendInitialMessage: boolean;
+		initialMessage: string;
     };
 }
 export const startLiveChatNode = createNodeDescriptor({
@@ -51,7 +57,7 @@ export const startLiveChatNode = createNodeDescriptor({
             },
             type: "cognigyText",
             params: {
-                required: true
+                required: false
             }
         },
         {
@@ -108,6 +114,105 @@ export const startLiveChatNode = createNodeDescriptor({
                 required: false
             }
         },
+        {
+            key: "addTags",
+            type: "toggle",
+            label: {
+                default: "Add tags",
+                deDE: "Tags ergänzen",
+                esES: "Agregar etiquetas"
+            },
+            description: {
+                default: "Add an array of tags to the ticket.",
+                deDE: "Ergänze Ticket mit einem Tags-Array.",
+                esES: "Agregue una serie de etiquetas al ticket."
+            },
+            defaultValue: false
+        },
+		{
+            key: "tags",
+            label: {
+                default: "Tags",
+                deDE: "Tags",
+                esES: "Etiquetas"
+            },
+            type: "json",
+            params: {
+                required: false,
+            },
+			defaultValue: ["enterprise", "other_tag"],
+			condition: {
+				key: "addTags",
+				value: true
+			}
+        },
+        {
+			key: "useDepartmentId",
+			type: "toggle",
+			label: {
+				default: "Use Department ID",
+				deDE: "Department ID benutzen",
+				esES: "Usar ID de departamento"
+			},
+			description: {
+				default: "Set default department for user certain?",
+				deDE: "Standardabteilung für bestimmten Benutzer festlegen?",
+				esES: "¿Establecer un departamento predeterminado para un usuario determinado?"
+			},
+			defaultValue: false
+		},
+		{
+			key: "departmentId",
+			label: {
+				default: "Department ID",
+				deDE: "Department ID",
+				esES: "Department ID"
+			},
+			type: "cognigyText",
+			description: {
+				default: "The department ID you wish to use.",
+				deDE: "Die Department ID, die sie benutzen.",
+				esES: "El ID del departamento que desea utilizar."
+			},
+			params: {
+				required: false,
+			},
+			condition: {
+				key: "useDepartmentId",
+				value: true
+			}
+		},
+        {
+			key: "sendInitialMessage",
+			type: "toggle",
+			label: {
+				default: "Send Initial Message to Live Agent",
+				deDE: "Nachricht an Liveagent schicken",
+				esES: "Enviar mensaje inicial a la agente en vivo"
+			},
+			description: {
+				default: "Send a message to the chat, such as a transcript or other information?",
+				deDE: "Senden Sie eine Nachricht an den Chat, z. B. eine Abschrift oder andere Informationen?",
+				esES: "¿Enviar un mensaje al chat, como una transcripción u otra información?"
+			},
+			defaultValue: false
+		},
+		{
+			key: "initialMessage",
+			label: {
+				default: "Initial Message",
+				deDE: "Erste Nachricht",
+				esES: "Mensaje inicial"
+			},
+			type: "cognigyText",
+			params: {
+				required: false,
+			},
+			condition: {
+				key: "sendInitialMessage",
+				value: true
+			}
+		}
     ],
     sections: [
         {
@@ -123,23 +228,40 @@ export const startLiveChatNode = createNodeDescriptor({
                 "email",
                 "phone",
             ]
-        }
+        },
+        {
+			key: "additionalOptions",
+			label: {
+				default: "Additional Handover Options",
+				deDE: "Zusätzliche Übergabeoptionen",
+				esES: "Opciones de traspaso adicionales."
+			},
+			defaultCollapsed: true,
+			fields: [
+				"addTags",
+				"tags",
+                "useDepartmentId",
+                "departmentId",
+                "sendInitialMessage",
+                "initialMessage"
+			]
+		}
     ],
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "text" },
         { type: "section", key: "visitor" },
+        { type: "section", key: "additionalOptions"},
     ],
     appearance: {
         color: "#00363d"
     },
     function: async ({ cognigy, config }: IStartLiveChatParams) => {
         const { api } = cognigy;
-        const { connection, text, displayName, email, phone } = config;
+        const { connection, text, displayName, email, phone, addTags, tags, useDepartmentId, departmentId, sendInitialMessage, initialMessage} = config;
         const { accountKey } = connection;
 
-        // Send configuration to Webchat client to start Zendesk Chat
-        api.say(text, {
+        let dataObject = {
             handover: true,
             account_key: accountKey,
             visitor: {
@@ -147,6 +269,18 @@ export const startLiveChatNode = createNodeDescriptor({
                 email,
                 phone
             }
-        });
+        };
+        if (addTags === true ) {
+			dataObject["tags"] = tags;
+		}
+        if (useDepartmentId === true) {
+            dataObject["id"] = parseInt(departmentId);
+        }
+        if (sendInitialMessage === true) {
+            dataObject["transcript"] = initialMessage;
+        }
+
+        // Send configuration to Webchat client to start Zendesk Chat
+        api.say(text, dataObject);
     }
 });

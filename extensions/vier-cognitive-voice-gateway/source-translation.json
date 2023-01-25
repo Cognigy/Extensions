@@ -43,6 +43,11 @@
         "inputFallbackTextLabel": "Fallback Text",
         "inputFallbackTextDescription": "The fallback text is used when the audio playback did not succeed."
     },
+    "stopPlay": {
+        "nodeLabel": "Stop Audio Playback",
+        "nodeSummary": "Stops the audio playback started using the \"Play Audio File\" node",
+        "inputUrlLabelDescription": "The URL must be exactly the one specified in the \"Play Audio File\" node."
+    },
     "recordingStart": {
         "nodeLabel": "Start Recording",
         "nodeSummary": "Start or resume recording of a call",
@@ -78,8 +83,6 @@
         "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
         "inputSynthesizersLabel": "Synthesizers",
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
-        "inputInterpretAsLabel": "Interpret as",
-        "inputInterpretAsDescription": "Explicitly states what the given text should be interpreted as.",
         "inputBargeInOnSpeechLabel": "Barge-In on Speech",
         "inputBargeInOnSpeechDescription": "Allows the audio to be interrupted by the speaker",
         "inputBargeInOnDtmfLabel": "Barge-In on DTMF",

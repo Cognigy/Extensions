@@ -18,7 +18,6 @@ interface INumberPromptNodeInputs extends BargeInInputs {
   timeout: number,
   language?: string,
   synthesizers?: Array<string>,
-  interpretAs?: string,
   submitInputs?: Array<string>,
   maxDigits?: number,
   useSubmitInputs: boolean,
@@ -90,7 +89,7 @@ export const promptForNumberNode = createNodeDescriptor({
     },
     {
       key: 'additional',
-      fields: ['language', 'synthesizers', 'interpretAs', ...bargeInFieldKeys],
+      fields: ['language', 'synthesizers', ...bargeInFieldKeys],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -127,7 +126,6 @@ export const promptForNumberNode = createNodeDescriptor({
       timeout: convertDuration(config.timeout),
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      interpretAs: config.interpretAs,
       bargeIn: convertBargeIn(config),
       type: {
         name: 'Number',

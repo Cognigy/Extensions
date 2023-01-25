@@ -10,6 +10,38 @@ See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.h
 
 Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html#from-cvg-to-cognigy-events) that needs to be handled by your flow. Some of the nodes below initiate the generation of such events.
 
+## Node: Speak (with SSML formatting)
+
+> The bot says the given text. SSML formatting is supported with a simple editor.
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller. To insert SSML tags mark the text and use the commands of the editor (Emphasize, Pause, Structure, Say as, Speech Rate, Speech Volume, Speech Pitch, Phoneme, Audio, Voice) </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Your contract &lt;say-as interpret-as=&quot;characters&quot;&gt;{{context.contractno}}&lt;/say-as&gt; is beeing updated. &lt;break time=&quot;300ms&quot;&gt;Thank you.</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+	</tbody>
+</table>
+
 ## Node: Start Recording
 
 > Starts or resumes a recording of a call. You can record the caller, the agent (bot), or both. If you record both lines, you will get a stereo recording.
@@ -97,22 +129,44 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The URL of the audio file</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">https://url.to.audiofile.com/audio/prerecorded.wav</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Allow the speaker to interrupt the audio file by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the audio file by pressing keys</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️ </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Fallback text</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Text to be announced when the audio file cannot be played.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Welcome at VIER! </td>
+		</tr>
+	</tbody>
+</table>
+
+## Node: Stop Audio Playback
+
+> Stops the audio playback started using the "Play Audio File" node. 
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The exact URL of the audio file started with the "Play Audio File" node.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
 	</tbody>
 </table>
@@ -209,14 +263,14 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Interpret as</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Explicitly state how the text should be interpreted, by default SSML is assumed</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">SSML or TEXT</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge In</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the text spoken by the bot to be interrupted by the caller</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
@@ -276,14 +330,14 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Interpret as</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Explicitly state how the text should be interpreted, by default SSML is assumed</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>SSML</i> or <i>TEXT</i></td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge In</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the text spoken by the bot to be interrupted by the caller</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
@@ -422,7 +476,7 @@ After a successful bridge, the bot will not receive further messages and will no
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a </i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with an <i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
         <tr>

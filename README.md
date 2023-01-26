@@ -18,6 +18,8 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 
 This repository contains the source code of existing modules which can be used as blueprints for further developments. Therefore, all of them are provided under the [MIT license](./LICENSE).
 
+You are subject to the terms of the third-party providers which you are connecting to when you use Extensions. Cognigy cannot take responsibility for your use of the third-party services, systems or materials. Cognigy.AI Extensions are licensed under the MIT license.
+
 ## Approval Process
 
 If you want us to approve your Extension, please note the following approval process:

@@ -3,6 +3,7 @@ import { terminateCallNode } from './nodes/terminateCall';
 import { forwardCallNode } from './nodes/forwardCall';
 import { bridgeCallNode } from './nodes/bridgeCall';
 import { playNode } from './nodes/play';
+import { stopPlayNode } from "./nodes/stopPlay";
 import { recordingStartNode } from './nodes/recordingStart';
 import { recordingStopNode } from './nodes/recordingStop';
 import { sendDataNode } from './nodes/data';
@@ -26,6 +27,7 @@ export default createExtension({
     recordingStartNode,
     recordingStopNode,
     playNode,
+    stopPlayNode,
     sendDataNode,
     forwardCallNode,
     bridgeCallNode,

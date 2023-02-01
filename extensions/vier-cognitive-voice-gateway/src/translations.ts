@@ -284,14 +284,6 @@ export default {
             'default': "Enable Ringing Tone",
             'deDE': "Klingelton aktivieren",
         },
-        inputInterpretAsDescription: {
-            'default': "Specify whether the text should be interpreted as text or SSML markup.",
-            'deDE': "Legen Sie fest, ob der Text als Text oder SSML-Auszeichnung interpretiert werden soll.",
-        },
-        inputInterpretAsLabel: {
-            'default': "Interpret as",
-            'deDE': "Interpretieren als",
-        },
         inputLanguageDescription: {
             'default': "To overwrite the Text-to-Speech language for specific messages, enter the language you want.",
             'deDE': "Um die Text-to-Speech-Sprache für bestimmte Nachrichten zu überschreiben, geben Sie die gewünschte Sprache ein.",
@@ -455,6 +447,20 @@ export default {
         sectionSelectSTTLabel: {
             'default': "Select Speech-to-Text Service",
             'deDE': "Speech-to-Text-Dienst wählen",
+        },
+    },
+    stopPlay: {
+        inputUrlLabelDescription: {
+            'default': "Enter exactly the same audio file URL as the one entered in the \"Play Audio File\" node.",
+            'deDE': "Geben Sie exakt die gleiche Audiodatei-URL an wie die URL, die im Knoten „Audiodatei abspielen“ eingetragen ist.",
+        },
+        nodeLabel: {
+            'default': "Stop Audio Playback",
+            'deDE': "Audiowiedergabe stoppen",
+        },
+        nodeSummary: {
+            'default': "Stop the audio playback started using the \"Play Audio File\" node",
+            'deDE': "Audiowiedergabe stoppen , die über den Knoten „Audiodatei abspielen“ gestartet wurde",
         },
     },
     terminate: {

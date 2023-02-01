@@ -96,6 +96,7 @@ export const bridgeCallNode = createNodeDescriptor({
       acceptAnsweringMachines: config.acceptAnsweringMachines,
       data: normalizeData(config.data),
       whispering: convertWhisperText(config.whisperingText),
+      experimentalEnableRingingTone: config.experimentalEnableRingingTone,
     };
 
     return delay(100, () => {

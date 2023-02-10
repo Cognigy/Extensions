@@ -27,7 +27,7 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.15.1",
+		"@cognigy/extension-tools": "^0.14.0",
 		"axios": "^0.26.1"
 	}
 }

@@ -69,7 +69,7 @@ export const shortenUrlNode = createNodeDescriptor({
                 dependencies: ["connection"],
                 resolverFunction: async ({ api, config }) => {
                     try {
-                        const projectsResponse = await api.httpRequest({
+                        const groupsResponse = await api.httpRequest({
                             method: "GET",
                             url: `https://api-ssl.bitly.com/v4/groups?organization_guid=${config.connection.organizationId}`,
                             headers: {
@@ -79,7 +79,7 @@ export const shortenUrlNode = createNodeDescriptor({
                         });
 
                         // map file list to "options array"
-                        return projectsResponse?.data?.data?.map((group: IBitlyGroup) => {
+                        return groupsResponse?.data?.groups?.map((group: IBitlyGroup) => {
                             if (group?.is_active) {
                                 return {
                                     label: group?.name,

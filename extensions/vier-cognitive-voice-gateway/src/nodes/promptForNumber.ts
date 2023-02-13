@@ -131,7 +131,7 @@ export const promptForNumberNode = createNodeDescriptor({
       timeout: convertDuration(config.timeout),
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      bargeIn: convertBargeIn(config),
+      bargeIn: convertBargeIn(api, config),
       type: {
         name: 'Number',
         submitInputs: config.useSubmitInputs ? submitInputs : undefined,

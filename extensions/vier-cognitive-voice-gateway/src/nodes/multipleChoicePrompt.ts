@@ -104,7 +104,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       timeout: convertDuration(config.timeout),
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      bargeIn: convertBargeIn(config),
+      bargeIn: convertBargeIn(api, config),
       type: {
         name: 'MultipleChoice',
         choices: config.choices,

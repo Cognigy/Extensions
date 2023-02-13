@@ -24,13 +24,19 @@ export default {
             phraseListDescription: {
                 'default': "A list of spoken phrases that trigger barge-in",
             },
+            phraseListFromContextDescription: {
+                'default': "A context key that supplies a list of phrases",
+            },
+            phraseListFromContextLabel: {
+                'default': "Phrase List from Context",
+            },
             phraseListLabel: {
                 'default': "Phrase List",
             },
         },
         section: {
             label: {
-                'default': "Barge-Int",
+                'default': "Barge-In",
             },
         },
     },

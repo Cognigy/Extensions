@@ -357,7 +357,7 @@ export const speakNode = createNodeDescriptor({
 
     const payload = {
       interpretAs: 'SSML',
-      bargeIn: convertBargeIn(config),
+      bargeIn: convertBargeIn(api, config),
     };
     cognigy.api.say(text, payload);
   },

@@ -76,7 +76,7 @@ export const playNode = createNodeDescriptor({
     const payload = {
       status: 'play',
       url: config.url,
-      bargeIn: convertBargeIn(config),
+      bargeIn: convertBargeIn(api, config),
       fallbackText: normalizeText(config.fallbackText),
     };
 

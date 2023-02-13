@@ -86,9 +86,13 @@ export function convertBargeIn(api: INodeExecutionAPI, inputs: BargeInInputs): B
   let phraseSet = new Set<string>();
   if (Array.isArray(inputs.bargeInPhraseList)) {
     for (const phrase of inputs.bargeInPhraseList) {
-      const trimmed = phrase.trim();
-      if (trimmed.length > 0) {
-        phraseSet.add(trimmed);
+      if (typeof phrase === 'string') {
+        const trimmed = phrase.trim();
+        if (trimmed.length > 0) {
+          phraseSet.add(trimmed);
+        }
+      } else {
+        api.log('error', `Discarded a phrase from the UI: ${phrase}`);
       }
     }
   }

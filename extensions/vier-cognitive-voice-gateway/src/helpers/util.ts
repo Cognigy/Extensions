@@ -1,5 +1,3 @@
-import { BargeInInputs } from "../common/shared";
-
 export function normalizeText(text) {
   if (!text) {
     return undefined;
@@ -83,13 +81,4 @@ export function delay(durationMillis: number, block: () => void): Promise<void> 
       resolve();
     }, durationMillis);
   });
-}
-
-export type BargeInOptions = { onSpeech: boolean, onDtmf: boolean };
-
-export function convertBargeIn(inputs: BargeInInputs): BargeInOptions {
-  return {
-    onSpeech: !!inputs.bargeInOnSpeech,
-    onDtmf: !!inputs.bargeInOnDtmf,
-  };
 }

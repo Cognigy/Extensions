@@ -4,14 +4,16 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  bargeInFieldKeys,
-  BargeInInputs,
-  promptFields,
-} from '../common/shared';
-import {
-  convertBargeIn,
   convertDuration,
 } from "../helpers/util";
+import {
+  bargeInFields,
+  bargeInForm,
+  BargeInInputs,
+  bargeInSection,
+  convertBargeIn,
+} from "../common/bargeIn";
+import { promptFields } from "../common/prompt";
 
 interface INumberPromptNodeInputs extends BargeInInputs {
   text: string,
@@ -38,6 +40,7 @@ export const promptForNumberNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
+    ...bargeInFields,
     {
       type: 'toggle',
       key: 'useSubmitInputs',
@@ -87,9 +90,10 @@ export const promptForNumberNode = createNodeDescriptor({
       label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
+    bargeInSection,
     {
       key: 'additional',
-      fields: ['language', 'synthesizers', ...bargeInFieldKeys],
+      fields: ['language', 'synthesizers'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -103,6 +107,7 @@ export const promptForNumberNode = createNodeDescriptor({
       key: 'stopCondition',
       type: 'section',
     },
+    bargeInForm,
     {
       key: 'additional',
       type: 'section',

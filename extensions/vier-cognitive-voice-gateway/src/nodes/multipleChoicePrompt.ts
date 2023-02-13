@@ -3,18 +3,26 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools';
 import t from '../translations';
-import { promptFields } from '../common/shared';
 import { convertDuration } from "../helpers/util";
+import {
+  bargeInFields,
+  bargeInForm,
+  BargeInInputs,
+  bargeInSection,
+  convertBargeIn,
+} from "../common/bargeIn";
+import { promptFields } from "../common/prompt";
+
+interface IMultipleChoicePromptNodeInputs extends BargeInInputs {
+  text: string,
+  timeout: number,
+  language?: string,
+  synthesizers?: Array<string>,
+  choices: object,
+}
 
 export interface IMultipleChoicePromptParams extends INodeFunctionBaseParams {
-  config: {
-    text: string,
-    timeout: number,
-    language?: string | null,
-    synthesizers?: Array<string>,
-    bargeIn?: boolean,
-    choices: object,
-  };
+  config: IMultipleChoicePromptNodeInputs;
 }
 
 export const promptForMultipleChoice = createNodeDescriptor({
@@ -27,6 +35,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
+    ...bargeInFields,
     {
       type: 'json',
       label: t.multipleChoicePrompt.inputChoicesLabel,
@@ -64,9 +73,10 @@ export const promptForMultipleChoice = createNodeDescriptor({
       label: t.multipleChoicePrompt.sectionChoicesSectionLabel,
       defaultCollapsed: false,
     },
+    bargeInSection,
     {
       key: 'additional',
-      fields: ['language', 'synthesizers', 'bargeIn'],
+      fields: ['language', 'synthesizers'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -80,6 +90,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       key: 'choicesSection',
       type: 'section',
     },
+    bargeInForm,
     {
       key: 'additional',
       type: 'section',
@@ -93,7 +104,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       timeout: convertDuration(config.timeout),
       language: config.language || null,
       synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      bargeIn: !!config.bargeIn,
+      bargeIn: convertBargeIn(config),
       type: {
         name: 'MultipleChoice',
         choices: config.choices,

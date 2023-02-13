@@ -1,6 +1,39 @@
 /* tslint:disable:quotemark */
 // This code is generated!
 export default {
+    bargeIn: {
+        input: {
+            confidenceDescription: {
+                'default': "The transcription confidence that must be reached for barge-in",
+            },
+            confidenceLabel: {
+                'default': "Confidence Threshold",
+            },
+            onDtmfDescription: {
+                'default': "Allows the audio to be interrupted by pressing keys",
+            },
+            onDtmfLabel: {
+                'default': "On DTMF",
+            },
+            onSpeechDescription: {
+                'default': "Allows the audio to be interrupted by the speaker",
+            },
+            onSpeechLabel: {
+                'default': "On Speech",
+            },
+            phraseListDescription: {
+                'default': "A list of spoken phrases that trigger barge-in",
+            },
+            phraseListLabel: {
+                'default': "Phrase List",
+            },
+        },
+        section: {
+            label: {
+                'default': "Barge-Int",
+            },
+        },
+    },
     bridge: {
         inputExtensionLengthDescription: {
             'default': "Select the size of the extension range from which VIER Cognitive Voice Gateway should select a phone number from.",
@@ -227,22 +260,6 @@ export default {
         inputAcceptAnsweringMachinesLabel: {
             'default': "Accept Answering Machines",
             'deDE': "Anrufbeantworter akzeptieren",
-        },
-        inputBargeInOnDtmfDescription: {
-            'default': "To allow the caller to interrupt the audio file by pressing keys, activate this checkbox.",
-            'deDE': "Damit der:die Anrufer:in die Audiodatei durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
-        },
-        inputBargeInOnDtmfLabel: {
-            'default': "Allow the caller to interrupt the audio file by pressing keys",
-            'deDE': "Dem:Der Anrufer:in erlauben, die Audiodatei durch Drücken von Tasten zu unterbrechen",
-        },
-        inputBargeInOnSpeechDescription: {
-            'default': "To allow the speaker to interrupt the audio file, activate this checkbox.",
-            'deDE': "Damit der:die Sprecher:in die Audiodatei unterbrechen kann, aktivieren Sie diese Checkbox.",
-        },
-        inputBargeInOnSpeechLabel: {
-            'default': "Allow the speaker to interrupt the audio file by speaking",
-            'deDE': "Dem:Der Sprecher:in erlauben, die Audiodatei durch Sprechen zu unterbrechen",
         },
         inputCallerIdDescription: {
             'default': "Enter the phone number that should be displayed to the callee. (This is a best-effort option. A correct display can not be guaranteed.)",

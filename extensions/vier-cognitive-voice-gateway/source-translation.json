@@ -83,10 +83,6 @@
         "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
         "inputSynthesizersLabel": "Synthesizers",
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
-        "inputBargeInOnSpeechLabel": "Barge-In on Speech",
-        "inputBargeInOnSpeechDescription": "Allows the audio to be interrupted by the speaker",
-        "inputBargeInOnDtmfLabel": "Barge-In on DTMF",
-        "inputBargeInOnDtmfDescription": "Allows the audio to be interrupted by pressing keys",
         "inputCallerIdLabel": "Displayed Caller ID",
         "inputCallerIdDescription": "The phone number displayed to the callee. (This is a best-effort option, correct display can not be guaranteed)",
         "inputCustomSipHeadersLabel": "Custom SIP Headers",
@@ -107,6 +103,21 @@
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default"
+    },
+    "bargeIn": {
+      "input": {
+        "onSpeechLabel": "On Speech",
+        "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
+        "onDtmfLabel": "On DTMF",
+        "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
+        "confidenceLabel": "Confidence Threshold",
+        "confidenceDescription": "The transcription confidence that must be reached for barge-in",
+        "phraseListLabel": "Phrase List",
+        "phraseListDescription": "A list of spoken phrases that trigger barge-in"
+      },
+      "section": {
+        "label": "Barge-In"
+      }
     },
     "speak": {
         "nodeLabel": "Speak out (SSML)",

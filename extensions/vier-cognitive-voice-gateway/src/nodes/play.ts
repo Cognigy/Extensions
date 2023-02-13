@@ -4,14 +4,15 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertBargeIn,
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFieldKeys,
   bargeInFields,
+  bargeInForm,
   BargeInInputs,
-} from "../common/shared";
+  bargeInSection,
+  convertBargeIn,
+} from "../common/bargeIn";
 
 interface IPlayNodeInputs extends BargeInInputs {
   url: string,
@@ -56,26 +57,18 @@ export const playNode = createNodeDescriptor({
   sections: [
     {
       key: 'general',
-      fields: ['url'],
+      fields: ['url', 'fallbackText'],
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
-    {
-      key: 'additional',
-      fields: [...bargeInFieldKeys, 'fallbackText'],
-      label: t.forward.sectionAdditionalSettingsLabel,
-      defaultCollapsed: true,
-    },
+    bargeInSection,
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
-    {
-      key: 'additional',
-      type: 'section',
-    },
+    bargeInForm,
   ],
   function: async ({ cognigy, config }: IPlayNodeParams) => {
     const { api } = cognigy;

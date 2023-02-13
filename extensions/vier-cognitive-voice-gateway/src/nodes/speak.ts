@@ -4,14 +4,15 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertBargeIn,
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFieldKeys,
   bargeInFields,
+  bargeInForm,
   BargeInInputs,
-} from "../common/shared";
+  bargeInSection,
+  convertBargeIn,
+} from "../common/bargeIn";
 
 interface ISpeakNodeInputs extends BargeInInputs {
   text: string,
@@ -293,6 +294,7 @@ export const speakNode = createNodeDescriptor({
       label: t.forward.sectionGeneralLabel,
       defaultCollapsed: false,
     },
+    bargeInSection,
     // {
     //   fields: ['additionalText'],
     //   key: 'textOptions',
@@ -305,18 +307,13 @@ export const speakNode = createNodeDescriptor({
     //   label: 'Optionen',
     //   defaultCollapsed: true,
     // },
-    {
-      key: 'additional',
-      fields: [...bargeInFieldKeys, 'timeout'],
-      label: t.forward.sectionAdditionalDataLabel,
-      defaultCollapsed: true,
-    },
   ],
   form: [
     {
       key: 'general',
       type: 'section',
     },
+    bargeInForm,
     // {
     //   key: 'textOptions',
     //   type: 'section'
@@ -325,10 +322,6 @@ export const speakNode = createNodeDescriptor({
     //   key: 'sendOptions',
     //   type: 'section'
     // },
-    {
-      key: 'additional',
-      type: 'section',
-    },
   ],
   function: async ({ cognigy, config }: ISpeakNodeParams) => {
     const { api } = cognigy;

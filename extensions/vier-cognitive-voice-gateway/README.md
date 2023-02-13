@@ -365,6 +365,11 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Choices</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
+		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
@@ -399,11 +404,6 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Choices</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
 		</tr>
 	</tbody>
 </table>
@@ -569,7 +569,7 @@ After a successful bridge, the bot will not receive further messages and will no
 ### Arguments
 <i>None.</i>
 
-## Node: Terminate Call
+## Node: End Call
  
 > Hangs up the call.
 

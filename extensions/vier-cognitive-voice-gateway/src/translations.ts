@@ -36,7 +36,8 @@ export default {
         },
         section: {
             label: {
-                'default': "Barge-In",
+                'default': "Barge-in",
+                'deDE': "Barge-in",
             },
         },
     },

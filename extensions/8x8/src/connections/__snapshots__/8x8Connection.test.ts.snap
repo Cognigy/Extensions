@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`8x8Connection should match snapshot 1`] = `
+{
+  "fields": [
+    {
+      "fieldName": "tenantId",
+    },
+    {
+      "fieldName": "crmApiUsername",
+    },
+    {
+      "fieldName": "crmApiPassword",
+    },
+    {
+      "fieldName": "dataRequestToken",
+    },
+    {
+      "fieldName": "actionRequestToken",
+    },
+    {
+      "fieldName": "clusterBaseUrl",
+    },
+  ],
+  "label": "8x8",
+  "type": "eightbyeight",
+}
+`;

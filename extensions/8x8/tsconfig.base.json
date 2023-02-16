@@ -1,0 +1,30 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "build",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "watch": false,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "./vscode",
+    "scripts",
+  ],
+  "include": [
+    "../../common/cognigy.d.ts",
+    "src/**/*",
+    "tsconfig.json"
+  ]
+}

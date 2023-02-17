@@ -23,13 +23,6 @@ export const bargeInFields: Array<INodeField> = [
     defaultValue: false,
   },
   {
-    type: 'toggle',
-    key: 'bargeInOnDtmf',
-    label: t.bargeIn.input.onDtmfLabel,
-    description: t.bargeIn.input.onDtmfDescription,
-    defaultValue: false,
-  },
-  {
     type: 'number',
     key: 'bargeInConfidence',
     label: t.bargeIn.input.confidenceLabel,
@@ -65,6 +58,13 @@ export const bargeInFields: Array<INodeField> = [
       key: 'bargeInOnSpeech',
       value: true,
     },
+  },
+  {
+    type: 'toggle',
+    key: 'bargeInOnDtmf',
+    label: t.bargeIn.input.onDtmfLabel,
+    description: t.bargeIn.input.onDtmfDescription,
+    defaultValue: false,
   },
 ];
 

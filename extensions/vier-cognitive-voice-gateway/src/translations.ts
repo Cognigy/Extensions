@@ -4,7 +4,7 @@ export default {
     bargeIn: {
         input: {
             confidenceDescription: {
-                'default': "The transcription confidence that must be reached for barge-in",
+                'default': "The Speech-to-Text confidence that must be reached for barge-in",
             },
             confidenceLabel: {
                 'default': "Confidence Threshold",
@@ -20,6 +20,7 @@ export default {
             },
             onSpeechLabel: {
                 'default': "On Speech",
+                'deDE': "Beim Sprechen",
             },
             phraseListDescription: {
                 'default': "A list of spoken phrases that trigger barge-in",

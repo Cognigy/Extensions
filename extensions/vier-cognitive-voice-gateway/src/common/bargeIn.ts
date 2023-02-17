@@ -39,6 +39,10 @@ export const bargeInFields: Array<INodeField> = [
       min: 0,
       max: 100,
     },
+    condition: {
+      key: 'bargeInOnSpeech',
+      value: true,
+    },
   },
   {
     type: 'textArray',
@@ -46,6 +50,10 @@ export const bargeInFields: Array<INodeField> = [
     label: t.bargeIn.input.phraseListLabel,
     description: t.bargeIn.input.phraseListDescription,
     defaultValue: undefined,
+    condition: {
+      key: 'bargeInOnSpeech',
+      value: true,
+    },
   },
   {
     type: 'cognigyText',
@@ -53,6 +61,10 @@ export const bargeInFields: Array<INodeField> = [
     label: t.bargeIn.input.phraseListFromContextLabel,
     description: t.bargeIn.input.phraseListFromContextDescription,
     defaultValue: undefined,
+    condition: {
+      key: 'bargeInOnSpeech',
+      value: true,
+    },
   },
 ];
 

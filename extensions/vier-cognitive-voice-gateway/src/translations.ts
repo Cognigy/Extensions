@@ -4,35 +4,44 @@ export default {
     bargeIn: {
         input: {
             confidenceDescription: {
-                'default': "The Speech-to-Text confidence that must be reached for barge-in",
+                'default': "Enter the threshold value that individual transcribed utterances of the call partner must reach for the bot to be interrupted. 70% and higher are recommended values.",
+                'deDE': "Geben Sie den Schwellenwert ein, den einzelne transkribierte Aussagen des:der Gesprächspartners:in ereichen müssen, damit der Bot unterbrochen wird. Empfehlenswert sind Werte ab 70%.",
             },
             confidenceLabel: {
-                'default': "Confidence Threshold",
+                'default': "Confidence Threshold [in percent %]",
+                'deDE': "Konfidenzintervall [in Prozent %]",
             },
             onDtmfDescription: {
-                'default': "Allows the audio to be interrupted by pressing keys",
+                'default': "To allow the call partner to interrupt the bot by pressing keys, select this checkbox.",
+                'deDE': "Damit der:dieGesprächspartner:in den Bot durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
             },
             onDtmfLabel: {
-                'default': "On DTMF",
+                'default': "By pressing keys",
+                'deDE': "Durch Drücken von Tasten",
             },
             onSpeechDescription: {
-                'default': "Allows the audio to be interrupted by the speaker",
+                'default': "To allow the call partner to interrupt the bot by speaking, select this checkbox.",
+                'deDE': "Damit der:die Gesprächspartner:in den Bot durch Sprechen unterbrechen kann, aktivieren Sie diese Checkbox.",
             },
             onSpeechLabel: {
-                'default': "On Speech",
-                'deDE': "Beim Sprechen",
+                'default': "By speaking",
+                'deDE': "Durch Sprechen",
             },
             phraseListDescription: {
-                'default': "A list of spoken phrases that trigger barge-in",
+                'default': "Enter the words and phrases that trigger a barge-in.",
+                'deDE': "Geben Sie die Wörter und Sätze ein, die ein Barge-in auslösen sollen.",
             },
             phraseListFromContextDescription: {
-                'default': "A context key that supplies a list of phrases",
+                'default': "Enter the key for which a phrase list is stored at Context. If this node contains a phrase list, then it will be merged with the referenced phrase list.",
+                'deDE': "Geben Sie den Schlüssel ein, für den bei Context eine Begriffsliste hinterlegt ist. Wenn dieser Knoten eine Begriffsliste enthält, wird diese mit der referenzierten Begriffsliste zusammengeführt.",
             },
             phraseListFromContextLabel: {
                 'default': "Phrase List from Context",
+                'deDE': "Begriffsliste aus Context",
             },
             phraseListLabel: {
                 'default': "Phrase List",
+                'deDE': "Begriffsliste",
             },
         },
         section: {

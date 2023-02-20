@@ -1,0 +1,490 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`schedule > getSchedulesNode should create the nodes for schedule 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Check Schedule",
+    "dependencies": {
+      "children": [
+        "onOpenSchedule",
+        "onClosedSchedule",
+        "onChoice1",
+        "onChoice2",
+        "onChoice3",
+        "onChoice4",
+        "onChoice5",
+        "onChoice6",
+      ],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 Check Schedule Connection",
+        "params": {
+          "connectionType": "eightbyeight",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "The ID of the schedule",
+        "key": "scheduleNameToID",
+        "label": "Schedules",
+        "optionsResolver": {
+          "dependencies": [
+            "connection",
+          ],
+          "resolverFunction": [Function],
+        },
+        "params": {
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "contextKey",
+        "label": {
+          "default": "Context Key to store Result",
+        },
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "scheduleNameToID",
+        "type": "field",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "getSchedule",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Schedule open",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onOpenSchedule",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Schedule closed",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onClosedSchedule",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 1 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice1",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 2 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice2",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 3 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice3",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 4 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice4",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 5 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice5",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Choice 6 Schedule",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getSchedule",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onChoice6",
+  },
+]
+`;

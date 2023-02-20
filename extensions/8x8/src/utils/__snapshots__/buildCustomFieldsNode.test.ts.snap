@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils > buildCustomFieldsNode should create the nodes for customer logic 1`] = `
+{
+  "defaultValue": {},
+  "description": "Custom fields and their parameter names are added by the administrator of the tenant.",
+  "key": "filter$customFields",
+  "label": "Custom Fields",
+  "type": "json",
+}
+`;

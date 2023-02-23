@@ -6,6 +6,11 @@ import { updateContactNode } from "./nodes/updateContact";
 import { createContactNode } from "./nodes/createContact";
 import { findContactNode } from "./nodes/findContact";
 import { createEngagementNode } from "./nodes/createEngagement";
+import { getAllCompaniesNode } from "./nodes/getAllCompanies";
+import { getAllCompanyDealsNode } from "./nodes/getAllCompanyDeals";
+import { getCompanyNode } from "./nodes/getCompany";
+import { getContactAndOwnerNode } from "./nodes/getContactAndOwner";
+import { getDealNode } from "./nodes/getDeal";
 
 /* import all connections */
 import { hubspotConnection } from "./connections/hubspot";
@@ -20,7 +25,12 @@ export default createExtension({
 		createContactNode,
 		createCompanyNode,
 		updateCompanyNode,
-		createEngagementNode
+		createEngagementNode,
+		getAllCompaniesNode,
+		getAllCompanyDealsNode,
+		getCompanyNode,
+		getContactAndOwnerNode,
+		getDealNode
 	],
 
 	connections: [

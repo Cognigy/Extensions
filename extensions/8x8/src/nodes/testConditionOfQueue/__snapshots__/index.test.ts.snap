@@ -1,0 +1,300 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test condition of queue > getTestConditionOfQueueNode should create the nodes for test condition of queue 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Test Condition of Queue",
+    "dependencies": {
+      "children": [
+        "onConditionMatched",
+        "onConditionNotMatched",
+      ],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 CRM Connection",
+        "params": {
+          "connectionType": "eightbyeight",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "Select the queue",
+        "key": "selectQueueId",
+        "label": "Select the queue",
+        "optionsResolver": {
+          "dependencies": [
+            "connection",
+          ],
+          "resolverFunction": [Function],
+        },
+        "params": {
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "description": "There are NO agents: Available, busy, working offline, or on break",
+        "key": "thereAreNoAgentsToggle",
+        "label": "There are NO agents:",
+        "type": "toggle",
+      },
+      {
+        "condition": {
+          "key": "thereAreNoAgentsToggle",
+          "value": true,
+        },
+        "description": "Select option",
+        "key": "thereAreNoAgentsValue",
+        "label": "Select option",
+        "params": {
+          "options": [
+            {
+              "label": "Available",
+              "value": "Available",
+            },
+            {
+              "label": "Available or busy",
+              "value": "AvailableorBusy",
+            },
+            {
+              "label": "Available, busy or working offline",
+              "value": "AvailableBusyOrWorkingOffline",
+            },
+            {
+              "label": "Available, busy, working offline, or on break",
+              "value": "AvailableBusyWorkingOfflineOrOnBreak",
+            },
+            {
+              "label": "Logged in (assigned but may not be enabled)",
+              "value": "LoggedIn",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "description": "The number of interactions in queue ahead of this interaction.",
+        "key": "numberOfInteractionsInQueueAheadOfThisInteractionToggle",
+        "label": "The number of interactions waiting ahead of this interaction is greater than:",
+        "type": "toggle",
+      },
+      {
+        "condition": {
+          "key": "numberOfInteractionsInQueueAheadOfThisInteractionToggle",
+          "value": true,
+        },
+        "description": "The number of interactions in queue ahead of this interaction",
+        "key": "numberOfInteractionsInQueueAheadOfThisInteractionValue",
+        "label": "Number of interactions",
+        "params": {
+          "required": true,
+        },
+        "type": "number",
+      },
+      {
+        "description": "There is an interaction in this queue that has been waiting longer than (seconds)",
+        "key": "thereIsAnInteractionInThisQueueThatHasBeenWaitingLongerThanToggle",
+        "label": "There is an interaction in this queue that has been waiting longer than",
+        "type": "toggle",
+      },
+      {
+        "condition": {
+          "key": "thereIsAnInteractionInThisQueueThatHasBeenWaitingLongerThanToggle",
+          "value": true,
+        },
+        "description": "Number of seconds",
+        "key": "thereIsAnInteractionInThisQueueThatHasBeenWaitingLongerThanValueInSeconds",
+        "label": "Number of seconds",
+        "params": {
+          "required": true,
+        },
+        "type": "number",
+      },
+      {
+        "description": "The "expected-wait-time" test is useful when there are more than 20 active equivalent agents. Mathematical uncertainty, with fewer than 20 active, is likely to produce unreliable results.",
+        "key": "theInstantaneousExpectedWaitTimeCalculationExceedsToggle",
+        "label": "The instantaneous expected-wait-time* calculation exceeds",
+        "type": "toggle",
+      },
+      {
+        "condition": {
+          "key": "theInstantaneousExpectedWaitTimeCalculationExceedsToggle",
+          "value": true,
+        },
+        "description": "Number of seconds",
+        "key": "theInstantaneousExpectedWaitTimeCalculationExceedsValueInSeconds",
+        "label": "Number of seconds",
+        "params": {
+          "required": true,
+        },
+        "type": "number",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "selectQueueId",
+        "type": "field",
+      },
+      {
+        "key": "thereAreNoAgentsToggle",
+        "type": "field",
+      },
+      {
+        "key": "thereAreNoAgentsValue",
+        "type": "field",
+      },
+      {
+        "key": "numberOfInteractionsInQueueAheadOfThisInteractionToggle",
+        "type": "field",
+      },
+      {
+        "key": "numberOfInteractionsInQueueAheadOfThisInteractionValue",
+        "type": "field",
+      },
+      {
+        "key": "thereIsAnInteractionInThisQueueThatHasBeenWaitingLongerThanToggle",
+        "type": "field",
+      },
+      {
+        "key": "thereIsAnInteractionInThisQueueThatHasBeenWaitingLongerThanValueInSeconds",
+        "type": "field",
+      },
+      {
+        "key": "theInstantaneousExpectedWaitTimeCalculationExceedsToggle",
+        "type": "field",
+      },
+      {
+        "key": "theInstantaneousExpectedWaitTimeCalculationExceedsValueInSeconds",
+        "type": "field",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [],
+    "summary": "Test Condition of Queue",
+    "tags": [],
+    "tokens": [],
+    "type": "testConditionOfQueue",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Condition matched",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "testConditionOfQueue",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onConditionMatched",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Condition not matched",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "testConditionOfQueue",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onConditionNotMatched",
+  },
+]
+`;

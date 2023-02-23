@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createBasicChildNode should create a basic child node 1`] = `
+{
+  "_id": undefined,
+  "appearance": {
+    "color": "#61d188",
+    "showIcon": true,
+    "textColor": "white",
+    "variant": "mini",
+  },
+  "behavior": {
+    "entrypoint": false,
+    "stopping": false,
+  },
+  "constraints": {
+    "collapsable": false,
+    "creatable": false,
+    "deletable": false,
+    "editable": false,
+    "movable": false,
+    "placement": {
+      "children": {
+        "whitelist": [],
+      },
+      "predecessor": {
+        "whitelist": [],
+      },
+      "successor": {},
+    },
+  },
+  "defaultLabel": "Get Customer",
+  "dependencies": {
+    "children": [],
+  },
+  "fields": [],
+  "form": [],
+  "function": null,
+  "parentType": "getCustomer",
+  "preview": undefined,
+  "sections": [],
+  "summary": "",
+  "tags": [],
+  "tokens": [],
+  "type": "getCustomer",
+}
+`;

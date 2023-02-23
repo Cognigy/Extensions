@@ -1,0 +1,289 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`customer > getCustomerNodes should create the nodes for customer logic 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Get Customer",
+    "dependencies": {
+      "children": [
+        "onFoundCustomer",
+        "onNotFoundCustomer",
+      ],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 CRM Connection",
+        "params": {
+          "connectionType": "eightbyeight",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "Filter the customer by first name. Maximum 30 characters",
+        "key": "filter$firstName",
+        "label": "First Name",
+        "type": "cognigyText",
+      },
+      {
+        "description": "Filter the customer by last name. Maximum 30 characters",
+        "key": "filter$lastName",
+        "label": "Last Name",
+        "type": "cognigyText",
+      },
+      {
+        "description": "Filter the customer by email. Maximum 55 characters",
+        "key": "filter$email",
+        "label": "Email",
+        "type": "cognigyText",
+      },
+      {
+        "description": "Filter the customer by voice. Maximum 38 characters",
+        "key": "filter$voice",
+        "label": "Voice",
+        "type": "cognigyText",
+      },
+      {
+        "description": "Filter the customer by company. Maximum 50 characters",
+        "key": "filter$company",
+        "label": "Company",
+        "type": "cognigyText",
+      },
+      {
+        "description": "Account number of the customer who is related to the case",
+        "key": "filter$accountNum",
+        "label": "Account Number",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The contact type must be one valid type (not deactivated) as defined in Configuration Manager.
+    The list of possible values is defined by the administrator of the tenant.",
+        "key": "filter$customerType",
+        "label": "Customer Type",
+        "type": "cognigyText",
+      },
+      {
+        "defaultValue": {},
+        "description": "Custom fields and their parameter names are added by the administrator of the tenant.",
+        "key": "filter$customFields",
+        "label": "Custom Fields",
+        "type": "json",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "customer",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "customer",
+        "key": "contextKey",
+        "label": {
+          "default": "Context Key to store Result",
+        },
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "filter$firstName",
+        "type": "field",
+      },
+      {
+        "key": "filter$lastName",
+        "type": "field",
+      },
+      {
+        "key": "filter$email",
+        "type": "field",
+      },
+      {
+        "key": "filter$voice",
+        "type": "field",
+      },
+      {
+        "key": "filter$company",
+        "type": "field",
+      },
+      {
+        "key": "filter$accountNum",
+        "type": "field",
+      },
+      {
+        "key": "filter$customerType",
+        "type": "field",
+      },
+      {
+        "key": "filter$customFields",
+        "type": "field",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "Retrieves customer details from 8x8 CRM",
+    "tags": [],
+    "tokens": [],
+    "type": "getCustomer",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Customer found",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getCustomer",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onFoundCustomer",
+  },
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#61d188",
+      "showIcon": true,
+      "textColor": "white",
+      "variant": "mini",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": false,
+      "deletable": false,
+      "editable": false,
+      "movable": false,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {
+          "whitelist": [],
+        },
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Customer not found",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [],
+    "form": [],
+    "function": null,
+    "parentType": "getCustomer",
+    "preview": undefined,
+    "sections": [],
+    "summary": "",
+    "tags": [],
+    "tokens": [],
+    "type": "onNotFoundCustomer",
+  },
+]
+`;

@@ -1,18 +1,16 @@
 {
-	"name": "bitly",
+	"name": "raffle",
 	"version": "4.0.0",
-	"description": "Integrates with Bitly",
+	"description": "Integrates with Raffle",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz bitly.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz raffle.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
 	"keywords": [
-		"Shorten URL",
-		"URL",
-		"Link"
+		"Search"
 	],
 	"repository": {
 		"type": "git",

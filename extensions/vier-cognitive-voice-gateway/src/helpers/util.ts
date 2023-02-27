@@ -1,3 +1,5 @@
+import { INodeExecutionAPI } from "@cognigy/extension-tools/build/interfaces/descriptor";
+
 export function normalizeText(text) {
   if (!text) {
     return undefined;
@@ -31,11 +33,19 @@ export function convertDuration(timeout: number | undefined): number | undefined
 
 export type Data = { [key: string]: string }
 
-export function normalizeData(dataObject: object | undefined): Data | undefined {
+export function normalizeData(api: INodeExecutionAPI, dataObject: object | undefined): Data | undefined {
   if (!dataObject) {
     return undefined;
   }
 
+  if (typeof dataObject === "string") {
+    try {
+      dataObject = JSON.parse(dataObject)
+    } catch (e) {
+      api.log('error', `Failed parse data as JSON: ${e}`)
+      return undefined;
+    }
+  }
   let entries = Object.entries(dataObject);
   if (entries.length == 0) {
     return undefined;
@@ -43,7 +53,7 @@ export function normalizeData(dataObject: object | undefined): Data | undefined 
 
   let output: Data = {};
   for (const [key, value] of entries) {
-    output[key] = `${value}`;
+    output[key] = typeof value === 'string' ? value : JSON.stringify(value);
   }
   return output;
 }

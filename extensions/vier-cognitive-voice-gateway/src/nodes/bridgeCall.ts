@@ -94,7 +94,7 @@ export const bridgeCallNode = createNodeDescriptor({
       customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
       ringTimeout: convertDuration(config.ringTimeout),
       acceptAnsweringMachines: config.acceptAnsweringMachines,
-      data: normalizeData(config.data),
+      data: normalizeData(api, config.data),
       whispering: convertWhisperText(config.whisperingText),
       experimentalEnableRingingTone: config.experimentalEnableRingingTone,
     };

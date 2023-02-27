@@ -34,7 +34,7 @@ export const sendDataNode = createNodeDescriptor({
     const { api } = cognigy;
     const payload = {
       status: 'data',
-      data: normalizeData(config.data) ?? {},
+      data: normalizeData(api, config.data) ?? {},
     };
     api.say('', payload);
   },

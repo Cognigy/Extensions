@@ -208,7 +208,7 @@ export const getConversationNode = createNodeDescriptor({
 			throw new Error(`${me}: Please supply one or both of: User ID and/or Session ID.`);
 
 
-		const reqUrl = `${odataBaseUrl}/v2.0/ChatHistory?${odataPredicates.join("&")}&apikey=${apiKey}`;
+		const reqUrl = `${odataBaseUrl}/v2.3/Conversations?${odataPredicates.join("&")}&apikey=${apiKey}`;
 		// Log the URL, but obscure a chunk of the apiKey:
 		LOG("Request URL:" + reqUrl.substring(0, reqUrl.length - 20) + " <...apiKey>");
 

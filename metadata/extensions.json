@@ -232,9 +232,9 @@
     {
       "name": "cognigy",
       "label": "Cognigy Customs",
-      "version": "4.1.5",
+      "version": "4.1.6",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/cognigy",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy415/cognigy.tar.gz",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy416/cognigy.tar.gz",
       "description": "Contains various Cognigy Flow Node extensions",
       "longDescription": "Next to the natively provided Flow Nodes in Cognigy.AI, this Extension exposes custom functions which use Cognigy-related APIs and systems.",
       "tags": [

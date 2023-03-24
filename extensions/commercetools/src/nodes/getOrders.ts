@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios from "axios";
 const qs = require("qs");
 
-export interface IGetCustomerParams extends INodeFunctionBaseParams {
+export interface IGetOrdersParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             projectKey: string;
@@ -13,8 +13,7 @@ export interface IGetCustomerParams extends INodeFunctionBaseParams {
             authUrl: string;
         };
         filter: string;
-        firstName: string;
-        lastName: string;
+        orderNumber: string;
         email: string;
         storeLocation: string;
         contextKey: string;
@@ -22,15 +21,15 @@ export interface IGetCustomerParams extends INodeFunctionBaseParams {
     };
 }
 
-export const getCustomerNode = createNodeDescriptor({
-    type: "getCustomer",
+export const getOrdersNode = createNodeDescriptor({
+    type: "getOrders",
     defaultLabel: {
-        default: "Get Customer",
-        deDE: "Kunde suchen"
+        default: "Get Orders",
+        deDE: "Bestellungen suchen"
     },
     summary: {
-        default: "Receives the customer data based on filters",
-        deDE: "Sucht mit Filtern nach dem Kunden",
+        default: "Receives the order data based on filters",
+        deDE: "Sucht mit Filtern nach Bestellungen",
     },
     fields: [
         {
@@ -53,8 +52,8 @@ export const getCustomerNode = createNodeDescriptor({
                 required: true,
                 options: [
                     {
-                        label: "Name",
-                        value: "name"
+                        label: "Order Number",
+                        value: "orderNumber"
                     },
                     {
                         label: "E-Mail",
@@ -64,10 +63,10 @@ export const getCustomerNode = createNodeDescriptor({
             }
         },
         {
-            key: "firstName",
+            key: "orderNumber",
             label: {
-                default: "First Name",
-                deDE: "Vorname"
+                default: "Order Number",
+                deDE: "Bestellnummer"
             },
             type: "cognigyText",
             params: {
@@ -75,22 +74,7 @@ export const getCustomerNode = createNodeDescriptor({
             },
             condition: {
                 key: "filter",
-                value: "name"
-            }
-        },
-        {
-            key: "lastName",
-            label: {
-                default: "Last Name",
-                deDE: "Nachname"
-            },
-            type: "cognigyText",
-            params: {
-                required: true,
-            },
-            condition: {
-                key: "filter",
-                value: "name"
+                value: "orderNumber"
             }
         },
         {
@@ -175,8 +159,7 @@ export const getCustomerNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "filter" },
-        { type: "field", key: "firstName" },
-        { type: "field", key: "lastName" },
+        { type: "field", key: "orderNumber" },
         { type: "field", key: "email" },
         { type: "section", key: "storage" }
     ],
@@ -185,13 +168,13 @@ export const getCustomerNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onFoundCustomer",
-            "onNotFoundCustomer"
+            "onFoundOrders",
+            "onNotFoundOrders"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IGetCustomerParams) => {
+    function: async ({ cognigy, config, childConfigs }: IGetOrdersParams) => {
         const { api } = cognigy;
-        const { connection, filter, firstName, lastName, email, storeLocation, contextKey, inputKey } = config;
+        const { connection, filter, orderNumber, email, storeLocation, contextKey, inputKey } = config;
         const { projectKey, clientId, secret, scope, authUrl, apiUrl } = connection;
 
         try {
@@ -216,15 +199,15 @@ export const getCustomerNode = createNodeDescriptor({
             });
 
             let filterQueryString = "";
-            if (filter === "name") {
-                filterQueryString = `where=firstName%20%3D%20%3AfirstName&var.firstName=${firstName}&where=lastName%20%3D%20%3AlastName&var.lastName=${lastName}`;
+            if (filter === "orderNumber") {
+                filterQueryString = `where=orderNumber%20%3D%20%3AorderNumber&var.orderNumber=${orderNumber}`;
             } else if (filter === "email") {
-                filterQueryString = `where=email%20%3D%20%3Aemail&var.email=${email}`;
+                filterQueryString = `where=customerEmail%20%3D%20%3AcustomerEmail&var.customerEmail=${email}`;
             }
 
             const response = await axios({
                 method: "GET",
-                url: `${apiUrl}/${projectKey}/customers?${filterQueryString}`,
+                url: `${apiUrl}/${projectKey}/orders?${filterQueryString}`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -233,7 +216,7 @@ export const getCustomerNode = createNodeDescriptor({
             });
 
             if (response.data?.results?.length !== 0) {
-                const onSuccessChild = childConfigs.find(child => child.type === "onFoundCustomer");
+                const onSuccessChild = childConfigs.find(child => child.type === "onFoundOrders");
                 api.setNextNode(onSuccessChild.id);
 
                 if (storeLocation === "context") {
@@ -243,11 +226,11 @@ export const getCustomerNode = createNodeDescriptor({
                     api.addToInput(inputKey, response.data.results);
                 }
             } else {
-                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomer");
+                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundOrders");
                 api.setNextNode(onErrorChild.id);
             }
         } catch (error) {
-            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomer");
+            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundOrders");
             api.setNextNode(onErrorChild.id);
             api.log("error", error.message);
         }
@@ -255,9 +238,9 @@ export const getCustomerNode = createNodeDescriptor({
 });
 
 
-export const onFoundCustomer = createNodeDescriptor({
-    type: "onFoundCustomer",
-    parentType: "getCustomer",
+export const onFoundOrders = createNodeDescriptor({
+    type: "onFoundOrders",
+    parentType: "getOrders",
     defaultLabel: {
         default: "Found",
         deDE: "Gefunden",
@@ -280,9 +263,9 @@ export const onFoundCustomer = createNodeDescriptor({
     }
 });
 
-export const onNotFoundCustomer = createNodeDescriptor({
-    type: "onNotFoundCustomer",
-    parentType: "getCustomer",
+export const onNotFoundOrders = createNodeDescriptor({
+    type: "onNotFoundOrders",
+    parentType: "getOrders",
     defaultLabel: {
         default: "Not Found",
         deDE: "Nicht Gefunden"

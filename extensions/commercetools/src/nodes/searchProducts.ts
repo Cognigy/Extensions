@@ -2,7 +2,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios from "axios";
 const qs = require("qs");
 
-export interface IGetCustomerParams extends INodeFunctionBaseParams {
+export interface ISearchProductsParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             projectKey: string;
@@ -12,25 +12,23 @@ export interface IGetCustomerParams extends INodeFunctionBaseParams {
             apiUrl: string;
             authUrl: string;
         };
-        filter: string;
-        firstName: string;
-        lastName: string;
-        email: string;
+        text: string;
+        limit: string;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
     };
 }
 
-export const getCustomerNode = createNodeDescriptor({
-    type: "getCustomer",
+export const searchProductsNode = createNodeDescriptor({
+    type: "searchProducts",
     defaultLabel: {
-        default: "Get Customer",
-        deDE: "Kunde suchen"
+        default: "Search Products",
+        deDE: "Produkte suchen"
     },
     summary: {
-        default: "Receives the customer data based on filters",
-        deDE: "Sucht mit Filtern nach dem Kunden",
+        default: "Searches for products",
+        deDE: "Sucht nach Produkten",
     },
     fields: [
         {
@@ -45,67 +43,20 @@ export const getCustomerNode = createNodeDescriptor({
             }
         },
         {
-            key: "filter",
-            label: "Filter",
-            type: "select",
-            defaultValue: "name",
+            key: "text",
+            label: "Text",
+            type: "cognigyText",
             params: {
-                required: true,
-                options: [
-                    {
-                        label: "Name",
-                        value: "name"
-                    },
-                    {
-                        label: "E-Mail",
-                        value: "email"
-                    }
-                ]
+                required: true
             }
         },
         {
-            key: "firstName",
-            label: {
-                default: "First Name",
-                deDE: "Vorname"
-            },
+            key: "limit",
+            label: "Limit",
             type: "cognigyText",
+            defaultValue: "10",
             params: {
                 required: true,
-            },
-            condition: {
-                key: "filter",
-                value: "name"
-            }
-        },
-        {
-            key: "lastName",
-            label: {
-                default: "Last Name",
-                deDE: "Nachname"
-            },
-            type: "cognigyText",
-            params: {
-                required: true,
-            },
-            condition: {
-                key: "filter",
-                value: "name"
-            }
-        },
-        {
-            key: "email",
-            label: {
-                default: "E-Mail Address",
-                deDE: "E-Mail Adresse"
-            },
-            type: "cognigyText",
-            params: {
-                required: true,
-            },
-            condition: {
-                key: "filter",
-                value: "email"
             }
         },
         {
@@ -174,10 +125,8 @@ export const getCustomerNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "filter" },
-        { type: "field", key: "firstName" },
-        { type: "field", key: "lastName" },
-        { type: "field", key: "email" },
+        { type: "field", key: "text" },
+        { type: "field", key: "limit" },
         { type: "section", key: "storage" }
     ],
     appearance: {
@@ -185,13 +134,13 @@ export const getCustomerNode = createNodeDescriptor({
     },
     dependencies: {
         children: [
-            "onFoundCustomer",
-            "onNotFoundCustomer"
+            "onFoundProducts",
+            "onNotFoundProducts"
         ]
     },
-    function: async ({ cognigy, config, childConfigs }: IGetCustomerParams) => {
+    function: async ({ cognigy, config, childConfigs }: ISearchProductsParams) => {
         const { api } = cognigy;
-        const { connection, filter, firstName, lastName, email, storeLocation, contextKey, inputKey } = config;
+        const { connection, text, limit, storeLocation, contextKey, inputKey } = config;
         const { projectKey, clientId, secret, scope, authUrl, apiUrl } = connection;
 
         try {
@@ -215,16 +164,9 @@ export const getCustomerNode = createNodeDescriptor({
                 data
             });
 
-            let filterQueryString = "";
-            if (filter === "name") {
-                filterQueryString = `where=firstName%20%3D%20%3AfirstName&var.firstName=${firstName}&where=lastName%20%3D%20%3AlastName&var.lastName=${lastName}`;
-            } else if (filter === "email") {
-                filterQueryString = `where=email%20%3D%20%3Aemail&var.email=${email}`;
-            }
-
             const response = await axios({
                 method: "GET",
-                url: `${apiUrl}/${projectKey}/customers?${filterQueryString}`,
+                url: `${apiUrl}/${projectKey}/product-projections/search?limit=${limit}&text.en-US="${text}"`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
@@ -233,7 +175,7 @@ export const getCustomerNode = createNodeDescriptor({
             });
 
             if (response.data?.results?.length !== 0) {
-                const onSuccessChild = childConfigs.find(child => child.type === "onFoundCustomer");
+                const onSuccessChild = childConfigs.find(child => child.type === "onFoundProducts");
                 api.setNextNode(onSuccessChild.id);
 
                 if (storeLocation === "context") {
@@ -243,11 +185,11 @@ export const getCustomerNode = createNodeDescriptor({
                     api.addToInput(inputKey, response.data.results);
                 }
             } else {
-                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomer");
+                const onErrorChild = childConfigs.find(child => child.type === "onNotFoundProducts");
                 api.setNextNode(onErrorChild.id);
             }
         } catch (error) {
-            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundCustomer");
+            const onErrorChild = childConfigs.find(child => child.type === "onNotFoundProducts");
             api.setNextNode(onErrorChild.id);
             api.log("error", error.message);
         }
@@ -255,9 +197,9 @@ export const getCustomerNode = createNodeDescriptor({
 });
 
 
-export const onFoundCustomer = createNodeDescriptor({
-    type: "onFoundCustomer",
-    parentType: "getCustomer",
+export const onFoundProducts = createNodeDescriptor({
+    type: "onFoundProducts",
+    parentType: "searchProducts",
     defaultLabel: {
         default: "Found",
         deDE: "Gefunden",
@@ -280,9 +222,9 @@ export const onFoundCustomer = createNodeDescriptor({
     }
 });
 
-export const onNotFoundCustomer = createNodeDescriptor({
-    type: "onNotFoundCustomer",
-    parentType: "getCustomer",
+export const onNotFoundProducts = createNodeDescriptor({
+    type: "onNotFoundProducts",
+    parentType: "searchProducts",
     defaultLabel: {
         default: "Not Found",
         deDE: "Nicht Gefunden"

@@ -47,7 +47,7 @@ export const getOrdersNode = createNodeDescriptor({
             key: "filter",
             label: "Filter",
             type: "select",
-            defaultValue: "name",
+            defaultValue: "orderNumber",
             params: {
                 required: true,
                 options: [

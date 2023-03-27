@@ -10,13 +10,13 @@ import {
 } from "./shared";
 
 export interface TransferCallInputs extends EndFlowInputs {
-  callerId?: string
-  customSipHeaders?: object
-  ringTimeout?: number
-  acceptAnsweringMachines?: boolean
-  data?: object
-  experimentalEnableRingingTone?: boolean
-  whisperingText?: string
+  callerId?: string;
+  customSipHeaders?: object;
+  ringTimeout?: number;
+  acceptAnsweringMachines?: boolean;
+  data?: object;
+  experimentalEnableRingingTone?: boolean;
+  whisperingText?: string;
 }
 
 const callerIdField: INodeField = {

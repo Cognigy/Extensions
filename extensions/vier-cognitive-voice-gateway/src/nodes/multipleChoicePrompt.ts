@@ -3,7 +3,10 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools';
 import t from '../translations';
-import { convertDuration } from "../helpers/util";
+import {
+  convertDuration,
+  normalizeTextArray,
+} from "../helpers/util";
 import {
   bargeInFields,
   bargeInForm,
@@ -96,14 +99,18 @@ export const promptForMultipleChoice = createNodeDescriptor({
       type: 'section',
     },
   ],
+  preview: {
+    key: 'text',
+    type: 'text',
+  },
   function: async ({ cognigy, config }: IMultipleChoicePromptParams) => {
     const { api } = cognigy;
 
     const payload = {
       status: 'prompt',
       timeout: convertDuration(config.timeout),
-      language: config.language || null,
-      synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
+      language: config.language ? config.language : undefined,
+      synthesizers: normalizeTextArray(config.synthesizers),
       bargeIn: convertBargeIn(api, config),
       type: {
         name: 'MultipleChoice',

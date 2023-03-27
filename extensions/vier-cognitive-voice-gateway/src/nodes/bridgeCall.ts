@@ -19,12 +19,12 @@ import {
 } from "../common/transferCall";
 
 interface IBridgeCallInputs extends TransferCallInputs {
-  headNumber: string
-  extensionLength: number
+  headNumber: string;
+  extensionLength: number;
 }
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
-  config: IBridgeCallInputs
+  config: IBridgeCallInputs;
 }
 
 export const bridgeCallNode = createNodeDescriptor({

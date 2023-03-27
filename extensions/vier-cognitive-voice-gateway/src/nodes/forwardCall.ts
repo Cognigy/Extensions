@@ -19,11 +19,11 @@ import {
 } from "../common/transferCall";
 
 interface IForwardCallInputs extends TransferCallInputs {
-  destinationNumber: string
+  destinationNumber: string;
 }
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
-  config: IForwardCallInputs
+  config: IForwardCallInputs;
 }
 
 export const forwardCallNode = createNodeDescriptor({

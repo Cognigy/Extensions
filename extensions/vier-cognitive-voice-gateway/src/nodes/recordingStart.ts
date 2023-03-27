@@ -75,7 +75,7 @@ export const recordingStartNode = createNodeDescriptor({
         speakers = ['AGENT'];
         break;
       default:
-        speakers = ['CUSTOMER', 'AGENT']
+        speakers = ['CUSTOMER', 'AGENT'];
         break;
     }
 

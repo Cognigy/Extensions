@@ -17,7 +17,6 @@
     "bridge": {
         "nodeLabel": "Bridge Call",
         "nodeSummary": "Bridge the call to a different destination for agent assistance",
-        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
         "inputHeadNumberLabel": "Head Number",
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
@@ -33,7 +32,12 @@
     "promptForNumber": {
         "nodeLabel": "Get Number from Caller",
         "nodeSummary": "Say something to the call with a prompt to enter a number",
-        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached"
+        "inputMaxDigitsLabel": "Maximum Allowed Digits",
+        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached.",
+        "inputMinDigitsLabel": "Minimum Allowed Digits",
+        "inputMinDigitsDescription": "The minimum amount of digits that are required for this prompt to complete successfully. If this property is set, the prompt completes successfully if at least as many digits were entered.",
+        "inputSubmitInputsLabel": "Submit Inputs",
+        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#"
     },
     "play": {
         "nodeLabel": "Play Audio File",
@@ -67,14 +71,7 @@
     "shared": {
         "inputRecordingIdDescription": "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
         "inputRecordingIdLabel": "Recording ID",
-        "inputMaxDigitsLabel": "Maximum Allowed Digits",
         "sectionStopConditionLabel": "Stop Condition",
-        "inputUseSubmitInputsLabel": "Use Submit Inputs",
-        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
-        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
-        "inputUseMaxDigitsLabel": "Use Max Digits",
-        "inputSubmitInputsLabel": "Submit Inputs",
-        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
         "inputTextLabel": "Message",
         "inputTextDescription": "The message to introduce the prompt to the caller",
         "inputTimeoutLabel": "Timeout",

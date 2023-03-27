@@ -68,10 +68,6 @@ export default {
             'default': "Phone Number Prefix",
             'deDE': "Rufnummernvorwahl",
         },
-        inputMaxDigitsDescription: {
-            'default': "Enter the maximum amount of digits the phone number can have. If set, the input ends once the maximum has been reached.",
-            'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, dann endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
-        },
         nodeLabel: {
             'default': "Forward Call to a Contact Center",
             'deDE': "Anruf an ein Contact Center weiterleiten",
@@ -125,7 +121,7 @@ export default {
             'deDE': "Auswahlmöglichkeiten",
         },
         nodeLabel: {
-            'default': "Get Multiple Choice Answer from Caller",
+            'default': "Ask Customer Multiple Choice Question",
             'deDE': "Multiple-Choice-Antwort von dem:der Anrufer:in erhalten",
         },
         nodeSummary: {
@@ -175,11 +171,26 @@ export default {
     },
     promptForNumber: {
         inputMaxDigitsDescription: {
-            'default': "Enter the maximum number of digits the phone number can have. If this option is enabled, the input ends as soon as the maximum number is reached.",
+            'default': "Enter the amount of digits the number can have. If this option is enabled, the input ends as soon as the amount of digits is reached.",
             'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
+        inputMaxDigitsLabel: {
+            'default': "Maximum Allowed Digits",
+        },
+        inputMinDigitsDescription: {
+            'default': "The minimum amount of digits required for this prompt to complete successfully. If this property is set, the prompt completes successfully if at least as many digits were entered.",
+        },
+        inputMinDigitsLabel: {
+            'default': "Minimum Required Digits",
+        },
+        inputSubmitInputsDescription: {
+            'default': "One or more synonyms to end an number input, such as DTMF_#",
+        },
+        inputSubmitInputsLabel: {
+            'default': "Submit Inputs",
+        },
         nodeLabel: {
-            'default': "Get Number from Caller",
+            'default': "Ask Customer for Number",
             'deDE': "Nummer von dem:der Anrufer:in erhalten",
         },
         nodeSummary: {
@@ -326,10 +337,6 @@ export default {
             'default': "Language",
             'deDE': "Sprache",
         },
-        inputMaxDigitsLabel: {
-            'default': "Maximum Allowed Digits",
-            'deDE': "Maximal erlaubte Ziffernanzahl",
-        },
         inputRecordingIdDescription: {
             'default': "Enter an arbitrary string to identify the call recording if multiple call recordings are created in the same dialog.",
             'deDE': "Geben Sie einen beliebigen String zur Identifizierung der Gesprächsaufzeichnung ein, wenn mehrere Gesprächsaufzeichnungen im selben Dialog erstellt werden.",
@@ -345,14 +352,6 @@ export default {
         inputRingTimeoutLabel: {
             'default': "Ring Timeout (in s)",
             'deDE': "Zeitüberschreitung beim Klingeln (in s)",
-        },
-        inputSubmitInputsDescription: {
-            'default': "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
-            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
-        },
-        inputSubmitInputsLabel: {
-            'default': "Submit Inputs",
-            'deDE': "Eingaben übermitteln",
         },
         inputSynthesizersDescription: {
             'default': "If specified, this parameter overwrites the Text-to-Speech list from the project settings.",
@@ -377,22 +376,6 @@ export default {
         inputTimeoutLabel: {
             'default': "Timeout",
             'deDE': "Zeitüberschreitung",
-        },
-        inputUseMaxDigitsDescription: {
-            'default': "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
-            'deDE': "Um die Eigenschaft „Maximale Ziffernanzahl“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
-        },
-        inputUseMaxDigitsLabel: {
-            'default': "Use Maximum Digits",
-            'deDE': "„Maximale Ziffernanzahl“ verwenden",
-        },
-        inputUseSubmitInputsDescription: {
-            'default': "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
-            'deDE': "Um die Eigenschaft „Eingaben übermitteln” als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
-        },
-        inputUseSubmitInputsLabel: {
-            'default': "Use Submit Inputs",
-            'deDE': "„Eingaben übermitteln“ verwenden",
         },
         inputWhisperingTextDescription: {
             'default': "Enter the text that should be announced to the agent the call is transfered to before the call partners are connected.",

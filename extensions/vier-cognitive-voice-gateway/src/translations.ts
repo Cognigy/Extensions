@@ -122,7 +122,7 @@ export default {
         },
         nodeLabel: {
             'default': "Ask Customer Multiple Choice Question",
-            'deDE': "Multiple-Choice-Antwort von dem:der Anrufer:in erhalten",
+            'deDE': "Stelle dem Kunden eine Multiple-Choice-Frage",
         },
         nodeSummary: {
             'default': "Say something to the call with a multiple choice prompt",
@@ -191,7 +191,7 @@ export default {
         },
         nodeLabel: {
             'default': "Ask Customer for Number",
-            'deDE': "Nummer von dem:der Anrufer:in erhalten",
+            'deDE': "Frage den Kunden nach einer Nummer",
         },
         nodeSummary: {
             'default': "Say something to the caller with a prompt to enter a number",

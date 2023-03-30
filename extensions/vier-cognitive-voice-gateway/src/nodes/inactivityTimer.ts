@@ -29,8 +29,8 @@ export const inactivityTimerNode = createNodeDescriptor({
       description: t.timer.enableTimerDescription,
       defaultValue: true,
       params: {
-        required: true
-      }
+        required: true,
+      },
     },
     {
       type: 'number',
@@ -68,7 +68,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IInactivityTimerParams) => {
     const { api } = cognigy;
 
-    let payload: object
+    let payload: object;
     if (config.enable) {
       const timeout = convertDuration(config.timeout);
       if (!timeout) {

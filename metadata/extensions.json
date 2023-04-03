@@ -794,6 +794,12 @@
           "defaultLabel": "Spellcheck",
           "description": "Check the spelling of a given text",
           "tags": ["azure", "check", "spelling"]
+        },
+        {
+          "type": "transcribeWhatsAppVoiceMessage",
+          "defaultLabel": "Transcribe WhatsApp Voice Message",
+          "description": "Transcribes a WhatsApp voice message",
+          "tags": []
         }
       ]
     },

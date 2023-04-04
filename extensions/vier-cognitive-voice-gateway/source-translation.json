@@ -17,7 +17,6 @@
     "bridge": {
         "nodeLabel": "Bridge Call",
         "nodeSummary": "Bridge the call to a different destination for agent assistance",
-        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached",
         "inputHeadNumberLabel": "Head Number",
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
@@ -33,7 +32,12 @@
     "promptForNumber": {
         "nodeLabel": "Get Number from Caller",
         "nodeSummary": "Say something to the call with a prompt to enter a number",
-        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached"
+        "inputMaxDigitsLabel": "Maximum Allowed Digits",
+        "inputMaxDigitsDescription": "The maximum amount of digits the number can have. If this property is set, input terminates once the limit has been reached.",
+        "inputMinDigitsLabel": "Minimum Allowed Digits",
+        "inputMinDigitsDescription": "The minimum amount of digits that are required for this prompt to complete successfully. If this property is set, the prompt completes successfully if at least as many digits were entered.",
+        "inputSubmitInputsLabel": "Submit Inputs",
+        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#"
     },
     "play": {
         "nodeLabel": "Play Audio File",
@@ -67,14 +71,7 @@
     "shared": {
         "inputRecordingIdDescription": "An arbitrary string to idetnify the the recording in case multiple recordings are created in the same dialog",
         "inputRecordingIdLabel": "Recording ID",
-        "inputMaxDigitsLabel": "Maximum Allowed Digits",
         "sectionStopConditionLabel": "Stop Condition",
-        "inputUseSubmitInputsLabel": "Use Submit Inputs",
-        "inputUseSubmitInputsDescription": "Use the Submit Inputs property as a stop condition",
-        "inputUseMaxDigitsDescription": "Use the Maximum Digits property as a stop condition",
-        "inputUseMaxDigitsLabel": "Use Max Digits",
-        "inputSubmitInputsLabel": "Submit Inputs",
-        "inputSubmitInputsDescription": "One or more synonyms to end an number input, such as DTMF_#",
         "inputTextLabel": "Message",
         "inputTextDescription": "The message to introduce the prompt to the caller",
         "inputTimeoutLabel": "Timeout",
@@ -83,10 +80,6 @@
         "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
         "inputSynthesizersLabel": "Synthesizers",
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
-        "inputBargeInOnSpeechLabel": "Barge-In on Speech",
-        "inputBargeInOnSpeechDescription": "Allows the audio to be interrupted by the speaker",
-        "inputBargeInOnDtmfLabel": "Barge-In on DTMF",
-        "inputBargeInOnDtmfDescription": "Allows the audio to be interrupted by pressing keys",
         "inputCallerIdLabel": "Displayed Caller ID",
         "inputCallerIdDescription": "The phone number displayed to the callee. (This is a best-effort option, correct display can not be guaranteed)",
         "inputCustomSipHeadersLabel": "Custom SIP Headers",
@@ -107,6 +100,23 @@
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default"
+    },
+    "bargeIn": {
+      "input": {
+        "onSpeechLabel": "On Speech",
+        "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
+        "onDtmfLabel": "On DTMF",
+        "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
+        "confidenceLabel": "Confidence Threshold",
+        "confidenceDescription": "The transcription confidence that must be reached for barge-in",
+        "phraseListLabel": "Phrase List",
+        "phraseListDescription": "A list of spoken phrases that trigger barge-in",
+        "phraseListFromContextLabel": "Phrase List from Context",
+        "phraseListFromContextDescription": "A context key that supplies a list of phrases"
+      },
+      "section": {
+        "label": "Barge-In"
+      }
     },
     "speak": {
         "nodeLabel": "Speak out (SSML)",

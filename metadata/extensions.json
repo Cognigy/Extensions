@@ -794,6 +794,12 @@
           "defaultLabel": "Spellcheck",
           "description": "Check the spelling of a given text",
           "tags": ["azure", "check", "spelling"]
+        },
+        {
+          "type": "transcribeWhatsAppVoiceMessage",
+          "defaultLabel": "Transcribe WhatsApp Voice Message",
+          "description": "Transcribes a WhatsApp voice message",
+          "tags": []
         }
       ]
     },
@@ -1437,10 +1443,10 @@
     {
       "name": "vier-voice",
       "label": "VIER Voice",
-      "version": "4.3.0",
+      "version": "4.4.0",
       "description": "Enable phone bots with VIER Cognitive Voice Gateway",
       "longDescription": "Enable phone bots with VIER Cognitive Voice Gateway.",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vier-voice430/vier_voice.tar.gz",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vier-voice440/vier_voice.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/vier-cognitive-voice-gateway",
       "tags": ["voice", "phone"],
       "icon": "data:image/png;base64,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",
@@ -1509,6 +1515,12 @@
           "type": "terminate",
           "defaultLabel": "Terminate Call",
           "description": "Drop the call",
+          "tags": []
+        },
+        {
+          "type": "stopPlayAudioFile",
+          "defaultLabel": "Stop Audio Playback",
+          "description": "Stop the audio playback",
           "tags": []
         }
       ]
@@ -1858,6 +1870,68 @@
             "description": "This node allows you to check the state of the Contact Center schedule and route interactions accordingly.",
             "tags": []
           }
+      ]
+    },
+    {
+      "name": "commercetools",
+      "label": "commercetools",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/commercetools400/commercetools.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/commercetools",
+      "description": "Integrates with commercetools",
+      "longDescription": "With this Extension, the Cognigy.AI Virtual Agent is able to manage customer orders or suggest products based on the users' ideas. Therefore, it could be used in e-commerce use-cases on a website/app or within a physical store in order to assist the store manager with stock information.",
+      "tags": ["E-Commerce", "Retail", "Orders", "Products", "Store"],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAIS0lEQVR4nO2beVAUVx7Hf6+P6blxlCAJFAEJwRWE4EKMBFErMZZuotkcQizdSkzp6loxpWv2MGGNuhsT3IKsxitGza4WYkxSiglapRtC1MIDD0AEhCXKJQOMA3Nf3W//iIMIwzA90z2z2fLzF9X93u99+0PPTPd73QhCQMnN+rjNDeeX253OHIaiejW0bMfC2PiD8+PT+4KdBQVzsDWXTqU09PWsqNF3LR28T0VL9I8qR216OW7c/jfinuwMVibRBWCMyfllh58wss4N9QbdnJHa0wRhnzQqsjAtInLHn5KyWsTOJ5qA0sZGprj7WmpDr36v1mpK8qfGtLEx/7JYHXmHZ84XTYTgAr7AtZKuOsu0T25cPGxjXWFC1EwMG3PhIYn0xcemvqR9HyFOiJpuBBOAMUbb6irfLqw/l89iTAtVtx+EsIqi21aOz5i15PFf1glWNtACGGPJkopvCn7oalnkYFm1EKG8gzCJoPP1+LRlealZJQFX87fj2c6miHU1FQWtZuPzdoFOdb7ISbotMyJ6y2eZL2z2twZvAUXNNSmF189v7HPaZzo4VubvwEKioGhtjCLsQOkzr61FCDn49PVZwMbq089+29r4xy67aTqHgeIfU3ykJGlmKLp4w4Qp784bN1HrSx+vAsowpg6fO/5ybV/36lsWQwZgHNQLJ3+hEOGMkCkPvRabnP/WL9JrvLX1eEBHu+tVu6ov53RbLWu77ZY4cWIGh3FKzZFE1ZiPd2TOKfe0f4iApWeOLajQd2w1OuyjxY8XPGKVYWeTVeHLP8n81X1nBDG4YVlXy+f/bwcPAHDT1Pd0WU/LlspB1yhDBGQpw2kK/Sw+6rygCMKSPCr8aDpCzoHbhxzp1aoqbGAd8FHndaizGoADHLyUIkAAck4Ojyoqyv71Uk8/kR4FuP+2cizs6W6CU8ag3Z0KSm5s8h/MWtuWrXPm2Idr41WAGyPrhBOGDjiou/VzOCO4lx4dnxsvizq+IinJNFJjnwS4MbEuOG3qgv26H8HCuQINKigaibQ9Xq1ZvCn7lfIEhIb9jw+GlwA3Vo6FC+YeKL5zC247rXyzCkqMIuy8BOC9k7N+U4YQYvn290uAGyfm4KJZB1/rW6HJbuQ7dkDEKcJKYtWagn2Zcz1e4PhKQALccIChxtILX+lboMbaK9q3BImQ6yGp8tCC+AmbVyZOrhKipiACBtJoM8KX+ha4ZNGBCwujQkKQVjklKV6fOvW9eTHjOwQpehfBBbjROm2wX/cjVFp0YON4fzQBAEBB0d3RCnXR30YlvpOenu4cuQd/RBPgxsaxsKenCSpMPWDy8ZdDRlIdk8Ojt32eNfcDIbN4QnQBbjiMoVh/C3/b247MHkUgTCGkXRCbvHrDpOkHxcjgiaAJGEi5UYv/oW1AHGAAhLCSpLpXT8icvTgh9bLYYw8mJAIAAFiMwcK54I6cyLiSmHZZ6OluXwmZADepKSmUPxcwQjHkdjjYhPLgAf4HBISaBwJCHSDUPBAQ6gCh5oGAkI2MMRBOC+Cy95U4hCtOIVnjk+ia4JGyvwDhsoMlRdlHlFaVGzvP5qoin+4KdpagXgkqbpbj8Cv7EGk39G8jU1R3kxAuoJX1dPKShZLERYJMdviC+AI4FjS1X2D1f04i0tY7ZHe/gP5EBAuU9AYV/+paJm3VEUGzeEA0AYTdCKOrD4Ci9RyQjuHnC4cIuAdGEnUT8fC0LcyUjdsQEmemTXABtLETNNeKQd52Dgh25GcVvAjoB0nC2pFEs08as/xDlDrLHEi+IbUHb/BXANPTAKPqj4Ci/QIAj7lAXwT0Qyt7EaPagxOWFSjGzxNkbjAwAZgFeWc1Dqs/gmRar88hDAsvAW4I0kWoYncTUdnbmdS3r/k18F38EoBcDpB1XgZNzSFg+m4FMr5/AgZAjEk6SErCCiXTt1/0pz8vAYTDBLKOSzj8yl5ECrQQEqgAN0gZXYFJZoV89pdXEUI+n8U+CSAcJlA1n4LR1UWABF4TFEpAPxKVnh77xBx6bMIVlLByxDVCrwKQywZjLu8BdfO/hQ05AMEF3MNOPZabI0HNpSj902HXFDwKIO0GiKgoAKn2GiAs7lyliAJ+AiE7FTNzPZOZv8nj7sEb2ne9iZUtZwQ/1YdDdAFuCNpARGatlE0r/Od9mwe3U938wRWsgw8qnFONu86/gUd6SIqe8MzrSKbWBS9ZcEDMmEYqMv33aKSHpAAA8JmjKmPlzlzCov8zZ+wW9UFJsT8CSPHwGYIZ/RHz3IETCKEhp7bXiYjKykp6fN3eV+B27RpO35Y2Unt/EEsAkkeWoLFPfix7akOZ13a+FrQd++sLztrjq7BBmw0Yk4FH/AlhBSAXYtQl5MQVeUzC/Os+9eA7hOPsgQxH+daNnLl3OnAuhn/I+xFEAEEbkET1jezF3b9DKJ7Xq3d+n9K4qjTacjJ/O9unnQEuh9LfOgEJIBkdUkYVyWZ/tYbvewJuAn9lprNTYTm6aivbenU+sA4F3/7+3Q3SejJq6gfSrIK/8+98P0K+NEXYjuS967xQvA7A9+8IfgKQlZn42xwqedkxPyJ6rihUITe4bJ/U5tS96jq9dyd22eUjtfdJACm9Q8fNe5Y2PVWDZswQ9CpNtPl4XHlMbm7+LhvXf/8ZthqihmvnTQBSPHKJRORCyfMlN5BID1CI/+psYyNj+379FFbftpnTt6YP3u9JANIkfk0ymnXMjJ0Bzfb4QtBWZDDGhG3vm5mc8fY7rPbGXPf2e+sC4EJhj+8iwidulWbkNQQrV0iWpMwn8ifh+u/e4rRNi8hJESZCotqCx+Xslk9c3BrsLP8FCdpWePRgdh4AAAAASUVORK5CYII=",
+      "nodes": [
+        {
+          "type": "getCustomer",
+          "defaultLabel": "Get Customer",
+          "description": "Retrieve the customer information based on the full name or email address.",
+          "tags": []
+        },
+        {
+          "type": "getOrders",
+          "defaultLabel": "Get Orders",
+          "description": "Retrieve orders based on the order number or customer email address.",
+          "tags": []
+        },
+        {
+          "type": "searchProducts",
+          "defaultLabel": "Search Products",
+          "description": "Searches for products based on a user text.",
+          "tags": []
+        },
+        {
+            "type": "suggestProducts",
+            "defaultLabel": "Suggest Products",
+            "description": "If the customer does not know what they are searching for, the virtual agent cann suggest products based on a search text.",
+            "tags": []
+          }
+      ]
+    },
+    {
+      "name": "aleph-alpha",
+      "label": "Aleph Alpha",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/aleph-alpha400/aleph-alpha.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/aleph-alpha",
+      "description": "Integrates with Aleph Alpha Luminous language models",
+      "longDescription": "The Luminous series is a family of large language models. Large language models are powerful technological tools that can process and produce human text. They have acquired this ability by “reading” enormous amounts of human text data during training. Similar to someone reading a whole library and half of the internet, large language models have acquired a structural understanding of language and accumulated information about the world. With this Extension, those language models can be used within a virtual agent conversation on voice and chat channels.",
+      "tags": ["AI", "GPT", "LLM"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "answer",
+          "defaultLabel": "Answer Question",
+          "description": "Answers a question based on a given source text",
+          "tags": []
+        },
+        {
+          "type": "summarize",
+          "defaultLabel": "Summarize",
+          "description": "Creates a summary of a given text",
+          "tags": []
+        }
       ]
     }
   ]

@@ -1,6 +1,56 @@
 /* tslint:disable:quotemark */
 // This code is generated!
 export default {
+    bargeIn: {
+        input: {
+            confidenceDescription: {
+                'default': "Enter the threshold value that individual transcribed utterances of the call partner must reach for the bot to be interrupted. 70% and higher are recommended values.",
+                'deDE': "Geben Sie den Schwellenwert ein, den einzelne transkribierte Aussagen des:der Gesprächspartners:in ereichen müssen, damit der Bot unterbrochen wird. Empfehlenswert sind Werte ab 70%.",
+            },
+            confidenceLabel: {
+                'default': "Confidence Threshold [in percent %]",
+                'deDE': "Konfidenzintervall [in Prozent %]",
+            },
+            onDtmfDescription: {
+                'default': "To allow the call partner to interrupt the bot by pressing keys, select this checkbox.",
+                'deDE': "Damit der:dieGesprächspartner:in den Bot durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
+            },
+            onDtmfLabel: {
+                'default': "By pressing keys",
+                'deDE': "Durch Drücken von Tasten",
+            },
+            onSpeechDescription: {
+                'default': "To allow the call partner to interrupt the bot by speaking, select this checkbox.",
+                'deDE': "Damit der:die Gesprächspartner:in den Bot durch Sprechen unterbrechen kann, aktivieren Sie diese Checkbox.",
+            },
+            onSpeechLabel: {
+                'default': "By speaking",
+                'deDE': "Durch Sprechen",
+            },
+            phraseListDescription: {
+                'default': "Enter the words and phrases that trigger a barge-in.",
+                'deDE': "Geben Sie die Wörter und Sätze ein, die ein Barge-in auslösen sollen.",
+            },
+            phraseListFromContextDescription: {
+                'default': "Enter the key for which a phrase list is stored at Context. If this node contains a phrase list, then it will be merged with the referenced phrase list.",
+                'deDE': "Geben Sie den Schlüssel ein, für den bei Context eine Begriffsliste hinterlegt ist. Wenn dieser Knoten eine Begriffsliste enthält, wird diese mit der referenzierten Begriffsliste zusammengeführt.",
+            },
+            phraseListFromContextLabel: {
+                'default': "Phrase List from Context",
+                'deDE': "Begriffsliste aus Context",
+            },
+            phraseListLabel: {
+                'default': "Phrase List",
+                'deDE': "Begriffsliste",
+            },
+        },
+        section: {
+            label: {
+                'default': "Barge-in",
+                'deDE': "Barge-in",
+            },
+        },
+    },
     bridge: {
         inputExtensionLengthDescription: {
             'default': "Select the size of the extension range from which VIER Cognitive Voice Gateway should select a phone number from.",
@@ -17,10 +67,6 @@ export default {
         inputHeadNumberLabel: {
             'default': "Phone Number Prefix",
             'deDE': "Rufnummernvorwahl",
-        },
-        inputMaxDigitsDescription: {
-            'default': "Enter the maximum amount of digits the phone number can have. If set, the input ends once the maximum has been reached.",
-            'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, dann endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
         nodeLabel: {
             'default': "Forward Call to a Contact Center",
@@ -75,8 +121,8 @@ export default {
             'deDE': "Auswahlmöglichkeiten",
         },
         nodeLabel: {
-            'default': "Get Multiple Choice Answer from Caller",
-            'deDE': "Multiple-Choice-Antwort von dem:der Anrufer:in erhalten",
+            'default': "Ask Customer Multiple Choice Question",
+            'deDE': "Stelle dem Kunden eine Multiple-Choice-Frage",
         },
         nodeSummary: {
             'default': "Say something to the call with a multiple choice prompt",
@@ -125,12 +171,27 @@ export default {
     },
     promptForNumber: {
         inputMaxDigitsDescription: {
-            'default': "Enter the maximum number of digits the phone number can have. If this option is enabled, the input ends as soon as the maximum number is reached.",
+            'default': "Enter the amount of digits the number can have. If this option is enabled, the input ends as soon as the amount of digits is reached.",
             'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
+        inputMaxDigitsLabel: {
+            'default': "Maximum Allowed Digits",
+        },
+        inputMinDigitsDescription: {
+            'default': "The minimum amount of digits required for this prompt to complete successfully. If this property is set, the prompt completes successfully if at least as many digits were entered.",
+        },
+        inputMinDigitsLabel: {
+            'default': "Minimum Required Digits",
+        },
+        inputSubmitInputsDescription: {
+            'default': "One or more synonyms to end an number input, such as DTMF_#",
+        },
+        inputSubmitInputsLabel: {
+            'default': "Submit Inputs",
+        },
         nodeLabel: {
-            'default': "Get Number from Caller",
-            'deDE': "Nummer von dem:der Anrufer:in erhalten",
+            'default': "Ask Customer for Number",
+            'deDE': "Frage den Kunden nach einer Nummer",
         },
         nodeSummary: {
             'default': "Say something to the caller with a prompt to enter a number",
@@ -228,22 +289,6 @@ export default {
             'default': "Accept Answering Machines",
             'deDE': "Anrufbeantworter akzeptieren",
         },
-        inputBargeInOnDtmfDescription: {
-            'default': "To allow the caller to interrupt the audio file by pressing keys, activate this checkbox.",
-            'deDE': "Damit der:die Anrufer:in die Audiodatei durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
-        },
-        inputBargeInOnDtmfLabel: {
-            'default': "Allow the caller to interrupt the audio file by pressing keys",
-            'deDE': "Dem:Der Anrufer:in erlauben, die Audiodatei durch Drücken von Tasten zu unterbrechen",
-        },
-        inputBargeInOnSpeechDescription: {
-            'default': "To allow the speaker to interrupt the audio file, activate this checkbox.",
-            'deDE': "Damit der:die Sprecher:in die Audiodatei unterbrechen kann, aktivieren Sie diese Checkbox.",
-        },
-        inputBargeInOnSpeechLabel: {
-            'default': "Allow the speaker to interrupt the audio file by speaking",
-            'deDE': "Dem:Der Sprecher:in erlauben, die Audiodatei durch Sprechen zu unterbrechen",
-        },
         inputCallerIdDescription: {
             'default': "Enter the phone number that should be displayed to the callee. (This is a best-effort option. A correct display can not be guaranteed.)",
             'deDE': "Geben Sie die Rufnummer ein, die dem:der Angerufenen angezeigt werden soll. (Dies ist eine Best-Effort-Option. Eine korrekte Anzeige kann nicht garantiert werden.)",
@@ -292,10 +337,6 @@ export default {
             'default': "Language",
             'deDE': "Sprache",
         },
-        inputMaxDigitsLabel: {
-            'default': "Maximum Allowed Digits",
-            'deDE': "Maximal erlaubte Ziffernanzahl",
-        },
         inputRecordingIdDescription: {
             'default': "Enter an arbitrary string to identify the call recording if multiple call recordings are created in the same dialog.",
             'deDE': "Geben Sie einen beliebigen String zur Identifizierung der Gesprächsaufzeichnung ein, wenn mehrere Gesprächsaufzeichnungen im selben Dialog erstellt werden.",
@@ -311,14 +352,6 @@ export default {
         inputRingTimeoutLabel: {
             'default': "Ring Timeout (in s)",
             'deDE': "Zeitüberschreitung beim Klingeln (in s)",
-        },
-        inputSubmitInputsDescription: {
-            'default': "Select one or more characters with which the caller should confirm the phone number input. Allowed are digits from 0-9 and the special characters * and #. You can enter only one character per line.",
-            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
-        },
-        inputSubmitInputsLabel: {
-            'default': "Submit Inputs",
-            'deDE': "Eingaben übermitteln",
         },
         inputSynthesizersDescription: {
             'default': "If specified, this parameter overwrites the Text-to-Speech list from the project settings.",
@@ -343,22 +376,6 @@ export default {
         inputTimeoutLabel: {
             'default': "Timeout",
             'deDE': "Zeitüberschreitung",
-        },
-        inputUseMaxDigitsDescription: {
-            'default': "To use the \"Maximum Digits\" property as a stop condition, activate this checkbox.",
-            'deDE': "Um die Eigenschaft „Maximale Ziffernanzahl“ als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
-        },
-        inputUseMaxDigitsLabel: {
-            'default': "Use Maximum Digits",
-            'deDE': "„Maximale Ziffernanzahl“ verwenden",
-        },
-        inputUseSubmitInputsDescription: {
-            'default': "To use the \"Submit Inputs\" property as a stop condition, activate this checkbox.",
-            'deDE': "Um die Eigenschaft „Eingaben übermitteln” als Stoppbedingung zu verwenden, aktivieren Sie diese Checkbox.",
-        },
-        inputUseSubmitInputsLabel: {
-            'default': "Use Submit Inputs",
-            'deDE': "„Eingaben übermitteln“ verwenden",
         },
         inputWhisperingTextDescription: {
             'default': "Enter the text that should be announced to the agent the call is transfered to before the call partners are connected.",

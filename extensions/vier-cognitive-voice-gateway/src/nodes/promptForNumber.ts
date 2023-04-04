@@ -4,14 +4,19 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  bargeInFieldKeys,
-  BargeInInputs,
-  promptFields,
-} from '../common/shared';
-import {
-  convertBargeIn,
   convertDuration,
+  DEFAULT_NUMBER_VALUE,
+  normalizeInteger,
+  normalizeTextArray,
 } from "../helpers/util";
+import {
+  bargeInFields,
+  bargeInForm,
+  BargeInInputs,
+  bargeInSection,
+  convertBargeIn,
+} from "../common/bargeIn";
+import { promptFields } from "../common/prompt";
 
 interface INumberPromptNodeInputs extends BargeInInputs {
   text: string,
@@ -19,9 +24,8 @@ interface INumberPromptNodeInputs extends BargeInInputs {
   language?: string,
   synthesizers?: Array<string>,
   submitInputs?: Array<string>,
+  minDigits?: number,
   maxDigits?: number,
-  useSubmitInputs: boolean,
-  useMaxDigits: boolean
 }
 
 export interface INumberPromptNodeParams extends INodeFunctionBaseParams {
@@ -38,37 +42,29 @@ export const promptForNumberNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    {
-      type: 'toggle',
-      key: 'useSubmitInputs',
-      label: t.shared.inputUseSubmitInputsLabel,
-      description: t.shared.inputUseSubmitInputsDescription,
-    },
+    ...bargeInFields,
     {
       type: 'textArray',
       key: 'submitInputs',
-      label: t.shared.inputSubmitInputsLabel,
-      description: t.shared.inputSubmitInputsDescription,
-      condition: {
-        key: 'useSubmitInputs',
-        value: true,
-      },
+      label: t.promptForNumber.inputSubmitInputsLabel,
+      description: t.promptForNumber.inputSubmitInputsDescription,
     },
     {
-      type: 'toggle',
-      key: 'useMaxDigits',
-      label: t.shared.inputUseMaxDigitsLabel,
-      description: t.shared.inputUseMaxDigitsDescription,
+      type: 'number',
+      key: 'minDigits',
+      label: t.promptForNumber.inputMinDigitsLabel,
+      description: t.promptForNumber.inputMinDigitsDescription,
+      defaultValue: DEFAULT_NUMBER_VALUE,
+      params: {
+        min: 1,
+      },
     },
     {
       type: 'number',
       key: 'maxDigits',
-      label: t.shared.inputMaxDigitsLabel,
+      label: t.promptForNumber.inputMaxDigitsLabel,
       description: t.promptForNumber.inputMaxDigitsDescription,
-      condition: {
-        key: 'useMaxDigits',
-        value: true,
-      },
+      defaultValue: DEFAULT_NUMBER_VALUE,
       params: {
         min: 1,
       },
@@ -83,13 +79,14 @@ export const promptForNumberNode = createNodeDescriptor({
     },
     {
       key: 'stopCondition',
-      fields: ['useSubmitInputs', 'submitInputs', 'useMaxDigits', 'maxDigits'],
+      fields: ['submitInputs', 'minDigits', 'maxDigits'],
       label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
+    bargeInSection,
     {
       key: 'additional',
-      fields: ['language', 'synthesizers', ...bargeInFieldKeys],
+      fields: ['language', 'synthesizers'],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -103,17 +100,22 @@ export const promptForNumberNode = createNodeDescriptor({
       key: 'stopCondition',
       type: 'section',
     },
+    bargeInForm,
     {
       key: 'additional',
       type: 'section',
     },
   ],
+  preview: {
+    key: 'text',
+    type: 'text',
+  },
   function: async ({ cognigy, config }: INumberPromptNodeParams) => {
     const { api } = cognigy;
-    let submitInputs = undefined;
+    let submitInputs = normalizeTextArray(config.submitInputs);
 
-    if (Array.isArray(config.submitInputs)) {
-      submitInputs = config.submitInputs.map((input) => {
+    if (submitInputs) {
+      submitInputs = submitInputs.map(input => {
         if (input.match(/^[1234567890ABCD*#]$/i)) {
           return `DTMF_${input.toUpperCase()}`;
         }
@@ -124,13 +126,14 @@ export const promptForNumberNode = createNodeDescriptor({
     const payload = {
       status: 'prompt',
       timeout: convertDuration(config.timeout),
-      language: config.language || null,
-      synthesizers: config.synthesizers.length ? config.synthesizers : undefined,
-      bargeIn: convertBargeIn(config),
+      language: config.language ? config.language : undefined,
+      synthesizers: normalizeTextArray(config.synthesizers),
+      bargeIn: convertBargeIn(api, config),
       type: {
         name: 'Number',
-        submitInputs: config.useSubmitInputs ? submitInputs : undefined,
-        maxDigits: config.useMaxDigits ? config.maxDigits : undefined,
+        submitInputs: submitInputs,
+        minDigits: normalizeInteger(config.minDigits, undefined, undefined),
+        maxDigits: normalizeInteger(config.maxDigits, undefined, undefined),
       },
     };
     api.say(config.text, payload);

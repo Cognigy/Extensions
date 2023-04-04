@@ -55,7 +55,7 @@ export const terminateCallNode = createNodeDescriptor({
     const { api } = cognigy;
     const payload = {
       status: 'termination',
-      data: normalizeData(config.data),
+      data: normalizeData(api, config.data),
     };
     api.say('', payload);
     if (config.endFlow) {

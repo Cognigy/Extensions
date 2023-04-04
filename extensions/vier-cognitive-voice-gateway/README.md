@@ -29,14 +29,29 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller. To insert SSML tags mark the text and use the commands of the editor (Emphasize, Pause, Structure, Say as, Speech Rate, Speech Volume, Speech Pitch, Phoneme, Audio, Voice) </td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Your contract &lt;say-as interpret-as=&quot;characters&quot;&gt;{{context.contractno}}&lt;/say-as&gt; is beeing updated. &lt;break time=&quot;300ms&quot;&gt;Thank you.</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in confidence treshhold</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The minimum transcription confidence that must be reached to barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in phrase list</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of phrases that trigger a barge-in if at least one of this phrases is contained in the user utterance. </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
@@ -131,20 +146,35 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 			<td style="border: 1px solid #ddd; padding: 8px;">The URL of the audio file</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the speaker to interrupt the audio file by speaking</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the audio file by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Fallback text</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Text to be announced when the audio file cannot be played.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Welcome at VIER! </td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in confidence treshhold</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The minimum transcription confidence that must be reached to barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in phrase list</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of phrases that trigger a barge-in if at least one of this phrases is contained in the user utterance. </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
 </table>
@@ -264,13 +294,28 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in confidence treshhold</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The minimum transcription confidence that must be reached to barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in phrase list</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of phrases that trigger a barge-in if at least one of this phrases is contained in the user utterance. </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
@@ -320,6 +365,11 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Choices</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
+		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
@@ -331,19 +381,29 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by speaking</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by the speaker</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Allow the caller to interrupt the bot output by pressing keys</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the talking bot can be interrupted by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Choices</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in confidence treshhold</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The minimum transcription confidence that must be reached to barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in phrase list</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of phrases that trigger a barge-in if at least one of this phrases is contained in the user utterance. </td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
 </table>
@@ -509,7 +569,7 @@ After a successful bridge, the bot will not receive further messages and will no
 ### Arguments
 <i>None.</i>
 
-## Node: Terminate Call
+## Node: End Call
  
 > Hangs up the call.
 

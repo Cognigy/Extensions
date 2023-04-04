@@ -19,12 +19,12 @@ import {
 } from "../common/transferCall";
 
 interface IBridgeCallInputs extends TransferCallInputs {
-  headNumber: string
-  extensionLength: number
+  headNumber: string;
+  extensionLength: number;
 }
 
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
-  config: IBridgeCallInputs
+  config: IBridgeCallInputs;
 }
 
 export const bridgeCallNode = createNodeDescriptor({
@@ -94,7 +94,7 @@ export const bridgeCallNode = createNodeDescriptor({
       customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
       ringTimeout: convertDuration(config.ringTimeout),
       acceptAnsweringMachines: config.acceptAnsweringMachines,
-      data: normalizeData(config.data),
+      data: normalizeData(api, config.data),
       whispering: convertWhisperText(config.whisperingText),
       experimentalEnableRingingTone: config.experimentalEnableRingingTone,
     };

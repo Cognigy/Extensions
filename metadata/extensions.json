@@ -1933,6 +1933,25 @@
           "tags": []
         }
       ]
+    },
+     {
+      "name": "anthropic",
+      "label": "Anthropic",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/anthropic400/anthropic.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/anthropic",
+      "description": "Integrates Cognigy.AI with Anthropic Claude language model",
+      "longDescription": "Claude can be a delightful company representative, a research assistant, a creative partner, a task automator, and more. Personality, tone, and behavior can all be customized to your needs. With this Extension, this language model, Claude, can be used within a virtual agent conversation on voice and chat channels.",
+      "tags": ["AI", "GPT", "LLM"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "prompt",
+          "defaultLabel": "Prompt",
+          "description": "Sends a prompt to Claude for completion",
+          "tags": []
+        }
+      ]
     }
   ]
 }

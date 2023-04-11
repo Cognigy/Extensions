@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
-    "aws-sdk": "^2.738.0",
+    "aws-sdk": "^2.1354.0",
     "tslint": "^6.1.2",
     "@azure/storage-blob": "^10.5.0",
     "uuid": "^3.3.3"

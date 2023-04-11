@@ -1,0 +1,30 @@
+{
+  "name": "street-list",
+  "version": "4.0.0",
+  "description": "Get a list of German streets by postcode",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz street-list.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run copy-assets && npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts",
+    "copy-assets": "xcopy src\\assets\\ build\\assets\\ /E /I /Y && for /R \"src\\assets\" %f in (*.json) do @xcopy \"%f\" \"build\\assets\\\" /I /Y"
+
+  },
+  "keywords": [
+    "Voice",
+    "Streets",
+    "Germany",
+    "Postcode"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "tslint": "^6.1.3"
+  },
+  "devDependencies": {
+    "@types/node": "^10.17.28",
+    "typescript": "^3.1.6"
+  }
+}

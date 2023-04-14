@@ -5,12 +5,14 @@ import { smtpConnection } from "./connections/smtpConnection";
 import { getConversationNode } from "./nodes/getConversation";
 import { cognigyApiConnection } from "./connections/cognigyApiConnection";
 import { intentDisambiguationNode } from "./nodes/intentDisambiguation";
+import { configureWorkingHoursNode } from "./nodes/configureWorkingHours";
 
 export default createExtension({
 	nodes: [
 		sendEmailWithAttachmentNode,
 		getConversationNode,
-		intentDisambiguationNode
+		intentDisambiguationNode,
+		configureWorkingHoursNode
 	],
 	connections: [
 		smtpConnection,

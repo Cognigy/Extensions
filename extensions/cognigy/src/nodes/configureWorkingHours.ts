@@ -3,14 +3,20 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 
 export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
     config: {
-        odataBaseUrl: string;
-        userId: string;
-        sessionId: string;
-        outputType: "json" | "html";
-        tzOffset: string;
-        storeLocation: "input" | "context";
-        contextKey: string;
-        inputKey: string;
+        mondayStart: number;
+        mondayEnd: number;
+        tuesdayStart: number;
+        tuesdayEnd: number;
+        wednesdayStart: number;
+        wednesdayEnd: number;
+        thursdayStart: number;
+        thursdayEnd: number;
+        fridayStart: number;
+        fridayEnd: number;
+        saturdayStart: number;
+        saturdayEnd: number;
+        sundayStart: number;
+        sundayEnd: number;
     };
 }
 
@@ -19,179 +25,314 @@ export const configureWorkingHoursNode = createNodeDescriptor({
     defaultLabel: "Set Working Hours",
     fields: [
         {
-            key: "connection",
-            label: "Cognigy API Connection",
-            type: "connection",
+            key: "mondayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
             params: {
-                connectionType: "cognigy-api",
+                text: "Monday"
+            }
+        },
+        {
+            key: "mondayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 9,
+            params: {
                 required: true
             }
         },
         {
-            key: "odataBaseUrl",
-            label: "OData Base URL",
-            type: "cognigyText",
-            defaultValue: "https://odata-trial.cognigy.ai",
-        },
-        {
-            key: "userId",
-            label: "Conversation User ID",
-            type: "cognigyText",
-            defaultValue: "{{ci.userId}}",
-        },
-        {
-            key: "sessionId",
-            label: "Conversation Session ID",
-            type: "cognigyText",
-            defaultValue: "{{ci.sessionId}}",
-        },
-        {
-            key: "outputType",
-            type: "select",
-            label: "Output Type",
-            defaultValue: "json",
+            key: "mondayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 18,
             params: {
-                options: [
-                    {
-                        label: "JSON",
-                        value: "json"
-                    },
-                    {
-                        label: "HTML",
-                        value: "html"
-                    }
-                ],
                 required: true
-            },
-        },
-        {
-            key: "tzOffset",
-            type: "cognigyText",
-            label: "User Timezone Offset",
-            defaultValue: "-6",
-            condition: {
-                key: "outputType",
-                value: "html",
             }
         },
 
         {
-            key: "storeLocation",
-            type: "select",
-            label: "Where to store the result",
-            defaultValue: "input",
+            key: "tuesdayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
             params: {
-                options: [
-                    {
-                        label: "Input",
-                        value: "input"
-                    },
-                    {
-                        label: "Context",
-                        value: "context"
-                    }
-                ],
+                text: "Tuesday"
+            }
+        },
+        {
+            key: "tuesdayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 9,
+            params: {
                 required: true
-            },
-        },
-        {
-            key: "inputKey",
-            type: "cognigyText",
-            label: "Input Key to store Result",
-            defaultValue: "conversation",
-            condition: {
-                key: "storeLocation",
-                value: "input",
             }
         },
         {
-            key: "contextKey",
-            type: "cognigyText",
-            label: "Context Key to store Result",
-            defaultValue: "conversation",
-            condition: {
-                key: "storeLocation",
-                value: "context",
+            key: "tuesdayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 18,
+            params: {
+                required: true
             }
         },
-
-    ],
-    sections: [
         {
-            key: "advanced",
-            label: "Advanced",
-            defaultCollapsed: true,
-            fields: [
-                "outputType",
-                "tzOffset"
-            ]
+            key: "wednesdayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Wednesday"
+            }
         },
         {
-            key: "storage",
-            label: "Storage Option",
-            defaultCollapsed: true,
-            fields: [
-                "storeLocation",
-                "inputKey",
-                "contextKey",
-            ]
-        }
+            key: "wednesdayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 9,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "wednesdayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 18,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "thursdayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Thursday"
+            }
+        },
+        {
+            key: "thursdayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 9,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "thursdayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 18,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "fridayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Friday"
+            }
+        },
+        {
+            key: "fridayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 9,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "fridayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 18,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "saturdayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Saturday"
+            }
+        },
+        {
+            key: "saturdayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 10,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "saturdayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 14,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "sundayDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Sunday"
+            }
+        },
+        {
+            key: "sundayStart",
+            label: "From",
+            type: "number",
+            defaultValue: 1,
+            params: {
+                required: true
+            }
+        },
+        {
+            key: "sundayEnd",
+            label: "To",
+            type: "number",
+            defaultValue: 1,
+            params: {
+                required: true
+            }
+        },
     ],
     form: [
-        { type: "field", key: "connection" },
-        { type: "field", key: "odataBaseUrl" },
-        { type: "field", key: "userId" },
-        { type: "field", key: "sessionId" },
-        { type: "section", key: "advanced" },
-        { type: "section", key: "storage" },
+        { type: "field", key: "mondayDescription" },
+        { type: "field", key: "mondayStart" },
+        { type: "field", key: "mondayEnd" },
+        { type: "field", key: "tuesdayDescription" },
+        { type: "field", key: "tuesdayStart" },
+        { type: "field", key: "tuesdayEnd" },
+        { type: "field", key: "wednesdayDescription" },
+        { type: "field", key: "wednesdayStart" },
+        { type: "field", key: "wednesdayEnd" },
+        { type: "field", key: "thursdayDescription" },
+        { type: "field", key: "thursdayStart" },
+        { type: "field", key: "thursdayEnd" },
+        { type: "field", key: "fridayDescription" },
+        { type: "field", key: "fridayStart" },
+        { type: "field", key: "fridayEnd" },
+        { type: "field", key: "saturdayDescription" },
+        { type: "field", key: "saturdayStart" },
+        { type: "field", key: "saturdayEnd" },
+        { type: "field", key: "sundayDescription" },
+        { type: "field", key: "sundayStart" },
+        { type: "field", key: "sundayEnd" },
     ],
-    // function: getConversationFunction
     function: async ({ cognigy, config }: IConfigureWorkingHoursParams): Promise<any> => {
-        const { api, context, input } = cognigy;
-        const { odataBaseUrl, userId, sessionId, outputType, tzOffset, storeLocation, inputKey, contextKey } = config;
+        const { api, input } = cognigy;
+        const { mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd } = config;
 
-        // if it is Christmas or New Years in EST, set openHours to closed
+        function isChristmasOrNewYearsDay(): boolean {
+            let month: number = input.currentTime.month;
+            let day: number = input.currentTime.day;
 
-        function isChristmasOrNewYearsDay() {
-            var currentTime = new Date();
-            var offset = -4.0;
-            var estTime = new Date(currentTime.getTime() + offset * 3600 * 1000);
-            var month = estTime.getUTCMonth();
-            var day = estTime.getUTCDate();
-
-            if ((month === 11 && day === 25) || (month === 0 && day === 1)) {
+            if ((month === 12 && day === 25) || (month === 1 && day === 1)) {
                 return true;
             } else {
                 return false;
             }
         }
 
-        // set the holiday value to a variable for testing
-        let holidayTest = isChristmasOrNewYearsDay()
+        let holidayTest = isChristmasOrNewYearsDay();
         if (holidayTest === true) {
-            // context.handoverOpen = false
+            api.log('info', 'Time is in holiday period');
             api.addToContext('handoverOpen', false, 'simple');
-        }
-        else {
-            // test the current EST hour within the scope of the set hours for Sunday (if Sunday), then the rest of the week
-            function isESTBusinessHour() {
-                var currentTime = new Date();
-                var offset = -4.0;
-                var estTime = new Date(currentTime.getTime() + offset * 3600 * 1000);
-                var dayOfWeek = estTime.getUTCDay();
-                var hour = estTime.getUTCHours();
+        } else {
 
-                // Set the working hours
-                if (dayOfWeek === 0) {
-                    return (hour >= 12 && hour <= 19);
-                } else {
-                    return (hour >= 9 && hour <= 20);
+            api.log('info', 'Check if time is in working hours');
+
+            function isInWorkingHours(): boolean {
+                let dayOfWeek: number = input.currentTime.weekday;
+                let hour: number = input.currentTime.hour;
+
+                switch (dayOfWeek) {
+
+                    // Monday
+                    case 1:
+                        return (hour >= mondayStart && hour <= mondayEnd);
+
+                    // Tuesday
+                    case 2:
+                        return (hour >= tuesdayStart && hour <= tuesdayEnd);
+
+                    // Wednesday
+                    case 3:
+                        return (hour >= wednesdayStart && hour <= wednesdayEnd);
+
+                    // Thursday
+                    case 4:
+                        return (hour >= thursdayStart && hour <= thursdayEnd);
+
+                    // Friday
+                    case 5:
+                        return (hour >= fridayStart && hour <= fridayEnd);
+
+                    // Saturday
+                    case 6:
+                        return (hour >= saturdayStart && hour <= saturdayEnd);
+
+                    // Sunday
+                    case 7:
+                        return (hour >= sundayStart && hour <= sundayEnd);
+
+                    default:
+                        return false;
                 }
             }
 
+            api.addToContext('workingHours', {
+                "monday": {
+                    "from": mondayStart,
+                    "to": mondayEnd,
+                },
+                "tuesday": {
+                    "from": tuesdayStart,
+                    "to": tuesdayEnd,
+                },
+                "wednesday": {
+                    "from": wednesdayStart,
+                    "to": wednesdayEnd,
+                },
+                "thursday": {
+                    "from": thursdayStart,
+                    "to": thursdayEnd,
+                },
+                "friday": {
+                    "from": fridayStart,
+                    "to": fridayEnd,
+                },
+                "saturday": {
+                    "from": saturdayStart,
+                    "to": saturdayEnd,
+                },
+                "sunday": {
+                    "from": sundayStart,
+                    "to": sundayEnd,
+                }
+            }, 'simple');
+
             // set the boolean value for the hours
-            api.addToContext('handoverOpen', isESTBusinessHour(), 'simples');
-            // context.handoverOpen = isESTBusinessHour();
+            api.addToContext('handoverOpen', isInWorkingHours(), 'simple');
         }
 
     }

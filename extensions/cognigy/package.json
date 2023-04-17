@@ -19,7 +19,8 @@
     "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.2",
     "juice": "^7.0.0",
-    "moment": "^2.29.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "nodemailer": "^6.4.16",
     "tslint": "^6.1.2"
   },

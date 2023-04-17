@@ -1,8 +1,10 @@
 
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import * as momenttimezone from "moment-timezone";
 
 export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
     config: {
+        timezone: string;
         mondayStart: number;
         mondayEnd: number;
         tuesdayStart: number;
@@ -17,6 +19,7 @@ export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
         saturdayEnd: number;
         sundayStart: number;
         sundayEnd: number;
+        storeWorkingHoursInContext: boolean;
     };
 }
 
@@ -24,6 +27,113 @@ export const configureWorkingHoursNode = createNodeDescriptor({
     type: "configureWorkingHours",
     defaultLabel: "Set Working Hours",
     fields: [
+        {
+            key: "timezone",
+            type: "select",
+            label: "Timezone",
+            description: "The timezone in which the working hours are configured",
+            defaultValue: "Europe/Berlin",
+            params: {
+                options: [
+                    {
+                        label: "Honolulu, Pacific",
+                        value: "Pacific/Honolulu"
+                    },
+                    {
+                        label: "Anchorage, America",
+                        value: "America/Anchorage"
+                    },
+                    {
+                        label: "Los Angeles, America",
+                        value: "America/New_York"
+                    },
+                    {
+                        label: "Phoenix, America",
+                        value: "America/Phoenix"
+                    },
+                    {
+                        label: "Chicago, America",
+                        value: "America/Chicago"
+                    },
+                    {
+                        label: "La Paz, America",
+                        value: "America/La_Paz"
+                    },
+                    {
+                        label: "New York, America",
+                        value: "America/New_York"
+                    },
+                    {
+                        label: "Sao Paulo, America",
+                        value: "America/Sao_Paulo"
+                    },
+                    {
+                        label: "Cape Verde, Atlantic",
+                        value: "Atlantic/Cape_Verde"
+                    },
+                    {
+                        label: "Casablanca, Africa",
+                        value: "Africa/Casablanca"
+                    },
+                    {
+                        label: "Berlin, Europe",
+                        value: "Europe/Berlin"
+                    },
+                    {
+                        label: "London, Europe",
+                        value: "Europe/London"
+                    },
+                    {
+                        label: "Kiev, Europe",
+                        value: "Europe/Kiev"
+                    },
+                    {
+                        label: "Riyadh, Asia",
+                        value: "Asia/Riyadh"
+                    },
+                    {
+                        label: "Dubai, Asia",
+                        value: "Asia/Dubai"
+                    },
+                    {
+                        label: "Tashkent, Asia",
+                        value: "Asia/Tashkent"
+                    },
+                    {
+                        label: "Dhaka, Asia",
+                        value: "Asia/Dhaka"
+                    },
+                    {
+                        label: "Bangkok, Asia",
+                        value: "Asia/Bangkok"
+                    },
+                    {
+                        label: "Singapore, Asia",
+                        value: "Asia/Singapore"
+                    },
+                    {
+                        label: "Tokyo, Asia",
+                        value: "Asia/Tokyo"
+                    },
+                    {
+                        label: "Vladivostok, Asia",
+                        value: "Asia/Vladivostok"
+                    },
+                    {
+                        label: "Sydney, Australia",
+                        value: "Australia/Sydney"
+                    },
+                    {
+                        label: "Auckland, Pacific",
+                        value: "Pacific/Auckland"
+                    },
+                    {
+                        label: "Apia, Pacific",
+                        value: "Pacific/Apia"
+                    }
+                ]
+            }
+        },
         {
             key: "mondayDescription",
             // @ts-ignore
@@ -214,8 +324,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 required: true
             }
         },
+        {
+            key: "storeWorkingHoursInContext",
+            label: "Sore Working Hours in Context",
+            type: "toggle",
+            defaultValue: false,
+        }
     ],
     form: [
+        { type: "field", key: "timezone" },
         { type: "field", key: "mondayDescription" },
         { type: "field", key: "mondayStart" },
         { type: "field", key: "mondayEnd" },
@@ -237,16 +354,35 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         { type: "field", key: "sundayDescription" },
         { type: "field", key: "sundayStart" },
         { type: "field", key: "sundayEnd" },
+        { type: "section", key: "advanced" }
     ],
+    sections: [
+        {
+            key: "advanced",
+            label: "Advanced",
+            defaultCollapsed: true,
+            fields: [
+                "storeWorkingHoursInContext"
+            ]
+        },
+    ],
+    tokens: [
+		{
+			label: "Handover is open",
+			script: "context.handoverOpen",
+			type: "context"
+		}
+	],
     function: async ({ cognigy, config }: IConfigureWorkingHoursParams): Promise<any> => {
         const { api, input } = cognigy;
-        const { mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd } = config;
+        const { timezone, mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd, storeWorkingHoursInContext } = config;
 
         function isChristmasOrNewYearsDay(): boolean {
-            let month: number = input.currentTime.month;
-            let day: number = input.currentTime.day;
+            const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
+            const currentDayOfWeekInTimezone: number = currentDateInTimezone.weekday();
+            const currentMonthInTimezone: number = currentDateInTimezone.month();
 
-            if ((month === 12 && day === 25) || (month === 1 && day === 1)) {
+            if ((currentMonthInTimezone === 12 && currentDayOfWeekInTimezone === 25) || (currentMonthInTimezone === 1 && currentDayOfWeekInTimezone === 1)) {
                 return true;
             } else {
                 return false;
@@ -262,74 +398,84 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             api.log('info', 'Check if time is in working hours');
 
             function isInWorkingHours(): boolean {
-                let dayOfWeek: number = input.currentTime.weekday;
-                let hour: number = input.currentTime.hour;
+                const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
+                const currentDayOfWeekInTimezone: number = currentDateInTimezone.weekday();
+                const currentHourInTimezone: number = currentDateInTimezone.hours();
 
-                switch (dayOfWeek) {
+                switch (currentDayOfWeekInTimezone) {
 
                     // Monday
                     case 1:
-                        return (hour >= mondayStart && hour <= mondayEnd);
+                        return (currentHourInTimezone >= mondayStart && currentHourInTimezone <= mondayEnd);
 
                     // Tuesday
                     case 2:
-                        return (hour >= tuesdayStart && hour <= tuesdayEnd);
+                        return (currentHourInTimezone >= tuesdayStart && currentHourInTimezone <= tuesdayEnd);
 
                     // Wednesday
                     case 3:
-                        return (hour >= wednesdayStart && hour <= wednesdayEnd);
+                        return (currentHourInTimezone >= wednesdayStart && currentHourInTimezone <= wednesdayEnd);
 
                     // Thursday
                     case 4:
-                        return (hour >= thursdayStart && hour <= thursdayEnd);
+                        return (currentHourInTimezone >= thursdayStart && currentHourInTimezone <= thursdayEnd);
 
                     // Friday
                     case 5:
-                        return (hour >= fridayStart && hour <= fridayEnd);
+                        return (currentHourInTimezone >= fridayStart && currentHourInTimezone <= fridayEnd);
 
                     // Saturday
                     case 6:
-                        return (hour >= saturdayStart && hour <= saturdayEnd);
+                        return (currentHourInTimezone >= saturdayStart && currentHourInTimezone <= saturdayEnd);
 
                     // Sunday
                     case 7:
-                        return (hour >= sundayStart && hour <= sundayEnd);
+                        return (currentHourInTimezone >= sundayStart && currentHourInTimezone <= sundayEnd);
 
                     default:
                         return false;
                 }
             }
 
-            api.addToContext('workingHours', {
-                "monday": {
-                    "from": mondayStart,
-                    "to": mondayEnd,
-                },
-                "tuesday": {
-                    "from": tuesdayStart,
-                    "to": tuesdayEnd,
-                },
-                "wednesday": {
-                    "from": wednesdayStart,
-                    "to": wednesdayEnd,
-                },
-                "thursday": {
-                    "from": thursdayStart,
-                    "to": thursdayEnd,
-                },
-                "friday": {
-                    "from": fridayStart,
-                    "to": fridayEnd,
-                },
-                "saturday": {
-                    "from": saturdayStart,
-                    "to": saturdayEnd,
-                },
-                "sunday": {
-                    "from": sundayStart,
-                    "to": sundayEnd,
-                }
-            }, 'simple');
+            if (storeWorkingHoursInContext) {
+                api.addToContext('workingHours', {
+                    1: {
+                        "dayOfWeek": "Monday",
+                        "from": mondayStart,
+                        "to": mondayEnd,
+                    },
+                    2: {
+                        "dayOfWeek": "Tuesday",
+                        "from": tuesdayStart,
+                        "to": tuesdayEnd,
+                    },
+                    3: {
+                        "dayOfWeek": "Wednesday",
+                        "from": wednesdayStart,
+                        "to": wednesdayEnd,
+                    },
+                    4: {
+                        "dayOfWeek": "Thursday",
+                        "from": thursdayStart,
+                        "to": thursdayEnd,
+                    },
+                    5: {
+                        "dayOfWeek": "Friday",
+                        "from": fridayStart,
+                        "to": fridayEnd,
+                    },
+                    6: {
+                        "dayOfWeek": "Saturday",
+                        "from": saturdayStart,
+                        "to": saturdayEnd,
+                    },
+                    7: {
+                        "dayOfWeek": "Sunday",
+                        "from": sundayStart,
+                        "to": sundayEnd,
+                    }
+                }, 'simple');
+            }
 
             // set the boolean value for the hours
             api.addToContext('handoverOpen', isInWorkingHours(), 'simple');

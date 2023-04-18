@@ -1,6 +1,7 @@
 
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import * as momenttimezone from "moment-timezone";
+import * as moment from "moment";
 
 export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
     config: {
@@ -19,7 +20,16 @@ export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
         saturdayEnd: number;
         sundayStart: number;
         sundayEnd: number;
+        mondayEnabled: boolean;
+        tuesdayEnabled: boolean;
+        wednesdayEnabled: boolean;
+        thursdayEnabled: boolean;
+        fridayEnabled: boolean;
+        saturdayEnabled: boolean;
+        sundayEnabled: boolean;
         storeWorkingHoursInContext: boolean;
+        enableClosedDates: boolean;
+        closedDates: string[];
     };
 }
 
@@ -144,12 +154,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "mondayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: true,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "mondayStart",
             label: "From",
             type: "number",
             defaultValue: 9,
             params: {
                 required: true
+            },
+            condition: {
+                key: "mondayEnabled",
+                value: true
             }
         },
         {
@@ -159,6 +182,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 18,
             params: {
                 required: true
+            },
+            condition: {
+                key: "mondayEnabled",
+                value: true
             }
         },
 
@@ -172,12 +199,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "tuesdayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: true,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "tuesdayStart",
             label: "From",
             type: "number",
             defaultValue: 9,
             params: {
                 required: true
+            },
+            condition: {
+                key: "tuesdayEnabled",
+                value: true
             }
         },
         {
@@ -187,6 +227,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 18,
             params: {
                 required: true
+            },
+            condition: {
+                key: "tuesdayEnabled",
+                value: true
             }
         },
         {
@@ -199,12 +243,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "wednesdayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: true,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "wednesdayStart",
             label: "From",
             type: "number",
             defaultValue: 9,
             params: {
                 required: true
+            },
+            condition: {
+                key: "wednesdayEnabled",
+                value: true
             }
         },
         {
@@ -214,6 +271,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 18,
             params: {
                 required: true
+            },
+            condition: {
+                key: "wednesdayEnabled",
+                value: true
             }
         },
         {
@@ -226,12 +287,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "thursdayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: true,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "thursdayStart",
             label: "From",
             type: "number",
             defaultValue: 9,
             params: {
                 required: true
+            },
+            condition: {
+                key: "thursdayEnabled",
+                value: true
             }
         },
         {
@@ -241,6 +315,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 18,
             params: {
                 required: true
+            },
+            condition: {
+                key: "thursdayEnabled",
+                value: true
             }
         },
         {
@@ -253,12 +331,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "fridayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: true,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "fridayStart",
             label: "From",
             type: "number",
             defaultValue: 9,
             params: {
                 required: true
+            },
+            condition: {
+                key: "fridayEnabled",
+                value: true
             }
         },
         {
@@ -268,6 +359,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 18,
             params: {
                 required: true
+            },
+            condition: {
+                key: "fridayEnabled",
+                value: true
             }
         },
         {
@@ -280,12 +375,25 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "saturdayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: false,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "saturdayStart",
             label: "From",
             type: "number",
             defaultValue: 10,
             params: {
                 required: true
+            },
+            condition: {
+                key: "saturdayEnabled",
+                value: true
             }
         },
         {
@@ -295,6 +403,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             defaultValue: 14,
             params: {
                 required: true
+            },
+            condition: {
+                key: "saturdayEnabled",
+                value: true
             }
         },
         {
@@ -307,21 +419,38 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
         {
+            key: "sundayEnabled",
+            type: "toggle",
+            label: "Open",
+            defaultValue: false,
+            params: {
+                required: true
+            }
+        },
+        {
             key: "sundayStart",
             label: "From",
             type: "number",
-            defaultValue: 1,
+            defaultValue: 10,
             params: {
                 required: true
+            },
+            condition: {
+                key: "sundayEnabled",
+                value: true
             }
         },
         {
             key: "sundayEnd",
             label: "To",
             type: "number",
-            defaultValue: 1,
+            defaultValue: 12,
             params: {
                 required: true
+            },
+            condition: {
+                key: "sundayEnabled",
+                value: true
             }
         },
         {
@@ -329,29 +458,66 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "Sore Working Hours in Context",
             type: "toggle",
             defaultValue: false,
+        },
+        {
+            key: "enableClosedDates",
+            type: "toggle",
+            defaultValue: false,
+            description: "Whether there are dates when the office is closed or not",
+            label: "Add Closed Dates"
+        },
+        {
+            key: "closedDatesDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: "Provide a list of dates when the office or store is closed. Please insert one date per row only and use the dateformat DD.MM.YYYY, such as 14.01.2024."
+            },
+            condition: {
+                key: "enableClosedDates",
+                value: true
+            }
+        },
+        {
+            key: "closedDates",
+            label: "Closed Dates",
+            type: "textArray",
+            defaultValue: false,
+            condition: {
+                key: "enableClosedDates",
+                value: true
+            }
         }
     ],
     form: [
         { type: "field", key: "timezone" },
         { type: "field", key: "mondayDescription" },
+        { type: "field", "key": "mondayEnabled" },
         { type: "field", key: "mondayStart" },
         { type: "field", key: "mondayEnd" },
         { type: "field", key: "tuesdayDescription" },
+        { type: "field", "key": "tuesdayEnabled" },
         { type: "field", key: "tuesdayStart" },
         { type: "field", key: "tuesdayEnd" },
         { type: "field", key: "wednesdayDescription" },
+        { type: "field", "key": "wednesdayEnabled" },
         { type: "field", key: "wednesdayStart" },
         { type: "field", key: "wednesdayEnd" },
         { type: "field", key: "thursdayDescription" },
+        { type: "field", "key": "thursdayEnabled" },
         { type: "field", key: "thursdayStart" },
         { type: "field", key: "thursdayEnd" },
         { type: "field", key: "fridayDescription" },
+        { type: "field", "key": "fridayEnabled" },
         { type: "field", key: "fridayStart" },
         { type: "field", key: "fridayEnd" },
         { type: "field", key: "saturdayDescription" },
+        { type: "field", "key": "saturdayEnabled" },
         { type: "field", key: "saturdayStart" },
         { type: "field", key: "saturdayEnd" },
         { type: "field", key: "sundayDescription" },
+        { type: "field", "key": "sundayEnabled" },
         { type: "field", key: "sundayStart" },
         { type: "field", key: "sundayEnd" },
         { type: "section", key: "advanced" }
@@ -362,20 +528,23 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "Advanced",
             defaultCollapsed: true,
             fields: [
-                "storeWorkingHoursInContext"
+                "storeWorkingHoursInContext",
+                "enableClosedDates",
+                "closedDatesDescription",
+                "closedDates"
             ]
         },
     ],
     tokens: [
-		{
-			label: "Handover is open",
-			script: "context.handoverOpen",
-			type: "context"
-		}
-	],
+        {
+            label: "Handover is open",
+            script: "context.handoverOpen",
+            type: "context"
+        }
+    ],
     function: async ({ cognigy, config }: IConfigureWorkingHoursParams): Promise<any> => {
         const { api, input } = cognigy;
-        const { timezone, mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd, storeWorkingHoursInContext } = config;
+        const { timezone, mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd, storeWorkingHoursInContext, mondayEnabled, thursdayEnabled, wednesdayEnabled, tuesdayEnabled, fridayEnabled, saturdayEnabled, sundayEnabled, enableClosedDates, closedDates } = config;
 
         function isChristmasOrNewYearsDay(): boolean {
             const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
@@ -393,6 +562,11 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         if (holidayTest === true) {
             api.log('info', 'Time is in holiday period');
             api.addToContext('handoverOpen', false, 'simple');
+
+            // check if date is in list of closed dates
+        } else if (enableClosedDates && closedDates.includes(`${input.currentTime.day < 10 ? '0' + input.currentTime.day : input.currentTime.day}.${input.currentTime.month < 10 ? '0' + input.currentTime.month : input.currentTime.month}.${input.currentTime.year}`)) {
+            api.log('info', 'Time is a closed date');
+            api.addToContext('handoverOpen', false, 'simple');
         } else {
 
             api.log('info', 'Check if time is in working hours');
@@ -406,31 +580,38 @@ export const configureWorkingHoursNode = createNodeDescriptor({
 
                     // Monday
                     case 1:
-                        return (currentHourInTimezone >= mondayStart && currentHourInTimezone <= mondayEnd);
+                        if (mondayEnabled) return (currentHourInTimezone >= mondayStart && currentHourInTimezone <= mondayEnd);
+                        else return false;
 
                     // Tuesday
                     case 2:
-                        return (currentHourInTimezone >= tuesdayStart && currentHourInTimezone <= tuesdayEnd);
+                        if (tuesdayEnabled) return (currentHourInTimezone >= tuesdayStart && currentHourInTimezone <= tuesdayEnd);
+                        else return false;
 
                     // Wednesday
                     case 3:
-                        return (currentHourInTimezone >= wednesdayStart && currentHourInTimezone <= wednesdayEnd);
+                        if (wednesdayEnabled) return (currentHourInTimezone >= wednesdayStart && currentHourInTimezone <= wednesdayEnd);
+                        else return false;
 
                     // Thursday
                     case 4:
-                        return (currentHourInTimezone >= thursdayStart && currentHourInTimezone <= thursdayEnd);
+                        if (thursdayEnabled) return (currentHourInTimezone >= thursdayStart && currentHourInTimezone <= thursdayEnd);
+                        else return false;
 
                     // Friday
                     case 5:
-                        return (currentHourInTimezone >= fridayStart && currentHourInTimezone <= fridayEnd);
+                        if (fridayEnabled) return (currentHourInTimezone >= fridayStart && currentHourInTimezone <= fridayEnd);
+                        else return false;
 
                     // Saturday
                     case 6:
-                        return (currentHourInTimezone >= saturdayStart && currentHourInTimezone <= saturdayEnd);
+                        if (saturdayEnabled) return (currentHourInTimezone >= saturdayStart && currentHourInTimezone <= saturdayEnd);
+                        else return false;
 
                     // Sunday
                     case 7:
-                        return (currentHourInTimezone >= sundayStart && currentHourInTimezone <= sundayEnd);
+                        if (sundayEnabled) return (currentHourInTimezone >= sundayStart && currentHourInTimezone <= sundayEnd);
+                        else return false;
 
                     default:
                         return false;

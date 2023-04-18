@@ -165,6 +165,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "mondayStart",
             label: "From",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             type: "number",
             defaultValue: 9,
             params: {
@@ -179,6 +180,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "mondayEnd",
             label: "To",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 18,
             params: {
                 required: true
@@ -211,6 +213,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "tuesdayStart",
             label: "From",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 9,
             params: {
                 required: true
@@ -224,6 +227,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "tuesdayEnd",
             label: "To",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 18,
             params: {
                 required: true
@@ -255,6 +259,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "wednesdayStart",
             label: "From",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 9,
             params: {
                 required: true
@@ -268,6 +273,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "wednesdayEnd",
             label: "To",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 18,
             params: {
                 required: true
@@ -299,6 +305,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "thursdayStart",
             label: "From",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 9,
             params: {
                 required: true
@@ -313,6 +320,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "To",
             type: "number",
             defaultValue: 18,
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
                 required: true
             },
@@ -343,6 +351,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "fridayStart",
             label: "From",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 9,
             params: {
                 required: true
@@ -357,6 +366,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "To",
             type: "number",
             defaultValue: 18,
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
                 required: true
             },
@@ -387,6 +397,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "saturdayStart",
             label: "From",
             type: "number",
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             defaultValue: 10,
             params: {
                 required: true
@@ -401,6 +412,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "To",
             type: "number",
             defaultValue: 14,
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
                 required: true
             },
@@ -432,6 +444,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "From",
             type: "number",
             defaultValue: 10,
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
                 required: true
             },
@@ -445,6 +458,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             label: "To",
             type: "number",
             defaultValue: 12,
+            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
                 required: true
             },
@@ -455,7 +469,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "storeWorkingHoursInContext",
-            label: "Sore Working Hours in Context",
+            label: "Store Working Hours in Context",
             type: "toggle",
             defaultValue: false,
         },

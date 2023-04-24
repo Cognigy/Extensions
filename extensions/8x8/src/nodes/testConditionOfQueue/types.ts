@@ -45,15 +45,14 @@ export interface DropdownOption {
 }
 
 export enum QueueType {
-  Chat = 'C',
-  Phone = 'T',
-  Email = 'Z',
-  Vmail = 'V'
+  Chat = 'chat',
+  Phone = 'phone',
+  Email = 'email',
+  Vmail = 'vmail'
 }
 export interface QueueApiResponse {
   'queue-id': number
   'queue-name': string
-  'queue-desc': string
   'media-type': QueueType
 }
 

@@ -14,6 +14,7 @@ export interface IExecuteQueriesParams extends INodeFunctionBaseParams {
 export const executeQueriesNode = createNodeDescriptor({
 	type: "executeQueries",
 	defaultLabel: "Execute Queries",
+	summary: "Executes Data Analysis Expressions (DAX) queries against the provided dataset",
 	fields: [
 		{
 			key: "datasetId",

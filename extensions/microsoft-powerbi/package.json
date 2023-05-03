@@ -1,7 +1,7 @@
 {
   "name": "microsoft-powerbi",
   "version": "4.0.0",
-  "description": "Adds Microsoft PowerBI Flow functions.",
+  "description": "Adds Microsoft PowerBI functions.",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

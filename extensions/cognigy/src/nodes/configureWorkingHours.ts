@@ -6,20 +6,20 @@ import * as moment from "moment";
 export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
     config: {
         timezone: string;
-        mondayStart: number;
-        mondayEnd: number;
-        tuesdayStart: number;
-        tuesdayEnd: number;
-        wednesdayStart: number;
-        wednesdayEnd: number;
-        thursdayStart: number;
-        thursdayEnd: number;
-        fridayStart: number;
-        fridayEnd: number;
-        saturdayStart: number;
-        saturdayEnd: number;
-        sundayStart: number;
-        sundayEnd: number;
+        mondayStart: string;
+        mondayEnd: string;
+        tuesdayStart: string;
+        tuesdayEnd: string;
+        wednesdayStart: string;
+        wednesdayEnd: string;
+        thursdayStart: string;
+        thursdayEnd: string;
+        fridayStart: string;
+        fridayEnd: string;
+        saturdayStart: string;
+        saturdayEnd: string;
+        sundayStart: string;
+        sundayEnd: string;
         mondayEnabled: boolean;
         tuesdayEnabled: boolean;
         wednesdayEnabled: boolean;
@@ -54,8 +54,8 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                         value: "America/Anchorage"
                     },
                     {
-                        label: "Los Angeles, America",
-                        value: "America/New_York"
+                        label: "Los Angeles, America (PST)",
+                        value: "America/Los_Angeles"
                     },
                     {
                         label: "Phoenix, America",
@@ -70,7 +70,7 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                         value: "America/La_Paz"
                     },
                     {
-                        label: "New York, America",
+                        label: "New York, America (EST)",
                         value: "America/New_York"
                     },
                     {
@@ -166,10 +166,11 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "mondayStart",
             label: "From",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            type: "number",
-            defaultValue: 9,
+            type: "cognigyText",
+            defaultValue: "9:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "9:00"
             },
             condition: {
                 key: "mondayEnabled",
@@ -179,11 +180,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "mondayEnd",
             label: "To",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 18,
+            defaultValue: "20:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "20:00"
             },
             condition: {
                 key: "mondayEnabled",
@@ -212,11 +214,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "tuesdayStart",
             label: "From",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 9,
+            defaultValue: "9:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "9:00"
             },
             condition: {
                 key: "tuesdayEnabled",
@@ -226,11 +229,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "tuesdayEnd",
             label: "To",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 18,
+            defaultValue: "18:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "18:00"
             },
             condition: {
                 key: "tuesdayEnabled",
@@ -258,11 +262,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "wednesdayStart",
             label: "From",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 9,
+            defaultValue: "9:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "9:00"
             },
             condition: {
                 key: "wednesdayEnabled",
@@ -272,11 +277,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "wednesdayEnd",
             label: "To",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 18,
+            defaultValue: "17:30",
             params: {
-                required: true
+                required: true,
+                placeholder: "18:00"
             },
             condition: {
                 key: "wednesdayEnabled",
@@ -304,11 +310,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "thursdayStart",
             label: "From",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 9,
+            defaultValue: "9:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "9:00"
             },
             condition: {
                 key: "thursdayEnabled",
@@ -318,11 +325,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "thursdayEnd",
             label: "To",
-            type: "number",
-            defaultValue: 18,
+            type: "cognigyText",
+            defaultValue: "18:00",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
-                required: true
+                required: true,
+                placeholder: "18:00"
             },
             condition: {
                 key: "thursdayEnabled",
@@ -350,11 +358,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "fridayStart",
             label: "From",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 9,
+            defaultValue: "9:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "9:00"
             },
             condition: {
                 key: "fridayEnabled",
@@ -364,11 +373,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "fridayEnd",
             label: "To",
-            type: "number",
-            defaultValue: 18,
+            type: "cognigyText",
+            defaultValue: "18:00",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
-                required: true
+                required: true,
+                placeholder: "18:00"
             },
             condition: {
                 key: "fridayEnabled",
@@ -396,11 +406,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "saturdayStart",
             label: "From",
-            type: "number",
+            type: "cognigyText",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            defaultValue: 10,
+            defaultValue: "10:00",
             params: {
-                required: true
+                required: true,
+                placeholder: "10:00"
             },
             condition: {
                 key: "saturdayEnabled",
@@ -410,11 +421,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "saturdayEnd",
             label: "To",
-            type: "number",
-            defaultValue: 14,
+            type: "cognigyText",
+            defaultValue: "14:00",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
-                required: true
+                required: true,
+                placeholder: "14:00"
             },
             condition: {
                 key: "saturdayEnabled",
@@ -442,11 +454,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "sundayStart",
             label: "From",
-            type: "number",
-            defaultValue: 10,
+            type: "cognigyText",
+            defaultValue: "10:00",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
-                required: true
+                required: true,
+                placeholder: "10:00"
             },
             condition: {
                 key: "sundayEnabled",
@@ -456,11 +469,12 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         {
             key: "sundayEnd",
             label: "To",
-            type: "number",
-            defaultValue: 12,
+            type: "cognigyText",
+            defaultValue: "12:00",
             description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
             params: {
-                required: true
+                required: true,
+                placeholder: "12:00"
             },
             condition: {
                 key: "sundayEnabled",
@@ -589,42 +603,43 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
                 const currentDayOfWeekInTimezone: number = currentDateInTimezone.weekday();
                 const currentHourInTimezone: number = currentDateInTimezone.hours();
+                const currentMinutesInTimezone: number = currentDateInTimezone.minutes();
 
                 switch (currentDayOfWeekInTimezone) {
 
                     // Monday
                     case 1:
-                        if (mondayEnabled) return (currentHourInTimezone >= mondayStart && currentHourInTimezone <= mondayEnd);
+                        if (mondayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(mondayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(mondayEnd, 'HH:mm')))));
                         else return false;
 
                     // Tuesday
                     case 2:
-                        if (tuesdayEnabled) return (currentHourInTimezone >= tuesdayStart && currentHourInTimezone <= tuesdayEnd);
+                        if (tuesdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(tuesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(tuesdayEnd, 'HH:mm')))));
                         else return false;
 
                     // Wednesday
                     case 3:
-                        if (wednesdayEnabled) return (currentHourInTimezone >= wednesdayStart && currentHourInTimezone <= wednesdayEnd);
+                        if (wednesdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(wednesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(wednesdayEnd, 'HH:mm')))));
                         else return false;
 
                     // Thursday
                     case 4:
-                        if (thursdayEnabled) return (currentHourInTimezone >= thursdayStart && currentHourInTimezone <= thursdayEnd);
+                        if (thursdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(thursdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(thursdayEnd, 'HH:mm')))));
                         else return false;
 
                     // Friday
                     case 5:
-                        if (fridayEnabled) return (currentHourInTimezone >= fridayStart && currentHourInTimezone <= fridayEnd);
+                        if (fridayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(fridayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(fridayEnd, 'HH:mm')))));
                         else return false;
 
                     // Saturday
                     case 6:
-                        if (saturdayEnabled) return (currentHourInTimezone >= saturdayStart && currentHourInTimezone <= saturdayEnd);
+                        if (saturdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(saturdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(saturdayEnd, 'HH:mm')))));
                         else return false;
 
                     // Sunday
                     case 7:
-                        if (sundayEnabled) return (currentHourInTimezone >= sundayStart && currentHourInTimezone <= sundayEnd);
+                        if (sundayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(sundayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(sundayEnd, 'HH:mm')))));
                         else return false;
 
                     default:

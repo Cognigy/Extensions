@@ -1,0 +1,666 @@
+[
+  {
+    "postcode": "20038",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20038",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20088",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20088",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20095",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20095",
+    "city": "Hamburg-Altstadt"
+  },
+  {
+    "postcode": "20095",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20095",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20095",
+    "city": "Klostertor"
+  },
+  {
+    "postcode": "20095",
+    "city": "Sankt Georg"
+  },
+  {
+    "postcode": "20095",
+    "city": "Hammerbrook"
+  },
+  {
+    "postcode": "20095",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "20095",
+    "city": "St. Georg"
+  },
+  {
+    "postcode": "20097",
+    "city": "HafenCity"
+  },
+  {
+    "postcode": "20097",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20097",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20097",
+    "city": "Hammerbrook"
+  },
+  {
+    "postcode": "20097",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20097",
+    "city": "Klostertor"
+  },
+  {
+    "postcode": "20097",
+    "city": "Sankt Georg"
+  },
+  {
+    "postcode": "20097",
+    "city": "St. Georg"
+  },
+  {
+    "postcode": "20097",
+    "city": "Hamm"
+  },
+  {
+    "postcode": "20099",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20099",
+    "city": "Hamburg-Altstadt"
+  },
+  {
+    "postcode": "20099",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20099",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20099",
+    "city": "Sankt Georg"
+  },
+  {
+    "postcode": "20099",
+    "city": "St. Georg"
+  },
+  {
+    "postcode": "20099",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "20144",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20144",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20144",
+    "city": "Hamburg-Nord"
+  },
+  {
+    "postcode": "20144",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20144",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20144",
+    "city": "Hoheluft-Ost"
+  },
+  {
+    "postcode": "20144",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20146",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20146",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20146",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20146",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20146",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20148",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20148",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20148",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20148",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20148",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20149",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20149",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20149",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20149",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20149",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20249",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20249",
+    "city": "Eppendorf"
+  },
+  {
+    "postcode": "20249",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20249",
+    "city": "Hamburg-Nord"
+  },
+  {
+    "postcode": "20249",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20249",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20249",
+    "city": "Hoheluft-Ost"
+  },
+  {
+    "postcode": "20249",
+    "city": "Winterhude"
+  },
+  {
+    "postcode": "20249",
+    "city": "Hohenfelde"
+  },
+  {
+    "postcode": "20251",
+    "city": "Alsterdorf"
+  },
+  {
+    "postcode": "20251",
+    "city": "Eppendorf"
+  },
+  {
+    "postcode": "20251",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20251",
+    "city": "Hamburg-Nord"
+  },
+  {
+    "postcode": "20251",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20251",
+    "city": "Hoheluft-Ost"
+  },
+  {
+    "postcode": "20251",
+    "city": "Niendorf"
+  },
+  {
+    "postcode": "20253",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20253",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20253",
+    "city": "Hamburg-Nord"
+  },
+  {
+    "postcode": "20253",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20253",
+    "city": "Harvestehude"
+  },
+  {
+    "postcode": "20253",
+    "city": "Hoheluft-Ost"
+  },
+  {
+    "postcode": "20253",
+    "city": "Hoheluft-West"
+  },
+  {
+    "postcode": "20253",
+    "city": "Lokstedt"
+  },
+  {
+    "postcode": "20255",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20255",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20255",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20255",
+    "city": "Hoheluft-West"
+  },
+  {
+    "postcode": "20255",
+    "city": "Lokstedt"
+  },
+  {
+    "postcode": "20255",
+    "city": "Stellingen"
+  },
+  {
+    "postcode": "20257",
+    "city": "Altona"
+  },
+  {
+    "postcode": "20257",
+    "city": "Altona-Nord"
+  },
+  {
+    "postcode": "20257",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20257",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20257",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20259",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20259",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20259",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20350",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20350",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20354",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20354",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20354",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20354",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20354",
+    "city": "Neustadt"
+  },
+  {
+    "postcode": "20354",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20354",
+    "city": "Sankt Pauli"
+  },
+  {
+    "postcode": "20354",
+    "city": "St. Pauli"
+  },
+  {
+    "postcode": "20355",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20355",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20355",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20355",
+    "city": "Neustadt"
+  },
+  {
+    "postcode": "20355",
+    "city": "Sankt Pauli"
+  },
+  {
+    "postcode": "20355",
+    "city": "St. Pauli"
+  },
+  {
+    "postcode": "20357",
+    "city": "Altona"
+  },
+  {
+    "postcode": "20357",
+    "city": "Altona-Altstadt"
+  },
+  {
+    "postcode": "20357",
+    "city": "Altona-Nord"
+  },
+  {
+    "postcode": "20357",
+    "city": "Eimsbüttel"
+  },
+  {
+    "postcode": "20357",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20357",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20357",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20357",
+    "city": "Rotherbaum"
+  },
+  {
+    "postcode": "20357",
+    "city": "Sankt Pauli"
+  },
+  {
+    "postcode": "20357",
+    "city": "Sternschanze"
+  },
+  {
+    "postcode": "20357",
+    "city": "St. Pauli"
+  },
+  {
+    "postcode": "20359",
+    "city": "Altona"
+  },
+  {
+    "postcode": "20359",
+    "city": "Altona-Altstadt"
+  },
+  {
+    "postcode": "20359",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20359",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20359",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20359",
+    "city": "Neustadt"
+  },
+  {
+    "postcode": "20359",
+    "city": "Sankt Pauli"
+  },
+  {
+    "postcode": "20359",
+    "city": "St. Pauli"
+  },
+  {
+    "postcode": "20359",
+    "city": "Sternschanze"
+  },
+  {
+    "postcode": "20457",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20457",
+    "city": "Hamburg-Altstadt"
+  },
+  {
+    "postcode": "20457",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20457",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20457",
+    "city": "Kleiner Grasbrook"
+  },
+  {
+    "postcode": "20457",
+    "city": "Klostertor"
+  },
+  {
+    "postcode": "20457",
+    "city": "Neustadt"
+  },
+  {
+    "postcode": "20457",
+    "city": "Steinwerder"
+  },
+  {
+    "postcode": "20457",
+    "city": "HafenCity"
+  },
+  {
+    "postcode": "20457",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "20459",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20459",
+    "city": "Hamburg-Altstadt"
+  },
+  {
+    "postcode": "20459",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20459",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20459",
+    "city": "Neustadt"
+  },
+  {
+    "postcode": "20459",
+    "city": "Sankt Pauli"
+  },
+  {
+    "postcode": "20459",
+    "city": "St. Pauli"
+  },
+  {
+    "postcode": "20459",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "20535",
+    "city": "Borgfelde"
+  },
+  {
+    "postcode": "20535",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20535",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20535",
+    "city": "Hamm-Nord"
+  },
+  {
+    "postcode": "20535",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20535",
+    "city": "Hamm"
+  },
+  {
+    "postcode": "20537",
+    "city": "Borgfelde"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hamm-Mitte"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hamm-Süd"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hammerbrook"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20537",
+    "city": "Hamm"
+  },
+  {
+    "postcode": "20539",
+    "city": "Hamburg"
+  },
+  {
+    "postcode": "20539",
+    "city": "Hamburg-Mitte"
+  },
+  {
+    "postcode": "20539",
+    "city": "Hampuri"
+  },
+  {
+    "postcode": "20539",
+    "city": "Kleiner Grasbrook"
+  },
+  {
+    "postcode": "20539",
+    "city": "Rothenburgsort"
+  },
+  {
+    "postcode": "20539",
+    "city": "Veddel"
+  },
+  {
+    "postcode": "20539",
+    "city": "Wilhelmsburg"
+  },
+  {
+    "postcode": "20539",
+    "city": "Kleingartenanlage"
+  },
+  {
+    "postcode": "20539",
+    "city": "HafenCity"
+  }
+]

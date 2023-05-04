@@ -1,0 +1,690 @@
+[
+  {
+    "postcode": "60308",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60308",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60311",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60311",
+    "city": "Innenstadt"
+  },
+  {
+    "postcode": "60311",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "60313",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60313",
+    "city": "Innenstadt"
+  },
+  {
+    "postcode": "60313",
+    "city": "Altstadt"
+  },
+  {
+    "postcode": "60314",
+    "city": "Fechenheim"
+  },
+  {
+    "postcode": "60314",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60314",
+    "city": "Schwanheim"
+  },
+  {
+    "postcode": "60314",
+    "city": "Ostend"
+  },
+  {
+    "postcode": "60316",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60316",
+    "city": "Ostend"
+  },
+  {
+    "postcode": "60316",
+    "city": "Nordend-Ost"
+  },
+  {
+    "postcode": "60316",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60316",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60318",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60318",
+    "city": "Innenstadt"
+  },
+  {
+    "postcode": "60318",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60318",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60318",
+    "city": "Nordend-Ost"
+  },
+  {
+    "postcode": "60320",
+    "city": "Eckenheim"
+  },
+  {
+    "postcode": "60320",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60320",
+    "city": "Preungesheim"
+  },
+  {
+    "postcode": "60320",
+    "city": "Dornbusch"
+  },
+  {
+    "postcode": "60320",
+    "city": "Westend-Nord"
+  },
+  {
+    "postcode": "60320",
+    "city": "Bockenheim"
+  },
+  {
+    "postcode": "60320",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60320",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60320",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60320",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60322",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60322",
+    "city": "Preungesheim"
+  },
+  {
+    "postcode": "60322",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60322",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60322",
+    "city": "Westend-Nord"
+  },
+  {
+    "postcode": "60322",
+    "city": "Innenstadt"
+  },
+  {
+    "postcode": "60322",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60322",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60322",
+    "city": "Dornbusch"
+  },
+  {
+    "postcode": "60322",
+    "city": "Ostend"
+  },
+  {
+    "postcode": "60323",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60323",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60323",
+    "city": "Westend-Nord"
+  },
+  {
+    "postcode": "60323",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60325",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60325",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60325",
+    "city": "Bockenheim"
+  },
+  {
+    "postcode": "60326",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60326",
+    "city": "Griesheim"
+  },
+  {
+    "postcode": "60326",
+    "city": "Gallus"
+  },
+  {
+    "postcode": "60327",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60327",
+    "city": "Gutleutviertel"
+  },
+  {
+    "postcode": "60327",
+    "city": "Gallus"
+  },
+  {
+    "postcode": "60327",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60327",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60329",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60329",
+    "city": "Innenstadt"
+  },
+  {
+    "postcode": "60329",
+    "city": "Bahnhofsviertel"
+  },
+  {
+    "postcode": "60329",
+    "city": "Gutleutviertel"
+  },
+  {
+    "postcode": "60329",
+    "city": "Gallus"
+  },
+  {
+    "postcode": "60385",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60385",
+    "city": "Bornheim"
+  },
+  {
+    "postcode": "60385",
+    "city": "Ostend"
+  },
+  {
+    "postcode": "60385",
+    "city": "Nordend-Ost"
+  },
+  {
+    "postcode": "60386",
+    "city": "Fechenheim"
+  },
+  {
+    "postcode": "60386",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60386",
+    "city": "Riederwald"
+  },
+  {
+    "postcode": "60386",
+    "city": "Schwanheim"
+  },
+  {
+    "postcode": "60386",
+    "city": "Seckbach"
+  },
+  {
+    "postcode": "60386",
+    "city": "Bornheim"
+  },
+  {
+    "postcode": "60388",
+    "city": "Bergen-Enkheim Hessen"
+  },
+  {
+    "postcode": "60388",
+    "city": "Bergen-Enkheim"
+  },
+  {
+    "postcode": "60388",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60388",
+    "city": "Seckbach"
+  },
+  {
+    "postcode": "60389",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60389",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60389",
+    "city": "Seckbach"
+  },
+  {
+    "postcode": "60389",
+    "city": "Nordend-Ost"
+  },
+  {
+    "postcode": "60389",
+    "city": "Bornheim"
+  },
+  {
+    "postcode": "60389",
+    "city": "Bergen-Enkheim"
+  },
+  {
+    "postcode": "60389",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60431",
+    "city": "Eschersheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60431",
+    "city": "Praunheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Preungesheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Dornbusch"
+  },
+  {
+    "postcode": "60431",
+    "city": "Ginnheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Bockenheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Heddernheim"
+  },
+  {
+    "postcode": "60431",
+    "city": "Niederursel"
+  },
+  {
+    "postcode": "60431",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60431",
+    "city": "Westend-Nord"
+  },
+  {
+    "postcode": "60433",
+    "city": "Eckenheim"
+  },
+  {
+    "postcode": "60433",
+    "city": "Eschersheim"
+  },
+  {
+    "postcode": "60433",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60433",
+    "city": "Preungesheim"
+  },
+  {
+    "postcode": "60433",
+    "city": "Dornbusch"
+  },
+  {
+    "postcode": "60433",
+    "city": "Frankfurter Berg"
+  },
+  {
+    "postcode": "60433",
+    "city": "Bonames"
+  },
+  {
+    "postcode": "60435",
+    "city": "Eckenheim"
+  },
+  {
+    "postcode": "60435",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60435",
+    "city": "Preungesheim"
+  },
+  {
+    "postcode": "60435",
+    "city": "Berkersheim"
+  },
+  {
+    "postcode": "60435",
+    "city": "Nordend-West"
+  },
+  {
+    "postcode": "60435",
+    "city": "Frankfurter Berg"
+  },
+  {
+    "postcode": "60435",
+    "city": "Bornheim"
+  },
+  {
+    "postcode": "60435",
+    "city": "Nordend"
+  },
+  {
+    "postcode": "60435",
+    "city": "Dornbusch"
+  },
+  {
+    "postcode": "60437",
+    "city": "Berkersheim"
+  },
+  {
+    "postcode": "60437",
+    "city": "Bonames"
+  },
+  {
+    "postcode": "60437",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60437",
+    "city": "Harheim"
+  },
+  {
+    "postcode": "60437",
+    "city": "Niederursel"
+  },
+  {
+    "postcode": "60437",
+    "city": "Kalbach"
+  },
+  {
+    "postcode": "60437",
+    "city": "Nieder-Eschbach"
+  },
+  {
+    "postcode": "60437",
+    "city": "Nieder-Erlenbach"
+  },
+  {
+    "postcode": "60437",
+    "city": "Frankfurter Berg"
+  },
+  {
+    "postcode": "60438",
+    "city": "Berkersheim"
+  },
+  {
+    "postcode": "60438",
+    "city": "Bonames"
+  },
+  {
+    "postcode": "60438",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60438",
+    "city": "Niederursel"
+  },
+  {
+    "postcode": "60438",
+    "city": "Kalbach-Riedberg"
+  },
+  {
+    "postcode": "60438",
+    "city": "Riedberg"
+  },
+  {
+    "postcode": "60439",
+    "city": "Berkersheim"
+  },
+  {
+    "postcode": "60439",
+    "city": "Bonames"
+  },
+  {
+    "postcode": "60439",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60439",
+    "city": "Ginnheim"
+  },
+  {
+    "postcode": "60439",
+    "city": "Heddernheim"
+  },
+  {
+    "postcode": "60439",
+    "city": "Niederursel"
+  },
+  {
+    "postcode": "60439",
+    "city": "Praunheim"
+  },
+  {
+    "postcode": "60486",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60486",
+    "city": "Rödelheim"
+  },
+  {
+    "postcode": "60486",
+    "city": "Bockenheim"
+  },
+  {
+    "postcode": "60486",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60486",
+    "city": "Westend"
+  },
+  {
+    "postcode": "60486",
+    "city": "Gallus"
+  },
+  {
+    "postcode": "60487",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60487",
+    "city": "Rödelheim"
+  },
+  {
+    "postcode": "60487",
+    "city": "Bockenheim"
+  },
+  {
+    "postcode": "60487",
+    "city": "Hausen"
+  },
+  {
+    "postcode": "60487",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60488",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60488",
+    "city": "Praunheim"
+  },
+  {
+    "postcode": "60488",
+    "city": "Rödelheim"
+  },
+  {
+    "postcode": "60488",
+    "city": "Hausen"
+  },
+  {
+    "postcode": "60489",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60489",
+    "city": "Rödelheim"
+  },
+  {
+    "postcode": "60528",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60528",
+    "city": "Niederrad"
+  },
+  {
+    "postcode": "60528",
+    "city": "Seckbach"
+  },
+  {
+    "postcode": "60528",
+    "city": "Sachsenhausen"
+  },
+  {
+    "postcode": "60528",
+    "city": "Schwanheim"
+  },
+  {
+    "postcode": "60529",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60529",
+    "city": "Goldstein"
+  },
+  {
+    "postcode": "60529",
+    "city": "Schwanheim"
+  },
+  {
+    "postcode": "60549",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60549",
+    "city": "Flughafen"
+  },
+  {
+    "postcode": "60594",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60594",
+    "city": "Sachsenhausen"
+  },
+  {
+    "postcode": "60596",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60596",
+    "city": "Sachsenhausen"
+  },
+  {
+    "postcode": "60598",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60598",
+    "city": "Sachsenhausen"
+  },
+  {
+    "postcode": "60599",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60599",
+    "city": "Oberrad"
+  },
+  {
+    "postcode": "60599",
+    "city": "Sachsenhausen"
+  },
+  {
+    "postcode": "60306",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60306",
+    "city": "Westend-Süd"
+  },
+  {
+    "postcode": "60310",
+    "city": "Frankfurt am Main"
+  },
+  {
+    "postcode": "60310",
+    "city": "Innenstadt"
+  }
+]

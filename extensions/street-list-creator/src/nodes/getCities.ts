@@ -1,11 +1,11 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
-interface Street {
-	street: string;
+interface Cities {
+	city: string;
 	postcode: string;
 }
 
-export interface IGetStreetsParams extends INodeFunctionBaseParams {
+export interface IGetCitiesParams extends INodeFunctionBaseParams {
 	config: {
 		inputText: string;
 		storeLocation: "input" | "context";
@@ -14,9 +14,9 @@ export interface IGetStreetsParams extends INodeFunctionBaseParams {
 	};
 }
 
-export const getStreetsNode = createNodeDescriptor({
-	type: "getStreets",
-	defaultLabel: "Get Streets",
+export const getCitiesNode = createNodeDescriptor({
+	type: "getCities",
+	defaultLabel: "Get Cities",
 	fields: [
 		{
 			key: "inputText",
@@ -47,7 +47,7 @@ export const getStreetsNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "streetList",
+			defaultValue: "citiesWithPostcode",
 			condition: {
 				key: "storeLocation",
 				value: "input",
@@ -57,7 +57,7 @@ export const getStreetsNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "streetList",
+			defaultValue: "citiesWithPostcode",
 			condition: {
 				key: "storeLocation",
 				value: "context",
@@ -81,8 +81,8 @@ export const getStreetsNode = createNodeDescriptor({
 		{ type: 'field', key: 'inputText' },
 		{ type: "section", key: "storage" },
 	],
-	// function: getStreetsFunction
-	function: async ({ cognigy, config }: IGetStreetsParams): Promise<any> => {
+	// function: getCitiesFunction
+	function: async ({ cognigy, config }: IGetCitiesParams): Promise<any> => {
 		const { api } = cognigy;
 		let { inputText, storeLocation, inputKey, contextKey } = config;
 
@@ -93,21 +93,21 @@ export const getStreetsNode = createNodeDescriptor({
 			}
 
 			const filename = `postcode-${inputText.substring(0, 2)}000-${inputText.substring(0, 2)}999.json`;
-			const streets: Street[] = require(`../assets/streets/${filename}`);
+			const cities: Cities[] = require(`../assets/cities/${filename}`);
 
-			let streetsInPostcode = [];
+			let citiesWithPostcode = [];
 
-			for (let street of streets) {
-				if (street.postcode === inputText) {
-					streetsInPostcode.push(street.street);
+			for (let city of cities) {
+				if (city.postcode === inputText) {
+					citiesWithPostcode.push(city.city);
 				}
 			}
 
 			if (storeLocation === 'context') {
-				api.addToContext(contextKey, streetsInPostcode, 'simple');
+				api.addToContext(contextKey, citiesWithPostcode, 'simple');
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, streetsInPostcode);
+				api.addToInput(inputKey, citiesWithPostcode);
 			}
 		} catch (error) {
 			if (storeLocation === 'context') {

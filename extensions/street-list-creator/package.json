@@ -1,11 +1,11 @@
 {
-  "name": "street-list",
+  "name": "postcode-lookup",
   "version": "4.0.0",
-  "description": "Get a list of German streets by postcode",
+  "description": "Get a list of German streets or cities by postcode",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz street-list.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz postcode-lookup.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run copy-assets && npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts",
     "copy-assets": "xcopy src\\assets\\ build\\assets\\ /E /I /Y && for /R \"src\\assets\" %f in (*.json) do @xcopy \"%f\" \"build\\assets\\\" /I /Y"
@@ -15,7 +15,8 @@
     "Voice",
     "Streets",
     "Germany",
-    "Postcode"
+    "Postcode",
+    "Cities"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",

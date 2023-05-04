@@ -12,3 +12,5 @@ This node lets you get a list of German streets within a certain postcode.
 - Where to Store the Result: The selection, where to store the bearer token (either in `context` or `input`)
 - Input Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `input`)
 - Context Key to Store Result: The key name where the value will be stored (Only necessary, when storeLocation equals `context`)
+
+[Street icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/street "Street Icons")

@@ -17,13 +17,14 @@
   "author": "Cognigy GmbH",
   "license": "ISC",
   "devDependencies": {
-		"@types/axios": "^0.14.0",
-		"@types/node": "^10.17.28",
-		"tslint": "^5.16.0",
-		"typescript": "^3.1.6"
-	},
-	"dependencies": {
-		"@cognigy/extension-tools": "^0.14.0",
-		"axios": "^0.21.2"
-	}
+    "@types/axios": "^0.14.0",
+    "@types/node": "^10.17.28",
+    "tslint": "^5.16.0",
+    "typescript": "^3.1.6"
+  },
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "axios": "^0.21.2",
+    "qs": "^6.11.1"
+  }
 }

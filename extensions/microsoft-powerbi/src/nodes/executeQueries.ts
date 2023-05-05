@@ -1,10 +1,17 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
+const qs = require('qs');
 
 export interface IExecuteQueriesParams extends INodeFunctionBaseParams {
 	config: {
+		connection: {
+			clientId: string;
+			tenantId: string;
+			username: string;
+			password: string;
+		}
 		datasetId: string;
-		queryStrings: string[];
+		query: string;
 		impersonatedUserName: string;
 		storeLocation: string;
 		inputKey: string;
@@ -13,9 +20,20 @@ export interface IExecuteQueriesParams extends INodeFunctionBaseParams {
 }
 export const executeQueriesNode = createNodeDescriptor({
 	type: "executeQueries",
-	defaultLabel: "Execute Queries",
-	summary: "Executes Data Analysis Expressions (DAX) queries against the provided dataset",
+	defaultLabel: "Execute Query",
+	summary: "Executes Data Analysis Expressions (DAX) query against the provided dataset",
 	fields: [
+		{
+			key: "connection",
+			label: {
+				default: "PowerBI Connection"
+			},
+			type: "connection",
+			params: {
+				connectionType: "powerBI",
+				required: true
+			}
+		},
 		{
 			key: "datasetId",
 			label: "Dataset ID",
@@ -25,16 +43,14 @@ export const executeQueriesNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "queryStrings",
-			label: "Queries",
-			type: "textArray",
-			description: "The list of queries, such as EVALUATE VALUES(MyTable)"
-		},
-		{
-			key: "impersonatedUserName",
-			label: "Impersonated Username",
+			key: "query",
+			label: "Query",
 			type: "cognigyText",
-			description: "The Microsoft PowerBI Username, such as user@company.com"
+			description: "The query, such as EVALUATE VALUES(MyTable)",
+			defaultValue: "EVALUATE VALUES(MyTable)",
+			params: {
+				required: true
+			}
 		},
 		{
 			key: "storeLocation",
@@ -59,7 +75,7 @@ export const executeQueriesNode = createNodeDescriptor({
 			key: "inputKey",
 			type: "cognigyText",
 			label: "Input Key to store Result",
-			defaultValue: "msFlows",
+			defaultValue: "query",
 			condition: {
 				key: "storeLocation",
 				value: "input"
@@ -69,7 +85,7 @@ export const executeQueriesNode = createNodeDescriptor({
 			key: "contextKey",
 			type: "cognigyText",
 			label: "Context Key to store Result",
-			defaultValue: "msFlows",
+			defaultValue: "query",
 			condition: {
 				key: "storeLocation",
 				value: "context"
@@ -89,45 +105,68 @@ export const executeQueriesNode = createNodeDescriptor({
 		}
 	],
 	form: [
+		{ type: "field", key: "connection" },
 		{ type: "field", key: "datasetId" },
-		{ type: "field", key: "queryStrings" },
+		{ type: "field", key: "query" },
 		{ type: "field", key: "impersonatedUserName" },
 		{ type: "section", key: "storageOption" }
 	],
-
+	appearance: {
+		color: '#F2CC40'
+	},
 	function: async ({ cognigy, config }: IExecuteQueriesParams) => {
 		const { api } = cognigy;
-		const { datasetId, queryStrings, impersonatedUserName, storeLocation, inputKey, contextKey } = config;
-
-		let queryObjectsArray: any[] = [];
-		for (let queryString of queryStrings) {
-			queryObjectsArray.push({
-				query: queryString
-			});
-		}
+		const { connection, datasetId, query, storeLocation, inputKey, contextKey } = config;
+		const { clientId, username, password, tenantId } = connection;
 
 		try {
+
+			// Authenticate the request
+			const authRequestData = qs.stringify({
+				'grant_type': 'password',
+				'resource': 'https://analysis.windows.net/powerbi/api',
+				'client_id': clientId,
+				'scope': 'https://analysis.windows.net/powerbi/api/.default',
+				'username': username,
+				'password': password
+			});
+
+			const authResponse = await axios({
+				method: 'post',
+				url: `https://login.microsoftonline.com/${tenantId}/oauth2/token`,
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Accept': 'application/json'
+				},
+				data: authRequestData
+			});
+
 			const response = await axios({
 				method: 'post',
 				url: `https://api.powerbi.com/v1.0/myorg/datasets/${datasetId}/executeQueries`,
 				headers: {
 					'Content-Type': 'application/json',
-					'Accept': 'application/json'
+					'Accept': 'application/json',
+					'Authorization': `Bearer ${authResponse.data.access_token}`
 				},
 				data: {
-					queries: queryObjectsArray,
+					queries: [
+						{
+							query
+						}
+					],
 					serializerSettings: {
 						includeNulls: true
 					},
-					impersonatedUserName
+					impersonatedUserName: username
 				}
 			});
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response, "simple");
+				api.addToContext(contextKey, response.data, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response);
+				api.addToInput(inputKey, response.data);
 			}
 
 		} catch (error) {

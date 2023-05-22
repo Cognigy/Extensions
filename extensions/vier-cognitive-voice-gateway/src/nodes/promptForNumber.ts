@@ -4,7 +4,7 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertDuration,
+  convertDurationFromSecondsToMillis,
   DEFAULT_NUMBER_VALUE,
   normalizeInteger,
   normalizeTextArray,
@@ -125,7 +125,7 @@ export const promptForNumberNode = createNodeDescriptor({
 
     const payload = {
       status: 'prompt',
-      timeout: convertDuration(config.timeout),
+      timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
       synthesizers: normalizeTextArray(config.synthesizers),
       bargeIn: convertBargeIn(api, config),

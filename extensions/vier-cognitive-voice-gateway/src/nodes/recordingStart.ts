@@ -3,7 +3,7 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import {
-  convertDuration,
+  convertDurationFromSecondsToMillis,
   normalizeText,
 } from '../helpers/util';
 import t from '../translations';
@@ -81,7 +81,7 @@ export const recordingStartNode = createNodeDescriptor({
 
     const payload = {
       status: 'recording-start',
-      maxDuration: convertDuration(config.maxDuration),
+      maxDuration: convertDurationFromSecondsToMillis(config.maxDuration),
       recordingId: normalizeText(config.recordingId),
       speakers: speakers,
     };

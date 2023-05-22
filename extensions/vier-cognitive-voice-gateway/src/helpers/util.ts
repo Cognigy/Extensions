@@ -43,7 +43,7 @@ export function convertWhisperText(text: string | undefined | null) {
   };
 }
 
-export function convertDuration(timeout: number | undefined | null): number | undefined {
+export function convertDurationFromSecondsToMillis(timeout: number | undefined | null): number | undefined {
   if (!timeout || timeout < 0) {
     return undefined;
   }

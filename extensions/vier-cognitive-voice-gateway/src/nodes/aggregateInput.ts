@@ -5,7 +5,6 @@ import {
 import t from '../translations';
 import { convertDurationFromSecondsToMillis } from "../helpers/util";
 
-
 export interface IInactivityTimerParams extends INodeFunctionBaseParams {
   config: {
     enable: boolean;
@@ -13,10 +12,10 @@ export interface IInactivityTimerParams extends INodeFunctionBaseParams {
   };
 }
 
-export const inactivityTimerNode = createNodeDescriptor({
-  type: 'timer',
-  defaultLabel: t.timer.nodeLabel,
-  summary: t.timer.nodeSummary,
+export const aggregateInputNode = createNodeDescriptor({
+  type: 'aggregate-input',
+  defaultLabel: t.aggregateInput.nodeLabel,
+  summary: t.aggregateInput.nodeSummary,
   appearance: {
     color: 'green',
   },
@@ -25,8 +24,8 @@ export const inactivityTimerNode = createNodeDescriptor({
     {
       type: 'toggle',
       key: 'enable',
-      label: t.timer.enableTimerLabel,
-      description: t.timer.enableTimerDescription,
+      label: t.aggregateInput.enableFieldLabel,
+      description: t.aggregateInput.enableFieldDescription,
       defaultValue: true,
       params: {
         required: true,
@@ -35,12 +34,13 @@ export const inactivityTimerNode = createNodeDescriptor({
     {
       type: 'number',
       key: 'timeout',
-      label: t.timer.useStartInputsLabel,
+      label: t.aggregateInput.timeoutFieldLabel,
+      description: t.aggregateInput.timeoutFieldDescription,
       params: {
-        min: 2,
-        max: 20,
+        min: 1,
+        max: 15,
       },
-      defaultValue: 10,
+      defaultValue: 3,
       condition: {
         key: 'enable',
         value: true,
@@ -76,12 +76,12 @@ export const inactivityTimerNode = createNodeDescriptor({
         return;
       }
       payload = {
-        status: 'inactivity-start',
+        status: 'aggregation-start',
         timeout: timeout,
       };
     } else {
       payload = {
-        status: 'inactivity-stop',
+        status: 'aggregation-stop',
       };
     }
     api.say('', payload);

@@ -110,7 +110,11 @@ function toNumberOrUndefined(numeric: number | string | undefined | null): numbe
     return undefined;
   }
   if (typeof numeric === 'string') {
-    const parsedNumber = Number(numeric);
+    const trimmed = numeric.trim()
+    if (trimmed === '') {
+      return undefined
+    }
+    const parsedNumber = Number(trimmed);
     return isNaN(parsedNumber) ? undefined : parsedNumber;
   }
   if (typeof numeric !== 'number') {

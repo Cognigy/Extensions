@@ -123,6 +123,7 @@ export const promptForNumberNode = createNodeDescriptor({
       });
     }
 
+    const maxDigits = normalizeInteger(config.maxDigits, 1, undefined);
     const payload = {
       status: 'prompt',
       timeout: convertDurationFromSecondsToMillis(config.timeout),
@@ -132,8 +133,8 @@ export const promptForNumberNode = createNodeDescriptor({
       type: {
         name: 'Number',
         submitInputs: submitInputs,
-        minDigits: normalizeInteger(config.minDigits, undefined, undefined),
-        maxDigits: normalizeInteger(config.maxDigits, undefined, undefined),
+        minDigits: normalizeInteger(config.minDigits, undefined, maxDigits),
+        maxDigits: maxDigits,
       },
     };
     api.say(config.text, payload);

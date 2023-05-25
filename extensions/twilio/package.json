@@ -17,12 +17,13 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
-    "twilio": "^3.33.0",
+    "axios": "^0.21.2",
+    "qs": "^6.11.2",
     "tslint": "^6.1.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^13.13.15",
-    "typescript": "^3.8.3",
-    "@types/twilio": "0.0.10"
+    "typescript": "^3.8.3"
   }
 }

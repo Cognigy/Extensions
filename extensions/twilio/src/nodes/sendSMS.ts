@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import * as Twilio from 'twilio';
-
+import axios from 'axios';
+const qs = require('qs');
 
 export interface ISendSMSParams extends INodeFunctionBaseParams {
 	config: {
@@ -127,21 +127,34 @@ export const sendSMSNode = createNodeDescriptor({
 		if (!from) throw new Error("The sender is missing. Define the 'from' field.");
 		if (!to) throw new Error("The receiver is missing. Define a 'to' field.");
 
-		let result = null;
 		try {
-			const client = Twilio(accountSid, authToken);
 
-			result = await client.messages.create({
-				from,
-				body,
-				to
+			const smsData = qs.stringify({
+				'From': from,
+				'Body': body,
+				'To': to
+			});
+
+			const response = await axios({
+				method: 'post',
+				url: `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': 'Basic '
+				},
+				auth: {
+					username: accountSid,
+					password: authToken
+				},
+				data: smsData
 			});
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, result, "simple");
+				api.addToContext(contextKey, response.data, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, result);
+				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

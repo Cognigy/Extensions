@@ -3,28 +3,28 @@
 export default {
     aggregateInput: {
         enableFieldDescription: {
-            'default': "Check this option to enable the input aggregation, uncheck it to disable the input aggregation.",
-            'deDE': "Aktiviere diese Option um die Aussagenaggregation einzuschalten, bzw. deaktivere sie um die Aussagenaggregation abzuschalten.",
+            'default': "To activate the aggregation of utterances, activate this switch.",
+            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktiviere diese Option.",
         },
         enableFieldLabel: {
-            'default': "Enable or disable the input aggregation",
-            'deDE': "Schaltet die Aussagenaggregation ein oder aus",
+            'default': "Enable or disable the utterance aggregation",
+            'deDE': "Aggregation von Aussagen aktivieren oder deaktivieren",
         },
         nodeLabel: {
-            'default': "Aggregate Input",
-            'deDE': "Aussagen Aggregieren",
+            'default': "Aggregate Utterances",
+            'deDE': "Aussagen aggregieren",
         },
         nodeSummary: {
-            'default': "Activate Input Aggregation",
-            'deDE': "Aktiviere die Aussagenaggregation",
+            'default': "Activate Aggregation of Utterances",
+            'deDE': "Aggregation von Aussagen aktivieren",
         },
         timeoutFieldDescription: {
-            'default': "This option configures the time in (s) after the last utterance, after which the input is considered complete and is delivered to the bot.",
-            'deDE': "Die Option konfiguriert die Zeit in (s) nach der letzten Aussage, aber der die Aussage als vollständig gilt und an den Bot geliefert wird.",
+            'default': "Select the time after the last utterance after which the utterance is considered complete and should be delivered to the bot.",
+            'deDE': "Wählen Sie die Zeit, die nach der letzten Aussage abgelaufen sein muss, damit sie als vollständig gilt und an den Bot geliefert wird.",
         },
         timeoutFieldLabel: {
-            'default': "Sets the Input Aggregation Timeout in (s)",
-            'deDE': "Setzt die Zeit in (s) nach der die Aussagenaggregation endet",
+            'default': "Utterance Aggregation Timeout in (s)",
+            'deDE': "Zeit in (s), nach der die Aggregation der Aussagen endet",
         },
     },
     bargeIn: {

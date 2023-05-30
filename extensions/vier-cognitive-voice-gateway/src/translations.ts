@@ -4,7 +4,7 @@ export default {
     aggregateInput: {
         enableFieldDescription: {
             'default': "To activate the aggregation of utterances, activate this switch.",
-            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktiviere diese Option.",
+            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Siese diesen Schalter.",
         },
         enableFieldLabel: {
             'default': "Enable or disable the utterance aggregation",

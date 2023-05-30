@@ -205,7 +205,7 @@ export default {
             'deDE': "Maximal erlaubte Ziffernanzahl",
         },
         inputMinDigitsDescription: {
-            'default': "Enter the minimum number of digits required for this prompt to complete successfully. If this option is enabled, the prompt completes successfully when at least this many digits are entered.",
+            'default': "Enter the minimum number of digits required for the prompt to succeed.",
             'deDE': "Geben Sie die Anzahl der Ziffern ein, die für den Erfolg der Eingabeaufforderung mindestens erforderlich sind.",
         },
         inputMinDigitsLabel: {

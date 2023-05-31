@@ -77,8 +77,8 @@
     {
       "name": "twilio",
       "label": "Twilio",
-      "version": "4.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/twilio400/twilio.tar.gz",
+      "version": "4.0.1",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/twilio401/twilio.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/twilio",
       "description": "Integrates Cognigy.AI with Twilio",
       "longDescription": "Twilio is an American cloud communications platform as a service (CPaaS) company based in San Francisco, California. It allows software developers to programmatically make and receive phone calls, send and receive text messages, and perform other communication functions using its web service APIs. With the Twilio integration, the virtual agent can send SMS messages to any chat or voice user in order to start a multi-factor authentication process or send additional information in parallel.",

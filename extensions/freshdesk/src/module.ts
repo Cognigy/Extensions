@@ -5,6 +5,7 @@ import { freshdeskAPIKeyConnection } from "./connections/freshdeskAPIKeyConnecti
 import { getTicketNode, onFoundTicket, onNotFoundTicket } from "./nodes/tickets/getTicket";
 import { updateTicketNode } from "./nodes/tickets/updateTicket";
 import { filterTicketsNode, onFoundTicketByFilter, onNotFoundTicketsByFilter } from "./nodes/tickets/filterTickets";
+import { replyToTicketNode } from "./nodes/tickets/replyToTicket";
 
 
 export default createExtension({
@@ -19,7 +20,9 @@ export default createExtension({
 
 		filterTicketsNode,
 		onFoundTicketByFilter,
-		onNotFoundTicketsByFilter
+		onNotFoundTicketsByFilter,
+
+		replyToTicketNode
 	],
 
 	connections: [

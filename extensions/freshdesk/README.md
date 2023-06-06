@@ -34,3 +34,7 @@ This Flow Nodes updates a ticket with a given **Ticket ID** using the available 
 ## Node: Filter Tickets
 
 This Flow Node returns all available tickets based on a given filter. Therefore, one could search for all tickets that are assigned or created by a specific person.
+
+## Node: Reply to Ticket
+
+This Flow Node replies to a Freshdesk ticket and, thus, sends the message to the actual user. Therefore, it answers emails through Freshdesk as well. In a potential scenario, the user is sending an email to the Freshdesk support inbox while this message is forwarded to Cognigy.AI via Freshdesk [Automations](https://support.freshdesk.com/en/support/solutions/articles/37614-setting-up-automation-rules-to-run-on-ticket-creation) and [Webhooks](https://support.freshdesk.com/en/support/solutions/articles/132589-using-webhooks-in-automation-rules-that-run-on-ticket-updates). Then, the Cognigy virtual agents creates the answer that fits the incoming support request and sends the message via the "Reply to Ticket" Flow Node. 

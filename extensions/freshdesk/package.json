@@ -1,6 +1,6 @@
 {
 	"name": "freshdesk",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"description": "Integrates with Freshdesk",
 	"main": "build/module.js",
 	"scripts": {

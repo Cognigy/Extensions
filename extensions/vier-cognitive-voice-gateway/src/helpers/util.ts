@@ -43,7 +43,7 @@ export function convertWhisperText(text: string | undefined | null) {
   };
 }
 
-export function convertDuration(timeout: number | undefined | null): number | undefined {
+export function convertDurationFromSecondsToMillis(timeout: number | undefined | null): number | undefined {
   if (!timeout || timeout < 0) {
     return undefined;
   }
@@ -110,7 +110,11 @@ function toNumberOrUndefined(numeric: number | string | undefined | null): numbe
     return undefined;
   }
   if (typeof numeric === 'string') {
-    const parsedNumber = Number(numeric);
+    const trimmed = numeric.trim()
+    if (trimmed === '') {
+      return undefined
+    }
+    const parsedNumber = Number(trimmed);
     return isNaN(parsedNumber) ? undefined : parsedNumber;
   }
   if (typeof numeric !== 'number') {

@@ -4,7 +4,7 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertDuration,
+  convertDurationFromSecondsToMillis,
   DEFAULT_NUMBER_VALUE,
   normalizeInteger,
   normalizeTextArray,
@@ -123,17 +123,18 @@ export const promptForNumberNode = createNodeDescriptor({
       });
     }
 
+    const maxDigits = normalizeInteger(config.maxDigits, 1, undefined);
     const payload = {
       status: 'prompt',
-      timeout: convertDuration(config.timeout),
+      timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
       synthesizers: normalizeTextArray(config.synthesizers),
       bargeIn: convertBargeIn(api, config),
       type: {
         name: 'Number',
         submitInputs: submitInputs,
-        minDigits: normalizeInteger(config.minDigits, undefined, undefined),
-        maxDigits: normalizeInteger(config.maxDigits, undefined, undefined),
+        minDigits: normalizeInteger(config.minDigits, undefined, maxDigits),
+        maxDigits: maxDigits,
       },
     };
     api.say(config.text, payload);

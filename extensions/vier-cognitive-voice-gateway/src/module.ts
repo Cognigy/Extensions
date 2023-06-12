@@ -12,6 +12,7 @@ import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
 import { inactivityTimerNode } from './nodes/inactivityTimer';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
+import { aggregateInputNode } from "./nodes/aggregateInput";
 import {
   checkOutboundResultNode,
   onOutboundDefault,
@@ -40,6 +41,7 @@ export default createExtension({
     onOutboundDefault,  // child
     setSpeechtoTextServiceNode,
     inactivityTimerNode,
+    aggregateInputNode,
   ],
   options: {
     label: 'VIER Voice',

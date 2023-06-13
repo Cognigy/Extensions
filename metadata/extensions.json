@@ -1996,6 +1996,31 @@
           "tags": []
         }
       ]
+    },
+    {
+      "name": "bvg",
+      "label": "BVG",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/bvg400/bvg.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/bvg",
+      "description": "This Extension uses the open BVG Transport REST API in order to search for stops and display current departures or arrivals",
+      "longDescription": "This Extension utilizes the BVG Transport API to search for stops and display current departures or arrivals, offering features such as filtering transportation types and outputting results as interactive messages.",
+      "tags": ["BVG", "Transport"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "findStops",
+          "defaultLabel": "Find Stations",
+          "description": "Finds a list of stations based on a query",
+          "tags": []
+        },
+        {
+          "type": "findSgetStopInfoops",
+          "defaultLabel": "Get Station Info",
+          "description": "Returns the departure or arrival information",
+          "tags": []
+        }
+      ]
     }
   ]
 }

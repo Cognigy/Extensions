@@ -3,7 +3,7 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
-import { convertDuration } from "../helpers/util";
+import { convertDurationFromSecondsToMillis } from "../helpers/util";
 
 
 export interface IInactivityTimerParams extends INodeFunctionBaseParams {
@@ -70,7 +70,7 @@ export const inactivityTimerNode = createNodeDescriptor({
 
     let payload: object;
     if (config.enable) {
-      const timeout = convertDuration(config.timeout);
+      const timeout = convertDurationFromSecondsToMillis(config.timeout);
       if (!timeout) {
         api.log("error", "a timeout must be set to a positive number of seconds when starting the inactivity detection!");
         return;
@@ -79,7 +79,6 @@ export const inactivityTimerNode = createNodeDescriptor({
         status: 'inactivity-start',
         timeout: timeout,
       };
-      api.say('', payload);
     } else {
       payload = {
         status: 'inactivity-stop',

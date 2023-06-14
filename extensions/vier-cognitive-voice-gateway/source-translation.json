@@ -148,14 +148,19 @@
         "nodeLabel": "Check Outbound Result",
         "nodeSummary": "Check the Result of the Outbound Call"
     },
-
     "timer": {
         "nodeLabel": "Inactivity Timeout",
         "nodeSummary": "Sets the Inactivity Timeout in (s)",
         "useStartInputsLabel": "Activate Inactivity Timeout",
-        "inputTimeoutStopDescription": "Stops the Inactivity Timeout detection",
-        "inputTimeoutStartDescription": "The Inactivity Timeout can only be set, if not already in the CVG project settings duration",
         "enableTimerLabel": "Enable or disable the timer",
         "enableTimerDescription": "Check this option to enable the inactivity timer, uncheck it to disable the timer."
+    },
+    "aggregateInput": {
+        "nodeLabel": "Aggregate Input",
+        "nodeSummary": "Activate Input Aggregation",
+        "timeoutFieldLabel": "Sets the Input Aggregation Timeout in (s)",
+        "timeoutFieldDescription": "This option configures the time in seconds after the last utterance, after which the input is considered complete and is delivered to the bot.",
+        "enableFieldLabel": "Enable or disable the input aggregation",
+        "enableFieldDescription": "Check this option to enable the input aggregation, uncheck it to disable the input aggregation."
     }
 }

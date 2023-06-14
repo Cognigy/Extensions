@@ -4,7 +4,7 @@ import {
 } from '@cognigy/extension-tools';
 import t from '../translations';
 import {
-  convertDuration,
+  convertDurationFromSecondsToMillis,
   normalizeTextArray,
 } from "../helpers/util";
 import {
@@ -108,7 +108,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
 
     const payload = {
       status: 'prompt',
-      timeout: convertDuration(config.timeout),
+      timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
       synthesizers: normalizeTextArray(config.synthesizers),
       bargeIn: convertBargeIn(api, config),

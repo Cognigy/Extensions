@@ -1,6 +1,32 @@
 /* tslint:disable:quotemark */
 // This code is generated!
 export default {
+    aggregateInput: {
+        enableFieldDescription: {
+            'default': "To activate the aggregation of utterances, activate this switch.",
+            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Siese diesen Schalter.",
+        },
+        enableFieldLabel: {
+            'default': "Enable or disable the utterance aggregation",
+            'deDE': "Aggregation von Aussagen aktivieren oder deaktivieren",
+        },
+        nodeLabel: {
+            'default': "Aggregate Utterances",
+            'deDE': "Aussagen aggregieren",
+        },
+        nodeSummary: {
+            'default': "Activate Aggregation of Utterances",
+            'deDE': "Aggregation von Aussagen aktivieren",
+        },
+        timeoutFieldDescription: {
+            'default': "Select the time after the last utterance after which the utterance is considered complete and should be delivered to the bot.",
+            'deDE': "Wählen Sie die Zeit, die nach der letzten Aussage abgelaufen sein muss, damit sie als vollständig gilt und an den Bot geliefert wird.",
+        },
+        timeoutFieldLabel: {
+            'default': "Utterance Aggregation Timeout in (s)",
+            'deDE': "Zeit in (s), nach der die Aggregation der Aussagen endet",
+        },
+    },
     bargeIn: {
         input: {
             confidenceDescription: {
@@ -121,8 +147,8 @@ export default {
             'deDE': "Auswahlmöglichkeiten",
         },
         nodeLabel: {
-            'default': "Ask Customer Multiple Choice Question",
-            'deDE': "Stelle dem Kunden eine Multiple-Choice-Frage",
+            'default': "Ask a Multiple Choice Question",
+            'deDE': "Multiple-Choice-Frage stellen",
         },
         nodeSummary: {
             'default': "Say something to the call with a multiple choice prompt",
@@ -171,27 +197,32 @@ export default {
     },
     promptForNumber: {
         inputMaxDigitsDescription: {
-            'default': "Enter the amount of digits the number can have. If this option is enabled, the input ends as soon as the amount of digits is reached.",
-            'deDE': "Geben Sie ein, wie viele Ziffern die Rufnummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
+            'default': "Enter the maximum number of digits that the number can have. If this option is enabled, then the input ends as soon as the amount of digits is reached.",
+            'deDE': "Geben Sie die Ziffernanzahl ein, die die Nummer maximal haben darf. Wenn diese Option aktiviert ist, endet die Eingabe, sobald die maximale Anzahl erreicht ist.",
         },
         inputMaxDigitsLabel: {
             'default': "Maximum Allowed Digits",
+            'deDE': "Maximal erlaubte Ziffernanzahl",
         },
         inputMinDigitsDescription: {
-            'default': "The minimum amount of digits required for this prompt to complete successfully. If this property is set, the prompt completes successfully if at least as many digits were entered.",
+            'default': "Enter the minimum number of digits required for the prompt to succeed.",
+            'deDE': "Geben Sie die Anzahl der Ziffern ein, die für den Erfolg der Eingabeaufforderung mindestens erforderlich sind.",
         },
         inputMinDigitsLabel: {
             'default': "Minimum Required Digits",
+            'deDE': "Erforderliche Mindestanzahl von Ziffern",
         },
         inputSubmitInputsDescription: {
-            'default': "One or more synonyms to end an number input, such as DTMF_#",
+            'default': "Select one or more characters with which the caller should confirm the phone number entry. Allowed are 0-9, * and #. You can enter only one character per line.",
+            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
         },
         inputSubmitInputsLabel: {
             'default': "Submit Inputs",
+            'deDE': "Eingaben übermitteln",
         },
         nodeLabel: {
-            'default': "Ask Customer for Number",
-            'deDE': "Frage den Kunden nach einer Nummer",
+            'default': "Ask for a Number",
+            'deDE': "Nach einer Nummer fragen",
         },
         nodeSummary: {
             'default': "Say something to the caller with a prompt to enter a number",
@@ -498,14 +529,6 @@ export default {
         enableTimerLabel: {
             'default': "Enable or disable the inactivity timer",
             'deDE': "Inaktivitätstimer aktivieren oder deaktivieren",
-        },
-        inputTimeoutStartDescription: {
-            'default': "You can set the Inactivity Timeout only if it is not already set in the VIER Cognitive Voice Gateway project settings.",
-            'deDE': "Sie können die Inaktivitätszeitüberschreitung nur einstellen, wenn sie noch nicht in den Projekteinstellungen von VIER Cognitive Voice Gateway festgelegt wurde.",
-        },
-        inputTimeoutStopDescription: {
-            'default': "Stops the Inactivity Timeout detection",
-            'deDE': "Stoppt die Zeitüberschreitungs-Erkennung bei Inaktivität",
         },
         nodeLabel: {
             'default': "Inactivity Timeout",

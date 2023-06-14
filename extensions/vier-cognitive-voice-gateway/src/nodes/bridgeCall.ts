@@ -3,7 +3,7 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import {
-  convertDuration,
+  convertDurationFromSecondsToMillis,
   convertWhisperText,
   delay,
   normalizeData,
@@ -92,7 +92,7 @@ export const bridgeCallNode = createNodeDescriptor({
       extensionLength: config.extensionLength,
       callerId: normalizeText(config.callerId),
       customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
-      ringTimeout: convertDuration(config.ringTimeout),
+      ringTimeout: convertDurationFromSecondsToMillis(config.ringTimeout),
       acceptAnsweringMachines: config.acceptAnsweringMachines,
       data: normalizeData(api, config.data),
       whispering: convertWhisperText(config.whisperingText),

@@ -2021,6 +2021,31 @@
           "tags": []
         }
       ]
+    },
+    {
+      "name": "freshsales",
+      "label": "Freshsales",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/freshsales400/freshsales.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/freshsales",
+      "description": "This Extension integrates with Freshsales CRM",
+      "longDescription": "Selling is hard. Juggling multiple tools is harder. That’s where Freshsales (formerly Freshworks CRM) comes in. Your sales and marketing teams no longer have to switch between multiple platforms. With this Extension, the virtual agent is able to search for information in Freshsales and provide details to the calling or chatting customer.",
+      "tags": ["Sales", "CRM", "Contact", "Account", "Deal"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "search",
+          "defaultLabel": "Search",
+          "description": "Searches for contacts, accounts, users or deals",
+          "tags": []
+        },
+        {
+          "type": "getInfo",
+          "defaultLabel": "Get Info",
+          "description": "Retrieves detailed information from contacts, accounts, or deals",
+          "tags": []
+        }
+      ]
     }
   ]
 }

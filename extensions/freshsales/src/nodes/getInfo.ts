@@ -44,7 +44,7 @@ export const getInfoNode = createNodeDescriptor({
 				deDE: "Art"
 			},
 			type: "select",
-			defaultValue: "contact",
+			defaultValue: "contacts",
 			description: {
 				default: "The type of the search result",
 				deDE: "Die Art des Suchergebnis"

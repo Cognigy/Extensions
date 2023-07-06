@@ -80,7 +80,7 @@ export const searchContactsNode = createNodeDescriptor({
                 default: "Should the email address be used for the search query?",
                 deDE: "Soll die E-Mail Adresse für die Suchanfrage verwendet werden?",
             },
-            defaultValue: true
+            defaultValue: false
         },
         {
             key: "email",
@@ -108,7 +108,7 @@ export const searchContactsNode = createNodeDescriptor({
                 default: "Should the full name be used for the search query?",
                 deDE: "Soll der Name für die Suchanfrage verwendet werden?",
             },
-            defaultValue: true
+            defaultValue: false
         },
         {
             key: "displayName",
@@ -136,7 +136,7 @@ export const searchContactsNode = createNodeDescriptor({
                 default: "Should the mobile number be used for the search query?",
                 deDE: "Soll die Handynummer für die Suchanfrage verwendet werden?",
             },
-            defaultValue: true
+            defaultValue: false
         },
         {
             key: "mobile",
@@ -295,20 +295,20 @@ export const searchContactsNode = createNodeDescriptor({
             });
         }
 
+        let queryData = {
+            "items": [{
+                "data": {
+                    "query": {
+                        "filter": {}
+                    }
+                }
+            }]
+        };
+
         try {
 
-            let queryData = {
-                "items": [{
-                    "data": {
-                        "query": {
-                            "filter": {}
-                        }
-                    }
-                }]
-            };
-
             // Add the dynamic filters for the query data
-            queryData["item"]["data"]["query"]["filter"]["or"] = filters;
+            queryData["items"][0]["data"]["query"]["filter"][filterOperator] = filters;
 
             const response = await axios({
                 method: "post",
@@ -321,27 +321,33 @@ export const searchContactsNode = createNodeDescriptor({
                 data: queryData
             });
 
-            if (response.data?.items?.length === 0) {
+
+            if (response?.data?.items?.length === 0) {
                 const onErrorChild = childConfigs.find(child => child.type === "onNotFoundContacts");
                 api.setNextNode(onErrorChild.id);
-
-                if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data.items, "simple");
-                } else {
-                    // @ts-ignore
-                    api.addToInput(inputKey, response.data.items);
-                }
             } else {
+
+                const contactResponse = await axios({
+                    method: "get",
+                    url: `https://api.getbase.com/v2/contacts/${response.data.items[0]items[0].data.id}`,
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                });
+
                 const onSuccessChild = childConfigs.find(child => child.type === "onFoundContacts");
                 api.setNextNode(onSuccessChild.id);
 
                 if (storeLocation === "context") {
-                    api.addToContext(contextKey, response.data?.items, "simple");
+                    api.addToContext(contextKey, response?.data?.items, "simple");
                 } else {
                     // @ts-ignore
-                    api.addToInput(inputKey, response.data?.items);
+                    api.addToInput(inputKey, response?.data?.items);
                 }
             }
+
         } catch (error) {
 
             const onErrorChild = childConfigs.find(child => child.type === "onNotFoundContacts");
@@ -354,6 +360,7 @@ export const searchContactsNode = createNodeDescriptor({
                 api.addToInput(inputKey, { error: error });
             }
         }
+
     }
 });
 

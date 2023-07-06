@@ -305,10 +305,10 @@ export const searchContactsNode = createNodeDescriptor({
                         }
                     }
                 }]
-            }
+            };
 
             // Add the dynamic filters for the query data
-            queryData["item"]["data"]["query"]["filter"][filterOperator] = filters;
+            queryData["item"]["data"]["query"]["filter"]["or"] = filters;
 
             const response = await axios({
                 method: "post",

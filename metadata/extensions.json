@@ -2046,6 +2046,31 @@
           "tags": []
         }
       ]
+    },
+    {
+      "name": "zendesk-sell",
+      "label": "Zendesk Sell",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk-sell400/zendesk-sell.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/zendesk-sell",
+      "description": "Integrates Cognigy.AI with the Zendesk Sell CRM System",
+      "longDescription": "Cognigy.AI virtual agents integrated with Zendesk Sell CRM offer a powerful solution to enhance customer experiences. This integration combines advanced conversational AI with a comprehensive customer relationship management system, resulting in improved efficiency, personalized interactions, and streamlined processes. By leveraging natural language processing and machine learning capabilities, Cognigy.AI virtual agents understand customer queries and provide accurate responses. Integration with Zendesk Sell CRM grants access to customer data, purchase history, and preferences, enabling virtual agents to deliver highly personalized interactions. This personalization increases customer satisfaction and loyalty.",
+      "tags": ["Sales", "CRM", "Contact"],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFfUlEQVR4nO2a7U9TdxTHv+fXpwsDATejMYoS022uSrJ4F7PFKJjpQi2CuFVmiSjJtuzN/pW9IBtJMxZjosnmlgmMFUFtoSCiZckSTZZoIjpfGaFWsLa0vWcvjItRHnrb+4Tz867tvb9zcnp7Hr6nwGv+39DzL8LhOvtb8eqfBLCHAWGWU0ZAhBzYdoRe/CAW+9JR8k/qHDMa8EKAXjGyCqPhpW9ZloOZ+5V3m4howAyvjGbBx7y+PpJ1urKtzHTOaIeMZtHfudt7+lHZajoBRfxqpENGs2Siq6k/+VCR5r8A8e9GOWQ0y2b6Wt+ZeG52bStgCwFgA3wylLyzfCy2wyHd3dYL8Cdq7rMwC1eBxZDlyYxLWtUMoiG8Qk+CqmbH7e1Mv1FJTQz6Qy+HjEZ1t1dTfzKVziYDUGw9ejhkNAW1u7L/bIIU0UECvVo7ZDQF9/sef/eMNC8dIxZ9WME5oaiBZ4s/mKhyOluh2AaxQoOgSTm7Hd4szcX39BB4n1ZnGoC6MrgUNfVTqXS1ywfGIGhlPQmazfyyHMys3hRvUXK2FTVFaip6rJf7kkhLAaKVM0VqrvrUBrriZY7SDmBllEhdZK9Nvq54hkQ7K7bzsHh10DVj37zZ4Jq/vqaHGfv1tlUA2lWBxXC7Q2lkJg8C1h2gDPlW+PZm6Xqsrpdsyj4j7OWJ/k/AM6hmKiW4tIUVspyyZJj27/F/P8dS5hgIlgqCocuPWt+ZOGUc7azYLBMEw7c/Hn/3zLp1dJQgBmCBxGjK+mvNrh9nS6sihwjiAkwOgmn7v5r6qZRz+2ij2SXS1AWo230r7al2+ZjFBbN8MH0DTHIwI5VkPiVQyAz7pgcAeLqGW5W1t8GEAcoSAQCAjf7uGco6TjAJQyV3woe73wcrTn2tEKOy7C+EQunlLv179GB59n7lbwD2Qt9WPaswGuxQxBYwfgC4QjdThFkkEtsB3Fnu0nd39c7e+NnjJYfcp7D+GqPAROQX2PgwgCe6WWF1Zc7jvzG/9e1kI7PtInQukU9zwHj0EkjZC0JWT2NqIM/Z+fQDRxMRBvW08ywJMibGJpCz1wH0WE+DapC/CialjHQE0G+Aer4KMGLhMRBaAHqol0G1bPEHE4+B4wqxLtXh5TI4MTIIcBtA03oYLISdLaemkSxrg6AB0njvsHAfcDXaD0EnrBSE2kBXfPWGmcOcE5rODos3QleG+wBuByihlbFiWS/3JT07ppoUFmFoFISlO8Gr0X4oSjNAyzYwRkE1kVRJSbkXhCEtfg7Lt8Kx0WGwfS9gnRLp9namK9a+2cxMQ8Welc8swLh2aRxs/xiEuWINasXGj759Uu4sbS22OuQ7DDGuhYchbJ8BmCnGoJZs8nXFHUzHQNRX6BnqpsHxyAAIHVaqDltbTk0ryUw7gYYKWc2rH4cnoj0Q6AAhrvpenagNnIlXVV9vJqZLUFkdCtMDroz0IicCILJMTlgvTybfeyfmBaAqCIULIrHhEHKiEUCm4DM0hjw35l1SxQECwvneU5wiFIsMQ6I6EKWKOkdD3N7OtDNZcQhQ8vqnSrGSGGNkZByCfQBmizxLM9xtnY8o6wqwQP9y12qhCTLGoxcBfG6lxOjxd89UKeXtUGhJPUE7UfRqtB9Ex0HW6RM2tHw3XVKR9IOwqLKkrSp8ZaQXQAcA6+gJ+84mXNsuHwDEgtVBe1l8ItoDRRy1krLkdt9Kez640AgggheCoM9eIDYcgsPRAEDR5fwCoI33nrjuVTTgaZ/wH/otRsYujsJp2wPAOiXym850KisdJsb5Z+/puRlijEZG4RAHrTRFyv5gQhACTBi0kyBj/rq2c/d+ZMWfmIw8MMReHtw5/XXVnCNXbrYfrzGbfwH379ZZgtk2kAAAAABJRU5ErkJggg==",
+      "nodes": [
+        {
+          "type": "searchContacts",
+          "defaultLabel": "Search Contacts",
+          "description": "Searches for CRM conptacts",
+          "tags": ["search"]
+        },
+        {
+          "type": "getContactDetails",
+          "defaultLabel": "Get Contact Details",
+          "description": "Returns the details of a given contact by id",
+          "tags": []
+        }
+      ]
     }
   ]
 }

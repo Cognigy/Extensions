@@ -1,12 +1,14 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { zendeskSellOAuth2AccessTokenConnection } from "./connections/zendeskSellOAuth2AccessTokenConnection";
-import { searchNode } from "./nodes/search";
+import { onFoundContacts, onNotFoundContacts, searchContactsNode } from "./nodes/search";
 
 
 
 export default createExtension({
 	nodes: [
-		searchNode
+		searchContactsNode,
+		onFoundContacts,
+		onNotFoundContacts
 	],
 
 	connections: [

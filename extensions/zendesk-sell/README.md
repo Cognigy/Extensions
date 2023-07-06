@@ -18,4 +18,5 @@ All exposed Flow Nodes of this Extension follow the [Zendesk Sales CRM API](http
 
 ### Exposed Nodes
 
-- [Search](https://developer.zendesk.com/api-reference/sales-crm/search/introduction/)
+- [Search Contacts](https://developer.zendesk.com/api-reference/sales-crm/search/introduction/)
+- [Get Contact Details](https://developer.zendesk.com/api-reference/sales-crm/resources/contacts/#retrieve-a-single-contact)

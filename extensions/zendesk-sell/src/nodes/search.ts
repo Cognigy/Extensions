@@ -141,8 +141,8 @@ export const searchContactsNode = createNodeDescriptor({
         {
             key: "mobile",
             label: {
-                default: "Full Name",
-                deDE: "Name"
+                default: "Mobile Number",
+                deDE: "Handynummer"
             },
             type: "cognigyText",
             params: {
@@ -219,7 +219,6 @@ export const searchContactsNode = createNodeDescriptor({
             label: {
                 default: "Storage Option",
                 deDE: "Speicheroption",
-                esES: "Opción de almacenamiento"
             },
             defaultCollapsed: true,
             fields: [
@@ -249,6 +248,13 @@ export const searchContactsNode = createNodeDescriptor({
             "onNotFoundContacts"
         ]
     },
+    tokens: [
+		{
+			label: "First Found Contact ID",
+			script: "input.zendesk.contacts[0].items[0].data.id",
+			type: "input"
+		}
+	],
     function: async ({ cognigy, config, childConfigs }: ISearchContactsParams) => {
         const { api } = cognigy;
         const { filterOperator, useMobile, useEmail, useDisplayName, mobile, email, displayName, connection, storeLocation, contextKey, inputKey } = config;
@@ -260,7 +266,7 @@ export const searchContactsNode = createNodeDescriptor({
             filters.push({
                 "filter": {
                     "attribute": {
-                        "name": "mobile"
+                        "name": "phone_numbers.mobile"
                     },
                     "parameter": {
                         "starts_with": mobile
@@ -326,16 +332,6 @@ export const searchContactsNode = createNodeDescriptor({
                 const onErrorChild = childConfigs.find(child => child.type === "onNotFoundContacts");
                 api.setNextNode(onErrorChild.id);
             } else {
-
-                const contactResponse = await axios({
-                    method: "get",
-                    url: `https://api.getbase.com/v2/contacts/${response.data.items[0]items[0].data.id}`,
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${accessToken}`
-                    }
-                });
 
                 const onSuccessChild = childConfigs.find(child => child.type === "onFoundContacts");
                 api.setNextNode(onSuccessChild.id);

@@ -22,6 +22,12 @@
         "inputExtensionLengthLabel": "Extension Length",
         "inputExtensionLengthDescription": "The range of extensions to choose a number from"
     },
+    "refer": {
+        "nodeLabel": "Refer Call",
+        "nodeSummary": "Transfer the call to a different destination using SIP REFER",
+        "inputDestinationLabel": "Destination",
+        "inputDestinationDescription": "The destination to transfer to (+E.164 number or SIP URI)"
+    },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
         "nodeSummary": "Say something to the call with a multiple choice prompt",
@@ -147,6 +153,10 @@
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
         "nodeSummary": "Check the Result of the Outbound Call"
+    },
+    "referService": {
+        "nodeLabel": "Check Refer Result",
+        "nodeSummary": "Check the result of the call refer"
     },
     "timer": {
         "nodeLabel": "Inactivity Timeout",

@@ -104,14 +104,6 @@ export default {
         },
     },
     forward: {
-        inputDestinationNumberDescription: {
-            'default': "Enter the phone number you want to forward the call to (with country code, e.g. +49721480848680).",
-            'deDE': "Geben Sie die Rufnummer ein, an die weitergeleitet werden soll (mit Ländervorwahl, z. B. +49721480848680).",
-        },
-        inputDestinationNumberLabel: {
-            'default': "Destination Phone Number",
-            'deDE': "Ziel-Rufnummer",
-        },
         nodeLabel: {
             'default': "Forward Call",
             'deDE': "Anruf weiterleiten",
@@ -282,17 +274,9 @@ export default {
         },
     },
     refer: {
-        inputDestinationDescription: {
-            'default': "Enter the phone number you want to forward the call to (with country code or SIP URI).",
-            'deDE': "Geben Sie die Rufnummer ein, an die weitergeleitet werden soll (mit Ländervorwahl oder SIP-URI).",
-        },
-        inputDestinationLabel: {
-            'default': "Destination",
-            'deDE': "Ziel",
-        },
         nodeLabel: {
-            'default': "Forward Call (SIP REFER)",
-            'deDE': "Anruf weiterleiten (SIP-REFER)",
+            'default': "Use SIP REFER",
+            'deDE': "Via SIP-REFER weiterleiten",
         },
         nodeSummary: {
             'default': "Forward the call to a different destination using SIP REFER",
@@ -301,12 +285,12 @@ export default {
     },
     referService: {
         nodeLabel: {
-            'default': "Check Forward Result",
-            'deDE': "Weiterleitungsergbnis prüfen",
+            'default': "Check SIP REFER result",
+            'deDE': "SIP-REFER-Ergebnis prüfen",
         },
         nodeSummary: {
-            'default': "Check the result of the call forward",
-            'deDE': "Ergebnis der Anrufweiterleitung prüfen",
+            'default': "Check the result of the previous forwarding via SIP REFER",
+            'deDE': "Ergebnis der vorangehenden Weiterleitung via SIP-REFER prüfen",
         },
     },
     sendData: {
@@ -371,6 +355,14 @@ export default {
         inputDataLabel: {
             'default': "Custom Data",
             'deDE': "Benutzerdefinierte Daten",
+        },
+        inputDestinationDescription: {
+            'default': "Enter the destination as a phone number with country code (e.g. +491467...) or as a SIP URI (e.g. sip:user@example.org).",
+            'deDE': "Geben Sie das Ziel als Rufnummer mit Ländervorwahl (z. B. +491467...) oder als SIP-URI (z. B. sip:user@example.org) ein.",
+        },
+        inputDestinationLabel: {
+            'default': "Destination",
+            'deDE': "Ziel",
         },
         inputEndFlowDescription: {
             'default': "To stop the flow after executing this node, activate this checkbox.",

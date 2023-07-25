@@ -26,8 +26,8 @@ export const referCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'destination',
-      label: t.refer.inputDestinationLabel,
-      description: t.refer.inputDestinationDescription,
+      label: t.shared.inputDestinationLabel,
+      description: t.shared.inputDestinationDescription,
       params: {
         required: true,
         placeholder: '+E.164 number or SIP URI',

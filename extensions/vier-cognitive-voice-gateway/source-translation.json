@@ -7,8 +7,6 @@
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
-        "inputDestinationNumberLabel": "Destination Number",
-        "inputDestinationNumberDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
         "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
         "sectionAdditionalDataLabel": "Data",
@@ -24,9 +22,7 @@
     },
     "refer": {
         "nodeLabel": "Refer Call",
-        "nodeSummary": "Transfer the call to a different destination using SIP REFER",
-        "inputDestinationLabel": "Destination",
-        "inputDestinationDescription": "The destination to transfer to (+E.164 number or SIP URI)"
+        "nodeSummary": "Transfer the call to a different destination using SIP REFER"
     },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
@@ -102,6 +98,8 @@
         "inputExperimentalEnableRingingToneDescription": "Enables the playback of a ringing tone while the call is pending. This option will change in the future.",
         "inputWhisperingTextLabel": "Whisperred Text to the transfered party",
         "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined",
+        "inputDestinationLabel": "Destination Number",
+        "inputDestinationDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
         "childSuccessLabel": "On Success",
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",

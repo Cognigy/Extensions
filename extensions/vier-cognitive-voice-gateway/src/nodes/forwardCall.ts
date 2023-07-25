@@ -39,8 +39,8 @@ export const forwardCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'destinationNumber',
-      label: t.forward.inputDestinationNumberLabel,
-      description: t.forward.inputDestinationNumberDescription,
+      label: t.shared.inputDestinationLabel,
+      description: t.shared.inputDestinationDescription,
       params: {
         required: true,
       },

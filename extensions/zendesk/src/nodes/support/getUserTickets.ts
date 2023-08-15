@@ -1,30 +1,30 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from "axios";
 
-export interface IGetTicketParams extends INodeFunctionBaseParams {
+export interface IGetUserTicketsParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
 			username: string;
 			password: string;
 			subdomain: string;
 		};
-		ticketId: number;
+		email: string;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
 	};
 }
-export const getTicketNode = createNodeDescriptor({
-	type: "getTicket",
+export const getUserTicketsNode = createNodeDescriptor({
+	type: "getUserTicketsNode",
 	defaultLabel: {
-		default: "Get Ticket",
-		deDE: "Erhalte Ticket",
-		esES: "Obtener Ticket"
+		default: "Get User Tickets",
+		deDE: "Erhalte Nutzer Tickets",
+		esES: "Obtener Tickets"
 	},
 	summary: {
-		default: "Retrieves the information about a given ticket",
-		deDE: "Erhält alle Infos über ein bestimmtes Ticket",
-		esES: "Recupera la información sobre un ticket determinado"
+		default: "Retrieves the information about user tickets",
+		deDE: "Erhält alle Infos über Nutzer Tickets",
+		esES: "Recupera la información sobre tickets"
 	},
 	fields: [
 		{
@@ -41,13 +41,18 @@ export const getTicketNode = createNodeDescriptor({
 			}
 		},
 		{
-			key: "ticketId",
-			label: "Ticket ID",
+			key: "email",
+            label: {
+				default: "Email Address",
+				deDE: "E-Mail Adresse",
+                esES: "Dirección de correo electrónico"
+			},
 			type: "cognigyText",
+            defaultValue: "{{profile.email}}",
             description: {
-                default: "The ID of the support ticket",
-                deDE: "Die ID des Support Tickets",
-                esES: "La identificación del ticket de soporte"
+                default: "The requester's email address",
+                deDE: "Die E-Mail Adresse der Nutzerin",
+                esES: "La dirección de correo electrónico del usuario"
             },
 			params: {
 				required: true,
@@ -123,7 +128,7 @@ export const getTicketNode = createNodeDescriptor({
 	],
 	form: [
 		{ type: "field", key: "connection" },
-		{ type: "field", key: "ticketId" },
+		{ type: "field", key: "email" },
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
@@ -131,20 +136,20 @@ export const getTicketNode = createNodeDescriptor({
 	},
 	dependencies: {
 		children: [
-			"onFoundTicket",
-			"onNotFoundTicket"
+			"onFoundUserTickets",
+			"onNotFoundUserTickets"
 		]
 	},
-	function: async ({ cognigy, config, childConfigs }: IGetTicketParams) => {
+	function: async ({ cognigy, config, childConfigs }: IGetUserTicketsParams) => {
 		const { api } = cognigy;
-		const { ticketId, connection, storeLocation, contextKey, inputKey } = config;
+		const { email, connection, storeLocation, contextKey, inputKey } = config;
 		const { username, password, subdomain } = connection;
 
 		try {
 
 			const response = await axios({
 				method: "get",
-				url: `https://${subdomain}.zendesk.com/api/v2/tickets/${ticketId}`,
+				url: `https://${subdomain}.zendesk.com/api/v2/search.json?query=type:ticket requester:${email}`,
 				headers: {
 					"Accept": "application/json",
 					"Content-Type": "application/json"
@@ -155,18 +160,18 @@ export const getTicketNode = createNodeDescriptor({
 				}
 			});
 
-			const onSuccessChild = childConfigs.find(child => child.type === "onFoundTicket");
+			const onSuccessChild = childConfigs.find(child => child.type === "onFoundUserTickets");
 			api.setNextNode(onSuccessChild.id);
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data.ticket, "simple");
+				api.addToContext(contextKey, response.data.results, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data.ticket);
+				api.addToInput(inputKey, response.data.results);
 			}
 		} catch (error) {
 
-			const onErrorChild = childConfigs.find(child => child.type === "onNotFoundTicket");
+			const onErrorChild = childConfigs.find(child => child.type === "onNotFoundUserTickets");
 			api.setNextNode(onErrorChild.id);
 
 			if (storeLocation === "context") {
@@ -179,12 +184,12 @@ export const getTicketNode = createNodeDescriptor({
 	}
 });
 
-export const onFoundTicket = createNodeDescriptor({
-	type: "onFoundTicket",
-	parentType: "getTicket",
+export const onFoundUserTickets = createNodeDescriptor({
+	type: "onFoundUserTickets",
+	parentType: "getUserTicketsNode",
 	defaultLabel: {
 		default: "On Found",
-		deDE: "Ticket gefunden",
+		deDE: "Tickets gefunden",
 		esES: "Encontre"
 	},
 	constraints: {
@@ -205,12 +210,12 @@ export const onFoundTicket = createNodeDescriptor({
 	}
 });
 
-export const onNotFoundTicket = createNodeDescriptor({
-	type: "onNotFoundTicket",
-	parentType: "getTicket",
+export const onNotFoundUserTickets = createNodeDescriptor({
+	type: "onNotFoundUserTickets",
+	parentType: "getUserTicketsNode",
 	defaultLabel: {
 		default: "On Not Found",
-		deDE: "Kein Ticket gefunden",
+		deDE: "Keine Tickets gefunden",
 		esES: "Nada Encontrado"
 	},
 	constraints: {

@@ -11,6 +11,7 @@ import { getPhoneNumbersNode } from "./nodes/talk/getPhoneNumbers";
 import { requestCallbackNode } from "./nodes/talk/requestCallback";
 import { startLiveChatNode } from "./nodes/liveChat/startLiveChat";
 import { zendeskChatAccountKeyConnection } from "./connections/zendeskChatAccountKeyConnection";
+import { getUserTicketsNode, onFoundUserTickets, onNotFoundUserTickets } from "./nodes/support/getUserTickets";
 
 
 export default createExtension({
@@ -20,6 +21,10 @@ export default createExtension({
 		getTicketNode,
 		onFoundTicket,
 		onNotFoundTicket,
+
+		getUserTicketsNode,
+		onFoundUserTickets,
+		onNotFoundUserTickets,
 
 		updateTicketNode,
 

@@ -11,6 +11,7 @@ import {
 
 export interface TransferCallInputs extends EndFlowInputs {
   callerId?: string;
+  userToUserInformation?: Array<string>
   customSipHeaders?: object;
   ringTimeout?: number;
   acceptAnsweringMachines?: boolean;
@@ -29,7 +30,14 @@ const callerIdField: INodeField = {
   },
 };
 
-const customSipHeadersField: INodeField = {
+export const userToUserField: INodeField = {
+  type: 'textArray',
+  key: 'userToUserInformation',
+  label: t.shared.inputUserToUserLabel,
+  description: t.shared.inputUserToUserDescription,
+};
+
+export const customSipHeadersField: INodeField = {
   type: 'json',
   key: 'customSipHeaders',
   label: t.shared.inputCustomSipHeadersLabel,
@@ -82,6 +90,7 @@ const whisperingTextField: INodeField = {
 export const transferCallFields: Array<INodeField> = [
   callerIdField,
   customSipHeadersField,
+  userToUserField,
   ringTimeoutField,
   acceptAnsweringMachinesField,
   dataField,
@@ -97,10 +106,10 @@ const callSection: INodeSection = {
   defaultCollapsed: true,
 };
 
-const sipHeadersSection: INodeSection = {
-  key: 'sipHeaders',
-  fields: [customSipHeadersField.key],
-  label: t.shared.inputCustomSipHeadersLabel,
+const sipSection: INodeSection = {
+  key: 'sip',
+  fields: [userToUserField.key, customSipHeadersField.key],
+  label: t.shared.sectionSipLabel,
   defaultCollapsed: true,
 };
 
@@ -120,7 +129,7 @@ const additionalSettingsSection: INodeSection = {
 
 export const transferCallSections: Array<INodeSection> = [
   callSection,
-  sipHeadersSection,
+  sipSection,
   additionalDataSection,
   additionalSettingsSection,
 ];
@@ -131,7 +140,7 @@ export const transferCallForm: Array<INodeFieldAndSectionFormElement> = [
     type: 'section',
   },
   {
-    key: sipHeadersSection.key,
+    key: sipSection.key,
     type: 'section',
   },
   {

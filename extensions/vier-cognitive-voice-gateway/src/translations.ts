@@ -428,6 +428,12 @@ export default {
             'default': "Timeout",
             'deDE': "Zeitüberschreitung",
         },
+        inputUserToUserDescription: {
+            'default': "A list of opaque strings that are send as User-To-User SIP headers.",
+        },
+        inputUserToUserLabel: {
+            'default': "User-To-User Information",
+        },
         inputWhisperingTextDescription: {
             'default': "Enter the text that should be announced to the agent the call is forwarded to before the call partners are connected.",
             'deDE': "Geben Sie den Text ein, der dem:der Agent:in bei der Weiterleitung angesagt werden soll, bevor die Gesprächspartner:innen verbunden werden.",
@@ -435,6 +441,9 @@ export default {
         inputWhisperingTextLabel: {
             'default': "Whispering Announcement",
             'deDE': "Whispering-Ansage",
+        },
+        sectionSipLabel: {
+            'default': "SIP",
         },
         sectionStopConditionLabel: {
             'default': "Stop Condition",

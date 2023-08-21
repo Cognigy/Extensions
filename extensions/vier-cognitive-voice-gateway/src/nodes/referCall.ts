@@ -1,10 +1,16 @@
 import { INodeFunctionBaseParams, createNodeDescriptor } from "@cognigy/extension-tools";
 import t from '../translations';
-import { normalizeText } from "../helpers/util";
+import {
+  normalizeSipHeaders,
+  normalizeText,
+  normalizeUserToUserInformation,
+} from "../helpers/util";
 import { EndFlowInputs, endFlowField } from "../common/shared";
 
 interface IReferCallInputs extends EndFlowInputs {
   destination: string;
+  userToUserInformation?: Array<string>
+  customSipHeaders?: object;
 }
 
 export interface IReferCallParams extends INodeFunctionBaseParams {
@@ -33,6 +39,9 @@ export const referCallNode = createNodeDescriptor({
         placeholder: '+E.164 number or SIP URI',
       },
     },
+    // TODO enable these once CVG supports them
+    // userToUserField,
+    // customSipHeadersField,
     endFlowField,
   ],
   preview: {
@@ -45,6 +54,8 @@ export const referCallNode = createNodeDescriptor({
     const payload = {
       status: 'refer',
       destination: normalizeText(config.destination),
+      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      userToUserInformation: normalizeUserToUserInformation(config.userToUserInformation),
     };
 
     api.say('', payload);

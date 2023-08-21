@@ -86,6 +86,8 @@
         "inputCallerIdDescription": "The phone number displayed to the callee. (This is a best-effort option, correct display can not be guaranteed)",
         "inputCustomSipHeadersLabel": "Custom SIP Headers",
         "inputCustomSipHeadersDescription": "An object where each property is the name of a header, and the value is a list of strings. All header names must begin with X-.",
+        "inputUserToUserLabel": "User-To-User Information",
+        "inputUserToUserDescription": "A list of opaque strings that are send as User-To-User SIP headers.",
         "inputRingTimeoutLabel": "Ring Timeout (s)",
         "inputRingTimeoutDescription": "The maximum time (in seconds) the call will be ringing before the attempt will be cancelled",
         "inputAcceptAnsweringMachinesLabel": "Accept Answering Machines",
@@ -103,7 +105,8 @@
         "childSuccessLabel": "On Success",
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
-        "childDefaultLabel": "Default"
+        "childDefaultLabel": "Default",
+        "sectionSipLabel": "SIP"
     },
     "bargeIn": {
       "input": {

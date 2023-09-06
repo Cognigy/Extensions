@@ -20,6 +20,13 @@ import {
   onOutboundSuccess,
   onOutboundTermination,
 } from './nodes/checkOutboundResult';
+import {
+  checkReferResultNode,
+  onReferDefault, 
+  onReferFailure,
+  onReferSuccess
+} from './nodes/checkReferResult';
+import { referCallNode } from './nodes/referCall';
 
 export default createExtension({
   nodes: [
@@ -32,6 +39,7 @@ export default createExtension({
     sendDataNode,
     forwardCallNode,
     bridgeCallNode,
+    referCallNode,
     terminateCallNode,
     speakNode,
     checkOutboundResultNode,
@@ -39,6 +47,10 @@ export default createExtension({
     onOutboundFailure, // child
     onOutboundTermination, // child
     onOutboundDefault,  // child
+    checkReferResultNode,
+    onReferSuccess, // child
+    onReferFailure, // child
+    onReferDefault, // child
     setSpeechtoTextServiceNode,
     inactivityTimerNode,
     aggregateInputNode,

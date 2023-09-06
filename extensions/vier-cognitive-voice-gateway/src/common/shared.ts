@@ -1,4 +1,6 @@
 import {
+  INodeAppearance,
+  INodeConstraints,
   INodeField,
   INodeFieldTranslations,
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
@@ -111,3 +113,25 @@ export const endFlowField: INodeField = {
     required: true,
   },
 };
+
+export const commonChildNodeFields: { 
+  appearance: INodeAppearance,
+  constraints?: INodeConstraints
+} = {
+  constraints: {
+    editable: false,
+    deletable: false,
+    creatable: false,
+    movable: false,
+    placement: {
+      predecessor: {
+        whitelist: [],
+      },
+    },
+  },
+  appearance: {
+    color: '#61d188',
+    textColor: 'white',
+    variant: 'mini',
+  },
+}

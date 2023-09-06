@@ -7,8 +7,6 @@
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
-        "inputDestinationNumberLabel": "Destination Number",
-        "inputDestinationNumberDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
         "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
         "sectionAdditionalDataLabel": "Data",
@@ -21,6 +19,10 @@
         "inputHeadNumberDescription": "The phone number prefix to bridge to",
         "inputExtensionLengthLabel": "Extension Length",
         "inputExtensionLengthDescription": "The range of extensions to choose a number from"
+    },
+    "refer": {
+        "nodeLabel": "Refer Call",
+        "nodeSummary": "Transfer the call to a different destination using SIP REFER"
     },
     "multipleChoicePrompt": {
         "nodeLabel": "Get Multiple Choice Answer from Caller",
@@ -84,6 +86,8 @@
         "inputCallerIdDescription": "The phone number displayed to the callee. (This is a best-effort option, correct display can not be guaranteed)",
         "inputCustomSipHeadersLabel": "Custom SIP Headers",
         "inputCustomSipHeadersDescription": "An object where each property is the name of a header, and the value is a list of strings. All header names must begin with X-.",
+        "inputUserToUserLabel": "User-To-User Information",
+        "inputUserToUserDescription": "A list of opaque strings that are send as User-To-User SIP headers.",
         "inputRingTimeoutLabel": "Ring Timeout (s)",
         "inputRingTimeoutDescription": "The maximum time (in seconds) the call will be ringing before the attempt will be cancelled",
         "inputAcceptAnsweringMachinesLabel": "Accept Answering Machines",
@@ -96,10 +100,13 @@
         "inputExperimentalEnableRingingToneDescription": "Enables the playback of a ringing tone while the call is pending. This option will change in the future.",
         "inputWhisperingTextLabel": "Whisperred Text to the transfered party",
         "inputWhisperingTextDescription": "The text played out to the person the call is transfered to before both call parties will be joined",
+        "inputDestinationLabel": "Destination Number",
+        "inputDestinationDescription": "The phone number to forward to (+E.164 format, e.g. +49721480848680)",
         "childSuccessLabel": "On Success",
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
-        "childDefaultLabel": "Default"
+        "childDefaultLabel": "Default",
+        "sectionSipLabel": "SIP"
     },
     "bargeIn": {
       "input": {
@@ -147,6 +154,10 @@
     "outboundService": {
         "nodeLabel": "Check Outbound Result",
         "nodeSummary": "Check the Result of the Outbound Call"
+    },
+    "referService": {
+        "nodeLabel": "Check Refer Result",
+        "nodeSummary": "Check the result of the call refer"
     },
     "timer": {
         "nodeLabel": "Inactivity Timeout",

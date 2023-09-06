@@ -4,7 +4,7 @@ export default {
     aggregateInput: {
         enableFieldDescription: {
             'default': "To activate the aggregation of utterances, activate this switch.",
-            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Siese diesen Schalter.",
+            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Sie diesen Schalter.",
         },
         enableFieldLabel: {
             'default': "Enable or disable the utterance aggregation",
@@ -104,14 +104,6 @@ export default {
         },
     },
     forward: {
-        inputDestinationNumberDescription: {
-            'default': "Enter the phone number you want to forward the call to (with country code, e.g. +49721480848680).",
-            'deDE': "Geben Sie die Rufnummer ein, an die weitergeleitet werden soll (mit Ländervorwahl, z. B. +49721480848680).",
-        },
-        inputDestinationNumberLabel: {
-            'default': "Destination Phone Number",
-            'deDE': "Ziel-Rufnummer",
-        },
         nodeLabel: {
             'default': "Forward Call",
             'deDE': "Anruf weiterleiten",
@@ -281,6 +273,26 @@ export default {
             'deDE': "Gesprächsaufzeichnung anhalten oder beenden",
         },
     },
+    refer: {
+        nodeLabel: {
+            'default': "Use SIP REFER",
+            'deDE': "Via SIP-REFER weiterleiten",
+        },
+        nodeSummary: {
+            'default': "Forward the call to a different destination using SIP REFER",
+            'deDE': "Anruf mittels SIP-REFER an ein anderes Ziel weiterleiten",
+        },
+    },
+    referService: {
+        nodeLabel: {
+            'default': "Check SIP REFER result",
+            'deDE': "SIP-REFER-Ergebnis prüfen",
+        },
+        nodeSummary: {
+            'default': "Check the result of the previous forwarding via SIP REFER",
+            'deDE': "Ergebnis der vorangehenden Weiterleitung via SIP-REFER prüfen",
+        },
+    },
     sendData: {
         inputDataDescription: {
             'default': "Enter an object with arbitrary properties. Each property must have a string value.",
@@ -343,6 +355,14 @@ export default {
         inputDataLabel: {
             'default': "Custom Data",
             'deDE': "Benutzerdefinierte Daten",
+        },
+        inputDestinationDescription: {
+            'default': "Enter the destination as a phone number with country code (e.g. +491467...) or as a SIP URI (e.g. sip:user@example.org).",
+            'deDE': "Geben Sie das Ziel als Rufnummer mit Ländervorwahl (z. B. +491467...) oder als SIP-URI (z. B. sip:user@example.org) ein.",
+        },
+        inputDestinationLabel: {
+            'default': "Destination",
+            'deDE': "Ziel",
         },
         inputEndFlowDescription: {
             'default': "To stop the flow after executing this node, activate this checkbox.",
@@ -408,13 +428,22 @@ export default {
             'default': "Timeout",
             'deDE': "Zeitüberschreitung",
         },
+        inputUserToUserDescription: {
+            'default': "A list of opaque strings that are send as User-To-User SIP headers.",
+        },
+        inputUserToUserLabel: {
+            'default': "User-To-User Information",
+        },
         inputWhisperingTextDescription: {
-            'default': "Enter the text that should be announced to the agent the call is transfered to before the call partners are connected.",
+            'default': "Enter the text that should be announced to the agent the call is forwarded to before the call partners are connected.",
             'deDE': "Geben Sie den Text ein, der dem:der Agent:in bei der Weiterleitung angesagt werden soll, bevor die Gesprächspartner:innen verbunden werden.",
         },
         inputWhisperingTextLabel: {
             'default': "Whispering Announcement",
             'deDE': "Whispering-Ansage",
+        },
+        sectionSipLabel: {
+            'default': "SIP",
         },
         sectionStopConditionLabel: {
             'default': "Stop Condition",

@@ -9,6 +9,7 @@ import {
   normalizeText,
   convertDurationFromSecondsToMillis,
   delay,
+  normalizeUserToUserInformation,
 } from '../helpers/util';
 import t from '../translations';
 import {
@@ -39,8 +40,8 @@ export const forwardCallNode = createNodeDescriptor({
     {
       type: 'cognigyText',
       key: 'destinationNumber',
-      label: t.forward.inputDestinationNumberLabel,
-      description: t.forward.inputDestinationNumberDescription,
+      label: t.shared.inputDestinationLabel,
+      description: t.shared.inputDestinationDescription,
       params: {
         required: true,
       },
@@ -78,6 +79,7 @@ export const forwardCallNode = createNodeDescriptor({
       destinationNumber: normalizeText(config.destinationNumber),
       callerId: normalizeText(config.callerId),
       customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+      userToUserInformation: normalizeUserToUserInformation(config.userToUserInformation),
       ringTimeout: convertDurationFromSecondsToMillis(config.ringTimeout),
       acceptAnsweringMachines: config.acceptAnsweringMachines,
       data: normalizeData(api, config.data),

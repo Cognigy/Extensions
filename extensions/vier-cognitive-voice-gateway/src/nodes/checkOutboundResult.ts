@@ -3,6 +3,7 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
+import { commonChildNodeFields } from '../common/shared';
 
 export const checkOutboundResultNode = createNodeDescriptor({
   type: 'outboundService',
@@ -35,19 +36,24 @@ export const checkOutboundResultNode = createNodeDescriptor({
       return child;
     }
 
-    const onFailureChild = childByType('onOutboundFailure');
     const onSuccessChild = childByType('onOutboundSuccess');
+    const onFailureChild = childByType('onOutboundFailure');
     const onTerminateChild = childByType('onOutboundTermination');
     const onDefaultChild = childByType('onOutboundDefault');
 
-    if (cognigy.input.data.status === 'outbound-success') {
-      api.setNextNode(onSuccessChild.id);
-    } else if (cognigy.input.data.status === 'outbound-failure') {
-      api.setNextNode(onFailureChild.id);
-    } else if (cognigy.input.data.status === 'termination') {
-      api.setNextNode(onTerminateChild.id);
-    } else {
-      api.setNextNode(onDefaultChild.id);
+    switch (cognigy.input.data.status) {
+      case 'outbound-success':
+        api.setNextNode(onSuccessChild.id);
+        break;
+      case 'outbound-failure':
+        api.setNextNode(onFailureChild.id);
+        break;
+      case 'termination':
+        api.setNextNode(onTerminateChild.id);
+        break;
+      default:
+        api.setNextNode(onDefaultChild.id);
+        break;
     }
   },
 });
@@ -56,86 +62,26 @@ export const onOutboundSuccess = createNodeDescriptor({
   type: 'onOutboundSuccess',
   parentType: 'outbound',
   defaultLabel: t.shared.childSuccessLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: [],
-      },
-    },
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini',
-  },
+  ...commonChildNodeFields,
 });
 
 export const onOutboundFailure = createNodeDescriptor({
   type: 'onOutboundFailure',
   parentType: 'outbound',
   defaultLabel: t.shared.childFailureLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: [],
-      },
-    },
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini',
-  },
+  ...commonChildNodeFields,
 });
 
 export const onOutboundTermination = createNodeDescriptor({
   type: 'onOutboundTermination',
   parentType: 'outbound',
   defaultLabel: t.shared.childTerminationLabel,
-  constraints: {
-    editable: false,
-    deletable: false,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: [],
-      },
-    },
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini',
-  },
+  ...commonChildNodeFields,
 });
 
 export const onOutboundDefault = createNodeDescriptor({
   type: 'onOutboundDefault',
   parentType: 'outbound',
   defaultLabel: t.shared.childDefaultLabel,
-  constraints: {
-    editable: false,
-    deletable: true,
-    creatable: false,
-    movable: false,
-    placement: {
-      predecessor: {
-        whitelist: [],
-      },
-    },
-  },
-  appearance: {
-    color: '#61d188',
-    textColor: 'white',
-    variant: 'mini',
-  },
+  ...commonChildNodeFields,
 });

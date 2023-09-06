@@ -103,6 +103,25 @@ export function normalizeSipHeaders(headersObject: object | undefined): CustomSi
   return headers;
 }
 
+export function normalizeUserToUserInformation(userToUserInformation: Array<string> | undefined): Array<string> | undefined {
+  if (!Array.isArray(userToUserInformation)) {
+    return undefined;
+  }
+
+  const information: Array<string> = []
+  for (const line of userToUserInformation) {
+    if (line === undefined || line === null || line === '') {
+      continue;
+    }
+    information.push(`${line}`)
+  }
+  if (information.length === 0) {
+    return undefined;
+  }
+
+  return information;
+}
+
 export const DEFAULT_NUMBER_VALUE = 'none';
 
 function toNumberOrUndefined(numeric: number | string | undefined | null): number | undefined {

@@ -1,0 +1,32 @@
+{
+  "name": "lekab",
+  "version": "2.1.0",
+  "description": "Integrates Lekab functionality with Cognigy.AI",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz lekab.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zipfull": "tar cfz lekab.tar.gz build/* node_modules package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run copyfile && npm run zip",
+    "copyfile": "copy src/lekab.js build/lekab.js",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Lekab",
+    "SMS"
+  ],
+  "author": "Petteri Paasikunnas / Lekab",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.13.0",
+    "axios": "^0.21.4",
+    "fatal": "^0.0.1",
+    "qs": "^6.11.2",
+    "tslint": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/node": "^13.13.15",
+    "typescript": "^3.8.3"
+  }
+}

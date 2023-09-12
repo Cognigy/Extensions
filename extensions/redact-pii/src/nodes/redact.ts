@@ -199,37 +199,37 @@ export const redactNode = createNodeDescriptor({
                 required: true
             }
         },
-        {
-            key: "addCustomPatterns",
-            label: {
-                default: "Add Custom Patterns",
-            },
-            type: "toggle",
-            defaultValue: false,
-            params: {
-                required: true
-            }
-        },
-        {
-            key: "customPatterns",
-            label: {
-                default: "Custom Patterns",
-            },
-            type: "typescript",
-            defaultValue: `[
-    {
-        "regexpPattern": /\b(cat|dog|cow)s?\b/gi,
-        "replaceWith": "ANIMAL"
-    }
-]`,
-            params: {
-                required: true
-            },
-            condition: {
-                key: "addCustomPatterns",
-                value: true
-            }
-        },
+        // {
+        //     key: "addCustomPatterns",
+        //     label: {
+        //         default: "Add Custom Patterns",
+        //     },
+        //     type: "toggle",
+        //     defaultValue: false,
+        //     params: {
+        //         required: true
+        //     }
+        // },
+//         {
+//             key: "customPatterns",
+//             label: {
+//                 default: "Custom Patterns",
+//             },
+//             type: "typescript",
+//             defaultValue: `[
+//     {
+//         "regexpPattern": /\b(cat|dog|cow)s?\b/gi,
+//         "replaceWith": "ANIMAL"
+//     }
+// ]`,
+//             params: {
+//                 required: true
+//             },
+//             condition: {
+//                 key: "addCustomPatterns",
+//                 value: true
+//             }
+//         },
         {
             key: "storeLocation",
             type: "select",
@@ -312,8 +312,8 @@ export const redactNode = createNodeDescriptor({
                 "zipcode",
                 "url",
                 "digits",
-                "addCustomPatterns",
-                "customPatterns"
+                // "addCustomPatterns",
+                // "customPatterns"
             ]
         }
     ],

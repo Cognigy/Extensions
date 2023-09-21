@@ -10,5 +10,8 @@ export default createExtension({
 
 	connections: [
 		lekabConnection
-	]
+	],
+	options: {
+		label: "Lekab"
+	}
 });

@@ -6,6 +6,10 @@ import {
   normalizeUserToUserInformation,
 } from "../helpers/util";
 import { EndFlowInputs, endFlowField } from "../common/shared";
+import {
+  customSipHeadersField,
+  userToUserField,
+} from "../common/transferCall";
 
 interface IReferCallInputs extends EndFlowInputs {
   destination: string;
@@ -39,9 +43,8 @@ export const referCallNode = createNodeDescriptor({
         placeholder: '+E.164 number or SIP URI',
       },
     },
-    // TODO enable these once CVG supports them
-    // userToUserField,
-    // customSipHeadersField,
+    userToUserField,
+    customSipHeadersField,
     endFlowField,
   ],
   preview: {

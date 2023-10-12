@@ -696,7 +696,7 @@
       "nodes": [
         {
           "type": "sendSMS",
-          "defaultLabel": Send SMS",
+          "defaultLabel": "Send SMS",
           "description": "Send SMS via Lekab",
           "tags": ["sms"]
         }

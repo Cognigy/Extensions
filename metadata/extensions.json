@@ -684,6 +684,25 @@
       ]
     },
     {
+      "name": "lekab",
+      "label": "Lekab",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/lekab400/lekab.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/lekab",
+      "description": "Integrates Lekab functionality with Cognigy.AI",
+      "longDescription": "This repository provides an integration between Cognigy.AI and Lekab, a powerful communication platform. The integration allows you to seamlessly connect Cognigy.AI to Lekab's services, enabling efficient communication through SMS.",
+      "tags": ["lekab", "sms"],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF/////2wi93KC3AAAAC5JREFUeNrs1DERAAAIxLDHv2kwwMTGJQI6NoFRRwI/AoAnCngieKKAJ7JoAQYA0xAGAYmAgh0AAAAASUVORK5CYII=",
+      "nodes": [
+        {
+          "type": "sendSMS",
+          "defaultLabel": Send SMS",
+          "description": "Send SMS via Lekab",
+          "tags": ["sms"]
+        }
+      ]
+    },
+    {
       "name": "microsoft-graph",
       "label": "Microsoft Graph",
       "version": "4.2.1",

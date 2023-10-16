@@ -2071,6 +2071,25 @@
           "tags": []
         }
       ]
+    },
+    {
+      "name": "lekab",
+      "label": "Lekab",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/lekab400/lekab.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/lekab",
+      "description": "Integrates Lekab functionality with Cognigy.AI",
+      "longDescription": "Lekab offers SMS APIs, digital tools, and solutions that streamline processes and communication to increase productivity, accessibility, and improve the customer experience. Since 1994, Lekab has helped companies communicate with their customers, employees, and stakeholders. Lekab develops and integrates smart solutions and services for mobile communication and process automation for several of the largest companies in the Nordic region.",
+      "tags": ["sms", "message"],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRF/////2wi93KC3AAAAC5JREFUeNrs1DERAAAIxLDHv2kwwMTGJQI6NoFRRwI/AoAnCngieKKAJ7JoAQYA0xAGAYmAgh0AAAAASUVORK5CYII=",
+      "nodes": [
+        {
+          "type": "sendSMS",
+          "defaultLabel": "Send SMS",
+          "description": "Sends a text message (SMS)",
+          "tags": ["sms", "messaging"]
+        }
+      ]
     }
   ]
 }

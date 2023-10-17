@@ -1,13 +1,13 @@
 {
   "name": "file-upload",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Triggers the securehub-file-upload webchat plugin",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
     "zip": "tar cfz securehub-file-upload.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
-    "lint": "tslint -c tslint.json src/**/*.ts"  
+    "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
     "securehub",
@@ -19,6 +19,7 @@
     "@cognigy/extension-tools": "^0.15.1",
     "axios": "^0.21.1",
     "https": "^1.0.0",
+    "luxon": "^3.4.3",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

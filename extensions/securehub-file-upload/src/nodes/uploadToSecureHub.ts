@@ -1,6 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 const https = require('https');
+const { DateTime } = require('luxon');
 
 export interface IUploadToSecureHubParams extends INodeFunctionBaseParams {
 	config: {
@@ -10,7 +11,9 @@ export interface IUploadToSecureHubParams extends INodeFunctionBaseParams {
 		};
 		folderName: string;
 		baseUrl: string;
-		rejectUnauthCert: boolean
+		rejectUnauthCert: boolean;
+		defineLinkExpiration: boolean;
+		daysExpiration: number;
 	};
 }
 export const uploadToSecureHubNode = createNodeDescriptor({
@@ -72,21 +75,72 @@ export const uploadToSecureHubNode = createNodeDescriptor({
 			},
 			type: "toggle",
 			defaultValue: false
-		}
+		},
+		{
+			key: "defineLinkExpiration",
+			label: {
+				default: "Define Link Expiration",
+				deDE: "Ablauf des Links festlegen"
+			},
+			description: {
+				default: "Customize how many days the link should remain active?",
+				deDE: "Anpassen wie viele Tage der Link aktiv bleiben soll.",
+			},
+			type: "toggle",
+			defaultValue: false
+		},
+		{
+			key: "daysExpiration",
+			label: {
+				default: "Link Expiration (in Days)",
+				deDE: "Linkablauf (in Tagen)"
+			},
+			type: "number",
+			defaultValue: 14,
+			params: {
+				max: 90
+			},
+			condition: {
+				key: "defineLinkExpiration",
+				value: true
+			}
+		},
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "folderName" },
 		{ type: "field", key: "baseUrl" },
-		{ type: "field", key: "rejectUnauthCert" }
+		{ type: "field", key: "rejectUnauthCert" },
+		{ type: "field", key: "defineLinkExpiration" },
+		{ type: "field", key: "daysExpiration" }
+
 	],
 	appearance: {
 		color: "#c80f2e"
 	},
 	function: async ({ cognigy, config }: IUploadToSecureHubParams) => {
 		const { api } = cognigy;
-		const { connection, folderName, baseUrl, rejectUnauthCert } = config;
+		const { connection, folderName, baseUrl, rejectUnauthCert, defineLinkExpiration, daysExpiration } = config;
 		const { username, password } = connection;
+
+		function addDaysToCurrentDate(daysToAdd: number): string {
+			// Get the current date and time using Luxon
+			let currentDate = DateTime.utc();
+
+			// Add the specified number of days
+			let newDate = currentDate.plus({ days: daysToAdd });
+
+			// Format the date in the desired format: YYYY-MM-DDTHH:mm:ssZ (without milliseconds)
+			let linkExpirationDate = newDate.toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+
+			return linkExpirationDate;
+		  }
+
+		  /*
+		let currentDate = DateTime.utc();
+		let newDate = currentDate.plus({ days: daysExpiration });
+		let linkExpirationDate = newDate.toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+*/
 
 		const agent = new https.Agent({
 			rejectUnauthorized: false
@@ -110,6 +164,11 @@ export const uploadToSecureHubNode = createNodeDescriptor({
 			axiosConfig["httpsAgent"] = agent;
 		}
 
+		let linkExpirationDate;
+		if (defineLinkExpiration === true) {
+			linkExpirationDate = addDaysToCurrentDate(daysExpiration);
+		}
+
 		try {
 			const response: AxiosResponse = await axios.post(tokenUrl, data, axiosConfig);
 			let bearerToken = response.data.access_token;
@@ -119,7 +178,9 @@ export const uploadToSecureHubNode = createNodeDescriptor({
 					baseUrl,
 					folderName,
 					bearerToken,
-					rejectCertificate: rejectUnauthCert
+					rejectCertificate: rejectUnauthCert,
+					defineLinkExpiration,
+					linkExpirationDate
 				}
 			});
 		} catch (error) {

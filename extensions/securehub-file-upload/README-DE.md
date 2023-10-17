@@ -21,3 +21,17 @@ Die Base URL für die SecureHub-Umgebung. Normalerweise *securehub.yourcompanyna
 * SecureHub Verbindung
 
 Für die Verbindung benötigen wir Ihren Benutzernamen und Ihr Passwort.
+
+## Zusätzliche Einstellungen
+
+* Nicht auhorisierte Zertifikate ablehnen
+
+Wird automatisch auf „false“ gesetzt. Lassen Sie „false“, wenn Sie Zertifikatsfehler von SecureHub erhalten.
+
+* Ablauf des Links festlegen
+
+Soll der Standard-Linkablauf verwendet werden oder möchten Sie ein benutzerdefiniertes Datum verwenden?
+
+* Linkablauf (in Tagen)
+
+In wie vielen Tagen ab dem aktuellen Tag sollte der Link ablaufen?

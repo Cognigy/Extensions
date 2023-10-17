@@ -123,24 +123,6 @@ export const uploadToSecureHubNode = createNodeDescriptor({
 		const { connection, folderName, baseUrl, rejectUnauthCert, defineLinkExpiration, daysExpiration } = config;
 		const { username, password } = connection;
 
-		function addDaysToCurrentDate(daysToAdd: number): string {
-			// Get the current date and time using Luxon
-			let currentDate = DateTime.utc();
-
-			// Add the specified number of days
-			let newDate = currentDate.plus({ days: daysToAdd });
-
-			// Format the date in the desired format: YYYY-MM-DDTHH:mm:ssZ (without milliseconds)
-			let linkExpirationDate = newDate.toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
-
-			return linkExpirationDate;
-		  }
-
-		  /*
-		let currentDate = DateTime.utc();
-		let newDate = currentDate.plus({ days: daysExpiration });
-		let linkExpirationDate = newDate.toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
-*/
 
 		const agent = new https.Agent({
 			rejectUnauthorized: false
@@ -166,7 +148,14 @@ export const uploadToSecureHubNode = createNodeDescriptor({
 
 		let linkExpirationDate;
 		if (defineLinkExpiration === true) {
-			linkExpirationDate = addDaysToCurrentDate(daysExpiration);
+			// Get the current date and time using Luxon
+			let currentDate = DateTime.utc();
+
+			// Add the specified number of days
+			let newDate = currentDate.plus({ days: daysExpiration });
+
+			// Format the date in the desired format: YYYY-MM-DDTHH:mm:ssZ (without milliseconds)
+			linkExpirationDate = newDate.toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
 		}
 
 		try {

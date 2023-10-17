@@ -20,4 +20,18 @@ The base URL for the SecureHub environment. Usually *securehub.yourcompanyname.c
 
 * Connection
 
-In the conection we will need your username and password.
+In the connection we will need your username and password.
+
+## Additional Options
+
+* Reject Unauthorized Certificates
+
+Automatically set to false. Leave as false if you receive certificate errors from SecureHub.
+
+* Define Link Expiration
+
+Should the standard link expiration be used or would you like to use a custom date. 
+
+* Link Expiration (in Days)
+
+In how many days from the current day should the link expire? 

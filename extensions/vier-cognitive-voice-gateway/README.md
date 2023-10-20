@@ -30,13 +30,8 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 			<td style="border: 1px solid #ddd; padding: 8px;">Your contract &lt;say-as interpret-as=&quot;characters&quot;&gt;{{context.contractno}}&lt;/say-as&gt; is beeing updated. &lt;break time=&quot;300ms&quot;&gt;Thank you.</td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speech</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -54,10 +49,15 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
 	</tbody>
 </table>
 
-## Node: Start Recording
+## Node: Start Call Recording
 
 > Starts or resumes a recording of a call. You can record the caller, the agent (bot), or both. If you record both lines, you will get a stereo recording.
 
@@ -72,24 +72,24 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
   </thead>
   <tbody>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Maximum Recording Duration</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Maximum Call Recording Duration</td>
       <td style="border: 1px solid #ddd; padding: 8px;">The duration in seconds after which the recording will be <b>stopped</b>. Leaving this field empty, the recording will not be stopped automatically. For this purpose use the <b>Stop Recording</b> node.</td>
       <td style="border: 1px solid #ddd; padding: 8px;">60 (<i>for 60 seconds</i>)</td>
     </tr>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Recording ID</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Call Recording ID</td>
       <td style="border: 1px solid #ddd; padding: 8px;">An arbitrary string to identify the recording in case multiple recordings are created in the same dialog. By leaving this field empty, the default value default will be used.</td>
       <td style="border: 1px solid #ddd; padding: 8px;">survey recording</td>
     </tr>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Speakers to record</td>
-      <td style="border: 1px solid #ddd; padding: 8px;">Choose if you want to record both lines (Customer & Agent) or only one of both lines</td>
-      <td style="border: 1px solid #ddd; padding: 8px;">Both Lines</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Speaker to record</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Choose if you want to record both call partners (Customer & Agent) or only one of both lines</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Both Call Partners</td>
     </tr>
   </tbody>
 </table>
 
-## Node: Stop Recording
+## Node: Stop Call Recording
 
 > Pauses or stops recording a call.
 
@@ -104,12 +104,12 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Recording ID</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Call Recording ID</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The ID used to start a recording. If left empty the default value <i>default</i> will be used.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">survey recording</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Terminate Recording</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Call Recording</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the recording will be terminated rather than paused</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
@@ -142,7 +142,7 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio file URL*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The URL of the audio file</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
@@ -152,13 +152,8 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 			<td style="border: 1px solid #ddd; padding: 8px;">Welcome at VIER! </td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -173,7 +168,12 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>

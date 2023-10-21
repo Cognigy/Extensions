@@ -202,12 +202,13 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 </table>
 
 
-## Node: Set Inactivity Timeout
+## Node: Inactivity Timeout
 
-> Start inactivity detection with a specified timeout.
+> Enable or disable inactivity detection with a specified timeout.
 
-The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available.
+The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available in Cognigy.
 
+When there is no activity within the call or session, meaning neither the bot provides an output nor the user initiates an input for the defined timeout period, CVG triggers an inactivity event to com-municate with Cognigy. In this event, the value of ci.data.status is "inactive". 
 
 ### Arguments
 <table style="border-collapse: collapse;">
@@ -221,15 +222,20 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	<tbody>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Enable or disable the timer</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Check this option to enable the inactivity timer, uncheck it to disable the timer. If checked a timeout (in seconds) has to be entered.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Disabled</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Check this option to enable the inactivity timer, uncheck it to disable the timer.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enabled</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Activate Inactivity Timer (in s)</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If inactivity timeout is enabled a timeout (in seconds) has to be entered.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">10</td>
 		</tr>
 	</tbody>
 </table>
 
 ## Node: Set Speech-to-Text Service
 
-> Sets the Speech-to-Text Service for transcription of voice input
+> Sets the Speech-to-Text Service and Fallback Service for transcription of voice input
 
 ### Arguments
 <table style="border-collapse: collapse;">
@@ -248,18 +254,28 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Microsoft </td>
 		</tr>
         <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Profile Token</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Use the profile token as displayed in VIER Cognitive Voice Gateway un-der Speech service profiles > Profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"> </td>
+		</tr>
+        <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service Fallback</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Fallback if main Speech-to-Text Service is not available. One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Fallback if main Speech-to-Text Service is not available. One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Google </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Profile Token Fallback</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Use the profile token as displayed in VIER Cognitive Voice Gateway un-der Speech service profiles > Profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"> </td>
 		</tr>
 	</tbody>
 </table>
 
-## Node: Get Number from Caller
+## Node: Ask for a Number
 
 > Prompts the user to enter a number. This number needs to be entered via DTMF.
 
@@ -274,33 +290,33 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Duration in seconds after which the prompt should be cancelled.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Synthesizers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
-		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Submit Inputs</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">One or more characters with which the caller should confirm the number entry. Allowed are 0-9, * and #.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">#</td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Minimum Required Digits</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Minimum number of digits required for the prompt to succeed.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>4</i></td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Maximum Allowed Digits</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Maximum number of digits that the number can have. If this option is enabled, then the input ends as soon as the amount of digits is reached.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>5</i></td>
+		</tr>
+<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -315,28 +331,28 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Use Submit Inputs</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the two stop conditions to signal the end of the user input</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Submit Inputs</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If <b>Use Submit Inputs</b> has been selected, use this input to define either a Text-To-Speech text or a DTMF signal to end the user input</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>DTMF_#</i> or <i>Done</i></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Use Max Digits</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the two stop conditions to signal the end of the user input</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Maximum Allowed Digits</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If <b>Use Max Digits</b> has been selected, use this input to define a maximum amount of digits a user can enter. The input will end once the limit has been reached</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">5</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text-to-Speech-Profiles</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If specified, this parameter overwrites the Text-to-Speech list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
 	</tbody>
 </table>

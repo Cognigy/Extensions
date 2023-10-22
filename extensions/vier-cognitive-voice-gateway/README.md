@@ -352,7 +352,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 	</tbody>
 </table>
 
-## Node: Get Multiple Choice Answer from Caller
+## Node: Ask a Multiple Choice Question
 
 > Prompts the user to select one of several choices (e.g. yes/no answers)
 
@@ -436,8 +436,8 @@ When there is no activity within the call or session, meaning neither the bot pr
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. You can use Cognigy variables as usual. E.g.</i><br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;"accountID": "{context.accountID}",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{context.contactReason}"<br>}
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. You can use Cognigy input and context objects as usual. E.g.</i><br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;"accountID": "{{context.accountID}}",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{{context.contactReason}}"<br>}
 </td>
 		</tr>
 	</tbody>
@@ -458,7 +458,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Destination Phone Number</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Destination</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The phone number to forward the call to. Must be in +E.164 format or a SIP address.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">+4921123456789 or sip:+4921123456789@sip.cognitivevoice.io</td>
 		</tr>
@@ -477,15 +477,20 @@ When there is no activity within the call or session, meaning neither the bot pr
 			<td style="border: 1px solid #ddd; padding: 8px;">Wether to talk with answering machines or immediately hang up on them. This is a best-effort feature since this mechanism relies on heuristics to determine of the callee is an answering machine.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP User-to-User Header</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of opaque strings that are send as User-To-User Information (UUI) SIP headers. The UUI SIP header can be used to send meta data (e.g. the dialogID) about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only 128 bytes of data will be accepted for UUI and Custom SIP Headers. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr> 
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP Custom SIP Headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. The Custom SIP headers can be used to send meta data  about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. This custom data is stored in CVG and can be read using CVG’s API e.g. by a downstream system after an agent handover.</i></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Whispering Announcement</td>
@@ -498,8 +503,8 @@ When there is no activity within the call or session, meaning neither the bot pr
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">(EXPERIMENTAL) Enable Ringing Tone</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tine while the call is in the process of transferring. This is an experimental feature flag that may be removed in the future!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enable Ringing Tone</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tone while the call is in the process of transferring.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>

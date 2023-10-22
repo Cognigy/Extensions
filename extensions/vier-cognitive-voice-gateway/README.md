@@ -292,7 +292,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Please enter your 4 or 5 digit code using your number keypad.</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
@@ -369,7 +369,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Do you like cats or dogs?</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
@@ -421,7 +421,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 
 ## Node: Send Data
 
-> Attaches custom data to a dialog. This custom data can be read e.g. after an agent handover.
+> Attaches custom data to a dialog. This custom data is stored in CVG and can be read e.g. by a downstream system after an agent handover.
 
 ### Arguments
 <table style="border-collapse: collapse;">
@@ -436,7 +436,9 @@ When there is no activity within the call or session, meaning neither the bot pr
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string.You can use Cognigy variables as usual.E.g.</i><br>{<br>    "accountID": "{context.accountID}",<br>
+    "contactReason": "{context.contactReason}"<br>}
+</td>
 		</tr>
 	</tbody>
 </table>

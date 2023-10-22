@@ -314,7 +314,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 			<td style="border: 1px solid #ddd; padding: 8px;">Maximum number of digits that the number can have. If this option is enabled, then the input ends as soon as the amount of digits is reached.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>5</i></td>
 		</tr>
-<tr>
+        <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
@@ -337,11 +337,6 @@ When there is no activity within the call or session, meaning neither the bot pr
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -372,13 +367,13 @@ When there is no activity within the call or session, meaning neither the bot pr
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Duration in seconds after which the prompt should be cancelled.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
         <tr>
@@ -386,24 +381,9 @@ When there is no activity within the call or session, meaning neither the bot pr
 			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Synthesizers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
-		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -418,8 +398,23 @@ When there is no activity within the call or session, meaning neither the bot pr
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text-to-Speech-Profiles</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If specified, this parameter overwrites the Text-to-Speech list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
 	</tbody>
 </table>

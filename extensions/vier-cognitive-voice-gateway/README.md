@@ -194,7 +194,7 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio File URL*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The exact URL of the audio file started with the "Play Audio File" node.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
@@ -436,8 +436,8 @@ When there is no activity within the call or session, meaning neither the bot pr
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string.You can use Cognigy variables as usual.E.g.</i><br>{<br>    "accountID": "{context.accountID}",<br>
-    "contactReason": "{context.contactReason}"<br>}
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. You can use Cognigy variables as usual. E.g.</i><br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;"accountID": "{context.accountID}",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{context.contactReason}"<br>}
 </td>
 		</tr>
 	</tbody>

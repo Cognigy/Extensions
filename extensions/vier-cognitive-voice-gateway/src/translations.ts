@@ -205,8 +205,8 @@ export default {
             'deDE': "Erforderliche Mindestanzahl von Ziffern",
         },
         inputSubmitInputsDescription: {
-            'default': "Select one or more characters with which the caller should confirm the phone number entry. Allowed are 0-9, * and #. You can enter only one character per line.",
-            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
+            'default': "Select one or more characters with which the caller should confirm the number entry. Allowed are 0-9, * and #. You can enter only one character per line.",
+            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Nummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
         },
         inputSubmitInputsLabel: {
             'default': "Submit Inputs",

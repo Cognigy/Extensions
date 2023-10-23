@@ -587,7 +587,56 @@ After a successful bridge, the bot will not receive further messages and will no
 
 ## Node: Check Call Forwarding Result
  
-> Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.
+> Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Forward Call" and each "Forward Call for Agent Assist" a "Wait for Input" node and a “Check Call Forward Result" node are used to handle the result.
+
+### Arguments
+<i>None.</i>
+
+## Node: Use SIP REFER
+
+> Transfer the call to a different destination using [https://datatracker.ietf.org/doc/html/rfc3515](SIP REFER), if this call supports it, e.g. to perform an agent handover. Upstream systems must support the receipt of SIP REFER requests. After a successful transfer, the bot is now out of the loop and will neither receive further messages nor can send any commands. If the call is being recorded by CVG, the recording will also be stopped automatically. 
+
+### Arguments
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Destination</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The phone number to forward the call to. Must be in +E.164 format or a SIP address.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">+4921123456789 or sip:+4921123456789@sip.cognitivevoice.io</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">User-to-User Information</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of opaque strings that are send as User-To-User Information (UUI) SIP headers. The UUI SIP header can be used to send meta data (e.g. the dialogID) about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only 128 bytes of data will be accepted for UUI and Custom SIP Headers. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr> 
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. The Custom SIP headers can be used to send meta data  about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. This custom data is stored in CVG and can be read using CVG’s API e.g. by a downstream system after an agent handover.</i></td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Quit Flow</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Wether the flow should be terminated after this node did execute</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+	</tbody>
+</table>
+
+## Node: Check Use SIP Refer Result
+ 
+> Check result after a call has been forwarded by using SIP Refer. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Use SIP Refer" node a "Wait for user input" and a "Check Use SIP Refer Result" node are used to handle the result.
 
 ### Arguments
 <i>None.</i>

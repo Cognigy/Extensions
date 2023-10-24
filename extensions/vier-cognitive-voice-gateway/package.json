@@ -8,8 +8,8 @@
   "dependencies": {
     "@cognigy/extension-tools": "^0.15.1",
     "@types/node": "^18.15.11",
-    "eslint": "^8.41.0",
-    "typescript": "^5.0.4"
+    "eslint": "^8.52.0",
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "rm": "rm -f vier_voice.tar.gz",

@@ -13,6 +13,10 @@ import {
   bargeInSection,
   convertBargeIn,
 } from "../common/bargeIn";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface ISpeakNodeInputs extends BargeInInputs {
   text: string,
@@ -288,12 +292,7 @@ export const speakNode = createNodeDescriptor({
     type: 'text',
   },
   sections: [
-    {
-      key: 'general',
-      fields: ['text'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['text']),
     bargeInSection,
     // {
     //   fields: ['additionalText'],
@@ -309,10 +308,7 @@ export const speakNode = createNodeDescriptor({
     // },
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     bargeInForm,
     // {
     //   key: 'textOptions',

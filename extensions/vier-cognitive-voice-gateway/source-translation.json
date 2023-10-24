@@ -7,7 +7,6 @@
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
-        "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
         "sectionAdditionalDataLabel": "Data",
         "sectionAdditionalSettingsLabel": "Additional Settings"
@@ -106,7 +105,8 @@
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default",
-        "sectionSipLabel": "SIP"
+        "sectionSipLabel": "SIP",
+        "sectionGeneralLabel": "General Settings"
     },
     "bargeIn": {
         "input": {

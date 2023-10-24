@@ -13,6 +13,7 @@ import { speakNode } from './nodes/speak';
 import { inactivityTimerNode } from './nodes/inactivityTimer';
 import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
 import { aggregateInputNode } from "./nodes/aggregateInput";
+import { referCallNode } from './nodes/referCall';
 import {
   checkOutboundResultNode,
   onOutboundDefault,
@@ -26,7 +27,6 @@ import {
   onReferFailure,
   onReferSuccess
 } from './nodes/checkReferResult';
-import { referCallNode } from './nodes/referCall';
 
 export default createExtension({
   nodes: [

@@ -3,6 +3,10 @@ import {
   INodeFunctionBaseParams,
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface IStopPlayNodeInputs {
   url: string,
@@ -33,18 +37,10 @@ export const stopPlayNode = createNodeDescriptor({
     },
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['url'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['url']),
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
   ],
   function: async ({ cognigy, config }: IStopPlayNodeParams) => {
     const { api } = cognigy;

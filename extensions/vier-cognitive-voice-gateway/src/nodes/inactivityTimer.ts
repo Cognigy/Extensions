@@ -4,14 +4,22 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import { convertDurationFromSecondsToMillis } from "../helpers/util";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
+interface IInactivityTimerInputs {
+  enable: boolean;
+  timeout: number;
+}
 
 export interface IInactivityTimerParams extends INodeFunctionBaseParams {
-  config: {
-    enable: boolean;
-    timeout: number;
-  };
+  config: IInactivityTimerInputs;
 }
+
+const timeoutFieldKey: keyof IInactivityTimerInputs = 'timeout'
+const enableFieldKey: keyof IInactivityTimerInputs = 'enable'
 
 export const inactivityTimerNode = createNodeDescriptor({
   type: 'timer',
@@ -24,7 +32,7 @@ export const inactivityTimerNode = createNodeDescriptor({
   fields: [
     {
       type: 'toggle',
-      key: 'enable',
+      key: enableFieldKey,
       label: t.timer.enableTimerLabel,
       description: t.timer.enableTimerDescription,
       defaultValue: true,
@@ -34,7 +42,7 @@ export const inactivityTimerNode = createNodeDescriptor({
     },
     {
       type: 'number',
-      key: 'timeout',
+      key: timeoutFieldKey,
       label: t.timer.useStartInputsLabel,
       params: {
         min: 2,
@@ -42,28 +50,20 @@ export const inactivityTimerNode = createNodeDescriptor({
       },
       defaultValue: 10,
       condition: {
-        key: 'enable',
+        key: enableFieldKey,
         value: true,
       },
     },
   ],
   preview: {
-    key: 'timeout',
+    key: timeoutFieldKey,
     type: 'text',
   },
   sections: [
-    {
-      key: 'general',
-      fields: ['enable', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection([enableFieldKey, timeoutFieldKey]),
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
   ],
   function: async ({ cognigy, config }: IInactivityTimerParams) => {
     const { api } = cognigy;

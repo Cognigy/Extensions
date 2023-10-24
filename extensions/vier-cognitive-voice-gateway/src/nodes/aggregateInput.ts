@@ -4,13 +4,22 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import { convertDurationFromSecondsToMillis } from "../helpers/util";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
-export interface IInactivityTimerParams extends INodeFunctionBaseParams {
-  config: {
-    enable: boolean;
-    timeout: number;
-  };
+interface IAggregateInputInputs {
+  enable: boolean;
+  timeout: number;
 }
+
+export interface IAggregateInputParams extends INodeFunctionBaseParams {
+  config: IAggregateInputInputs;
+}
+
+const timeoutFieldKey: keyof IAggregateInputInputs = 'timeout'
+const enableFieldKey: keyof IAggregateInputInputs = 'enable'
 
 export const aggregateInputNode = createNodeDescriptor({
   type: 'aggregate-input',
@@ -23,7 +32,7 @@ export const aggregateInputNode = createNodeDescriptor({
   fields: [
     {
       type: 'toggle',
-      key: 'enable',
+      key: enableFieldKey,
       label: t.aggregateInput.enableFieldLabel,
       description: t.aggregateInput.enableFieldDescription,
       defaultValue: true,
@@ -33,7 +42,7 @@ export const aggregateInputNode = createNodeDescriptor({
     },
     {
       type: 'number',
-      key: 'timeout',
+      key: timeoutFieldKey,
       label: t.aggregateInput.timeoutFieldLabel,
       description: t.aggregateInput.timeoutFieldDescription,
       params: {
@@ -42,30 +51,22 @@ export const aggregateInputNode = createNodeDescriptor({
       },
       defaultValue: 3,
       condition: {
-        key: 'enable',
+        key: enableFieldKey,
         value: true,
       },
     },
   ],
   preview: {
-    key: 'timeout',
+    key: timeoutFieldKey,
     type: 'text',
   },
   sections: [
-    {
-      key: 'general',
-      fields: ['enable', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection([enableFieldKey, timeoutFieldKey]),
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
   ],
-  function: async ({ cognigy, config }: IInactivityTimerParams) => {
+  function: async ({ cognigy, config }: IAggregateInputParams) => {
     const { api } = cognigy;
 
     let payload: object;

@@ -124,10 +124,6 @@ export default {
             'default': "Call Settings",
             'deDE': "Anruf-Einstellungen",
         },
-        sectionGeneralLabel: {
-            'default': "General Settings",
-            'deDE': "Allgemeine Einstellungen",
-        },
     },
     multipleChoicePrompt: {
         inputChoicesDescription: {
@@ -441,6 +437,10 @@ export default {
         inputWhisperingTextLabel: {
             'default': "Whispering Announcement",
             'deDE': "Whispering-Ansage",
+        },
+        sectionGeneralLabel: {
+            'default': "General Settings",
+            'deDE': "Allgemeine Einstellungen",
         },
         sectionSipLabel: {
             'default': "SIP",

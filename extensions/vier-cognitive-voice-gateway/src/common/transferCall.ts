@@ -65,7 +65,7 @@ const acceptAnsweringMachinesField: INodeField = {
   defaultValue: true,
 };
 
-const dataField: INodeField = {
+export const dataField: INodeField = {
   type: 'json',
   key: 'data',
   label: t.shared.inputDataLabel,
@@ -106,21 +106,21 @@ const callSection: INodeSection = {
   defaultCollapsed: true,
 };
 
-const sipSection: INodeSection = {
+export const sipSection: INodeSection = {
   key: 'sip',
   fields: [userToUserField.key, customSipHeadersField.key],
   label: t.shared.sectionSipLabel,
   defaultCollapsed: true,
 };
 
-const additionalDataSection: INodeSection = {
+export const additionalDataSection: INodeSection = {
   key: 'additionalData',
   fields: [dataField.key],
   label: t.forward.sectionAdditionalDataLabel,
   defaultCollapsed: true,
 };
 
-const additionalSettingsSection: INodeSection = {
+export const additionalSettingsSection: INodeSection = {
   key: 'additionalSettings',
   fields: [whisperingTextField.key, endFlowField.key, enableRingingToneField.key],
   label: t.forward.sectionAdditionalSettingsLabel,

@@ -13,6 +13,10 @@ import {
   bargeInSection,
   convertBargeIn,
 } from "../common/bargeIn";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface IPlayNodeInputs extends BargeInInputs {
   url: string,
@@ -55,19 +59,11 @@ export const playNode = createNodeDescriptor({
     ...bargeInFields,
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['url', 'fallbackText'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['url', 'fallbackText']),
     bargeInSection,
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     bargeInForm,
   ],
   function: async ({ cognigy, config }: IPlayNodeParams) => {

@@ -18,6 +18,10 @@ import {
   TransferCallInputs,
   transferCallSections,
 } from "../common/transferCall";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface IForwardCallInputs extends TransferCallInputs {
   destinationNumber: string;
@@ -26,6 +30,8 @@ interface IForwardCallInputs extends TransferCallInputs {
 export interface IForwardCallParams extends INodeFunctionBaseParams {
   config: IForwardCallInputs;
 }
+
+const destinationFieldKey: keyof IForwardCallInputs = 'destinationNumber'
 
 export const forwardCallNode = createNodeDescriptor({
   type: 'forward',
@@ -39,7 +45,7 @@ export const forwardCallNode = createNodeDescriptor({
   fields: [
     {
       type: 'cognigyText',
-      key: 'destinationNumber',
+      key: destinationFieldKey,
       label: t.shared.inputDestinationLabel,
       description: t.shared.inputDestinationDescription,
       params: {
@@ -50,24 +56,16 @@ export const forwardCallNode = createNodeDescriptor({
   ],
 
   preview: {
-    key: 'destinationNumber',
+    key: destinationFieldKey,
     type: 'text',
   },
 
   sections: [
-    {
-      key: 'general',
-      fields: ['destinationNumber'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection([destinationFieldKey]),
     ...transferCallSections,
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     ...transferCallForm,
   ],
 

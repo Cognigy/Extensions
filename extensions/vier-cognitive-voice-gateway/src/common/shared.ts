@@ -2,7 +2,9 @@ import {
   INodeAppearance,
   INodeConstraints,
   INodeField,
+  INodeFieldAndSectionFormElement,
   INodeFieldTranslations,
+  INodeSection,
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 
@@ -134,4 +136,20 @@ export const commonChildNodeFields: {
     textColor: 'white',
     variant: 'mini',
   },
+}
+
+const generalSectionKey = 'general'
+
+export const generalSectionFormElement: INodeFieldAndSectionFormElement = {
+  type: "section",
+  key: generalSectionKey,
+}
+
+export function generalSection(fieldKeys: Array<string>, defaultCollapsed: boolean = false): INodeSection {
+  return {
+    key: generalSectionKey,
+    fields: fieldKeys,
+    label: t.shared.sectionGeneralLabel,
+    defaultCollapsed: defaultCollapsed,
+  };
 }

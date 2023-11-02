@@ -2096,7 +2096,7 @@
       "label": "Virtually Human",
       "version": "4.0.0",
       "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/virtuallyhuman400/virtually-human-4.0.0.tar.gz",
-      "infoUrl": "https://github.com/Cognigy/Extensions/releases/download/virtuallyhuman400",
+      "infoUrl": "https://github.com/Cognigy/Extensions/releases/tag/virtuallyhuman400",
       "description": "Integrates with Virtually Human",
       "longDescription": "A digital human is an avatar capable of showing facial expressions and body language, focused on emotion and empathy. Running on top of conversational systems like chatbots, digital humans can respond in an appropriate non-verbal way that is aligned with the topic and sentiment of the conversation.",
       "tags": ["avatar"],

@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.10.0",
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "ical2json": "^3.0.0",
     "localtunnel": "^2.0.1",
     "moment": "^2.29.2",

@@ -28,7 +28,7 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.13.0",
-		"axios": "^0.21.2",
+		"axios": "^1.6.0",
 		"jsforce": "^1.9.3"
 	}
 }

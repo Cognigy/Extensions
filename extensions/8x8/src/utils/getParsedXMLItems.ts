@@ -14,10 +14,9 @@ const getParsedXMLItems = <T>(xmlData: string, mapFunc: (obj: Record<string, any
   const parsedData = parser.parse(xmlData, { allowBooleanAttributes: true });
   const reply = parsedData.WAPI?.REPLY;
 
-  if (!reply?.['@_STATUS']) {
+  if (!reply || !reply['@_STATUS']) {
     throw new Error(errorMessageInvalidResponse);
   }
-
   if (reply['@_STATUS'] === '-1') {
     throw new Error(reply['@_ERROR_STR'] ?? 'No error message found');
   }

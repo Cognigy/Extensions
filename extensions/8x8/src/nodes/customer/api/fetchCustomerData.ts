@@ -3,27 +3,23 @@ import type { CustomerData } from '../types';
 import mapFetchCustomersXmlResponseToJson from './utils/mapFetchCustomersXmlResponseToJson';
 
 export interface FetchCustomerDataParams {
+  apiKey: string
   tenantId: string
-  crmApiUsername: string
-  crmApiPassword: string
   filterXml: string
   clusterBaseUrl: string
 }
 
-const fetchCustomersData = async({ filterXml, crmApiPassword, tenantId, crmApiUsername, clusterBaseUrl }: FetchCustomerDataParams): Promise<CustomerData[]> => {
+const fetchCustomersData = async({ filterXml, apiKey, tenantId, clusterBaseUrl }: FetchCustomerDataParams): Promise<CustomerData[]> => {
   const response = await axios({
     method: 'POST',
-    url: `${clusterBaseUrl}/WAPI/wapi.php`,
-    data: `xml_query=<WAPI>
-      <TENANT>${tenantId}</TENANT>
-      <USERNAME>${crmApiUsername}</USERNAME>
-      <PASSWORD>${crmApiPassword}</PASSWORD>
-      <COMMAND OBJECT="Customer" ACTION="GET">
+    url: `${clusterBaseUrl}/cc/v1/wapi`,
+    data: ` <COMMAND OBJECT="Customer" ACTION="GET">
         ${filterXml}
-      </COMMAND>
-    </WAPI>`,
+      </COMMAND>`,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/xml',
+      'X-8x8-Tenant': tenantId,
+      'x-api-key': apiKey
     }
   });
   return mapFetchCustomersXmlResponseToJson(response.data);

@@ -1,5 +1,5 @@
 import { createExtension } from '@cognigy/extension-tools';
-import { connection } from './connections/8x8Connection';
+import { simpleConnection } from './connections/8x8SimpleConnection';
 import { getCustomerNodes } from './nodes/customer';
 import { getScheduleNodes } from './nodes/schedule';
 import { getTestConditionOfQueueNode } from './nodes/testConditionOfQueue';
@@ -13,7 +13,7 @@ export default createExtension({
     ...getCaseNodes()
   ],
   connections: [
-    connection
+    simpleConnection
   ],
   options: {
     label: '8x8'

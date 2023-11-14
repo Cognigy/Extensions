@@ -10,10 +10,9 @@ const mockAxios = axios as unknown as jest.Mock;
 describe('case > api > fetchCustomerData()', () => {
   const getMockParams = (): FetchCaseDataParams => ({
     filterXml: '<CASENUM>123123123</CASENUM>',
-    crmApiPassword: 'test-pass',
+    apiKey: 'hgs43v35y4h',
     tenantId: 'test-tenant',
-    clusterBaseUrl: 'https://8x8.com',
-    crmApiUsername: 'user'
+    clusterBaseUrl: 'https://8x8.com'
   });
 
   it('should fetch and convert xml to json', async() => {

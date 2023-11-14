@@ -1,24 +1,20 @@
 {
-	"name": "8x8",
-	"version": "4.0.0",
+	"name": "8x8-cognigy-extension",
+	"version": "5.0.0",
 	"description": "Integrates with 8x8",
 	"main": "build/module.js",
 	"scripts": {
-      "transpile": "tsc -p .",
-      "lint": "eslint src/** --fix",
-      "zip": "tar cfz 8x8.tar.gz build/* package.json package-lock.json README.md icon.png",
-      "build": "npm run transpile && npm run lint && npm run zip"
-  },
+		"publish:local": "node --experimental-json-modules scripts/publish-local.mjs",
+		"build": "tsc -p .",
+		"clean": "rm -rf build",
+		"lint": "eslint src/** --fix",
+		"test": "jest --coverage",
+		"test:dev": "jest --watchAll --coverage"
+	},
 	"keywords": [
-    "8x8 Contact Center",
-    "CRM",
-    "Statistics",
-    "Schedule"
+    "8x8 Contact Center", "CRM", "Statistics", "Schedule"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Cognigy/Extensions"
-  },
+	"repository": "https://github.com/8x8/vcc-cognigy-extension",
 	"author": "8x8",
 	"license": "MIT",
 	"devDependencies": {

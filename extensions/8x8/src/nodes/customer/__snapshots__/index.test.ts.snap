@@ -38,54 +38,17 @@ exports[`customer > getCustomerNodes should create the nodes for customer logic 
     "fields": [
       {
         "key": "connection",
-        "label": "8x8 CRM Connection",
+        "label": "8x8 Connection",
         "params": {
-          "connectionType": "eightbyeight",
+          "connectionType": "eightbyeightsimple",
           "required": true,
         },
         "type": "connection",
       },
       {
-        "description": "Filter the customer by first name. Maximum 30 characters",
-        "key": "filter$firstName",
-        "label": "First Name",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the customer by last name. Maximum 30 characters",
-        "key": "filter$lastName",
-        "label": "Last Name",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the customer by email. Maximum 55 characters",
-        "key": "filter$email",
-        "label": "Email",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the customer by voice. Maximum 38 characters",
-        "key": "filter$voice",
-        "label": "Voice",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the customer by company. Maximum 50 characters",
-        "key": "filter$company",
-        "label": "Company",
-        "type": "cognigyText",
-      },
-      {
         "description": "Account number of the customer who is related to the case",
         "key": "filter$accountNum",
         "label": "Account Number",
-        "type": "cognigyText",
-      },
-      {
-        "description": "The contact type must be one valid type (not deactivated) as defined in Configuration Manager.
-    The list of possible values is defined by the administrator of the tenant.",
-        "key": "filter$customerType",
-        "label": "Customer Type",
         "type": "cognigyText",
       },
       {
@@ -143,31 +106,7 @@ exports[`customer > getCustomerNodes should create the nodes for customer logic 
         "type": "field",
       },
       {
-        "key": "filter$firstName",
-        "type": "field",
-      },
-      {
-        "key": "filter$lastName",
-        "type": "field",
-      },
-      {
-        "key": "filter$email",
-        "type": "field",
-      },
-      {
-        "key": "filter$voice",
-        "type": "field",
-      },
-      {
-        "key": "filter$company",
-        "type": "field",
-      },
-      {
         "key": "filter$accountNum",
-        "type": "field",
-      },
-      {
-        "key": "filter$customerType",
         "type": "field",
       },
       {

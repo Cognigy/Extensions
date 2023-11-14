@@ -19,40 +19,9 @@ export const onNotFoundCustomer = createBasicChildNode({
 
 const filterFields: INodeField[] = [
   createFilterTextField({
-    key: 'firstName',
-    label: 'First Name',
-    description: 'Filter the customer by first name. Maximum 30 characters'
-  }),
-  createFilterTextField({
-    key: 'lastName',
-    label: 'Last Name',
-    description: 'Filter the customer by last name. Maximum 30 characters'
-  }),
-  createFilterTextField({
-    key: 'email',
-    label: 'Email',
-    description: 'Filter the customer by email. Maximum 55 characters'
-  }),
-  createFilterTextField({
-    key: 'voice',
-    label: 'Voice',
-    description: 'Filter the customer by voice. Maximum 38 characters'
-  }),
-  createFilterTextField({
-    key: 'company',
-    label: 'Company',
-    description: 'Filter the customer by company. Maximum 50 characters'
-  }),
-  createFilterTextField({
     key: 'accountNum',
     label: 'Account Number',
     description: 'Account number of the customer who is related to the case'
-  }),
-  createFilterTextField({
-    key: 'customerType',
-    label: 'Customer Type',
-    description: `The contact type must be one valid type (not deactivated) as defined in Configuration Manager.
-    The list of possible values is defined by the administrator of the tenant.`
   }),
   {
     key: addFilterKeyPrefix('customFields'),
@@ -70,10 +39,10 @@ export const getCustomerNode = createNodeDescriptor({
   fields: [
     {
       key: 'connection',
-      label: '8x8 CRM Connection',
+      label: '8x8 Connection',
       type: 'connection',
       params: {
-        connectionType: 'eightbyeight',
+        connectionType: 'eightbyeightsimple',
         required: true
       }
     },

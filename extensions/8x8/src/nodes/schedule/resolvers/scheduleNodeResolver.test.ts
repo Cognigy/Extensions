@@ -1,7 +1,7 @@
 import addToStorage from '../../../utils/addToStorage';
-import type { I8x8Connection } from '../../../connections/8x8Connection';
 import StoreLocationName from '../../../constants/StoreLocationName';
 import fetchScheduleData from '../api/fetchScheduleData';
+import type { I8x8SimpleConnection } from '../../../connections/8x8SimpleConnection';
 import scheduleNodeResolver from './scheduleNodeResolver';
 
 jest.mock('../../../utils/addToStorage', () => jest.fn());
@@ -21,9 +21,9 @@ describe('scheduleNodeResolver', () => {
   const cognigy = { api: { output: jest.fn(), setNextNode: jest.fn(), log: jest.fn() }, input: {}, context: {}, profile: {}, addToContext: jest.fn(), addToInput: jest.fn() };
   const connection = {
     tenantId: 'vcc-eu3',
-    dataRequestToken: 'testtoken1234',
+    apiKey: 'sdvfa423qrf43re43rr2r',
     clusterBaseUrl: '8x8.com'
-  } as unknown as I8x8Connection;
+  } as unknown as I8x8SimpleConnection;
   const config = { connection, storeLocation: StoreLocationName.Context, scheduleNameToID: '1', contextKey: 'scheduletatus', inputKey: 'scheduleStatus' };
   const nodeId = '10';
   const childConfigs = [

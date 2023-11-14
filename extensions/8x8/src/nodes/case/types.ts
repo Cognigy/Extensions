@@ -1,7 +1,7 @@
 import type { INodeFunctionBaseParams } from '@cognigy/extension-tools';
-import type { I8x8Connection } from '../../connections/8x8Connection';
 import type StoreLocationName from '../../constants/StoreLocationName';
 import type { SearchGenericParams } from '../../types';
+import type { I8x8SimpleConnection } from '../../connections/8x8SimpleConnection';
 
 export interface CaseData {
   accountNum: number
@@ -26,18 +26,12 @@ export interface CaseData {
 
 export interface SearchCaseParams extends SearchGenericParams {
   filter$caseNum?: string
-  filter$accountNum?: string
-  filter$lastName?: string
-  filter$company?: string
-  filter$status?: string
-  filter$project?: string
-  filter$subject?: string
   filter$customFields?: Record<string, string>
 }
 
 export interface IGetCaseParams extends INodeFunctionBaseParams {
   config: {
-    connection: I8x8Connection
+    connection: I8x8SimpleConnection
     storeLocation: StoreLocationName
     contextKey?: string
     inputKey?: string

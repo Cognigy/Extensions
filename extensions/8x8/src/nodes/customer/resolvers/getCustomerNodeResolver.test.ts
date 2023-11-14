@@ -1,4 +1,4 @@
-import type { I8x8Connection } from '../../../connections/8x8Connection';
+import type { I8x8SimpleConnection } from '../../../connections/8x8SimpleConnection';
 import addToStorage from '../../../utils/addToStorage';
 import fetchCustomerData from '../api/fetchCustomerData';
 import { onFoundCustomer, onNotFoundCustomer } from '../getCustomer';
@@ -26,9 +26,9 @@ describe('customer > getCustomerNodeResolver', () => {
 
     const connection = {
       tenantId: 'vcc-eu3',
-      dataRequestToken: 'testtoken1234',
+      apiKey: 'asdf32fsadf3d',
       clusterBaseUrl: '8x8.com'
-    } as unknown as I8x8Connection;
+    } as unknown as I8x8SimpleConnection;
     return {
       cognigy,
       config: {
@@ -48,10 +48,10 @@ describe('customer > getCustomerNodeResolver', () => {
     jest.clearAllMocks();
   });
 
-  it('should not find the customer with email empty', async() => {
+  it('should not find the customer with accountNum empty', async() => {
     mockFetch.mockReturnValue([]);
     const config = getMockConfig({
-      filter$firstName: 'John'
+      filter$accountNum: '10000000'
     });
     await getCustomerNodeResolver(config);
     expect(config.cognigy.api.setNextNode).toHaveBeenCalledWith(mockOnNotFoundCustomerId);
@@ -61,7 +61,7 @@ describe('customer > getCustomerNodeResolver', () => {
     const mockError = new Error('mockError');
     mockFetch.mockRejectedValue(mockError);
     const config = getMockConfig({
-      filter$email: 'r@8x8.com'
+      filter$accountNum: '10000000'
     });
     await getCustomerNodeResolver(config);
     expect(config.cognigy.api.setNextNode).toHaveBeenCalledWith(mockOnNotFoundCustomerId);
@@ -71,11 +71,11 @@ describe('customer > getCustomerNodeResolver', () => {
   it('should found the customer', async() => {
     const mockCustomer = {
       id: 'mockId',
-      email: 'mockEmail'
+      accountNumber: '10000000'
     };
     mockFetch.mockReturnValue([mockCustomer]);
     const config = getMockConfig({
-      filter$email: mockCustomer.email
+      filter$accountNum: mockCustomer.accountNumber
     });
     await getCustomerNodeResolver(config);
     expect(config.cognigy.api.setNextNode).toHaveBeenCalledWith(mockOnFoundCustomerId);

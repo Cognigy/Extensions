@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`8x8SimpleConnection should match snapshot 1`] = `
+{
+  "fields": [
+    {
+      "fieldName": "apiKey",
+    },
+    {
+      "fieldName": "clusterBaseUrl",
+    },
+    {
+      "fieldName": "tenantId",
+    },
+  ],
+  "label": "8x8",
+  "type": "eightbyeightsimple",
+}
+`;

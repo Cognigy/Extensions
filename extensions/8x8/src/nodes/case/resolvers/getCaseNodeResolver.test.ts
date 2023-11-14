@@ -1,8 +1,8 @@
-import type { I8x8Connection } from '../../../connections/8x8Connection';
 import type { IGetCaseParams, SearchCaseParams } from '../types';
 import { onFoundCase, onNotFoundCase } from '../getCase';
 import fetchCaseData from '../api/fetchCaseData';
 import addToStorage from '../../../utils/addToStorage';
+import type { I8x8SimpleConnection } from '../../../connections/8x8SimpleConnection';
 import getCaseNodeResolver from './getCaseNodeResolver';
 
 jest.mock('../../../utils/addToStorage', () => jest.fn());
@@ -26,9 +26,9 @@ describe('case > getCaseNodeResolver', () => {
 
     const connection = {
       tenantId: 'vcc-eu3',
-      dataRequestToken: 'testtoken1234',
+      apiKey: 'asdf32faf3',
       clusterBaseUrl: '8x8.com'
-    } as unknown as I8x8Connection;
+    } as unknown as I8x8SimpleConnection;
     return {
       cognigy,
       config: {
@@ -68,10 +68,10 @@ describe('case > getCaseNodeResolver', () => {
     });
   });
 
-  it('should not find the customer with email empty', async() => {
+  it('should not find the customer with caseNum empty', async() => {
     mockFetch.mockReturnValue([]);
     const config = getMockConfig({
-      filter$firstName: 'John'
+      filter$caseNum: '1'
     });
     await getCaseNodeResolver(config);
     expect(config.cognigy.api.setNextNode).toHaveBeenCalledWith(mockOnNotFoundCaseId);

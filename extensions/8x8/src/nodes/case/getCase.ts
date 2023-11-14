@@ -23,36 +23,6 @@ const filterFields: INodeField[] = [
     label: 'Case Number',
     description: 'Filter the case by case number. Maximum 30 characters'
   }),
-  createFilterTextField({
-    key: 'accountNum',
-    label: 'Account Number',
-    description: 'Filter the case by account number. Maximum 30 characters'
-  }),
-  createFilterTextField({
-    key: 'lastName',
-    label: 'Last name of customer',
-    description: 'Filter the case by last name of customer. Maximum 30 characters. Supports partial strings'
-  }),
-  createFilterTextField({
-    key: 'company',
-    label: 'Company',
-    description: 'Filter the case by company. Maximum 50 characters. Supports partial strings'
-  }),
-  createFilterTextField({
-    key: 'status',
-    label: 'Case Status',
-    description: 'Filter the case by case status. Maximum 30 characters'
-  }),
-  createFilterTextField({
-    key: 'project',
-    label: 'Project',
-    description: 'Filter the case by project. Maximum 30 characters'
-  }),
-  createFilterTextField({
-    key: 'subject',
-    label: 'Subject',
-    description: 'Filter the case by case subject. Maximum 50 characters. Supports partial strings'
-  }),
   buildCustomFieldsNode()
 ];
 
@@ -63,10 +33,10 @@ export const getCaseNode = createNodeDescriptor({
   fields: [
     {
       key: 'connection',
-      label: '8x8 CRM Connection',
+      label: '8x8 Connection',
       type: 'connection',
       params: {
-        connectionType: 'eightbyeight',
+        connectionType: 'eightbyeightsimple',
         required: true
       }
     },

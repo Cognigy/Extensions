@@ -9,7 +9,7 @@ describe('test condition of queue > testConditionOfQueueNodeResolver', () => {
     queueId: '123',
     clusterBaseUrl: 'https://clusterBaseUrl',
     tenantId: 'tenantId',
-    dataRequestToken: 'dataRequestToken'
+    apiKey: 'kjbl345tnjogkj5ojn5g4'
   };
 
   it('should return null if no data comes', async() => {

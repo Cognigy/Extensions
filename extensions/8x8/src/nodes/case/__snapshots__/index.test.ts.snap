@@ -38,9 +38,9 @@ exports[`customer > getCaseNodes should create the nodes for case logic 1`] = `
     "fields": [
       {
         "key": "connection",
-        "label": "8x8 CRM Connection",
+        "label": "8x8 Connection",
         "params": {
-          "connectionType": "eightbyeight",
+          "connectionType": "eightbyeightsimple",
           "required": true,
         },
         "type": "connection",
@@ -49,42 +49,6 @@ exports[`customer > getCaseNodes should create the nodes for case logic 1`] = `
         "description": "Filter the case by case number. Maximum 30 characters",
         "key": "filter$caseNum",
         "label": "Case Number",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by account number. Maximum 30 characters",
-        "key": "filter$accountNum",
-        "label": "Account Number",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by last name of customer. Maximum 30 characters. Supports partial strings",
-        "key": "filter$lastName",
-        "label": "Last name of customer",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by company. Maximum 50 characters. Supports partial strings",
-        "key": "filter$company",
-        "label": "Company",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by case status. Maximum 30 characters",
-        "key": "filter$status",
-        "label": "Case Status",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by project. Maximum 30 characters",
-        "key": "filter$project",
-        "label": "Project",
-        "type": "cognigyText",
-      },
-      {
-        "description": "Filter the case by case subject. Maximum 50 characters. Supports partial strings",
-        "key": "filter$subject",
-        "label": "Subject",
         "type": "cognigyText",
       },
       {
@@ -143,30 +107,6 @@ exports[`customer > getCaseNodes should create the nodes for case logic 1`] = `
       },
       {
         "key": "filter$caseNum",
-        "type": "field",
-      },
-      {
-        "key": "filter$accountNum",
-        "type": "field",
-      },
-      {
-        "key": "filter$lastName",
-        "type": "field",
-      },
-      {
-        "key": "filter$company",
-        "type": "field",
-      },
-      {
-        "key": "filter$status",
-        "type": "field",
-      },
-      {
-        "key": "filter$project",
-        "type": "field",
-      },
-      {
-        "key": "filter$subject",
         "type": "field",
       },
       {

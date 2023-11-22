@@ -1,0 +1,27 @@
+{
+  "name": "abtest",
+  "version": "1.5.1",
+  "description": "Enable A/B testing in your agent.  To use, set the user split within the AB Configuration node at the start of your users flow and then use the context variable 'ABGroup' in an if node or the Flow Seperator node within this extension.",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz ABNode.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Cognigy.AI",
+    "extensions",
+    "AB Test"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.10.0"
+  },
+  "devDependencies": {
+    "tslint": "^6.1.3",
+    "typescript": "^3.9.7"
+  }
+}
+  

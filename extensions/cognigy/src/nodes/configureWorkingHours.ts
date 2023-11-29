@@ -27,6 +27,27 @@ export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
         fridayEnabled: boolean;
         saturdayEnabled: boolean;
         sundayEnabled: boolean;
+        mondayBreakEnabled: boolean;
+        tuesdayBreakEnabled: boolean;
+        wednesdayBreakEnabled: boolean;
+        thursdayBreakEnabled: boolean;
+        fridayBreakEnabled: boolean;
+        saturdayBreakEnabled: boolean;
+        sundayBreakEnabled: boolean;
+        mondayBreakStart: string;
+        mondayBreakEnd: string;
+        tuesdayBreakStart: string;
+        tuesdayBreakEnd: string;
+        wednesdayBreakStart: string;
+        wednesdayBreakEnd: string;
+        thursdayBreakStart: string;
+        thursdayBreakEnd: string;
+        fridayBreakStart: string;
+        fridayBreakEnd: string;
+        saturdayBreakStart: string;
+        saturdayBreakEnd: string;
+        sundayBreakStart: string;
+        sundayBreakEnd: string;
         storeWorkingHoursInContext: boolean;
         enableClosedDates: boolean;
         closedDates: string[];
@@ -35,12 +56,18 @@ export interface IConfigureWorkingHoursParams extends INodeFunctionBaseParams {
 
 export const configureWorkingHoursNode = createNodeDescriptor({
     type: "configureWorkingHours",
-    defaultLabel: "Set Working Hours",
+    defaultLabel: {
+        deDE: "Öffnungszeiten",
+        default: "Set Working Hours"
+    },
     fields: [
         {
             key: "timezone",
             type: "select",
-            label: "Timezone",
+            label: {
+                deDE: "Zeitzone",
+                default: "Timezone"
+            },
             description: "The timezone in which the working hours are configured",
             defaultValue: "Europe/Berlin",
             params: {
@@ -150,13 +177,19 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             type: "description",
             label: " ",
             params: {
-                text: "Monday"
+                text: {
+                    deDE: "Montag",
+                    default: "Monday"
+                }
             }
         },
         {
             key: "mondayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: true,
             params: {
                 required: true
@@ -164,9 +197,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "mondayStart",
-            label: "From",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
-            type: "cognigyText",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
             defaultValue: "9:00",
             params: {
                 required: true,
@@ -179,9 +218,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "mondayEnd",
-            label: "To",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "20:00",
             params: {
                 required: true,
@@ -193,19 +238,119 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             }
         },
 
+
+        {
+            key: "mondayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "mondayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "mondayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "mondayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "mondayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "mondayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "mondayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "mondayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "mondayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "mondayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
+
         {
             key: "tuesdayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Tuesday"
+                text: {
+                    deDE: "Dienstag",
+                    default: "Tuesday"
+                }
             }
         },
         {
             key: "tuesdayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: true,
             params: {
                 required: true
@@ -213,9 +358,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "tuesdayStart",
-            label: "From",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "9:00",
             params: {
                 required: true,
@@ -228,9 +379,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "tuesdayEnd",
-            label: "To",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "18:00",
             params: {
                 required: true,
@@ -241,19 +398,120 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "tuesdayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "tuesdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "tuesdayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "tuesdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "tuesdayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "tuesdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "tuesdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "tuesdayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "tuesdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "tuesdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
+
         {
             key: "wednesdayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Wednesday"
+                text: {
+                    deDE: "Mittwoch",
+                    default: "Wednesday"
+                }
             }
         },
         {
             key: "wednesdayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: true,
             params: {
                 required: true
@@ -261,9 +519,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "wednesdayStart",
-            label: "From",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "9:00",
             params: {
                 required: true,
@@ -276,9 +540,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "wednesdayEnd",
-            label: "To",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "17:30",
             params: {
                 required: true,
@@ -289,19 +559,120 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "wednesdayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "wednesdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "wednesdayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "wednesdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "wednesdayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "wednesdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "wednesdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "wednesdayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "wednesdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "wednesdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
+
         {
             key: "thursdayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Thursday"
+                text: {
+                    deDE: "Donnerstag",
+                    default: "Thursday"
+                }
             }
         },
         {
             key: "thursdayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: true,
             params: {
                 required: true
@@ -309,9 +680,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "thursdayStart",
-            label: "From",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "9:00",
             params: {
                 required: true,
@@ -324,10 +701,16 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "thursdayEnd",
-            label: "To",
-            type: "cognigyText",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
             defaultValue: "18:00",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             params: {
                 required: true,
                 placeholder: "18:00"
@@ -337,19 +720,119 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "thursdayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "thursdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "thursdayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "thursdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "thursdayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "thursdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "thursdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "thursdayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "thursdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "thursdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
         {
             key: "fridayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Friday"
+                text: {
+                    deDE: "Freitag",
+                    default: "Friday"
+                }
             }
         },
         {
             key: "fridayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: true,
             params: {
                 required: true
@@ -357,9 +840,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "fridayStart",
-            label: "From",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "9:00",
             params: {
                 required: true,
@@ -372,10 +861,16 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "fridayEnd",
-            label: "To",
-            type: "cognigyText",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
             defaultValue: "18:00",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             params: {
                 required: true,
                 placeholder: "18:00"
@@ -385,19 +880,120 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "fridayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "fridayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "fridayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "fridayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "fridayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "fridayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "fridayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "fridayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "fridayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "fridayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
+
         {
             key: "saturdayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Saturday"
+                text: {
+                    deDE: "Samstag",
+                    default: "Saturday"
+                }
             }
         },
         {
             key: "saturdayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: false,
             params: {
                 required: true
@@ -405,9 +1001,15 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "saturdayStart",
-            label: "From",
-            type: "cognigyText",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             defaultValue: "10:00",
             params: {
                 required: true,
@@ -420,10 +1022,16 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "saturdayEnd",
-            label: "To",
-            type: "cognigyText",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
             defaultValue: "14:00",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             params: {
                 required: true,
                 placeholder: "14:00"
@@ -433,19 +1041,121 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "saturdayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "saturdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "saturdayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "saturdayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "saturdayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "saturdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "saturdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "saturdayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "saturdayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "saturdayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
+
+
         {
             key: "sundayDescription",
             // @ts-ignore
             type: "description",
             label: " ",
             params: {
-                text: "Sunday"
+                text: {
+                    deDE: "Sonntag",
+                    default: "Sunday"
+                }
             }
         },
         {
             key: "sundayEnabled",
             type: "toggle",
-            label: "Open",
+            label: {
+                deDE: "Geöffnet",
+                default: "Open"
+            },
             defaultValue: false,
             params: {
                 required: true
@@ -453,10 +1163,16 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "sundayStart",
-            label: "From",
-            type: "cognigyText",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            type: "time",
             defaultValue: "10:00",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             params: {
                 required: true,
                 placeholder: "10:00"
@@ -468,10 +1184,16 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "sundayEnd",
-            label: "To",
-            type: "cognigyText",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
             defaultValue: "12:00",
-            description: "The hour in 24 hours format where 7am is 7 and 7pm is 19",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
             params: {
                 required: true,
                 placeholder: "12:00"
@@ -481,9 +1203,106 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 value: true
             }
         },
+
+
+        {
+            key: "sundayBreakDescription",
+            // @ts-ignore
+            type: "description",
+            label: " ",
+            params: {
+                text: {
+                    deDE: "Mittagspause",
+                    default: "Lunch Break"
+                }
+            },
+            condition: {
+                key: "sundayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "sundayBreakEnabled",
+            type: "toggle",
+            label: {
+                deDE: "Findet statt",
+                default: "Plan"
+            },
+            defaultValue: true,
+            params: {
+                required: true
+            },
+            condition: {
+                key: "sundayEnabled",
+                value: true,
+            }
+        },
+        {
+            key: "sundayBreakStart",
+            label: {
+                deDE: "Von",
+                default: "From"
+            },
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            type: "time",
+            defaultValue: "12:00",
+            params: {
+                required: true,
+                placeholder: "12:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "sundayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "sundayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+        {
+            key: "sundayBreakEnd",
+            label: {
+                deDE: "Bis",
+                default: "To"
+            },
+            type: "time",
+            description: {
+                deDE: "Die Stunde im 24-Stunden-Format: 7 Uhr morgens ist 7 und 19 Uhr abends ist 19",
+                default: "The hour in 24 hours format where 7am is 7 and 7pm is 19"
+            },
+            defaultValue: "13:00",
+            params: {
+                required: true,
+                placeholder: "13:00"
+            },
+            condition: {
+                and: [
+                    {
+                        key: "sundayEnabled",
+                        value: true,
+                    },
+                    {
+                        key: "sundayBreakEnabled",
+                        value: true
+                    }
+                ]
+            }
+        },
+
+
         {
             key: "storeWorkingHoursInContext",
-            label: "Store Working Hours in Context",
+            label: {
+                deDE: "Zeiten im Kontext speichern",
+                default: "Store Working Hours in Context"
+            },
             type: "toggle",
             defaultValue: false,
         },
@@ -491,8 +1310,14 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             key: "enableClosedDates",
             type: "toggle",
             defaultValue: false,
-            description: "Whether there are dates when the office is closed or not",
-            label: "Add Closed Dates"
+            description: {
+                deDE: "Ob es Tage gibt, an denen das Büro geschlossen ist oder nicht",
+                default: "Whether there are dates when the office is closed or not"
+            },
+            label: {
+                deDE: "Tag hinzufügen",
+                default: "Add Closed Dates"
+            },
         },
         {
             key: "closedDatesDescription",
@@ -500,7 +1325,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             type: "description",
             label: " ",
             params: {
-                text: "Provide a list of dates when the office or store is closed. Please insert one date per row only and use the dateformat DD.MM.YYYY, such as 14.01.2024."
+                text: {
+                    deDE: "Geben Sie eine Liste von Daten an, an denen das Büro oder das Geschäft geschlossen ist. Bitte geben Sie nur ein Datum pro Zeile ein und verwenden Sie das Datumsformat TT.MM.JJJJ, z. B. 14.01.2024.",
+                    default: "Provide a list of dates when the office or store is closed. Please insert one date per row only and use the dateformat DD.MM.YYYY, such as 14.01.2024."
+                }
             },
             condition: {
                 key: "enableClosedDates",
@@ -509,7 +1337,10 @@ export const configureWorkingHoursNode = createNodeDescriptor({
         },
         {
             key: "closedDates",
-            label: "Closed Dates",
+            label: {
+                deDE: "Geschlossen am",
+                default: "Closed Dates"
+            },
             type: "textArray",
             defaultValue: false,
             condition: {
@@ -520,46 +1351,204 @@ export const configureWorkingHoursNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "timezone" },
-        { type: "field", key: "mondayDescription" },
-        { type: "field", "key": "mondayEnabled" },
-        { type: "field", key: "mondayStart" },
-        { type: "field", key: "mondayEnd" },
-        { type: "field", key: "tuesdayDescription" },
-        { type: "field", "key": "tuesdayEnabled" },
-        { type: "field", key: "tuesdayStart" },
-        { type: "field", key: "tuesdayEnd" },
-        { type: "field", key: "wednesdayDescription" },
-        { type: "field", "key": "wednesdayEnabled" },
-        { type: "field", key: "wednesdayStart" },
-        { type: "field", key: "wednesdayEnd" },
-        { type: "field", key: "thursdayDescription" },
-        { type: "field", "key": "thursdayEnabled" },
-        { type: "field", key: "thursdayStart" },
-        { type: "field", key: "thursdayEnd" },
-        { type: "field", key: "fridayDescription" },
-        { type: "field", "key": "fridayEnabled" },
-        { type: "field", key: "fridayStart" },
-        { type: "field", key: "fridayEnd" },
-        { type: "field", key: "saturdayDescription" },
-        { type: "field", "key": "saturdayEnabled" },
-        { type: "field", key: "saturdayStart" },
-        { type: "field", key: "saturdayEnd" },
-        { type: "field", key: "sundayDescription" },
-        { type: "field", "key": "sundayEnabled" },
-        { type: "field", key: "sundayStart" },
-        { type: "field", key: "sundayEnd" },
+        { type: "section", key: "mondayGeneralWorkingHours" },
+        { type: "section", key: "tuesdayGeneralWorkingHours" },
+        { type: "section", key: "wednesdayGeneralWorkingHours" },
+        { type: "section", key: "thursdayGeneralWorkingHours" },
+        { type: "section", key: "fridayGeneralWorkingHours" },
+        { type: "section", key: "saturdayGeneralWorkingHours" },
+        { type: "section", key: "sundayGeneralWorkingHours" },
+        // { type: "section", key: "generalWorkingHours" },
+        { type: "section", key: "closedDates" },
         { type: "section", key: "advanced" }
     ],
     sections: [
         {
-            key: "advanced",
-            label: "Advanced",
+            key: "mondayGeneralWorkingHours",
+            label: {
+                deDE: "Montag",
+                default: "Monday"
+            },
             defaultCollapsed: true,
             fields: [
-                "storeWorkingHoursInContext",
+                // "mondayDescription",
+                "mondayEnabled",
+                "mondayStart",
+                "mondayEnd",
+                "mondayBreakDescription",
+                "mondayBreakEnabled",
+                "mondayBreakStart",
+                "mondayBreakEnd"
+            ]
+        },
+        {
+            key: "tuesdayGeneralWorkingHours",
+            label: {
+                deDE: "Dienstag",
+                default: "Tuesday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "tuesdayEnabled",
+                "tuesdayStart",
+                "tuesdayEnd",
+                "tuesdayBreakDescription",
+                "tuesdayBreakEnabled",
+                "tuesdayBreakStart",
+                "tuesdayBreakEnd"
+            ]
+        },
+        {
+            key: "wednesdayGeneralWorkingHours",
+            label: {
+                deDE: "Mittwoch",
+                default: "Wednesday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "wednesdayEnabled",
+                "wednesdayStart",
+                "wednesdayEnd",
+                "wednesdayBreakDescription",
+                "wednesdayBreakEnabled",
+                "wednesdayBreakStart",
+                "wednesdayBreakEnd"
+            ]
+        },
+        {
+            key: "thursdayGeneralWorkingHours",
+            label: {
+                deDE: "Donnerstag",
+                default: "Thursday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "thursdayEnabled",
+                "thursdayStart",
+                "thursdayEnd",
+                "thursdayBreakDescription",
+                "thursdayBreakEnabled",
+                "thursdayBreakStart",
+                "thursdayBreakEnd"
+            ]
+        },
+        {
+            key: "fridayGeneralWorkingHours",
+            label: {
+                deDE: "Freitag",
+                default: "Friday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "fridayEnabled",
+                "fridayStart",
+                "fridayEnd",
+                "fridayBreakDescription",
+                "fridayBreakEnabled",
+                "fridayBreakStart",
+                "fridayBreakEnd"
+            ]
+        },
+        {
+            key: "saturdayGeneralWorkingHours",
+            label: {
+                deDE: "Samstag",
+                default: "Saturday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "saturdayEnabled",
+                "saturdayStart",
+                "saturdayEnd",
+                "saturdayBreakDescription",
+                "saturdayBreakEnabled",
+                "saturdayBreakStart",
+                "saturdayBreakEnd"
+            ]
+        },
+        {
+            key: "sundayGeneralWorkingHours",
+            label: {
+                deDE: "Sonntag",
+                default: "Sunday"
+            },
+            defaultCollapsed: true,
+            fields: [
+                // "mondayDescription",
+                "sundayEnabled",
+                "sundayStart",
+                "sundayEnd",
+                "sundayBreakDescription",
+                "sundayBreakEnabled",
+                "sundayBreakStart",
+                "sundayBreakEnd"
+            ]
+        },
+        {
+            key: "generalWorkingHours",
+            label: {
+                deDE: "Öffnungszeiten",
+                default: "Working Hours"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "mondayDescription",
+                "mondayEnabled",
+                "mondayStart",
+                "mondayEnd",
+                "tuesdayDescription",
+                "tuesdayEnabled",
+                "tuesdayStart",
+                "tuesdayEnd",
+                "wednesdayDescription",
+                "wednesdayEnabled",
+                "wednesdayStart",
+                "wednesdayEnd",
+                "thursdayDescription",
+                "thursdayEnabled",
+                "thursdayStart",
+                "thursdayEnd",
+                "fridayDescription",
+                "fridayEnabled",
+                "fridayStart",
+                "fridayEnd",
+                "saturdayDescription",
+                "saturdayEnabled",
+                "saturdayStart",
+                "saturdayEnd",
+                "sundayDescription",
+                "sundayEnabled",
+                "sundayStart",
+                "sundayEnd"
+            ]
+        },
+        {
+            key: "closedDates",
+            label: {
+                deDE: "Geschlossen am",
+                default: "Closed Dates"
+            },
+            defaultCollapsed: true,
+            fields: [
                 "enableClosedDates",
                 "closedDatesDescription",
                 "closedDates"
+            ]
+        },
+        {
+            key: "advanced",
+            label: {
+                deDE: "Erweiterte Optionen",
+                default: "Advanced"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "storeWorkingHoursInContext"
             ]
         },
     ],
@@ -570,9 +1559,65 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             type: "context"
         }
     ],
-    function: async ({ cognigy, config }: IConfigureWorkingHoursParams): Promise<any> => {
+    dependencies: {
+        children: [
+            "onOpen",
+            "onClosed"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: IConfigureWorkingHoursParams): Promise<any> => {
         const { api, input } = cognigy;
-        const { timezone, mondayStart, mondayEnd, tuesdayStart, tuesdayEnd, wednesdayStart, wednesdayEnd, thursdayStart, thursdayEnd, fridayStart, fridayEnd, saturdayStart, saturdayEnd, sundayStart, sundayEnd, storeWorkingHoursInContext, mondayEnabled, thursdayEnabled, wednesdayEnabled, tuesdayEnabled, fridayEnabled, saturdayEnabled, sundayEnabled, enableClosedDates, closedDates } = config;
+        const {
+            timezone,
+            mondayStart,
+            mondayEnd,
+            tuesdayStart,
+            tuesdayEnd,
+            wednesdayStart,
+            wednesdayEnd,
+            thursdayStart,
+            thursdayEnd,
+            fridayStart,
+            fridayEnd,
+            saturdayStart,
+            saturdayEnd,
+            sundayStart,
+            sundayEnd,
+
+            mondayEnabled,
+            thursdayEnabled,
+            wednesdayEnabled,
+            tuesdayEnabled,
+            fridayEnabled,
+            saturdayEnabled,
+            sundayEnabled,
+
+            mondayBreakEnabled,
+            mondayBreakStart,
+            mondayBreakEnd,
+            tuesdayBreakEnabled,
+            tuesdayBreakStart,
+            tuesdayBreakEnd,
+            wednesdayBreakEnabled,
+            wednesdayBreakStart,
+            wednesdayBreakEnd,
+            thursdayBreakEnabled,
+            thursdayBreakStart,
+            thursdayBreakEnd,
+            fridayBreakEnabled,
+            fridayBreakStart,
+            fridayBreakEnd,
+            saturdayBreakEnabled,
+            saturdayBreakEnd,
+            saturdayBreakStart,
+            sundayBreakEnabled,
+            sundayBreakStart,
+            sundayBreakEnd,
+
+            enableClosedDates,
+            closedDates,
+            storeWorkingHoursInContext,
+        } = config;
 
         function isChristmasOrNewYearsDay(): boolean {
             const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
@@ -609,39 +1654,80 @@ export const configureWorkingHoursNode = createNodeDescriptor({
 
                     // Monday
                     case 1:
-                        if (mondayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(mondayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(mondayEnd, 'HH:mm')))));
-                        else return false;
+                        if (mondayEnabled) {
+                            if (mondayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(mondayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(mondayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(mondayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(mondayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Tuesday
                     case 2:
-                        if (tuesdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(tuesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(tuesdayEnd, 'HH:mm')))));
-                        else return false;
+                        if (tuesdayEnabled) {
+                            if (tuesdayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(tuesdayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(tuesdayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(tuesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(tuesdayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Wednesday
                     case 3:
-                        if (wednesdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(wednesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(wednesdayEnd, 'HH:mm')))));
-                        else return false;
+                        if (wednesdayEnabled) {
+                            if (wednesdayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(wednesdayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(wednesdayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(wednesdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(wednesdayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Thursday
                     case 4:
-                        if (thursdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(thursdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(thursdayEnd, 'HH:mm')))));
-                        else return false;
+                        if (thursdayEnabled) {
+                            if (thursdayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(thursdayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(thursdayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(thursdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(thursdayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Friday
                     case 5:
-                        if (fridayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(fridayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(fridayEnd, 'HH:mm')))));
-                        else return false;
+                        if (fridayEnabled) {
+                            if (fridayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(fridayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(fridayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(fridayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(fridayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Saturday
                     case 6:
-                        if (saturdayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(saturdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(saturdayEnd, 'HH:mm')))));
-                        else return false;
+                        if (saturdayEnabled) {
+                            if (saturdayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(saturdayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(saturdayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(saturdayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(saturdayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
 
                     // Sunday
                     case 7:
-                        if (sundayEnabled) return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(sundayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(sundayEnd, 'HH:mm')))));
-                        else return false;
-
+                        if (sundayEnabled) {
+                            if (sundayBreakEnabled) {
+                                return !((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(sundayBreakStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(sundayBreakEnd, 'HH:mm')))));
+                            }
+                            return ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isAfter(moment(sundayStart, 'HH:mm'))) && ((moment(`${currentHourInTimezone}:${currentMinutesInTimezone}`, 'HH:mm').isBefore(moment(sundayEnd, 'HH:mm')))));
+                        } else {
+                            return false;
+                        }
                     default:
                         return false;
                 }
@@ -687,9 +1773,46 @@ export const configureWorkingHoursNode = createNodeDescriptor({
                 }, 'simple');
             }
 
+            if (isInWorkingHours()) {
+                const onOpenChild = childConfigs.find(child => child.type === "onOpen");
+                api.setNextNode(onOpenChild.id);
+
+            } else {
+                const onClosedChild = childConfigs.find(child => child.type === "onClosed");
+                api.setNextNode(onClosedChild.id);
+            }
+
             // set the boolean value for the hours
             api.addToContext('handoverOpen', isInWorkingHours(), 'simple');
         }
 
+    }
+});
+
+export const onOpen = createNodeDescriptor({
+    type: "onOpen",
+    parentType: "configureWorkingHours",
+    defaultLabel: {
+        deDE: "Geöffnet",
+        default: "Geöffnet"
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onClosed = createNodeDescriptor({
+    type: "onClosed",
+    parentType: "configureWorkingHours",
+    defaultLabel: {
+        deDE: "Geschlossen",
+        default: "Geschlossen"
+    },
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini"
     }
 });

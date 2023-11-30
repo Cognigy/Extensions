@@ -1636,10 +1636,18 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             api.log('info', 'Time is in holiday period');
             api.addToContext('handoverOpen', false, 'simple');
 
+            const onClosedChild = childConfigs.find(child => child.type === "onClosed");
+            api.setNextNode(onClosedChild.id);
+
             // check if date is in list of closed dates
         } else if (enableClosedDates && closedDates.includes(`${input.currentTime.day < 10 ? '0' + input.currentTime.day : input.currentTime.day}.${input.currentTime.month < 10 ? '0' + input.currentTime.month : input.currentTime.month}.${input.currentTime.year}`)) {
             api.log('info', 'Time is a closed date');
             api.addToContext('handoverOpen', false, 'simple');
+
+
+            const onClosedChild = childConfigs.find(child => child.type === "onClosed");
+            api.setNextNode(onClosedChild.id);
+
         } else {
 
             api.log('info', 'Check if time is in working hours');

@@ -1,7 +1,7 @@
 import type { INodeFunctionBaseParams } from '@cognigy/extension-tools';
-import type { I8x8Connection } from '../../connections/8x8Connection';
 import type StoreLocationName from '../../constants/StoreLocationName';
 import type { SearchGenericParams } from '../../types';
+import type { I8x8SimpleConnection } from '../../connections/8x8SimpleConnection';
 
 export interface CustomerAddress {
   street1: string
@@ -41,7 +41,7 @@ export interface SearchCustomerParams extends SearchGenericParams {
 
 export interface IGetCustomerParams extends INodeFunctionBaseParams {
   config: {
-    connection: I8x8Connection
+    connection: I8x8SimpleConnection
     storeLocation: StoreLocationName
     contextKey?: string
     inputKey?: string

@@ -1,0 +1,336 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`voice handover node > getDataAugmentationNode should create the node for data augmentation 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Data Augmentation",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 Connection",
+        "params": {
+          "connectionType": "eightbyeightsimple",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "The ID of the call",
+        "key": "sipCallId",
+        "label": "8x8 sip Call ID",
+        "params": {
+          "required": true,
+        },
+        "type": "cognigyText",
+      },
+      {
+        "description": "The name of the property to be sent via payload and displayed for the Agent",
+        "key": "displayName1",
+        "label": "Title of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The value of the property to be sent via payload and displayed for the Agent",
+        "key": "value1",
+        "label": "The value of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The name of the property to be sent via payload and displayed for the Agent",
+        "key": "displayName2",
+        "label": "Title of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The value of the property to be sent via payload and displayed for the Agent",
+        "key": "value2",
+        "label": "The value of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The name of the property to be sent via payload and displayed for the Agent",
+        "key": "displayName3",
+        "label": "Title of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The value of the property to be sent via payload and displayed for the Agent",
+        "key": "value3",
+        "label": "The value of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The name of the property to be sent via payload and displayed for the Agent",
+        "key": "displayName4",
+        "label": "Title of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The value of the property to be sent via payload and displayed for the Agent",
+        "key": "value4",
+        "label": "The value of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The name of the property to be sent via payload and displayed for the Agent",
+        "key": "displayName5",
+        "label": "Title of the property",
+        "type": "cognigyText",
+      },
+      {
+        "description": "The value of the property to be sent via payload and displayed for the Agent",
+        "key": "value5",
+        "label": "The value of the property",
+        "type": "cognigyText",
+      },
+      {
+        "defaultValue": false,
+        "description": {
+          "default": "Use JSON for defining payload for Data Augmentation.",
+        },
+        "key": "useCustomFields",
+        "label": {
+          "default": "Use JSON Fields to configure payload",
+        },
+        "type": "toggle",
+      },
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": true,
+        },
+        "defaultValue": {
+          "data": {
+            "variables": [
+              {
+                "display": "true",
+                "displayName": "mock name to be displayed 1",
+                "ivr": "true",
+                "name": "mockName1",
+                "value": "mock value 1",
+              },
+              {
+                "display": "true",
+                "displayName": "mock name to be displayed 2",
+                "ivr": "true",
+                "name": "mockName2",
+                "value": "mock value 2",
+              },
+            ],
+          },
+        },
+        "description": "Send 8x8 properties with custom JSON for Data Augmentation payload, default value provided for payload structure model.",
+        "key": "customFields",
+        "label": "8x8 Data Augmentation JSON properties",
+        "params": {
+          "required": true,
+        },
+        "type": "json",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "contextKey",
+        "label": {
+          "default": "Context Key to store Result",
+        },
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "sipCallId",
+        "type": "field",
+      },
+      {
+        "key": "useCustomFields",
+        "type": "field",
+      },
+      {
+        "key": "augmentationSection1",
+        "type": "section",
+      },
+      {
+        "key": "augmentationSection2",
+        "type": "section",
+      },
+      {
+        "key": "augmentationSection3",
+        "type": "section",
+      },
+      {
+        "key": "augmentationSection4",
+        "type": "section",
+      },
+      {
+        "key": "augmentationSection5",
+        "type": "section",
+      },
+      {
+        "key": "jsonPayload",
+        "type": "section",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": false,
+        },
+        "defaultCollapsed": false,
+        "fields": [
+          "displayName1",
+          "value1",
+        ],
+        "key": "augmentationSection1",
+        "label": "Data Augmentation payload value section 1",
+      },
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": false,
+        },
+        "defaultCollapsed": false,
+        "fields": [
+          "displayName2",
+          "value2",
+        ],
+        "key": "augmentationSection2",
+        "label": "Data Augmentation payload value section 2",
+      },
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": false,
+        },
+        "defaultCollapsed": false,
+        "fields": [
+          "displayName3",
+          "value3",
+        ],
+        "key": "augmentationSection3",
+        "label": "Data Augmentation payload value section 3",
+      },
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": false,
+        },
+        "defaultCollapsed": false,
+        "fields": [
+          "displayName4",
+          "value4",
+        ],
+        "key": "augmentationSection4",
+        "label": "Data Augmentation payload value section 4",
+      },
+      {
+        "condition": {
+          "key": "useCustomFields",
+          "value": false,
+        },
+        "defaultCollapsed": false,
+        "fields": [
+          "displayName5",
+          "value5",
+        ],
+        "key": "augmentationSection5",
+        "label": "Data Augmentation payload value section 5",
+      },
+      {
+        "defaultCollapsed": false,
+        "fields": [
+          "customFields",
+        ],
+        "key": "jsonPayload",
+        "label": "Data Augmentation JSON payload",
+      },
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "Sends a payload with variables to enrich the properties served to the agent",
+    "tags": [],
+    "tokens": [],
+    "type": "dataAugmentation",
+  },
+]
+`;

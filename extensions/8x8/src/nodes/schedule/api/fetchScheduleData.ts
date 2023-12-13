@@ -5,20 +5,21 @@ interface I8x8ScheduleResponse {
 }
 
 export interface FetchCustomerDataParams {
-  authToken: string
+  apiKey: string
+  tenantId: string
   url: string
   scheduleID: string
 }
 
-const fetchScheduleData = async(authToken: string, url: string, scheduleID: string): Promise<I8x8ScheduleResponse> => {
+const fetchScheduleData = async(apiKey: string, tenantId: string, url: string, scheduleID: string): Promise<I8x8ScheduleResponse> => {
   const scheduleResponse = await axios({
     method: 'GET',
-    url: `${url}/api/provisioning/schedules/${scheduleID}/status.json`,
+    url: `${url}/cc/v1/schedules/${scheduleID}/status`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'cache-control': 'no-cache',
-      Authorization: `Basic ${Buffer.from(authToken).toString('base64')}`
+      'X-8x8-Tenant': tenantId,
+      'x-api-key': apiKey
     }
   });
 

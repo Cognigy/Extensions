@@ -70,10 +70,10 @@ export const getCustomerNode = createNodeDescriptor({
   fields: [
     {
       key: 'connection',
-      label: '8x8 CRM Connection',
+      label: '8x8 Connection',
       type: 'connection',
       params: {
-        connectionType: 'eightbyeight',
+        connectionType: 'eightbyeightsimple',
         required: true
       }
     },

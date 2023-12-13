@@ -9,7 +9,7 @@ import mapSearchParamsToXml from '../../../utils/mapSearchParamsToXml';
 const getCaseNodeResolver = async({ cognigy, config, childConfigs }: IGetCaseParams): Promise<void> => {
   const { api } = cognigy;
   const { connection, storeLocation, contextKey, inputKey } = config;
-  const { crmApiUsername, crmApiPassword, tenantId, clusterBaseUrl } = connection;
+  const { apiKey, tenantId, baseUrl } = connection;
 
   const onNotFoundCaseChild = findChildNode(childConfigs, onNotFoundCase);
   const onFoundCaseChild = findChildNode(childConfigs, onFoundCase);
@@ -22,7 +22,7 @@ const getCaseNodeResolver = async({ cognigy, config, childConfigs }: IGetCasePar
       return;
     }
     api.log!('info', 'Fetching customer data with filterXml = ' + filterXml);
-    const foundCases = await fetchCaseData({ filterXml, clusterBaseUrl, crmApiPassword, tenantId, crmApiUsername });
+    const foundCases = await fetchCaseData({ filterXml, apiKey, baseUrl, tenantId });
     if (foundCases.length > 0) {
       api.setNextNode!(onFoundCaseChild!.id);
 

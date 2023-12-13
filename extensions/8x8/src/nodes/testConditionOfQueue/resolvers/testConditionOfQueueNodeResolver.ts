@@ -8,7 +8,7 @@ import checkConditions from './utils/checkConditions';
 const testConditionOfQueueNodeResolver = async({ cognigy, config, childConfigs }: TestConditionOfQueueResolverParams): Promise<void> => {
   const { api } = cognigy;
   const { selectQueueId, connection } = config;
-  const { tenantId, dataRequestToken, clusterBaseUrl } = connection;
+  const { apiKey, tenantId, baseUrl } = connection;
   const onConditionMatchedChild = findChildNode(childConfigs, onConditionMatchedNode);
   const onConditionNotMatchedChild = findChildNode(childConfigs, onConditionNotMatchedNode);
 
@@ -18,9 +18,9 @@ const testConditionOfQueueNodeResolver = async({ cognigy, config, childConfigs }
     }
     api.log!('debug', `Fetching queue statistics for queue id ${selectQueueId}`);
     const queueStatisticsData = await fetchQueueStatistics({
-      clusterBaseUrl,
+      apiKey,
+      baseUrl,
       tenantId,
-      dataRequestToken,
       queueId: selectQueueId
     });
     if (!queueStatisticsData) {

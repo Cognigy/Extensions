@@ -21,7 +21,7 @@ describe('getScheduleDropdownOptions', () => {
       connection: {
         tenantId: 'mockTenantId',
         dataRequestToken: '',
-        clusterBaseUrl: 'mockClusterBaseUrl'
+        baseUrl: 'mockBaseUrl'
       }
     };
     return {

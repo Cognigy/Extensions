@@ -7,9 +7,9 @@ jest.mock('axios', () => jest.fn());
 describe('test condition of queue > testConditionOfQueueNodeResolver', () => {
   const mockParams = {
     queueId: '123',
-    clusterBaseUrl: 'https://clusterBaseUrl',
+    baseUrl: 'https://baseUrl',
     tenantId: 'tenantId',
-    dataRequestToken: 'dataRequestToken'
+    apiKey: 'kjbl345tnjogkj5ojn5g4'
   };
 
   it('should return null if no data comes', async() => {

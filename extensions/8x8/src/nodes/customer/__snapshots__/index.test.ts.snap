@@ -38,9 +38,9 @@ exports[`customer > getCustomerNodes should create the nodes for customer logic 
     "fields": [
       {
         "key": "connection",
-        "label": "8x8 CRM Connection",
+        "label": "8x8 Connection",
         "params": {
-          "connectionType": "eightbyeight",
+          "connectionType": "eightbyeightsimple",
           "required": true,
         },
         "type": "connection",

@@ -1802,7 +1802,7 @@ export const onOpen = createNodeDescriptor({
     parentType: "configureWorkingHours",
     defaultLabel: {
         deDE: "Geöffnet",
-        default: "Geöffnet"
+        default: "Open"
     },
     appearance: {
         color: "#61d188",
@@ -1816,7 +1816,7 @@ export const onClosed = createNodeDescriptor({
     parentType: "configureWorkingHours",
     defaultLabel: {
         deDE: "Geschlossen",
-        default: "Geschlossen"
+        default: "Closed"
     },
     appearance: {
         color: "#cf142b",

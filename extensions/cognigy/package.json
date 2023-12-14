@@ -1,7 +1,7 @@
 {
   "name": "cognigy",
-  "version": "4.1.7",
-  "description": "Cognigy",
+  "version": "4.1.6",
+  "description": "Basic Cognigy Extensions",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -16,7 +16,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.14.0",
+    "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.2",
     "juice": "^7.0.0",
     "moment": "^2.29.4",

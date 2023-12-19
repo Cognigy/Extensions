@@ -1526,25 +1526,6 @@
       ]
     },
     {
-      "name": "openai",
-      "label": "OpenAI",
-      "version": "4.0.0",
-      "description": "Integrates with OpenAI GPT-3",
-      "longDescription": "OpenAI is committed to the safe deployment of AI. Since the launch of this API, people made deploying applications faster and more streamlined while adding new safety features. Our progress with safeguards makes it possible to remove the waitlist for GPT-3. Starting today, developers in supported countries can sign up and start experimenting with our API right away. Source: https://openai.com/blog/api-no-waitlist/. Install the Extension to generate text automatically using OpenAI within a chat or voice conversation.",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/openai400/openai.tar.gz",
-      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/openai",
-      "tags": ["AI", "generate", "open source", "gpt-3"],
-      "icon": "data:image/png;base64,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",
-      "nodes": [
-        {
-          "type": "generateText",
-          "defaultLabel": "Generate Text",
-          "description": "Generates a new text based on a given prompt",
-          "tags": []
-        }
-      ]
-    },
-    {
       "name": "amazon-connect",
       "label": "Amazon Connect",
       "version": "4.0.0",
@@ -1925,50 +1906,6 @@
             "description": "If the customer does not know what they are searching for, the virtual agent cann suggest products based on a search text.",
             "tags": []
           }
-      ]
-    },
-    {
-      "name": "aleph-alpha",
-      "label": "Aleph Alpha",
-      "version": "4.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/aleph-alpha400/aleph-alpha.tar.gz",
-      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/aleph-alpha",
-      "description": "Integrates with Aleph Alpha Luminous language models",
-      "longDescription": "The Luminous series is a family of large language models. Large language models are powerful technological tools that can process and produce human text. They have acquired this ability by “reading” enormous amounts of human text data during training. Similar to someone reading a whole library and half of the internet, large language models have acquired a structural understanding of language and accumulated information about the world. With this Extension, those language models can be used within a virtual agent conversation on voice and chat channels.",
-      "tags": ["AI", "GPT", "LLM"],
-      "icon": "data:image/png;base64,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",
-      "nodes": [
-        {
-          "type": "answer",
-          "defaultLabel": "Answer Question",
-          "description": "Answers a question based on a given source text",
-          "tags": []
-        },
-        {
-          "type": "summarize",
-          "defaultLabel": "Summarize",
-          "description": "Creates a summary of a given text",
-          "tags": []
-        }
-      ]
-    },
-     {
-      "name": "anthropic",
-      "label": "Anthropic",
-      "version": "4.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/anthropic400/anthropic.tar.gz",
-      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/anthropic",
-      "description": "Integrates Cognigy.AI with Anthropic Claude language model",
-      "longDescription": "Claude can be a delightful company representative, a research assistant, a creative partner, a task automator, and more. Personality, tone, and behavior can all be customized to your needs. With this Extension, this language model, Claude, can be used within a virtual agent conversation on voice and chat channels.",
-      "tags": ["AI", "GPT", "LLM"],
-      "icon": "data:image/png;base64,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",
-      "nodes": [
-        {
-          "type": "prompt",
-          "defaultLabel": "Prompt",
-          "description": "Sends a prompt to Claude for completion",
-          "tags": []
-        }
       ]
     },
     {

@@ -1844,8 +1844,8 @@
     {
       "name": "8x8",
       "label": "8x8",
-      "version": "4.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8400/8x8.tar.gz",
+      "version": "5.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8500/8x8.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/8x8",
       "description": "Integrates with 8x8",
       "longDescription": "Integrates with 8x8",
@@ -1874,6 +1874,18 @@
             "type": "schedule",
             "defaultLabel": "Schedule",
             "description": "This node allows you to check the state of the Contact Center schedule and route interactions accordingly.",
+            "tags": []
+          },
+          {
+            "type": "voiceHandover",
+            "defaultLabel": "Voice Handover",
+            "description": "Forwards a call to the 8x8 Agent Desktop",
+            "tags": []
+          },
+          {
+            "type": "dataAugmentation",
+            "defaultLabel": "Data Augmentation",
+            "description": "Sends a payload with variables to enrich the properties served to the agent",
             "tags": []
           }
       ]

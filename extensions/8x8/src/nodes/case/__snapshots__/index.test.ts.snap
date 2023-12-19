@@ -38,9 +38,9 @@ exports[`customer > getCaseNodes should create the nodes for case logic 1`] = `
     "fields": [
       {
         "key": "connection",
-        "label": "8x8 CRM Connection",
+        "label": "8x8 Connection",
         "params": {
-          "connectionType": "eightbyeight",
+          "connectionType": "eightbyeightsimple",
           "required": true,
         },
         "type": "connection",

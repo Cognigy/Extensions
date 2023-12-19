@@ -10,7 +10,7 @@ import findChildNode from '../../../utils/findChildNode';
 const scheduleNodeResolver = async({ cognigy, config, childConfigs }: IGetScheduleParams): Promise<void> => {
   const { api } = cognigy;
   const { connection, storeLocation, scheduleNameToID, contextKey, inputKey } = config;
-  const { tenantId, dataRequestToken, clusterBaseUrl } = connection;
+  const { tenantId, apiKey, baseUrl } = connection;
 
   const onOpenSchedule = findChildNode(childConfigs, onOpenNode);
   const onClosedSchedule = findChildNode(childConfigs, onClosedNode);
@@ -22,8 +22,7 @@ const scheduleNodeResolver = async({ cognigy, config, childConfigs }: IGetSchedu
   const onChoice6 = findChildNode(childConfigs, onChoice6Node);
 
   try {
-    const authToken = `${tenantId}:${dataRequestToken}`;
-    const result = await fetchScheduleData(authToken, clusterBaseUrl, scheduleNameToID);
+    const result = await fetchScheduleData(apiKey, tenantId, baseUrl, scheduleNameToID);
 
     const schedule = result['schedule-status'].status;
     const scheduleOutput = getScheduleStringValue(schedule);

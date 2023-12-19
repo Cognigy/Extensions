@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`voice handover node > getVoiceHndoverNode should create the node for voice handover 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Voice Handover",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 Connection",
+        "params": {
+          "connectionType": "eightbyeightsimple",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "A message that will be said once the handover is initiated",
+        "key": "handoverInitiated",
+        "label": "Handover initiated message",
+        "params": {
+          "required": false,
+        },
+        "type": "cognigyText",
+      },
+      {
+        "description": "The ID of the queue",
+        "key": "queueId",
+        "label": "8x8 Queue ID",
+        "params": {
+          "required": true,
+        },
+        "type": "cognigyText",
+      },
+      {
+        "description": "The ID of the call",
+        "key": "sipCallId",
+        "label": "8x8 sip Call ID",
+        "params": {
+          "required": true,
+        },
+        "type": "cognigyText",
+      },
+      {
+        "defaultValue": {
+          "additionalProperties": [
+            {
+              "key": "firstName",
+              "value": "Roger",
+            },
+          ],
+          "caseId": "1000",
+          "company": "Tennis",
+          "email": "roger.federer@atp.com",
+          "name": "Roger Federer",
+          "phone": "+40744000111",
+          "userId": "string",
+        },
+        "description": "Extend 8x8 properties with custom JSON.",
+        "key": "customFields",
+        "label": "8x8 JSON properties",
+        "type": "json",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "scheduleStatus",
+        "key": "contextKey",
+        "label": {
+          "default": "Context Key to store Result",
+        },
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "handoverInitiated",
+        "type": "field",
+      },
+      {
+        "key": "settings",
+        "type": "section",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "defaultCollapsed": false,
+        "fields": [
+          "queueId",
+          "sipCallId",
+          "customFields",
+        ],
+        "key": "settings",
+        "label": "8x8 Settings",
+      },
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "Forwards a call to the 8x8 Agent Desktop",
+    "tags": [],
+    "tokens": [],
+    "type": "voiceHandover",
+  },
+]
+`;

@@ -25,7 +25,7 @@ describe('test condition of queue > testConditionOfQueueNodeResolver', () => {
   const mockQueueId = '123';
   const mockConfig = {
     connection: {
-      clusterBaseUrl: 'https://clusterBaseUrl',
+      baseUrl: 'https://baseUrl',
       tenantId: 'tenantId',
       dataRequestToken: 'dataRequestToken'
     },

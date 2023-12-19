@@ -3,26 +3,25 @@ import type { QueueStatisticsApiResponse } from '../types';
 
 interface FetchQueueStatisticsParams {
   queueId: string
-  clusterBaseUrl: string
+  baseUrl: string
   tenantId: string
-  dataRequestToken: string
+  apiKey: string
 }
 
 const fetchQueueStatistics = async({
   queueId,
-  clusterBaseUrl,
+  baseUrl,
   tenantId,
-  dataRequestToken
+  apiKey
 }: FetchQueueStatisticsParams): Promise<QueueStatisticsApiResponse | null> => {
-  const authToken = `${tenantId}:${dataRequestToken}`;
   const response = await axios({
-    url: `${clusterBaseUrl}/api/rtstats/stats/queue/${queueId}.json`,
+    url: `${baseUrl}/cc/v1/stats/rt/queue/${queueId}`,
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'cache-control': 'no-cache',
-      Authorization: `Basic ${Buffer.from(authToken).toString('base64')}`
+      'X-8x8-Tenant': tenantId,
+      'x-api-key': apiKey
     }
   });
   return response.data?.queue ?? null;

@@ -7,16 +7,17 @@ const mockAxios = axios as unknown as jest.Mock;
 
 describe('api > fetchScheduleData()', () => {
   const mockParams: FetchCustomerDataParams = {
-    authToken: 'fdkjhgkj434kbgfi34b',
+    apiKey: 'fdkjhgkj434kbgfi34b',
+    tenantId: 'mockTenant',
     url: 'https://8x8.com',
     scheduleID: '1'
   };
 
-  const { authToken, url, scheduleID } = mockParams;
+  const { apiKey, tenantId, url, scheduleID } = mockParams;
 
   it('should fetch and return schedule data', async() => {
     mockAxios.mockReturnValueOnce({ data: { 'schedule-status': { status: 0 } } });
-    const data = await fetchScheduleData(authToken, url, scheduleID);
+    const data = await fetchScheduleData(apiKey, tenantId, url, scheduleID);
 
     expect(data).toEqual({ 'schedule-status': { status: 0 } });
   });

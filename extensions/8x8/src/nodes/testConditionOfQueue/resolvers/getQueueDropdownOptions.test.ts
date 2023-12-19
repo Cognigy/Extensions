@@ -1,6 +1,6 @@
 import { QueueType } from '../types';
 import type { DropdownOption, GetQueueDropdownOptionsParams, QueueApiResponse } from '../types';
-import getScheduleDropdownOptions from './getQueueDropdownOptions';
+import getQueueDropdownOptions from './getQueueDropdownOptions';
 
 describe('getQueueDropdownOptions', () => {
   const api = {
@@ -9,7 +9,6 @@ describe('getQueueDropdownOptions', () => {
   const getMockQueue = (id: number, type = QueueType.Chat): QueueApiResponse => ({
     'queue-id': id,
     'queue-name': `mock name ${id}`,
-    'queue-desc': `mock desc ${id}`,
     'media-type': type
   });
   const getDisplayType = (type: QueueType): string => {
@@ -35,8 +34,8 @@ describe('getQueueDropdownOptions', () => {
     const config = {
       connection: {
         tenantId: 'mockTenantId',
-        dataRequestToken: '',
-        clusterBaseUrl: 'mockClusterBaseUrl'
+        apiKey: 'dfasf34afsef34f4',
+        baseUrl: 'mockBaseUrl'
       }
     };
     return {
@@ -49,12 +48,10 @@ describe('getQueueDropdownOptions', () => {
     const mockQueue1 = getMockQueue(1);
     api.httpRequest.mockResolvedValue({
       data: {
-        queues: {
-          queue: [mockQueue1]
-        }
+        queue: [mockQueue1]
       }
     });
-    const result = await getScheduleDropdownOptions(getMockParams());
+    const result = await getQueueDropdownOptions(getMockParams());
     expect(result).toEqual([convertToDropdownOption(mockQueue1)]);
   });
 
@@ -66,9 +63,7 @@ describe('getQueueDropdownOptions', () => {
     const mockQueue5 = getMockQueue(5, 'test' as QueueType.Vmail);
     api.httpRequest.mockResolvedValue({
       data: {
-        queues: {
-          queue: [mockQueue1, mockQueue2, mockQueue3, mockQueue4, mockQueue5]
-        }
+        queue: [mockQueue1, mockQueue2, mockQueue3, mockQueue4, mockQueue5]
       }
     });
     const expected = [
@@ -78,23 +73,23 @@ describe('getQueueDropdownOptions', () => {
       convertToDropdownOption(mockQueue4),
       convertToDropdownOption(mockQueue5)
     ];
-    const result = await getScheduleDropdownOptions(getMockParams());
+    const result = await getQueueDropdownOptions(getMockParams());
     expect(result).toEqual(expected);
   });
 
   it('should return empty array if data is empty object', async() => {
-    api.httpRequest.mockResolvedValue({
-      data: {
-        queues: {}
-      }
-    });
-    await expect(getScheduleDropdownOptions(getMockParams())).rejects.toThrow('No queues found');
+    api.httpRequest.mockResolvedValue({});
+    await expect(getQueueDropdownOptions(getMockParams())).rejects.toThrow('No queues found');
+  });
+  it('should return empty array if result is empty object', async() => {
+    api.httpRequest.mockResolvedValue({});
+    await expect(getQueueDropdownOptions(getMockParams())).rejects.toThrow('No queues found');
   });
 
   it('should throw an error if api throw eror', async() => {
     const mockError = new Error('mockError');
     api.httpRequest.mockRejectedValue(mockError);
-    await expect(getScheduleDropdownOptions(getMockParams())).rejects.toThrow(mockError.message);
+    await expect(getQueueDropdownOptions(getMockParams())).rejects.toThrow(mockError.message);
   });
 });
 

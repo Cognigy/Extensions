@@ -10,10 +10,10 @@ import type { GetQueueDropdownOptionsParams, QueueApiResponse, QueueType } from 
  */
 const getQueueDropdownOptions = async({ api, config }: GetQueueDropdownOptionsParams): Promise<IOptionsResolverReturnData[]> => {
   const queueType = {
-    Chat: 'C',
-    Phone: 'T',
-    Email: 'Z',
-    Vmail: 'V'
+    Chat: 'chat',
+    Phone: 'phone',
+    Email: 'email',
+    Vmail: 'vmail'
   };
   const getDisplayType = (type: QueueType): string => {
     switch (type) {
@@ -32,24 +32,23 @@ const getQueueDropdownOptions = async({ api, config }: GetQueueDropdownOptionsPa
   const addNamePrefix = (name: string, type: QueueType): string => `${getDisplayType(type)}: ${name}`;
   try {
     const { connection } = config;
-    const { clusterBaseUrl, tenantId, dataRequestToken } = connection;
-    const authToken = `${tenantId}:${dataRequestToken}`;
+    const { apiKey, baseUrl, tenantId } = connection;
 
     const result = await api.httpRequest!({
       method: 'GET',
-      url: `${clusterBaseUrl}/api/stats/queues.json`,
+      url: `${baseUrl}/cc/v1/stats/rt/queues`,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'cache-control': 'no-cache',
-        Authorization: `Basic ${Buffer.from(authToken).toString('base64')}`
+        'X-8x8-Tenant': tenantId,
+        'x-api-key': apiKey
       }
     });
     const { data } = result;
-    if (!data?.queues?.queue) {
+    if (!data?.queue) {
       throw new Error('No queues found');
     }
-    const queues = data.queues.queue as QueueApiResponse[];
+    const queues = data.queue as QueueApiResponse[];
 
     return queues.map(queue => ({
       label: addNamePrefix(queue['queue-name'], queue['media-type']),

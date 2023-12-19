@@ -10,7 +10,7 @@ const getCustomerNodeResolver = async({ cognigy, config, childConfigs }: IGetCus
   const { api } = cognigy;
   const { connection, storeLocation, contextKey, inputKey } = config;
 
-  const { crmApiUsername, crmApiPassword, tenantId, clusterBaseUrl } = connection;
+  const { apiKey, tenantId, baseUrl } = connection;
 
   const onNotFoundCustomerChild = findChildNode(childConfigs, onNotFoundCustomer);
   const onFoundCustomerChild = findChildNode(childConfigs, onFoundCustomer);
@@ -23,7 +23,7 @@ const getCustomerNodeResolver = async({ cognigy, config, childConfigs }: IGetCus
       return;
     }
     api.log!('info', 'Fetching customer data with filterXml = ' + filterXml);
-    const foundCustomers = await fetchCustomersData({ filterXml, clusterBaseUrl, crmApiPassword, tenantId, crmApiUsername });
+    const foundCustomers = await fetchCustomersData({ filterXml, apiKey, baseUrl, tenantId });
     if (foundCustomers.length > 0) {
       api.setNextNode!(onFoundCustomerChild!.id);
 

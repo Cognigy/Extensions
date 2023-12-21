@@ -2,24 +2,29 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export interface IgetTrackingInformationParams extends INodeFunctionBaseParams {
-	config: {
-		apiConnection: {
+    config: {
+        apiConnection: {
             apiKey: string;
         };
         trackingNumber: string;
         language: string;
-        specifyService: boolean;
-        service: string;
+        recipientPostalCode: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
-	};
+    };
 }
 
 export const getTrackingInformationNode = createNodeDescriptor({
     type: "getTrackingInformation",
-    defaultLabel: "Get Tracking Information",
-    summary: "Get the tracking status of a package.",
+    defaultLabel: {
+        deDE: "Sendung verfolgen",
+        default: "Track Shipment"
+    },
+    summary: {
+        deDE: " Status einer Sendung erhalten",
+        default: "Get the tracking status of a package."
+    },
     preview: {
         key: "trackingNumber",
         type: "text"
@@ -27,9 +32,12 @@ export const getTrackingInformationNode = createNodeDescriptor({
     fields: [
         {
             key: "apiConnection",
-            label: "DHL API Keys",
+            label: "DHL API Key",
             type: "connection",
-            description: "API authentication information for DHL",
+            description: {
+                deDE: "API Key der DHL API",
+                default: "API authentication information for DHL"
+            },
             params: {
                 connectionType: 'dhl',
                 required: true
@@ -37,132 +45,109 @@ export const getTrackingInformationNode = createNodeDescriptor({
         },
         {
             key: "trackingNumber",
-            label: "Tracking Number",
+            label: {
+                deDE: "Sendungsnummer",
+                default: "Tracking Number"
+            },
             type: "cognigyText",
-            description: "Tracking number for the delivery you wish to see.",
+            description: {
+                deDE: "Die Sendungsnummer abgefragten DHL Sendung.",
+                default: "Tracking number for the delivery you wish to see."
+            },
             params: {
                 required: true
             }
         },
         {
             key: "language",
-            label: "Response Language",
+            label: {
+                deDE: "Ergebnissprache",
+                default: "Response Language"
+            },
             type: "cognigyText",
-            description: "Response language for the client in ISO 639-1 two character format (en, de, jp etc.)",
-            defaultValue: "en",
+            description: {
+                deDE: "Die Antwortsprache im ISO 639-1 Format, bspw. en, de, jp etc.",
+                default: "Response language for the client in ISO 639-1 two character format (en, de, jp etc.)"
+            },
+            defaultValue: "en"
+        },
+        {
+            key: "recipientPostalCode",
+            label: {
+                deDE: "Empfänger Postleitzahl",
+                default: "Recipient Postal Code"
+            },
+            type: "cognigyText",
+            defaultValue: "",
+        },
+        {
+            key: "storeLocation",
+            type: "select",
+            label: {
+                deDE: "Wo das Ergebnis gespeichert werden soll",
+                default: "Where to Store the Result"
+            },
             params: {
+                options: [
+                    {
+                        label: "Input",
+                        value: "input"
+                    },
+                    {
+                        label: "Context",
+                        value: "context"
+                    }
+                ],
                 required: true
+            },
+            defaultValue: "input"
+        },
+        {
+            key: "inputKey",
+            type: "cognigyText",
+            label: {
+                deDE: "Input Key zur Speicherung",
+                default: "Input Key to Store Result"
+            },
+            defaultValue: "trackingInfo",
+            condition: {
+                key: "storeLocation",
+                value: "input"
             }
         },
-		{
-			key: "specifyService",
-			label: "Specify DHL Service",
-            description: "Specify the specific DHL service the user should be allowed to track.",
-			type: "toggle",
-			defaultValue: false
-		},
         {
-			key: "service",
-			label: "DHL Service",
-			type: "select",
-            params: {
-				options: [
-					{
-						label: "Express",
-						value: "express"
-					},
-					{
-						label: "Parcel DE",
-						value: "parcel-de"
-					},
-					{
-						label: "ecommerce",
-						value: "ecommerce"
-					},
-					{
-						label: "DGF",
-						value: "dgf"
-					},
-					{
-						label: "Parcel UK",
-						value: "parcel-uk"
-					},
-					{
-						label: "Post DE",
-						value: "post-de"
-					},
-					{
-						label: "Same day",
-						value: "sameday"
-					},
-					{
-						label: "Freight",
-						value: "freight"
-					},
-					{
-						label: "Parcel NL",
-						value: "parcel-nl"
-					},
-					{
-						label: "Parcel PL",
-						value: "parcel-pl"
-					},
-					{
-						label: "DSC",
-						value: "dsc"
-					}
-				]
-			},
-			defaultValue: "address",
-			condition: {
-				key: "specifyService",
-				value: true
-			}
-		},
-        {
-			key: "storeLocation",
-			type: "select",
-			label: "Where to Store the Result",
-			params: {
-				options: [
-					{
-						label: "Input",
-						value: "input"
-					},
-					{
-						label: "Context",
-						value: "context"
-					}
-				],
-				required: true
-			},
-			defaultValue: "input"
-		},
-        {
-			key: "inputKey",
-			type: "cognigyText",
-			label: "Input Key to Store Result",
-			defaultValue: "trackingInfo",
-			condition: {
-				key: "storeLocation",
-				value: "input"
-			}
-		},
-		{
-			key: "contextKey",
-			type: "cognigyText",
-			label: "Context Key to store Result",
-			defaultValue: "trackingInfo",
-			condition: {
-				key: "storeLocation",
-				value: "context"
-			}
-		}
+            key: "contextKey",
+            type: "cognigyText",
+            label: {
+                deDE: "Context Key zur Speicherung",
+                default: "Context Key to Store Result"
+            },
+            defaultValue: "trackingInfo",
+            condition: {
+                key: "storeLocation",
+                value: "context"
+            }
+        }
     ],
     sections: [
         {
+            key: "advanced",
+            label: {
+                deDE: "Erweitert",
+                default: "Advanced"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "language",
+                "recipientPostalCode"
+            ]
+        },
+        {
             key: "storageOption",
-            label: "Storage Option",
+            label: {
+                deDE: "Speicheroption",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -172,78 +157,197 @@ export const getTrackingInformationNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "apiConnection"},
-        { type: "field", key: "trackingNumber"},
-        { type: "field", key: "language"},
-        { type: "field", key: "specifyService"},
-        { type: "field", key: "service"},
-        { type: "section", key: "storageOption"}
+        { type: "field", key: "apiConnection" },
+        { type: "field", key: "trackingNumber" },
+        { type: "section", key: "advanced" },
+        { type: "section", key: "storageOption" }
     ],
     appearance: {
         color: "#FFCC00"
     },
-    function: async ({ cognigy, config }: IgetTrackingInformationParams) => {
+    dependencies: {
+        children: [
+            "pretransit",
+            "transit",
+            "delivered",
+            "failure",
+            "unknown"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: IgetTrackingInformationParams) => {
         const { api } = cognigy;
-        const { apiConnection, trackingNumber, language, specifyService, service, storeLocation, inputKey, contextKey } = config;
+        const { apiConnection, trackingNumber, language, recipientPostalCode, storeLocation, inputKey, contextKey } = config;
         const { apiKey } = apiConnection;
 
-        const endpoint = `https://api-eu.dhl.com/track/shipments`;
-        let trackingParameters = {};
-        if (specifyService === false) {
-            trackingParameters = {
-                trackingNumber: trackingNumber,
-                language: language
+        try {
+            const result: AxiosResponse = await axios.get(`https://api-eu.dhl.com/track/shipments`, {
+                params: {
+                    trackingNumber,
+                    language,
+                    recipientPostalCode
+                },
+                headers: {
+                    'DHL-API-Key': apiKey,
+                }
+            });
+
+            const trackingStatusOrig = result.data.shipments[0].status.statusCode;
+
+            let trackingStatusNum;
+            let onTrackingChild;
+
+            switch (trackingStatusOrig) {
+                case "pre-transit":
+                    trackingStatusNum = "0";
+                    onTrackingChild = childConfigs.find(child => child.type === "pretransit");
+                    break;
+                case "transit":
+                    trackingStatusNum = "1";
+                    onTrackingChild = childConfigs.find(child => child.type === "transit");
+                    break;
+                case "delivered":
+                    trackingStatusNum = "2";
+                    onTrackingChild = childConfigs.find(child => child.type === "delivered");
+                    break;
+                default:
+                    onTrackingChild = childConfigs.find(child => child.type === "unknown");
+                    trackingStatusNum = "No information available";
+            }
+
+            api.setNextNode(onTrackingChild.id);
+
+            const trackingResults = {
+                details: result.data,
+                statusNum: trackingStatusNum
             };
-        } else {
-            trackingParameters = {
-                trackingNumber: trackingNumber,
-                language: language,
-                service: service
-            };
-        }
-		const axiosConfig: AxiosRequestConfig = {
-			params: trackingParameters,
-			headers: {
-				'DHL-API-Key': apiKey,
-			}
-		};
-    try {
-        const result: AxiosResponse = await axios.get(endpoint, axiosConfig);
-        const trackingStatusOrig = result.data.shipments[0].status.statusCode;
-        let trackingStatusNum;
 
-        switch (trackingStatusOrig) {
-            case "pre-transit":
-                trackingStatusNum = "0";
-                break;
-            case "transit":
-                trackingStatusNum = "1";
-                break;
-            case "delivered":
-                trackingStatusNum = "2";
-                break;
-            default:
-                trackingStatusNum = "No information available";
-        }
+            if (storeLocation === 'context') {
+                api.addToContext(contextKey, trackingResults, 'simple');
+            } else {
+                // @ts-ignore
+                api.addToInput(inputKey, trackingResults);
+            }
+        } catch (error) {
+            if (storeLocation === 'context') {
+                api.addToContext(contextKey, { error: error.message }, 'simple');
+            } else {
+                // @ts-ignore
+                api.addToInput(inputKey, { error: error.message });
+            }
+            const onErrorChild = childConfigs.find(child => child.type === "failure");
+            api.setNextNode(onErrorChild.id);
 
-        const trackingResults = {
-            details: result.data,
-            statusNum: trackingStatusNum
-        };
-
-        if (storeLocation === 'context') {
-            api.addToContext(contextKey, trackingResults, 'simple');
-        } else {
-            // @ts-ignore
-            api.addToInput(inputKey, trackingResults);
-        }
-    } catch (error) {
-        if (storeLocation === 'context') {
-            api.addToContext(contextKey, { error: error.message }, 'simple');
-        } else {
-            // @ts-ignore
-            api.addToInput(inputKey, { error: error.message });
         }
     }
-}
 });
+
+export const pretransit = createNodeDescriptor({
+    type: "pretransit",
+    parentType: "getTrackingInformation",
+    defaultLabel: "Pre Transit",
+    constraints: {
+        editable: false,
+        deletable: true,
+        creatable: true,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#FFCC00",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const transit = createNodeDescriptor({
+    type: "transit",
+    parentType: "getTrackingInformation",
+    defaultLabel: "Transit",
+    constraints: {
+        editable: false,
+        deletable: true,
+        creatable: true,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#FFCC00",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const delivered = createNodeDescriptor({
+    type: "delivered",
+    parentType: "getTrackingInformation",
+    defaultLabel: "Delivered",
+    constraints: {
+        editable: false,
+        deletable: true,
+        creatable: true,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const failure = createNodeDescriptor({
+    type: "failure",
+    parentType: "getTrackingInformation",
+    defaultLabel: "Failure",
+    constraints: {
+        editable: false,
+        deletable: true,
+        creatable: true,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const unknown = createNodeDescriptor({
+    type: "unknown",
+    parentType: "getTrackingInformation",
+    defaultLabel: "Unknown",
+    constraints: {
+        editable: false,
+        deletable: true,
+        creatable: true,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+

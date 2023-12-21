@@ -1,6 +1,6 @@
 {
   "name": "dhl",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Integrate DHL functions",
   "main": "build/module.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.12.0",
+    "@cognigy/extension-tools": "^0.14.0",
     "axios": "^0.21.1",
     "qs": "^6.10.1",
     "tslint": "^6.1.3",

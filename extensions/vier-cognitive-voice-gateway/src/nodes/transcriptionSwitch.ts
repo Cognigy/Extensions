@@ -9,42 +9,48 @@ import {
 import t from '../translations';
 import { languageSelectField } from "../common/shared";
 
-export interface ISetSpeechToTextServiceParams extends INodeFunctionBaseParams {
-  config: {
-    language?: string,
-    transcriber: string,
-    profileToken?: string,
-    transcriberFallback?: string,
-    profileTokenFallback?: string,
+interface ITranscriptionSwitchInputs {
+  language?: string,
+  transcriber: string,
+  profileToken?: string,
+  transcriberFallback?: string,
+  profileTokenFallback?: string,
+}
+
+export interface ITranscriptionSwitchParams extends INodeFunctionBaseParams {
+  config: ITranscriptionSwitchInputs;
+}
+
+function generateTranscriberSelect(key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField {
+  return {
+    type: 'text',
+    key,
+    label,
+    description,
+    params: {
+      required: false,
+    },
   };
 }
 
-const generateTranscriberSelect = (key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField => ({
-  type: 'text',
-  key,
-  label,
-  description,
-  params: {
-    required: false,
-  },
-});
+function generateProfileTokenInput(key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField {
+  return {
+    type: 'text',
+    key,
+    label,
+    description,
+    params: {
+      required: false,
+      placeholder: '',
+    },
+    condition: {
+      key: 'transcriber',
+      value: '',
+    },
+  };
+}
 
-const generateProfileTokenInput = (key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField => ({
-  type: 'text',
-  key,
-  label,
-  description,
-  params: {
-    required: false,
-    placeholder: '',
-  },
-  condition: {
-    key: 'transcriber',
-    value: '',
-  },
-});
-
-export const setSpeechtoTextServiceNode = createNodeDescriptor({
+export const transcriptionSwitchNode = createNodeDescriptor({
   type: 'speechToText',
   defaultLabel: t.speechToText.nodeLabel,
   summary: t.speechToText.nodeSummary,
@@ -91,7 +97,7 @@ export const setSpeechtoTextServiceNode = createNodeDescriptor({
       type: 'section',
     },
   ],
-  function: async ({ cognigy, config }: ISetSpeechToTextServiceParams) => {
+  function: async ({ cognigy, config }: ITranscriptionSwitchParams) => {
     const { api } = cognigy;
     const transcriber = [];
 

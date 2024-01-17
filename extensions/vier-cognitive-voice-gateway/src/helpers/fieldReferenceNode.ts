@@ -43,6 +43,7 @@ export const fieldReferenceNode = createNodeDescriptor({
       description: 'text',
       params: {
         required: false,
+        placeholder: '',
       },
     },
     {

@@ -116,8 +116,8 @@ function shouldDisplayAdvancedSetting(): TNodeFieldCondition {
 const boostedPhrasesField: INodeField = {
   type: 'textArray',
   key: 'boostedPhrases',
-  label: 'boostedPhrases',
-  description: 'boostedPhrases',
+  label: t.speechToText.inputBoostedPhrasesLabel,
+  description: t.speechToText.inputBoostedPhrasesDescription,
   params: {
     required: false,
   },
@@ -127,8 +127,8 @@ const boostedPhrasesField: INodeField = {
 const boostedPhrasesFromContextField: INodeField = {
   type: 'text',
   key: 'boostedPhrasesFromContext',
-  label: 'boostedPhrasesFromContext',
-  description: 'boostedPhrasesFromContext',
+  label: t.speechToText.inputBoostedPhrasesFromContextLabel,
+  description: t.speechToText.inputBoostedPhrasesFromContextDescription,
   params: {
     required: false,
   },
@@ -138,8 +138,9 @@ const boostedPhrasesFromContextField: INodeField = {
 const profanityFilterField: INodeField = {
   type: 'toggle',
   key: 'profanityFilter',
-  label: 'profanity',
-  description: 'profanity',
+  defaultValue: true,
+  label: t.speechToText.inputProfanityFilterLabel,
+  description: t.speechToText.inputProfanityFilterDescription,
   params: {
     required: false,
   },
@@ -204,7 +205,7 @@ export const transcriptionSwitchNode = createNodeDescriptor({
     {
       key: 'dynamicProfileSettings',
       fields: [boostedPhrasesField.key, boostedPhrasesFromContextField.key, profanityFilterField.key],
-      label: 'dynamicProfile',
+      label: t.speechToText.sectionDynamicProfileSettings,
       defaultCollapsed: false,
       condition: shouldDisplayAdvancedSetting(),
     },

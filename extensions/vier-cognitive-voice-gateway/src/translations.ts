@@ -473,9 +473,27 @@ export default {
         },
     },
     speechToText: {
+        inputBoostedPhrasesDescription: {
+            'default': "Enter the list of phrases that receive an increased weight during voice recognition.",
+        },
+        inputBoostedPhrasesFromContextDescription: {
+            'default': "Enter the key for which a list of phrases to be boosted is stored in the Context. If this node contains a list of boosted phrases, then it will be merged with the list from the Context.",
+        },
+        inputBoostedPhrasesFromContextLabel: {
+            'default': "Phrases to boost from Context",
+        },
+        inputBoostedPhrasesLabel: {
+            'default': "Phrases to boost",
+        },
         inputLanguageLabel: {
             'default': "Language",
             'deDE': "Sprache",
+        },
+        inputProfanityFilterDescription: {
+            'default': "Enable the Profanity Filter",
+        },
+        inputProfanityFilterLabel: {
+            'default': "Enable the Profanity Filter",
         },
         inputProfileTokenDescription: {
             'default': "Use the profile token as displayed in VIER Cognitive Voice Gateway under Speech service profiles > Profile token.",
@@ -512,6 +530,9 @@ export default {
         nodeSummary: {
             'default': "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
             'deDE': "Speech-to-Text-Dienste müssen verwendet werden, um die erwartete Eingabe bestmöglich zu transkribieren",
+        },
+        sectionDynamicProfileSettings: {
+            'default': "Dynamic Profile",
         },
         sectionFallback: {
             'default': "Fallback Option",

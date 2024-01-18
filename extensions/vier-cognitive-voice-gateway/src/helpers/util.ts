@@ -1,4 +1,9 @@
-import { INodeExecutionAPI } from "@cognigy/extension-tools/build/interfaces/descriptor";
+import {
+  INodeExecutionAPI,
+  INodeField,
+} from "@cognigy/extension-tools/build/interfaces/descriptor";
+
+type Inputs = { [s: string]: any };
 
 export function normalizeText(text: string | undefined | null) {
   if (!text) {
@@ -11,7 +16,10 @@ export function normalizeText(text: string | undefined | null) {
   return trimmed;
 }
 
-export function normalizeTextArray(texts: Array<string | undefined> | undefined | null) {
+export function normalizeTextArray(texts: Array<string | undefined> | string | undefined | null): Array<string> | undefined {
+  if (typeof texts === 'string') {
+    return [normalizeText(texts)];
+  }
   if (!Array.isArray(texts) || texts.length === 0) {
     return undefined;
   }
@@ -20,7 +28,7 @@ export function normalizeTextArray(texts: Array<string | undefined> | undefined 
     return undefined;
   }
 
-  const output = [];
+  const output: Array<string> = [];
   for (let text of texts) {
     const normalized = normalizeText(text);
     if (normalized) {
@@ -28,6 +36,20 @@ export function normalizeTextArray(texts: Array<string | undefined> | undefined 
     }
   }
   return output;
+}
+
+export function normalizedBoolean(field: INodeField, config: Inputs): boolean {
+  const value = config[field.key]
+  if (value === true) {
+    return true;
+  }
+  if (value === false) {
+    return false;
+  }
+  if (typeof field.defaultValue === 'boolean') {
+    return field.defaultValue
+  }
+  return false;
 }
 
 export function convertWhisperText(text: string | undefined | null) {
@@ -157,4 +179,21 @@ export function delay(durationMillis: number, block: () => void): Promise<void> 
       resolve();
     }, durationMillis);
   });
+}
+
+export function getStringListFromContext(api: INodeExecutionAPI, key: string): Array<string> {
+  const output: Array<string> = [];
+  const contextValue = api.getContext(key);
+  if (Array.isArray(contextValue)) {
+    for (let string of contextValue) {
+      if (typeof string === 'string') {
+        output.push(string);
+      } else {
+        api.log('error', `Discarded a value from the context key ${key}: ${string}`);
+      }
+    }
+  } else {
+    api.log('error', `Context key ${key} did not contain an array!`);
+  }
+  return output
 }

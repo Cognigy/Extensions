@@ -9,6 +9,12 @@ import {
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 import { languageSelectField } from "../common/shared";
+import {
+  getStringListFromContext,
+  normalizedBoolean,
+  normalizeText,
+  normalizeTextArray,
+} from "../helpers/util";
 
 interface ITranscriptionSwitchInputs {
   language?: string,
@@ -16,11 +22,16 @@ interface ITranscriptionSwitchInputs {
   profileToken?: string,
   transcriberFallback?: string,
   profileTokenFallback?: string,
+  boostedPhrases?: Array<string>,
+  boostedPhrasesFromContext?: string,
+  profanityFilter?: boolean,
 }
 
 export interface ITranscriptionSwitchParams extends INodeFunctionBaseParams {
   config: ITranscriptionSwitchInputs;
 }
+
+const vendorsWithBoostAndProfanitySupport = ['MICROSOFT', 'GOOGLE', 'IBM'];
 
 function generateTranscriberSelect(key: string, label: INodeFieldTranslations, description: INodeFieldTranslations, condition: TNodeFieldCondition): INodeField {
   return {
@@ -81,20 +92,10 @@ function supportsAdvancedSettings(transcriber: INodeField, profileToken: INodeFi
   return {
     and: [
       {
-        or: [
-          {
-            key: transcriber.key,
-            value: 'MICROSOFT',
-          },
-          {
-            key: transcriber.key,
-            value: 'GOOGLE',
-          },
-          {
-            key: transcriber.key,
-            value: 'IBM',
-          },
-        ]
+        or: vendorsWithBoostAndProfanitySupport.map(v => ({
+          key: transcriber.key,
+          value: v,
+        }))
       },
       {
         key: profileToken.key,
@@ -145,6 +146,25 @@ const profanityFilterField: INodeField = {
     required: false,
   },
   condition: shouldDisplayAdvancedSetting()
+}
+
+type StaticTranscriber = string
+interface DynamicTranscriber {
+  vendor: string
+  boostedPhrases?: Array<string>
+  filterProfanity?: boolean
+}
+type Transcriber = StaticTranscriber | DynamicTranscriber
+
+function createTranscriber(vendor: string, boostedPhrases: Set<string>, filterProfanity: boolean): Transcriber {
+  if (boostedPhrases.size === 0 && filterProfanity === profanityFilterField.defaultValue) {
+    return vendor
+  }
+  return {
+    vendor,
+    boostedPhrases: [...boostedPhrases],
+    filterProfanity: filterProfanity,
+  }
 }
 
 export const transcriptionSwitchNode = createNodeDescriptor({
@@ -234,18 +254,25 @@ export const transcriptionSwitchNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ITranscriptionSwitchParams) => {
     const { api } = cognigy;
-    const transcriber = [];
+    const boostedPhrases = new Set(normalizeTextArray(config.boostedPhrases) ?? [])
+    const boostedPhrasesContextKey = normalizeText(config.boostedPhrasesFromContext)
+    if (boostedPhrasesContextKey) {
+      getStringListFromContext(api, boostedPhrasesContextKey).forEach(s => boostedPhrases.add(s))
+    }
+    const profanityFilter: boolean = normalizedBoolean(profanityFilterField, config)
+
+    const transcriber: Array<Transcriber> = [];
 
     if (config.profileToken) {
       transcriber.push(config.profileToken);
     } else if (config.transcriber) {
-      transcriber.push(config.transcriber);
+      transcriber.push(createTranscriber(config.transcriber, boostedPhrases, profanityFilter));
     }
 
     if (config.profileTokenFallback) {
       transcriber.push(config.profileTokenFallback);
     } else if (config.transcriberFallback) {
-      transcriber.push(config.transcriberFallback);
+      transcriber.push(createTranscriber(config.transcriberFallback, boostedPhrases, profanityFilter));
     }
 
     const payload = {

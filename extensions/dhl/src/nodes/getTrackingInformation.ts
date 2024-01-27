@@ -214,7 +214,9 @@ export const getTrackingInformationNode = createNodeDescriptor({
                     trackingStatusNum = "No information available";
             }
 
-            api.setNextNode(onTrackingChild.id);
+            if (onTrackingChild) {
+                api.setNextNode(onTrackingChild.id);
+            }
 
             const trackingResults = {
                 details: result.data,
@@ -235,8 +237,9 @@ export const getTrackingInformationNode = createNodeDescriptor({
                 api.addToInput(inputKey, { error: error.message });
             }
             const onErrorChild = childConfigs.find(child => child.type === "failure");
-            api.setNextNode(onErrorChild.id);
-
+            if (onErrorChild) {
+                api.setNextNode(onErrorChild.id);
+            }
         }
     }
 });

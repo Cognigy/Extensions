@@ -232,37 +232,23 @@
     {
       "name": "cognigy",
       "label": "Cognigy Customs",
-      "version": "4.1.6",
+      "version": "4.2.0",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/cognigy",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy416/cognigy.tar.gz",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cognigy420/cognigy.tar.gz",
       "description": "Contains various Cognigy Flow Node extensions",
       "longDescription": "Next to the natively provided Flow Nodes in Cognigy.AI, this Extension exposes custom functions which use Cognigy-related APIs and systems.",
       "tags": [
         "cognigy",
-        "attachments",
-        "conversations",
         "intent",
         "disambiguation"
       ],
       "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFrElEQVR4nO2aW2xUVRSG/7XPDLSdaQu0RRHFRkSDJPhAobbQWDWKeEsI0sRLNIDpxQIvBgIGdWLQBDFECkgLKkjEaEk0xguSqGAMtyIkkkAMISYkEpAOt06nl5lz9vIFKrV01jlzdkmM53ubzr/Wv+afzp69zxwgICAgICAgICDg/wmZaFJavSWnvbvrDQWyMgpZtyfaFq424ZmJ/Bmb7kIqvSCThqB/6mhbtCtkwjDek3wKjGUaLEl1tKppa+cvi9tN+A5q4qTvAHhpJg2BbAC7lAlD1qh1KVVIqa9g6D/PBL4DKJzWXAbgAbd6ZpTlVqy5xa+vKXwH4MBZ6rFP2OKceX59TeEvgEmtwxj8sNcyZo6NqN4ywpe3IXwFkB+NrwTg/YUwW7q750k/3qbIOoCbJq+OaNbzs6132Hkl21qTZB1AdyQ6A8AoH9735pWvf8xHvRGyC2BKS9hxdDN8fp0Ro8FPvQmyCiA/nJoGcKkB/5mjypsKDPTJmqwCYE0vu5BdcKEJp0htzGYGU3gOoKC8eQIDNS6km4moRRKxxkzc2TTc6xym8BwAw6kFIJ0hutgJrw2HQ28DSAvaokhR2E2gQ4K3AKa0hDXjGUlGxNu7DteduThm5GkC/hD7st6EijW5nmYxhKcAouF0A8BjJR1ptRUAsKPGsRSelTtzTr4TKvMyiyk8BcAa9bKKDiVKSw5efXT5wMIjAI6JvUm96WUWU7gOYFRV8z0AJohC5uXYUeP0d6FtchmqC6ZumOp2HlO4C2Buq9Xba38KefFL5g7LbRvwx5y8JgBxyUYT3/BToqsACk9fLAUwWdJZil6L712QGPDEnnk9oCvrQgYYeOHWitYbuhi6CsB20g0Qt70U77itpGnQZ6G2uLCKXOJzK9zMZAoxgLyqljFgLJR0RPhxwGf/GjoP1h8noi/EibSrTZYxxABUrz0HgLRTSykF8Z0j5nclDYPGR8o3PCLpTJE5gOpYCAR530/4oWN/40lJlrigj4DofGYVE5g3ozpm5Iq1RMYAol1Fs5l5otSEiD505XZycS9YP+dCOTY3MfKGXDgVPgLkYuODE53p0NduDZPJ87sB/CXILMsKiR8XEwwaQE7l+tsZmC42sKxVOFwnHXj+4VgsRUSfSzIGzy2sbBnvum+WDBIAU8ih9yAvfmlt6++8muaEclYA6JB0tnae9trbK9cNoHj6R1FmftBF/brkocazXk3jexckCPheFLJeMmlu6zCv/b1w3QC67Z75AKRLVT0g+51sjUnxoJumPhhFp061D+n2eEAAI6e0FIL5LbGScDQ561LWP3ImDizaR6CfZSW/mK2HGwYEYIed+wFEhDonRGhALKZ9eDOgN7gQlRdUDt0p8V8BxBRrvUysIvx25Zzvi9w8tRPyYqi0jSG7p6BfANHKm2cwUCEVEcsnOze072nsJFDG3/EBgMFlQ7Uz7BcA2/ZLcgmd6SyyNxmbIKS+BJASVJFoV/EaY57X0BdAtHLjaCLMlgqI8AF2Lu41NUDnvvp2An0r6RhojFY1lZjyvUpfAOzoV5kRFfSaOPyJ2RGIyQnVAugRhAop9ZBZ774AmMAsvvtgtCbaak+YHiJxuC5OgLioMmOV6bVAAUC0smUOgHGynFaZNO/XWSk3vcfldRU/atJXYVbTcLbtdbKUzia7So6bNL+WxIFz34DoqKRTRBlvf/OKily2JgIYLegYbD2PYzXSau2DmAbTx5KKmZ/In/7+3aZcFRyshHxp7HTy0NndpkwHHSbP2gYgKchCOq2XG/ME8+OiiugzwNe21xWJPXVxUlgrz4NZQMzIPY5iEwJdTqqS102YuYL1dlmD0ZH7ipeYsAsRZb7kTeA/sb+m24SZGzoPXvg9WlFSD80Zv+6Y0QEwATTg/txhln08ra2Mr0tR+Fe/swYEBAQEBAQE/Kf5GwDtwzjZLGdyAAAAAElFTkSuQmCC",
       "nodes": [
         {
-          "type": "getConversation",
-          "defaultLabel": "Get Conversation",
-          "description": "Retrieves the current conversation from the OData endpoint",
-          "tags": ["odata", "conversation", "transcript"]
-        },
-        {
           "type": "intentDisambiguation",
           "defaultLabel": "Intent Disambiguation",
           "description": "Handle Intent disambiguations and let the user decide",
           "tags": ["intent", "disambiguation"]
-        },
-        {
-          "type": "sendEmailWithAttachment",
-          "defaultLabel": "Send Email With Attachment",
-          "description": "Send an email with an uploaded attachment",
-          "tags": ["email", "smtp", "attachment", "file"]
         }
       ]
     },

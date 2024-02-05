@@ -1,4 +1,4 @@
-# DHL Functionality Extension
+# DHL
 
 This extension allows you to access functions made available via the DHL API. In order to use this extension you will need to create an account in the [DHL Developer Portal](https://developer.dhl.com/documentation) and create an API key. If you are already a DHL customer please contact your customer service agent and ask for assistance as other conditions may apply.  
 

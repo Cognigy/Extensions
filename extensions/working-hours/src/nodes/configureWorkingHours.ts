@@ -1619,28 +1619,8 @@ export const configureWorkingHoursNode = createNodeDescriptor({
             storeWorkingHoursInContext,
         } = config;
 
-        function isChristmasOrNewYearsDay(): boolean {
-            const currentDateInTimezone = momenttimezone.utc(input.currentTime.ISODate).tz(timezone);
-            const currentDayOfWeekInTimezone: number = currentDateInTimezone.weekday();
-            const currentMonthInTimezone: number = currentDateInTimezone.month();
-
-            if ((currentMonthInTimezone === 12 && currentDayOfWeekInTimezone === 25) || (currentMonthInTimezone === 1 && currentDayOfWeekInTimezone === 1)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        let holidayTest = isChristmasOrNewYearsDay();
-        if (holidayTest === true) {
-            api.log('info', 'Time is in holiday period');
-            api.addToContext('handoverOpen', false, 'simple');
-
-            const onClosedChild = childConfigs.find(child => child.type === "onClosed");
-            api.setNextNode(onClosedChild.id);
-
             // check if date is in list of closed dates
-        } else if (enableClosedDates && closedDates.includes(`${input.currentTime.day < 10 ? '0' + input.currentTime.day : input.currentTime.day}.${input.currentTime.month < 10 ? '0' + input.currentTime.month : input.currentTime.month}.${input.currentTime.year}`)) {
+        if (enableClosedDates && closedDates.includes(`${input.currentTime.day < 10 ? '0' + input.currentTime.day : input.currentTime.day}.${input.currentTime.month < 10 ? '0' + input.currentTime.month : input.currentTime.month}.${input.currentTime.year}`)) {
             api.log('info', 'Time is a closed date');
             api.addToContext('handoverOpen', false, 'simple');
 

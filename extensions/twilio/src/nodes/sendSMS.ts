@@ -1,6 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
-const qs = require('qs');
+const twilio = require('twilio');
 
 export interface ISendSMSParams extends INodeFunctionBaseParams {
 	config: {
@@ -122,40 +121,40 @@ export const sendSMSNode = createNodeDescriptor({
 		const { connection, from, to, body, storeLocation, inputKey, contextKey } = config;
 		const { accountSid, authToken } = connection;
 
+		const client = new twilio(accountSid, authToken);
+
+		let messageRaw;
+
 		if (!body) throw new Error("SMS body missing or empty.");
 		if (body.length > 1600) throw new Error("SMS body too long (max 1600 characters).");
 		if (!from) throw new Error("The sender is missing. Define the 'from' field.");
 		if (!to) throw new Error("The receiver is missing. Define a 'to' field.");
 
 		try {
-
-			const smsData = qs.stringify({
-				'From': from,
-				'Body': body,
-				'To': to
-			});
-
-			const response = await axios({
-				method: 'post',
-				url: `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Authorization': 'Basic '
-				},
-				auth: {
-					username: accountSid,
-					password: authToken
-				},
-				data: smsData
-			});
-
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+			await client.messages
+				.create({
+					body: body.replace(/\\n/g, "\n"),
+					from: from,
+					to: to,
+					riskCheck: "disable",
+					attempt: 3,
+					validityPeriod: 3600
+				}, (error, message) => {
+					if (!error) {
+						messageRaw = message;
+					} else {
+						messageRaw = error;
+					}
+				});
+			{
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, messageRaw, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, messageRaw);
+				}
 			}
+
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error, "simple");

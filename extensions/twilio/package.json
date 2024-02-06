@@ -1,6 +1,6 @@
 {
   "name": "twilio",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Exposes Twilio functionality to Cognigy.AI",
   "main": "build/module.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "@cognigy/extension-tools": "^0.13.0",
     "axios": "^0.21.2",
     "qs": "^6.11.2",
-    "tslint": "^6.1.2"
+    "tslint": "^6.1.2",
+    "twilio": "^4.21.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

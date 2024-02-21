@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.14.0",
-    "axios": "^0.21.4",
+    "axios": "^0.28.0",
     "fatal": "^0.0.1",
     "qs": "^6.11.2",
     "tslint": "^6.1.2"

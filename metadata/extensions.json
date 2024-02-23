@@ -1319,12 +1319,12 @@
     {
       "name": "stripe",
       "label": "Stripe",
-      "version": "4.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/stripe400/stripe.tar.gz",
+      "version": "4.1.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/stripe410/stripe.tar.gz",
       "infoUrl": "https://support.cognigy.com/hc/en-us/articles/4402249687058-Stripe-Handle-Payments-and-Customers",
       "description": "Handle Payments and Customers",
       "longDescription": "With Cognigy.AI and the Stripe Extension, a virtual agent can provide different customer, invoice, product, and payment actions within a chat or voice conversation.",
-      "tags": ["customer", "order", "invoice", "bill", "products"],
+      "tags": ["customer", "invoice", "bill", "products"],
       "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAY2SURBVHgB5ZtbbBRVGMf/58zeSi/QlpZe2NIWClXEFAMxxQClckkMIRp90RgxRFJQMBaqbyDEFyUYkEtaCGD6gr4hMSEkFFsUUhERgiGGlF6g2xZou/ReurtzjucMKQG62Kk9s3R3f+l0Z2dnL+fb813+39khMMGHWxvzHcz2JigtJBwFHDwVIE4i/mHCwIfEvxYOclN8qDMI2E8e2pdaN9qz/nMAG8qaizjXvgTnRQhHOK8hmnNnxe6UmmedEtQApaXNSYOE7ufAe4gAxDiOBXy9244dyG99+rERBtj42a1cRm1VYjcHkUWT7vMXHzmQ3fj4wScM8FFZUw7Vbb8SQqYjEiFoprpWVL43rWH4EB3eWbfpdobG7L9E7OAlHG5G9aoPPvknefjQIwM4HNpX4iYbkU+Oy5mwb/iO4QIbytqKOGPViCIIZcsqdrtrjBnAGNuOKIPrIr0LyPotntkU5AaiEGpDPhWDX4MoRfezt6goElYgWiG0kFLOZyFKkbqGckIyEa0QpNjEjRMhwukgmJHlQFamHdNSNMRO0uAU705EMvYHgL5+Bq9XR+sdP+7cC6DtbgAWE2NDCJiV68DSRbGY96ILLqd5BX2/W0fdTR8uX3uAa9cHhbiDckjJlhYLXvYh8XEU7749Ba+87MJ4+elUD06f7YNqLJsBKck2lG5MRlKihomMJQZIFoMu/VgMfsrEHryEwgLWvZ8YFoOXKDfAgoIYzMx2IFxQboDXXp2EcEJpDHDYCfLzzJUVfj9HQ5MPnfd12G0EcbEUCQka0tNsoCHsNSs1gHu63ShqRkMO+tuDHfCK2xEfSBgj223HC3OcmD8vBhlp1pYqSl89PtZc4Lt4eTDo4CWBAMfNRp+x/Xy6F25RNRYviYVVKDWA3WTsS51q/m2bW/yo/KELVqE0CPp85orKBQUurF4ZD20CZEqlM8DT6jd97upV8ShcOAmXrw7iwqUB3L1nufAJilIDdAolJ1VcWqq5l01O0rCyOM7YPK0B1F7qx9W/HxhBMlRoCwq37oBCqMhhc/PHrrAT4ql4nguvL4nD9Aw7uoQS9HZZbwjlhVD1+T403jbvCsEomOdC2aapKFmbZOgKK1FuAKnZD1V2oqNz/D49X8joLz5NweyZ1pXWloihri6Gb/Z1CJ8ewHiZnECxeX0ycrLssAJLDCDp7WOo/LELFd970TbOCG8XJXbJ2mTEuNR/XOVB8GlkVjh3oR/1ou6XZW76NHPl8tO4XMTQD3UNPqjE0pZYMKTgkVliSWHsmKe1bJLu3HUPKglJU/Rxenp01P4xYGyyXlglagBZEJkhfZoNCaLP2CPcSxWWxQAzSPeQceJwpVcs0JqbiImKO01KDSB9fPnSWKP/Pxb+Em3vS1cGTZ0bE6P2O1PqAlLcvLNmMpYtjsPFPwdw4eKA6bLWbCDSdbUhy7Ku8Bsr4o2trn4IV0R933DLh9sev5jqI8/PEo2UuXPMrR109ajzf4nlQTBvptPYJLLZ0dLmR69YAuvuZkY6lC2wbLfDVGqUtUV7h1rVGNIsIGPEDPf/L2uv3xiCap5rFhgrVTW9UE3YGOC8CKiyZ6CasDBAe6eOk2Jx1ApCXgmOFY8ImgePeI0AaAVKDaCLGSrFSl7u+PW7X2SMqup+nDrba4ggq7BEDMmlcdnVKXjJhdxsx5jUn/ymf/t9AOfO96O71/qWmDSAnFuWLUY55M9iRKGTkWYXhtGQlGgzfiWiaQQBUdX1DzDjpzF3hNKTklnWCaFEusADscXAIuRagXQL1TpeEUMyC7QjShG+76HCP68iWuGopwysFlEK4ThDtQA9gWiF2U/S8u8yb4g8VYOog1fLy+qMUpjo+k5EGZRrxpgNA1TsddcIfziOqIEcLd+Tfk7uPRJDfsRtFg80IvJp4sy3bfjOIwMc3TPZSxldzjn3IELhhHt06i8+vDe7bfjYE3JYXk9HndpisduEyKMRPlZ0ZPeTF06O6AdUfJ0upohjkRAHxxAhiLEcHxziCw/vz6oP8tizWV/atlSjbLtY8i5GOEJ4DWXajuGAF/QUmKDk8+Y8wmxrGGcrjUtsCMnkIbzQYjT4w78hMZh2TsgVylgtsbtOlO9KGfVquH8BQi0niL8dtYUAAAAASUVORK5CYII=",
       "nodes": [
         {
@@ -1358,30 +1358,6 @@
           "tags": ["invoices", "pay"]
         },
         {
-          "type": "createCardToken",
-          "defaultLabel": "Create Card Token",
-          "description": "Creates a new credit card and returns the token",
-          "tags": ["credit card", "token"]
-        },
-        {
-          "type": "createOrder",
-          "defaultLabel": "Create Order",
-          "description": "Creates a new order",
-          "tags": ["create", "order"]
-        },
-        {
-          "type": "createSKU",
-          "defaultLabel": "Create SKU",
-          "description": "Creates a new stock keeping unit",
-          "tags": ["create", "sku", "stock"]
-        },
-        {
-          "type": "payOrder",
-          "defaultLabel": "Pay Order",
-          "description": "Pays a given order",
-          "tags": ["pay", "order"]
-        },
-        {
           "type": "getProducts",
           "defaultLabel": "Get Products",
           "description": "Retrieves a list of products from stripe",
@@ -1404,6 +1380,12 @@
           "defaultLabel": "Get Charges",
           "description": "Retrieves a list of charges",
           "tags": ["charges"]
+        },
+        {
+          "type": "createPaymentIntent",
+          "defaultLabel": "Create Payment Intent",
+          "description": "Creates a new payment intent",
+          "tags": ["payment"]
         }
       ]
     },

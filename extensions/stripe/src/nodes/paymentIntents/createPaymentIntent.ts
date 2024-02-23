@@ -133,8 +133,8 @@ export const createPaymentIntentNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "coupon" },
-        { type: "field", key: "code" },
+        { type: "field", key: "amount" },
+        { type: "field", key: "currency" },
         { type: "section", key: "advanced" },
         { type: "section", key: "storageOption" },
     ],
@@ -155,8 +155,11 @@ export const createPaymentIntentNode = createNodeDescriptor({
 
         const stripe = new Stripe(secretKey);
 
-        try {
-            const paymentIntent = await stripe.paymentIntents.create({
+        let paymentIntentObject: Stripe.PaymentIntentCreateParams;
+
+        // Check if customer ID is given
+        if (customer) {
+            paymentIntentObject = {
                 amount,
                 currency,
                 automatic_payment_methods: {
@@ -164,7 +167,20 @@ export const createPaymentIntentNode = createNodeDescriptor({
                 },
                 description,
                 customer
-            });
+            }
+        } else {
+            paymentIntentObject = {
+                amount,
+                currency,
+                automatic_payment_methods: {
+                    enabled: automaticPaymentMethods,
+                },
+                description
+            }
+        }
+
+        try {
+            const paymentIntent = await stripe.paymentIntents.create(paymentIntentObject);
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, paymentIntent, "simple");

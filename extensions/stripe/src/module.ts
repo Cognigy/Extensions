@@ -6,7 +6,6 @@ import { getCustomerNode, onFoundCustomer, onNotFoundCustomer } from "./nodes/cu
 import { getCustomerPaymentMethodsNode, onFoundCustomerPaymentMethods, onNotFoundCustomerPaymentMethods } from "./nodes/customers/getCustomerPaymentMethods";
 import { getCustomerInvoicesNode, onFoundInvoices, OnNotFoundInvoices } from "./nodes/invoices/getInvoices";
 import { onErrorPayInvoice, onSuccessPayInvoice, payInvoiceNode } from "./nodes/invoices/payInvoice";
-// import { onErrorPayOrder, onSuccessPayOrder, payOrderNode } from "./nodes/orders/payOrder";
 import { getProductsNode } from "./nodes/products/getProducts";
 import { getChargesNode, onChargesFound, OnNoChargesFound } from "./nodes/refunds/getCharges";
 import { createRefundNode, onErrorRefund, onSuccessRefund } from "./nodes/refunds/createRefund";

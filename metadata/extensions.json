@@ -1812,7 +1812,7 @@
       "name": "8x8",
       "label": "8x8",
       "version": "5.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8500/8x8.tar.gz",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8510/8x8.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/8x8",
       "description": "Integrates with 8x8",
       "longDescription": "Integrates with 8x8",
@@ -1853,6 +1853,12 @@
             "type": "dataAugmentation",
             "defaultLabel": "Data Augmentation",
             "description": "Sends a payload with variables to enrich the properties served to the agent",
+            "tags": []
+          },
+          {
+            "type": "sendSMS",
+            "defaultLabel": "Send SMS",
+            "description": "This node enables you to send outbound SMS messages",
             "tags": []
           }
       ]

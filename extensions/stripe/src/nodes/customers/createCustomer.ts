@@ -131,9 +131,7 @@ export const createCustomerNode = createNodeDescriptor({
         const { connection, name, phone, email, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
-        const stripe = new Stripe(secretKey, {
-            apiVersion: "2020-08-27"
-        });
+        const stripe = new Stripe(secretKey);
 
         try {
 

@@ -1,6 +1,6 @@
 {
   "name": "stripe",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Integrates with Stripe and provices customer, order, invoice, product, and refund actions",
   "main": "build/module.js",
   "scripts": {
@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
-    "stripe": "^8.154.0",
+    "stripe": "^14.18.0",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

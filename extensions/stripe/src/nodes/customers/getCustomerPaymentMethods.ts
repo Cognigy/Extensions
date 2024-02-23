@@ -130,9 +130,8 @@ export const getCustomerPaymentMethodsNode = createNodeDescriptor({
         const { connection, customerId, paymentMethod, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
-        const stripe = new Stripe(secretKey, {
-            apiVersion: "2020-08-27"
-        });
+        const stripe = new Stripe(secretKey);
+
 
         try {
 

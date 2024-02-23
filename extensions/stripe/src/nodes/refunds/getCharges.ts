@@ -120,9 +120,8 @@ export const getChargesNode = createNodeDescriptor({
         const { connection, customerId, onlyReturnNotRefunded, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
-        const stripe = new Stripe(secretKey, {
-            apiVersion: "2020-08-27"
-        });
+        const stripe = new Stripe(secretKey);
+
 
         try {
 

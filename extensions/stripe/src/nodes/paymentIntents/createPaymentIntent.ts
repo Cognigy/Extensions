@@ -1,24 +1,26 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import Stripe from "stripe";
 
-export interface ICreateCustomerParams extends INodeFunctionBaseParams {
+export interface ICreatePaymentIntentParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             secretKey: string;
         };
-        name: string;
-        phone: string;
-        email: string;
+        amount: number;
+        currency: string;
+        automaticPaymentMethods: boolean;
+        description: string;
+        customer: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
     };
 }
 
-export const createCustomerNode = createNodeDescriptor({
-    type: "createCustomer",
-    defaultLabel: "Create Customer",
-    summary: "Creates a new customer in stripe",
+export const createPaymentIntentNode = createNodeDescriptor({
+    type: "createPaymentIntent",
+    defaultLabel: "Create Payment Intent",
+    summary: "Creates a new payment intent in Stripe",
     fields: [
         {
             key: "connection",
@@ -30,32 +32,42 @@ export const createCustomerNode = createNodeDescriptor({
             }
         },
         {
-            key: "email",
-            label: "Email Address",
+            key: "amount",
+            label: "Amount",
             type: "cognigyText",
-            defaultValue: "l.wilson@cognigy.com",
-            description: "The Email address of the customer",
+            description: "A positive integer representing how much to charge",
             params: {
                 required: true
             }
         },
         {
-            key: "name",
-            label: "Full Name",
+            key: "currency",
+            label: "Currency",
             type: "cognigyText",
-            description: "The full name of the customer",
+            defaultValue: "eur",
+            description: "Three-letter ISO currency code in lowercase",
             params: {
                 required: true
             }
         },
         {
-            key: "phone",
-            label: "Phone Number",
+            key: "automaticPaymentMethods",
+            label: "Automatic Payment Methods",
+            type: "toggle",
+            defaultValue: true,
+            description: "When you enable this parameter, this PaymentIntent accepts payment methods that you enable in the Dashboard and that are compatible with this PaymentIntent's other parameters",
+        },
+        {
+            key: "description",
+            label: "Description",
             type: "cognigyText",
-            description: "The phone number of the customer",
-            params: {
-                required: true
-            }
+            description: "An arbitrary string attached to the object. Often useful for displaying to users",
+        },
+        {
+            key: "customer",
+            label: "Customer",
+            type: "cognigyText",
+            description: "ID of the Customer this PaymentIntent belongs to, if one exists",
         },
         {
             key: "storeLocation",
@@ -74,13 +86,13 @@ export const createCustomerNode = createNodeDescriptor({
                 ],
                 required: true
             },
-            defaultValue: "context"
+            defaultValue: "input"
         },
         {
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "stripe.customer",
+            defaultValue: "stripe.paymentIntent",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -90,7 +102,7 @@ export const createCustomerNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "stripe.customer",
+            defaultValue: "stripe.paymentIntent",
             condition: {
                 key: "storeLocation",
                 value: "context"
@@ -107,13 +119,23 @@ export const createCustomerNode = createNodeDescriptor({
                 "inputKey",
                 "contextKey",
             ]
+        },
+        {
+            key: "advanced",
+            label: "Advanced",
+            defaultCollapsed: true,
+            fields: [
+                "automaticPaymentMethods",
+                "description",
+                "customer"
+            ]
         }
     ],
     form: [
         { type: "field", key: "connection" },
-        { type: "field", key: "name" },
-        { type: "field", key: "phone" },
-        { type: "field", key: "email" },
+        { type: "field", key: "coupon" },
+        { type: "field", key: "code" },
+        { type: "section", key: "advanced" },
         { type: "section", key: "storageOption" },
     ],
     appearance: {
@@ -121,31 +143,34 @@ export const createCustomerNode = createNodeDescriptor({
     },
     tokens: [
         {
-            label: "Stripe Customer ID",
-            script: "context.stripe.customer.id",
-            type: "context"
+            label: "Stripe Promotion Code",
+            script: "input.stripe.paymentIntent.client_secret",
+            type: "input"
         }
     ],
-    function: async ({ cognigy, config }: ICreateCustomerParams) => {
+    function: async ({ cognigy, config }: ICreatePaymentIntentParams) => {
         const { api } = cognigy;
-        const { connection, name, phone, email, storeLocation, inputKey, contextKey } = config;
+        const { connection, amount, currency, customer, automaticPaymentMethods, description, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
         const stripe = new Stripe(secretKey);
 
         try {
-
-            const customer = await stripe.customers.create({
-                name,
-                email,
-                phone
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount,
+                currency,
+                automatic_payment_methods: {
+                    enabled: automaticPaymentMethods,
+                },
+                description,
+                customer
             });
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, customer, "simple");
+                api.addToContext(contextKey, paymentIntent, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, customer);
+                api.addToInput(inputKey, paymentIntent);
             }
 
         } catch (error) {

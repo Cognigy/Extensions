@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.13.0",
-    "stripe": "^8.154.0",
+    "stripe": "^14.18.0",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

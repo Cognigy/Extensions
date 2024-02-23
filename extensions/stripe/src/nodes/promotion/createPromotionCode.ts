@@ -190,9 +190,8 @@ export const createPromotionCodeNode = createNodeDescriptor({
         const { connection, coupon, active, configureMaxRedemptions, maxRedemptions, code, assignToCustomer, customerId, storeLocation, inputKey, contextKey } = config;
         const { secretKey } = connection;
 
-        const stripe = new Stripe(secretKey, {
-            apiVersion: "2020-08-27"
-        });
+        const stripe = new Stripe(secretKey);
+
 
         try {
 

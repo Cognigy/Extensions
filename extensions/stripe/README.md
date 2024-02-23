@@ -26,12 +26,8 @@ All exposed Flow Nodes of this Extension follow the [Stripe API](https://stripe.
 - *Invoices*
   - [Get Invoices](https://stripe.com/docs/api/invoices/list?lang=node)
   - [Pay Invoice](https://stripe.com/docs/api/invoices/pay)
-- *Orders*
-  - [Create Order](https://stripe.com/docs/api/orders/create)
-  - [Create Card Token](https://stripe.com/docs/api/tokens/create_card)
-  - [Create SKU](https://stripe.com/docs/api/skus/create)
-  - [Pay Order](https://stripe.com/docs/api/orders/pay?lang=node)
-
+- *Payment Intent*
+  - [Create Payment Intent](https://docs.stripe.com/api/payment_intents/create)
 - *Products*
   - [Get Products](https://stripe.com/docs/api/products/list)
 - *Refunds*

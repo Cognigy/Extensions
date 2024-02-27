@@ -15,6 +15,10 @@ import {
   convertBargeIn,
 } from "../common/bargeIn";
 import { promptFields } from "../common/prompt";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface IMultipleChoicePromptNodeInputs extends BargeInInputs {
   text: string,
@@ -64,12 +68,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     },
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['text', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['text', 'timeout']),
     {
       key: 'choicesSection',
       fields: ['choices'],
@@ -85,10 +84,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     },
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     {
       key: 'choicesSection',
       type: 'section',

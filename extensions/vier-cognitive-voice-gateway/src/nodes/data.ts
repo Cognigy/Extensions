@@ -4,11 +4,23 @@ import {
 } from '@cognigy/extension-tools/build';
 import { normalizeData } from '../helpers/util';
 import t from '../translations';
+import { INodeExecutionAPI } from "@cognigy/extension-tools/build/interfaces/descriptor";
 
 export interface ISendDataParams extends INodeFunctionBaseParams {
   config: {
     data: object
   };
+}
+
+export function emitData(api: INodeExecutionAPI, data: object | undefined) {
+  const normalizedData = normalizeData(api, data) ?? {};
+  if (normalizedData) {
+    const payload = {
+      status: 'data',
+      data: normalizedData,
+    };
+    api.say('', payload);
+  }
 }
 
 export const sendDataNode = createNodeDescriptor({
@@ -32,10 +44,6 @@ export const sendDataNode = createNodeDescriptor({
   ],
   function: async ({ cognigy, config }: ISendDataParams) => {
     const { api } = cognigy;
-    const payload = {
-      status: 'data',
-      data: normalizeData(api, config.data) ?? {},
-    };
-    api.say('', payload);
+    emitData(api, config.data);
   },
 });

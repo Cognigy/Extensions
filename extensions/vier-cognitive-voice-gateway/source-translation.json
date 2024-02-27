@@ -7,7 +7,6 @@
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
-        "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
         "sectionAdditionalDataLabel": "Data",
         "sectionAdditionalSettingsLabel": "Additional Settings"
@@ -106,24 +105,25 @@
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default",
-        "sectionSipLabel": "SIP"
+        "sectionSipLabel": "SIP",
+        "sectionGeneralLabel": "General Settings"
     },
     "bargeIn": {
-      "input": {
-        "onSpeechLabel": "On Speech",
-        "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
-        "onDtmfLabel": "On DTMF",
-        "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
-        "confidenceLabel": "Confidence Threshold",
-        "confidenceDescription": "The transcription confidence that must be reached for barge-in",
-        "phraseListLabel": "Phrase List",
-        "phraseListDescription": "A list of spoken phrases that trigger barge-in",
-        "phraseListFromContextLabel": "Phrase List from Context",
-        "phraseListFromContextDescription": "A context key that supplies a list of phrases"
-      },
-      "section": {
-        "label": "Barge-In"
-      }
+        "input": {
+            "onSpeechLabel": "On Speech",
+            "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
+            "onDtmfLabel": "On DTMF",
+            "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
+            "confidenceLabel": "Confidence Threshold",
+            "confidenceDescription": "The transcription confidence that must be reached for barge-in",
+            "phraseListLabel": "Phrase List",
+            "phraseListDescription": "A list of spoken phrases that trigger barge-in",
+            "phraseListFromContextLabel": "Phrase List from Context",
+            "phraseListFromContextDescription": "A context key that supplies a list of phrases"
+        },
+        "section": {
+            "label": "Barge-In"
+        }
     },
     "speak": {
         "nodeLabel": "Speak out (SSML)",
@@ -149,7 +149,14 @@
         "inputProfileTokenFallbackDescription": "Profile Token Fallback",
         "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
         "sectionFallback": "Fallback Option",
-        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token"
+        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token",
+        "inputProfanityFilterLabel": "Enable the Profanity Filter",
+        "inputProfanityFilterDescription": "Enable the Profanity Filter",
+        "inputBoostedPhrasesLabel": "Phrases to boost",
+        "inputBoostedPhrasesDescription": "Enter the list of phrases that receive an increased weight during voice recognition.",
+        "inputBoostedPhrasesFromContextLabel": "Phrases to boost from Context",
+        "inputBoostedPhrasesFromContextDescription": "Enter the key for which a list of phrases to be boosted is stored in the Context. If this node contains a list of boosted phrases, then it will be merged with the list from the Context.",
+        "sectionDynamicProfileSettings": "Dynamic Profile"
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",

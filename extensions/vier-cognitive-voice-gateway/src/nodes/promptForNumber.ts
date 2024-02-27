@@ -17,6 +17,10 @@ import {
   convertBargeIn,
 } from "../common/bargeIn";
 import { promptFields } from "../common/prompt";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface INumberPromptNodeInputs extends BargeInInputs {
   text: string,
@@ -71,12 +75,7 @@ export const promptForNumberNode = createNodeDescriptor({
     },
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['text', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['text', 'timeout']),
     {
       key: 'stopCondition',
       fields: ['submitInputs', 'minDigits', 'maxDigits'],
@@ -92,10 +91,7 @@ export const promptForNumberNode = createNodeDescriptor({
     },
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     {
       key: 'stopCondition',
       type: 'section',

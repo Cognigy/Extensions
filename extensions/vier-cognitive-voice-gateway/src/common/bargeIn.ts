@@ -5,6 +5,11 @@ import {
   INodeSection,
 } from "@cognigy/extension-tools/build/interfaces/descriptor";
 import t from "../translations";
+import {
+  getStringListFromContext,
+  normalizeText,
+  normalizeTextArray,
+} from "../helpers/util";
 
 export interface BargeInInputs {
   bargeInOnSpeech?: boolean;
@@ -95,32 +100,10 @@ export function convertBargeIn(api: INodeExecutionAPI, inputs: BargeInInputs): B
     confidence = inputs.bargeInConfidence;
   }
 
-  let phraseSet = new Set<string>();
-  if (Array.isArray(inputs.bargeInPhraseList)) {
-    for (const phrase of inputs.bargeInPhraseList) {
-      if (typeof phrase === 'string') {
-        const trimmed = phrase.trim();
-        if (trimmed.length > 0) {
-          phraseSet.add(trimmed);
-        }
-      } else {
-        api.log('error', `Discarded a phrase from the UI: ${phrase}`);
-      }
-    }
-  }
-  if (!!inputs.bargeInPhraseListFromContext) {
-    const contextValue = api.getContext(inputs.bargeInPhraseListFromContext);
-    if (Array.isArray(contextValue)) {
-      for (let phrase of contextValue) {
-        if (typeof phrase === 'string') {
-          phraseSet.add(phrase);
-        } else {
-          api.log('error', `Discarded a phrase from the context key ${inputs.bargeInPhraseListFromContext}: ${phrase}`);
-        }
-      }
-    } else {
-      api.log('error', `Context key ${inputs.bargeInPhraseListFromContext} did not contain an array!`);
-    }
+  const phraseSet = new Set<string>(normalizeTextArray(inputs.bargeInPhraseList) ?? []);
+  const phraseListContextKey = normalizeText(inputs.bargeInPhraseListFromContext)
+  if (phraseListContextKey) {
+    getStringListFromContext(api, phraseListContextKey).forEach(s => phraseSet.add(s))
   }
   const phraseList = phraseSet.size > 0 ? [...phraseSet] : undefined;
 

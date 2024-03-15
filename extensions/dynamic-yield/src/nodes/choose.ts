@@ -130,7 +130,7 @@ export const chooseNode = createNodeDescriptor({
                 default: "Input Key to store Result",
                 deDE: "Input Key zum Speichern des Ergebnisses"
             },
-            defaultValue: "dy",
+            defaultValue: "products",
             condition: {
                 key: "storeLocation",
                 value: "input",
@@ -143,7 +143,7 @@ export const chooseNode = createNodeDescriptor({
                 default: "Context Key to store Result",
                 deDE: "Context Key zum Speichern des Ergebnisses"
             },
-            defaultValue: "dy",
+            defaultValue: "products",
             condition: {
                 key: "storeLocation",
                 value: "context",
@@ -176,11 +176,36 @@ export const chooseNode = createNodeDescriptor({
         color: "#E60887"
     },
     function: async ({ cognigy, config }: IChooseParams) => {
-        const { api } = cognigy;
+        const { api, input } = cognigy;
         const { selectorNames, contextPageLocation, contextPageType, connection, storeLocation, contextKey, inputKey } = config;
         const { key, region } = connection;
 
         try {
+
+            // Create conditions based on the Lexicon slot results
+            let conditions = [];
+            for (const slotName in input.slots) {
+                if (input.slots.hasOwnProperty(slotName)) {
+                    const slotValues = input.slots[slotName];
+
+                    // Determine action based on slotName
+                    const action = "IS";
+
+                    // Iterate over slot values and add them to the conditions array
+                    for (const slotValue of slotValues) {
+                        // Construct condition object for each slot value
+                        const condition = {
+                            "field": slotName,
+                            "arguments": [{ "action": action, "value": slotValue.keyphrase }]
+                        };
+
+                        // Add condition to the conditions array
+                        conditions.push(condition);
+                    }
+                }
+            }
+
+            api.log('debug', JSON.stringify(conditions));
 
             let url: string = "";
             if (region === 'eu') {
@@ -200,7 +225,20 @@ export const chooseNode = createNodeDescriptor({
                 data: {
                     "user": {},
                     "selector": {
-                        "names": selectorNames
+                        "names": selectorNames,
+                        "args": {
+                            "Chatbot_Reco": {
+                                "realtimeRules": [
+                                    {
+                                        "type": "include",
+                                        "slots": [],
+                                        "query": {
+                                            "conditions": conditions
+                                        }
+                                    }
+                                ]
+                            }
+                        }
                     },
                     "context": {
                         "page": {
@@ -211,16 +249,16 @@ export const chooseNode = createNodeDescriptor({
                         }
                     },
                     "options": {
-                        "isImplicitPageview": false
+                        "isImplicitPageview": true
                     }
                 }
             });
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, response.data, "simple");
+                api.addToContext(contextKey, response?.data?.choices[0]?.variations[0]?.payload?.data?.slots, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, response.data);
+                api.addToInput(inputKey, response?.data?.choices[0]?.variations[0]?.payload?.data?.slots);
             }
         } catch (error) {
 

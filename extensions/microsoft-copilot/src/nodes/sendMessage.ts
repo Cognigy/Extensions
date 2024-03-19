@@ -12,6 +12,39 @@ export interface ISendMessageProps extends INodeFunctionBaseParams {
 		contextKey: string;
 	};
 }
+
+
+const getActivities = async (conversationId: string, token: string) => {
+
+	const poll = async (conversationId: string, token: string): Promise<string> => {
+
+		const response = await axios({
+			method: "get",
+			url: `https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`,
+			headers: {
+				"Accept": "application/json",
+				"Authorization": `Bearer ${token}`
+			}
+		});
+
+		let latestActivity: any = response?.data?.activities[response?.data?.activities.length - 1];
+
+		if (latestActivity?.type === "message" && latestActivity?.from?.role === "bot") {
+			return latestActivity?.text;
+		} else {
+
+			await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+
+			// Wait three seconds until the Copilot service will be polled again
+			return await poll(conversationId, token);
+		}
+	};
+
+	const text: string = await poll(conversationId, token);
+
+	return text;
+};
+
 export const sendMessageNode = createNodeDescriptor({
 	type: "sendMessage",
 	defaultLabel: "Send Message",
@@ -131,15 +164,20 @@ export const sendMessageNode = createNodeDescriptor({
 			});
 			const { id } = sendActivityResponse?.data;
 
+			const answer: string = await getActivities(conversationId, token);
+
+
 			// Retrieve list of activities
-			const retrieveActivitiesResponse = await axios.get(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
-			const { activities } = retrieveActivitiesResponse?.data;
+			// const retrieveActivitiesResponse = await axios.get(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
+			// const { activities } = retrieveActivitiesResponse?.data;
+
+			api.say(answer);
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, { conversationId, streamUrl, activities, token }, "simple");
+				api.addToContext(contextKey, { conversationId, streamUrl, text, token }, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, { conversationId, streamUrl, activities, token });
+				api.addToInput(inputKey, { conversationId, streamUrl, text, token });
 			}
 
 		} catch (error) {

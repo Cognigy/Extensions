@@ -1,0 +1,28 @@
+{
+  "name": "microsoft-copilot",
+  "version": "4.0.0",
+  "description": "Talk to Microsoft Copilot",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz microsoft-copilot.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Microsoft",
+    "Copilot"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "ISC",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "axios": "^0.21.1",
+    "tslint": "^5.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "@types/node-fetch": "^2.5.7",
+    "typescript": "^3.9.9"
+  }
+}

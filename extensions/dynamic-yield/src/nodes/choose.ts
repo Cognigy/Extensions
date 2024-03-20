@@ -10,6 +10,7 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         selectorNames: string[];
         contextPageType: string;
         contextPageLocation: string;
+        advancedConditions: any;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -102,6 +103,13 @@ export const chooseNode = createNodeDescriptor({
             }
         },
         {
+            key: "advancedConditions",
+            label: "Advanced Conditions",
+            description: "More advanced conditions that should be used for choosing products. The standard uses the IS action.",
+            type: "json",
+            defaultValue: "{}",
+        },
+        {
             key: "storeLocation",
             type: "select",
             label: {
@@ -148,9 +156,20 @@ export const chooseNode = createNodeDescriptor({
                 key: "storeLocation",
                 value: "context",
             }
-        },
+        }
     ],
     sections: [
+        {
+            key: "advanced",
+            label: {
+                default: "Advanced",
+                deDE: "Erweitert"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "advancedConditions"
+            ]
+        },
         {
             key: "storage",
             label: {
@@ -170,6 +189,7 @@ export const chooseNode = createNodeDescriptor({
         { type: "field", key: "selectorNames" },
         { type: "field", key: "contextPageType" },
         { type: "field", key: "contextPageLocation" },
+        { type: "section", key: "advanced" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -177,13 +197,18 @@ export const chooseNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IChooseParams) => {
         const { api, input } = cognigy;
-        const { selectorNames, contextPageLocation, contextPageType, connection, storeLocation, contextKey, inputKey } = config;
+        const { selectorNames, contextPageLocation, contextPageType, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
         const { key, region } = connection;
 
         try {
 
             // Create conditions based on the Lexicon slot results
             let conditions = [];
+
+            if (Object?.keys(advancedConditions)?.length !== 0) {
+                conditions.push(advancedConditions);
+            }
+
             for (const slotName in input.slots) {
                 if (input.slots.hasOwnProperty(slotName)) {
                     const slotValues = input.slots[slotName];
@@ -204,8 +229,6 @@ export const chooseNode = createNodeDescriptor({
                     }
                 }
             }
-
-            api.log('debug', JSON.stringify(conditions));
 
             let url: string = "";
             if (region === 'eu') {

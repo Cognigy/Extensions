@@ -111,7 +111,7 @@ export const detectJailbreakNode = createNodeDescriptor({
 		try {
 			const response = await axios({
 				method: "POST",
-				url: contentSafetyEndpoint,
+				url: `${contentSafetyEndpoint}contentsafety/text:detectJailbreak?api-version=2023-10-15-preview`,
 				headers: {
 					'Ocp-Apim-Subscription-Key': key,
 					'Content-Type': 'application/json'

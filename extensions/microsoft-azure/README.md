@@ -28,7 +28,16 @@ You will require the following Secrets for the respective Nodes:
   2.
     - key: region
     - value: Azure Region
-  
+
+- **Detect Jailbreak (Content Safety)**
+
+  1.
+    - key: key
+    - value: Content Safety API Key
+  2.
+    - key: contentSafetyEndpoint
+    - value: Endpoint URL (e.g. https://demo.cognitiveservices.azure.com/)
+
 
 ## Node: Transcribe WhatsApp Voice Message
 
@@ -170,3 +179,7 @@ Unlike the **Extract Keyphrases** node, this one detects entities such as locati
     }
 }
 ```
+
+## Node: Detect Jailbreak
+
+This Node uses the Azure Content Safety service in order to detect a jailbreak in a given `text`. If such a jailbreak was detected, it follows the "Detected" path, otherwise it continues with "Else".

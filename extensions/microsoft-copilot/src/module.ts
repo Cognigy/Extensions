@@ -1,11 +1,11 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { sendMessageNode } from "./nodes/sendMessage";
+import { run } from "./nodes/run";
 import { copilotConnection } from "./connections/copilotConnection";
 
 
 export default createExtension({
 	nodes: [
-		sendMessageNode
+		run
 	],
 
 	connections: [

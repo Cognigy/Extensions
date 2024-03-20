@@ -7,9 +7,11 @@ export interface ISendMessageProps extends INodeFunctionBaseParams {
 			directLineTokenEndpoint: string;
 		},
 		text: string;
-		storeLocation: string;
+		outputMode: string;
 		inputKey: string;
 		contextKey: string;
+		outputResultImmediately: boolean;
+		streamStopTokens: string[];
 	};
 }
 
@@ -45,9 +47,33 @@ const getActivities = async (conversationId: string, token: string) => {
 	return text;
 };
 
-export const sendMessageNode = createNodeDescriptor({
-	type: "sendMessage",
-	defaultLabel: "Send Message",
+const streamToOutput = (text: string, stopTokens: string[], api: INodeFunctionBaseParams["cognigy"]["api"]) => {
+	let currentSubstring = '';
+	const result = [];
+
+	for (const char of text) {
+		if (stopTokens.includes(char)) {
+			if (currentSubstring.trim() !== '') {
+				result.push(currentSubstring.trim() + char);
+			}
+			currentSubstring = '';
+		} else {
+			currentSubstring += char;
+		}
+	}
+
+	if (currentSubstring.trim() !== '') {
+		result.push(currentSubstring.trim());
+	}
+
+	for (const substring of result) {
+		api.say(substring);
+	}
+};
+
+export const run = createNodeDescriptor({
+	type: "run",
+	defaultLabel: "Run Copilot",
 	preview: {
 		key: "text",
 		type: "text"
@@ -67,24 +93,30 @@ export const sendMessageNode = createNodeDescriptor({
 		{
 			key: "text",
 			label: "Text",
+			defaultValue: "{{input.text}}",
 			type: "cognigyText",
 			params: {
 				required: true
 			}
 		},
 		{
-			key: "storeLocation",
+			key: "outputMode",
 			type: "select",
-			label: "Where to store the result",
+			label: "How to handle the result",
+			description: "Whether to store the result in the input, context or stream it directly into the output",
 			params: {
 				options: [
 					{
-						label: "Input",
+						label: "Store in Input",
 						value: "input"
 					},
 					{
-						label: "Context",
+						label: "Store in Context",
 						value: "context"
+					},
+					{
+						label: "Stream to Output",
+						value: "stream"
 					}
 				],
 				required: true
@@ -97,7 +129,7 @@ export const sendMessageNode = createNodeDescriptor({
 			label: "Input Key to store Result",
 			defaultValue: "copilot",
 			condition: {
-				key: "storeLocation",
+				key: "outputMode",
 				value: "input"
 			}
 		},
@@ -107,32 +139,63 @@ export const sendMessageNode = createNodeDescriptor({
 			label: "Context Key to store Result",
 			defaultValue: "copilot",
 			condition: {
-				key: "storeLocation",
+				key: "outputMode",
 				value: "context"
 			}
-		}
+		},
+		{
+			key: "outputResultImmediately",
+			type: "toggle",
+			label: "Output result immediately",
+			defaultValue: false,
+			condition: {
+				or: [
+					{
+						key: "outputMode",
+						value: "input"
+					},
+					{
+						key: "outputMode",
+						value: "context"
+					}
+				]
+			}
+		},
+		{
+			key: "streamStopTokens",
+			type: "textArray",
+			label: "Stream Output Tokens",
+			description: "Tokens after which to output the stream buffer",
+			defaultValue: [".", "!", "?"],
+			condition: {
+				key: "outputMode",
+				value: "stream",
+			}
+		},
 	],
 	sections: [
 		{
-			key: "storageOption",
-			label: "Storage Option",
+			key: "storageAndStreamingOptions",
+			label: "Storage & Streaming Options",
 			defaultCollapsed: true,
 			fields: [
-				"storeLocation",
+				"outputMode",
 				"inputKey",
-				"contextKey"
+				"contextKey",
+				"streamStopTokens",
+				"outputResultImmediately"
 			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "text" },
-		{ type: "section", key: "storageOption" }
+		{ type: "section", key: "storageAndStreamingOptions" }
 	],
 
 	function: async ({ cognigy, config }: ISendMessageProps) => {
 		const { api, input } = cognigy;
-		const { connection, text, storeLocation, inputKey, contextKey } = config;
+		let { connection, text, outputMode, streamStopTokens, inputKey, contextKey, outputResultImmediately } = config;
 		const { directLineTokenEndpoint } = connection;
 
 		// Docs: https://learn.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-direct-line-3-0-receive-activities?view=azure-bot-service-4.0
@@ -144,11 +207,10 @@ export const sendMessageNode = createNodeDescriptor({
 			const { token, conversationId } = directLineTokenResponse?.data;
 
 			// Start the conversation
-			const startConversationResponse = await axios.post("https://directline.botframework.com/v3/directline/conversations", {}, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
-			const { streamUrl } = startConversationResponse?.data;
+			await axios.post("https://directline.botframework.com/v3/directline/conversations", {}, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
 
 			// Send new activity to copilot
-			const sendActivityResponse = await axios.post(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, {
+			await axios.post(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, {
 				"locale": "en-EN",
 				"type": "message",
 				"from": {
@@ -162,30 +224,43 @@ export const sendMessageNode = createNodeDescriptor({
 					"Authorization": `Bearer ${token}`
 				}
 			});
-			const { id } = sendActivityResponse?.data;
 
+			// Await the answer from Microsoft Copilot
 			const answer: string = await getActivities(conversationId, token);
 
+			switch (outputMode) {
+				case "input":
+					// @ts-ignore
+					api.addToInput(inputKey, { conversationId, text });
+					break;
+				case "context":
+					api.addToContext(contextKey, { conversationId, text }, "simple");
+					break;
+				case "stream":
+					// Double check that output immediately is false
+					outputResultImmediately = false;
+					// Stream the answer
+					streamToOutput(answer, streamStopTokens, api);
+					break;
+			}
 
-			// Retrieve list of activities
-			// const retrieveActivitiesResponse = await axios.get(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
-			// const { activities } = retrieveActivitiesResponse?.data;
-
-			api.say(answer);
-
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, { conversationId, streamUrl, text, token }, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, { conversationId, streamUrl, text, token });
+			// Output the answer as text message
+			if (outputResultImmediately) {
+				api.say(answer);
 			}
 
 		} catch (error) {
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, error, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, error);
+			switch (outputMode) {
+				case "intput":
+					// @ts-ignore
+					api.addToInput(inputKey, { conversationId, text });
+					break;
+				case "context":
+					api.addToContext(contextKey, error, "simple");
+					break;
+				case "stream":
+					api.addToContext(contextKey, error, "simple");
+					break;
 			}
 		}
 	}

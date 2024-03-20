@@ -7,6 +7,8 @@ import { namedEntityRecognitionNode } from "./nodes/namedEntityRecognition";
 import { sentimentAnalysisNode } from "./nodes/sentimentAnalysis";
 import { onTranscriptionError, onTranscriptionSuccess, transcribeWhatsAppVoiceMessageNode } from "./nodes/transcribeWhatsAppVoiceMessage";
 import { speechServiceConnection } from "./connections/speechServiceConnection";
+import { detectJailbreakNode, onJailbreakDetected, onNoJailbreakDetected } from "./nodes/content-safety/detectJailbreak";
+import { contentSafetyConnetion } from "./connections/contentSafetyConnection";
 
 export default createExtension({
 	nodes: [
@@ -17,13 +19,18 @@ export default createExtension({
 
 		transcribeWhatsAppVoiceMessageNode,
 		onTranscriptionSuccess,
-		onTranscriptionError
+		onTranscriptionError,
+
+		detectJailbreakNode,
+		onJailbreakDetected,
+		onNoJailbreakDetected
 	],
 
 	connections: [
 		spellcheckConnection,
 		textanalyticsConnection,
-		speechServiceConnection
+		speechServiceConnection,
+		contentSafetyConnetion
 	],
 
 	options: {

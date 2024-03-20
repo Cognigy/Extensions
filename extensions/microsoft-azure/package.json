@@ -1,7 +1,7 @@
 {
   "name": "microsoft-azure",
-  "version": "4.1.0",
-  "description": "Microsoft Azure Cognitive Services",
+  "version": "4.2.0",
+  "description": "Integrates Azure Services",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -12,7 +12,8 @@
   "keywords": [
     "Microsoft",
     "Azure",
-    "Cognitive Services"
+    "Cognitive Services",
+    "Content Safety"
   ],
   "author": "Cognigy GmbH",
   "license": "MIT",

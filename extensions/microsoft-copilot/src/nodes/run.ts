@@ -1,5 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
+const WebSocket = require('ws');
+
 
 export interface ISendMessageProps extends INodeFunctionBaseParams {
 	config: {
@@ -47,28 +49,38 @@ const getActivities = async (conversationId: string, token: string) => {
 	return text;
 };
 
-const streamToOutput = (text: string, stopTokens: string[], api: INodeFunctionBaseParams["cognigy"]["api"]) => {
-	let currentSubstring = '';
-	const result = [];
+const streamToOutput = async (streamUrl: string, stopTokens: string[], api: INodeFunctionBaseParams["cognigy"]["api"]) => {
 
-	for (const char of text) {
-		if (stopTokens.includes(char)) {
-			if (currentSubstring.trim() !== '') {
-				result.push(currentSubstring.trim() + char);
-			}
-			currentSubstring = '';
-		} else {
-			currentSubstring += char;
+	// Connect to the WebSocket server
+	const ws: WebSocket = new WebSocket(streamUrl, {
+		headers: {
+			"Accept": "application/json"
 		}
-	}
+	});
 
-	if (currentSubstring.trim() !== '') {
-		result.push(currentSubstring.trim());
-	}
+	ws.onopen = () => {
+		api.log("info", "[Microsoft Copilot] WebSocket connected");
+	};
 
-	for (const substring of result) {
-		api.say(substring);
-	}
+	ws.onmessage = (event: MessageEvent) => {
+		api.log("info", `[Microsoft Copilot] Received message`);
+
+		const latestActivity = JSON.parse(event?.data?.toString('utf-8'));
+
+		api.log("debug", `[Microsoft Copilot] Latest activity: ${JSON.stringify(latestActivity)}`);
+
+		if (latestActivity[0]?.type === "message" && latestActivity[0]?.from?.role === "bot") {
+			api.say(latestActivity[0]?.text);
+		}
+	};
+
+	ws.onerror = (error: Event) => {
+		api.log("error", `[Microsoft Copilot] WebSocket error: ${JSON.stringify(error)}`);
+	};
+
+	ws.onclose = () => {
+		api.log("info", "[Microsoft Copilot] WebSocket disconnected");
+	};
 };
 
 export const run = createNodeDescriptor({
@@ -207,7 +219,8 @@ export const run = createNodeDescriptor({
 			const { token, conversationId } = directLineTokenResponse?.data;
 
 			// Start the conversation
-			await axios.post("https://directline.botframework.com/v3/directline/conversations", {}, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
+			const directLineStartConversationResponse = await axios.post("https://directline.botframework.com/v3/directline/conversations", {}, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
+			const { streamUrl } = directLineStartConversationResponse?.data;
 
 			// Send new activity to copilot
 			await axios.post(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, {
@@ -240,7 +253,7 @@ export const run = createNodeDescriptor({
 					// Double check that output immediately is false
 					outputResultImmediately = false;
 					// Stream the answer
-					streamToOutput(answer, streamStopTokens, api);
+					await streamToOutput(streamUrl, streamStopTokens, api);
 					break;
 			}
 

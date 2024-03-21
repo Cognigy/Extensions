@@ -1,7 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import axios from 'axios';
-const WebSocket = require('ws');
-
 
 export interface ISendMessageProps extends INodeFunctionBaseParams {
 	config: {
@@ -9,11 +7,9 @@ export interface ISendMessageProps extends INodeFunctionBaseParams {
 			directLineTokenEndpoint: string;
 		},
 		text: string;
-		outputMode: string;
+		storeLocation: string;
 		inputKey: string;
 		contextKey: string;
-		outputResultImmediately: boolean;
-		streamStopTokens: string[];
 	};
 }
 
@@ -49,40 +45,6 @@ const getActivities = async (conversationId: string, token: string) => {
 	return text;
 };
 
-const streamToOutput = async (streamUrl: string, stopTokens: string[], api: INodeFunctionBaseParams["cognigy"]["api"]) => {
-
-	// Connect to the WebSocket server
-	const ws: WebSocket = new WebSocket(streamUrl, {
-		headers: {
-			"Accept": "application/json"
-		}
-	});
-
-	ws.onopen = () => {
-		api.log("info", "[Microsoft Copilot] WebSocket connected");
-	};
-
-	ws.onmessage = (event: MessageEvent) => {
-		api.log("info", `[Microsoft Copilot] Received message`);
-
-		const latestActivity = JSON.parse(event?.data?.toString('utf-8'));
-
-		api.log("debug", `[Microsoft Copilot] Latest activity: ${JSON.stringify(latestActivity)}`);
-
-		if (latestActivity[0]?.type === "message" && latestActivity[0]?.from?.role === "bot") {
-			api.say(latestActivity[0]?.text);
-		}
-	};
-
-	ws.onerror = (error: Event) => {
-		api.log("error", `[Microsoft Copilot] WebSocket error: ${JSON.stringify(error)}`);
-	};
-
-	ws.onclose = () => {
-		api.log("info", "[Microsoft Copilot] WebSocket disconnected");
-	};
-};
-
 export const run = createNodeDescriptor({
 	type: "run",
 	defaultLabel: "Run Copilot",
@@ -112,23 +74,18 @@ export const run = createNodeDescriptor({
 			}
 		},
 		{
-			key: "outputMode",
+			key: "storeLocation",
 			type: "select",
-			label: "How to handle the result",
-			description: "Whether to store the result in the input, context or stream it directly into the output",
+			label: "Where to store the result",
 			params: {
 				options: [
 					{
-						label: "Store in Input",
+						label: "Input",
 						value: "input"
 					},
 					{
-						label: "Store in Context",
+						label: "Context",
 						value: "context"
-					},
-					{
-						label: "Stream to Output",
-						value: "stream"
 					}
 				],
 				required: true
@@ -141,7 +98,7 @@ export const run = createNodeDescriptor({
 			label: "Input Key to store Result",
 			defaultValue: "copilot",
 			condition: {
-				key: "outputMode",
+				key: "storeLocation",
 				value: "input"
 			}
 		},
@@ -151,63 +108,32 @@ export const run = createNodeDescriptor({
 			label: "Context Key to store Result",
 			defaultValue: "copilot",
 			condition: {
-				key: "outputMode",
+				key: "storeLocation",
 				value: "context"
 			}
-		},
-		{
-			key: "outputResultImmediately",
-			type: "toggle",
-			label: "Output result immediately",
-			defaultValue: false,
-			condition: {
-				or: [
-					{
-						key: "outputMode",
-						value: "input"
-					},
-					{
-						key: "outputMode",
-						value: "context"
-					}
-				]
-			}
-		},
-		{
-			key: "streamStopTokens",
-			type: "textArray",
-			label: "Stream Output Tokens",
-			description: "Tokens after which to output the stream buffer",
-			defaultValue: [".", "!", "?"],
-			condition: {
-				key: "outputMode",
-				value: "stream",
-			}
-		},
+		}
 	],
 	sections: [
 		{
-			key: "storageAndStreamingOptions",
-			label: "Storage & Streaming Options",
+			key: "storageOption",
+			label: "Storage Option",
 			defaultCollapsed: true,
 			fields: [
-				"outputMode",
+				"storeLocation",
 				"inputKey",
-				"contextKey",
-				"streamStopTokens",
-				"outputResultImmediately"
+				"contextKey"
 			]
 		}
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "field", key: "text" },
-		{ type: "section", key: "storageAndStreamingOptions" }
+		{ type: "section", key: "storageOption" }
 	],
 
 	function: async ({ cognigy, config }: ISendMessageProps) => {
 		const { api, input } = cognigy;
-		let { connection, text, outputMode, streamStopTokens, inputKey, contextKey, outputResultImmediately } = config;
+		let { connection, text, storeLocation, inputKey, contextKey } = config;
 		const { directLineTokenEndpoint } = connection;
 
 		// Docs: https://learn.microsoft.com/en-us/azure/bot-service/rest-api/bot-framework-rest-direct-line-3-0-receive-activities?view=azure-bot-service-4.0
@@ -220,7 +146,6 @@ export const run = createNodeDescriptor({
 
 			// Start the conversation
 			const directLineStartConversationResponse = await axios.post("https://directline.botframework.com/v3/directline/conversations", {}, { headers: { "Accept": "application/json", "Authorization": `Bearer ${token}` } });
-			const { streamUrl } = directLineStartConversationResponse?.data;
 
 			// Send new activity to copilot
 			await axios.post(`https://directline.botframework.com/v3/directline/conversations/${conversationId}/activities`, {
@@ -241,39 +166,22 @@ export const run = createNodeDescriptor({
 			// Await the answer from Microsoft Copilot
 			const answer: string = await getActivities(conversationId, token);
 
-			switch (outputMode) {
-				case "input":
-					// @ts-ignore
-					api.addToInput(inputKey, { conversationId, text });
-					break;
-				case "context":
-					api.addToContext(contextKey, { conversationId, text }, "simple");
-					break;
-				case "stream":
-					// Double check that output immediately is false
-					outputResultImmediately = false;
-					// Stream the answer
-					await streamToOutput(streamUrl, streamStopTokens, api);
-					break;
-			}
-
 			// Output the answer as text message
-			if (outputResultImmediately) {
-				api.say(answer);
+			api.say(answer);
+
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, { conversationId, text }, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, { conversationId, text });
 			}
 
 		} catch (error) {
-			switch (outputMode) {
-				case "intput":
-					// @ts-ignore
-					api.addToInput(inputKey, { conversationId, text });
-					break;
-				case "context":
-					api.addToContext(contextKey, error, "simple");
-					break;
-				case "stream":
-					api.addToContext(contextKey, error, "simple");
-					break;
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, error);
 			}
 		}
 	}

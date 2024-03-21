@@ -18,8 +18,7 @@
   "dependencies": {
     "@cognigy/extension-tools": "^0.14.0",
     "axios": "^0.21.1",
-    "tslint": "^5.16.0",
-    "ws": "^8.16.0"
+    "tslint": "^5.16.0"
   },
   "devDependencies": {
     "@types/node": "^13.13.15",

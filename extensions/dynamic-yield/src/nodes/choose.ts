@@ -10,6 +10,8 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         selectorNames: string[];
         contextPageType: string;
         contextPageLocation: string;
+        useLexicon: boolean;
+        conditions: any;
         advancedConditions: any;
         storeLocation: string;
         contextKey: string;
@@ -103,11 +105,59 @@ export const chooseNode = createNodeDescriptor({
             }
         },
         {
+            key: "useLexicon",
+            label: {
+                default: "Use Lexicon",
+                deDE: "Lexicon verwenden"
+            },
+            type: "toggle",
+            defaultValue: false,
+            description: {
+                default: "If a Cognigy Lexicon should be used to detect slots and keyphrases that are used as conditions.",
+                deDE: "Ob ein Cognigy Lexicon für die Erkennung von Slots und Keyphrases genutzt werden soll. Diese werden als Conditions genutzt"
+            }
+        },
+        {
+            key: "conditions",
+            label: {
+                default: "Conditions",
+                deDE: "Bedingungen"
+            },
+            description: {
+                default: "Conditions that should be used for choosing products.",
+                deDE: "Bedingungen die für die Produktauswahl genutzt werden sollen."
+            },
+            type: "json",
+            defaultValue: `{
+                "field": "price",
+                "arguments": [
+                   {
+                      "action": "LT",
+                      "value": 40
+                   }
+                ]
+             }`,
+            condition: {
+                key: "useLexicon",
+                value: false
+            }
+        },
+        {
             key: "advancedConditions",
-            label: "Advanced Conditions",
-            description: "More advanced conditions that should be used for choosing products. The standard uses the IS action.",
+            label: {
+                default: "Advanced Conditions",
+                deDE: "Erweiterte Bedingungen"
+            },
+            description: {
+                default: "More advanced conditions that should be used for choosing products. The standard uses the IS action.",
+                deDE: "Erweiterte Bedingungen die zur Produktauswahl genutzt werden sollen."
+            },
             type: "json",
             defaultValue: "{}",
+            condition: {
+                key: "useLexicon",
+                value: true
+            }
         },
         {
             key: "storeLocation",
@@ -160,18 +210,20 @@ export const chooseNode = createNodeDescriptor({
     ],
     sections: [
         {
-            key: "advanced",
+            key: "conditionsOptions",
             label: {
-                default: "Advanced",
-                deDE: "Erweitert"
+                default: "Condition Options",
+                deDE: "Bedingungen"
             },
             defaultCollapsed: true,
             fields: [
+                "useLexicon",
+                "conditions",
                 "advancedConditions"
             ]
         },
         {
-            key: "storage",
+            key: "storageOptions",
             label: {
                 default: "Storage Option",
                 deDE: "Speicheroption"
@@ -189,8 +241,8 @@ export const chooseNode = createNodeDescriptor({
         { type: "field", key: "selectorNames" },
         { type: "field", key: "contextPageType" },
         { type: "field", key: "contextPageLocation" },
-        { type: "section", key: "advanced" },
-        { type: "section", key: "storage" },
+        { type: "section", key: "conditionsOptions" },
+        { type: "section", key: "storageOptions" },
     ],
     appearance: {
         color: "#E60887"

@@ -11,8 +11,8 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         contextPageType: string;
         contextPageLocation: string;
         useLexicon: boolean;
-        conditions: any;
-        advancedConditions: any;
+        conditions: any[];
+        advancedConditions: any[];
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -128,7 +128,7 @@ export const chooseNode = createNodeDescriptor({
                 deDE: "Bedingungen die für die Produktauswahl genutzt werden sollen."
             },
             type: "json",
-            defaultValue: `{
+            defaultValue: `[{
                 "field": "price",
                 "arguments": [
                    {
@@ -136,7 +136,7 @@ export const chooseNode = createNodeDescriptor({
                       "value": 40
                    }
                 ]
-             }`,
+             }]`,
             condition: {
                 key: "useLexicon",
                 value: false
@@ -153,7 +153,7 @@ export const chooseNode = createNodeDescriptor({
                 deDE: "Erweiterte Bedingungen die zur Produktauswahl genutzt werden sollen."
             },
             type: "json",
-            defaultValue: "{}",
+            defaultValue: "[]",
             condition: {
                 key: "useLexicon",
                 value: true
@@ -212,8 +212,8 @@ export const chooseNode = createNodeDescriptor({
         {
             key: "conditionsOptions",
             label: {
-                default: "Condition Options",
-                deDE: "Bedingungen"
+                default: "Conditions Option",
+                deDE: "Bedingungenoption"
             },
             defaultCollapsed: true,
             fields: [
@@ -249,38 +249,43 @@ export const chooseNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IChooseParams) => {
         const { api, input } = cognigy;
-        const { selectorNames, contextPageLocation, contextPageType, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
+        const { selectorNames, contextPageLocation, contextPageType, useLexicon, conditions, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
         const { key, region } = connection;
 
         try {
 
-            // Create conditions based on the Lexicon slot results
-            let conditions = [];
+            // Check if the lexicon should be used
+            if (useLexicon) {
+                // Check if advanced conditions are not empty
+                if (Object?.keys(advancedConditions)?.length !== 0) {
+                    // Loop through the JSON array of advanced conditions and add it to the conditions array
+                    for (let adavncedCondition of advancedConditions) {
+                        conditions.push(adavncedCondition);
+                    }
+                }
 
-            if (Object?.keys(advancedConditions)?.length !== 0) {
-                conditions.push(advancedConditions);
-            }
+                for (const slotName in input.slots) {
+                    if (input.slots.hasOwnProperty(slotName)) {
+                        const slotValues = input.slots[slotName];
 
-            for (const slotName in input.slots) {
-                if (input.slots.hasOwnProperty(slotName)) {
-                    const slotValues = input.slots[slotName];
+                        // Determine action based on slotName
+                        const action = "IS";
 
-                    // Determine action based on slotName
-                    const action = "IS";
+                        // Iterate over slot values and add them to the conditions array
+                        for (const slotValue of slotValues) {
+                            // Construct condition object for each slot value
+                            const condition = {
+                                "field": slotName,
+                                "arguments": [{ "action": action, "value": slotValue.keyphrase }]
+                            };
 
-                    // Iterate over slot values and add them to the conditions array
-                    for (const slotValue of slotValues) {
-                        // Construct condition object for each slot value
-                        const condition = {
-                            "field": slotName,
-                            "arguments": [{ "action": action, "value": slotValue.keyphrase }]
-                        };
-
-                        // Add condition to the conditions array
-                        conditions.push(condition);
+                            // Add condition to the conditions array
+                            conditions.push(condition);
+                        }
                     }
                 }
             }
+
 
             let url: string = "";
             if (region === 'eu') {
@@ -308,7 +313,7 @@ export const chooseNode = createNodeDescriptor({
                                         "type": "include",
                                         "slots": [],
                                         "query": {
-                                            "conditions": conditions
+                                            conditions
                                         }
                                     }
                                 ]

@@ -94,6 +94,25 @@
       ]
     },
     {
+      "name": "dynamic-yield",
+      "label": "Dynamic Yield",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/dynamic-yield400/dynamic-yield.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/dynamic-yield",
+      "description": "Integrates Cognigy.AI with Dynamic Yield by Mastercard",
+      "longDescription": "Cognigy.ai and Dynamic Yield together offer the ideal solution for modern conversational shopping experiences. Cognigy.ai provides cutting-edge conversational AI technology, empowering businesses to create sophisticated AI assistants. With its natural language understanding capabilities, it ensures seamless interactions, understanding user intents and responding effectively. Dynamic Yield complements this by delivering personalized experiences across various touchpoints, including web, mobile, email, and now, conversational interfaces. Its powerful AI-driven personalization engine analyzes user behavior in real-time to deliver tailored recommendations and messages, enhancing engagement and driving conversions. Together, Cognigy.ai and Dynamic Yield enable retailers to offer personalized shopping experiences through conversational channels. AI Agentst powered by Cognigy.ai can engage customers in meaningful conversations, assisting them with product inquiries, recommendations, and purchases. Dynamic Yield's personalization capabilities ensure that these interactions are highly relevant and context-aware, increasing the likelihood of conversion.",
+      "tags": ["Shopping", "Recommendation"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "choose",
+          "defaultLabel": "Choose",
+          "description": "Get the chosen variations for one or more campaigns",
+          "tags": ["choose", "variations"]
+        }
+      ]
+    },
+    {
       "name": "abbyy-vantage",
       "label": "Abbyy Vantage",
       "version": "4.0.0",

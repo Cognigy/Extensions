@@ -13,6 +13,7 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         useLexicon: boolean;
         conditions: any[];
         advancedConditions: any[];
+        logConditions: boolean;
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -160,6 +161,19 @@ export const chooseNode = createNodeDescriptor({
             }
         },
         {
+            key: "logConditions",
+            label: {
+                default: "Log Conditions",
+                deDE: "Bedingungen loggen"
+            },
+            description: {
+                default: "Logs the filter conditions as debug message.",
+                deDE: "Schreibt die Filterbedingungen als Debugnachricht in die Logs."
+            },
+            type: "toggle",
+            defaultValue: false,
+        },
+        {
             key: "storeLocation",
             type: "select",
             label: {
@@ -223,6 +237,17 @@ export const chooseNode = createNodeDescriptor({
             ]
         },
         {
+            key: "debuggingOptions",
+            label: {
+                default: "Debugging",
+                deDE: "Fehlersuche"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "logConditions"
+            ]
+        },
+        {
             key: "storageOptions",
             label: {
                 default: "Storage Option",
@@ -243,19 +268,30 @@ export const chooseNode = createNodeDescriptor({
         { type: "field", key: "contextPageLocation" },
         { type: "section", key: "conditionsOptions" },
         { type: "section", key: "storageOptions" },
+        { type: "section", key: "debuggingOptions" }
     ],
     appearance: {
         color: "#E60887"
     },
-    function: async ({ cognigy, config }: IChooseParams) => {
+    dependencies: {
+        children: [
+            "onFound",
+            "onNotFound"
+        ]
+    },
+    function: async ({ cognigy, config, childConfigs }: IChooseParams) => {
         const { api, input } = cognigy;
-        const { selectorNames, contextPageLocation, contextPageType, useLexicon, conditions, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
+        let { selectorNames, contextPageLocation, contextPageType, useLexicon, conditions, logConditions, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
         const { key, region } = connection;
 
         try {
 
             // Check if the lexicon should be used
             if (useLexicon) {
+
+                // Remove the default value from conditions
+                conditions = [];
+
                 // Check if advanced conditions are not empty
                 if (Object?.keys(advancedConditions)?.length !== 0) {
                     // Loop through the JSON array of advanced conditions and add it to the conditions array
@@ -284,6 +320,11 @@ export const chooseNode = createNodeDescriptor({
                         }
                     }
                 }
+            }
+
+            // Check if debugging is enabled
+            if (logConditions) {
+                api.log("debug", `[Dynamic Yield] Conditions: ${JSON.stringify(conditions)}`);
             }
 
 
@@ -334,6 +375,14 @@ export const chooseNode = createNodeDescriptor({
                 }
             });
 
+            if (response?.data?.choices[0]?.variations[0]?.payload?.data?.slots?.length !== 0) {
+                const onFound = childConfigs.find(child => child.type === "onFound");
+                api.setNextNode(onFound.id);
+            } else {
+                const onNotFound = childConfigs.find(child => child.type === "onNotFound");
+                api.setNextNode(onNotFound.id);
+            }
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, response?.data?.choices[0]?.variations[0]?.payload?.data?.slots, "simple");
             } else {
@@ -342,6 +391,9 @@ export const chooseNode = createNodeDescriptor({
             }
         } catch (error) {
 
+            const onNotFound = childConfigs.find(child => child.type === "onNotFound");
+            api.setNextNode(onNotFound.id);
+
             if (storeLocation === "context") {
                 api.addToContext(contextKey, { error: error }, "simple");
             } else {
@@ -349,5 +401,53 @@ export const chooseNode = createNodeDescriptor({
                 api.addToInput(inputKey, { error: error });
             }
         }
+    }
+});
+
+export const onFound = createNodeDescriptor({
+    type: "onFound",
+    parentType: "choose",
+    defaultLabel: {
+        default: "Found Products"
+    },
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
+    }
+});
+
+export const onNotFound = createNodeDescriptor({
+    type: "onNotFound",
+    parentType: "choose",
+    defaultLabel: {
+        default: "Else"
+    },
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#61d188",
+        textColor: "white",
+        variant: "mini"
     }
 });

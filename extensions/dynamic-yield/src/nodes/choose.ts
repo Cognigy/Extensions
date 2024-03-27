@@ -480,7 +480,7 @@ export const chooseNode = createNodeDescriptor({
                     "selector": {
                         "names": selectorNames,
                         "args": {
-                            "Cognigy": {
+                            [selectorNames[0]]: {
                                 "realtimeRules": [
                                     {
                                         "type": "include",

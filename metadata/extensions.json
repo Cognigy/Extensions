@@ -96,7 +96,7 @@
     {
       "name": "dynamic-yield",
       "label": "Dynamic Yield",
-      "version": "4.0.0",
+      "version": "4.0.1",
       "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/dynamic-yield400/dynamic-yield.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/dynamic-yield",
       "description": "Integrates Cognigy.AI with Dynamic Yield by Mastercard",

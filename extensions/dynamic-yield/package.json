@@ -1,6 +1,6 @@
 {
 	"name": "dynamic-yield",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"description": "Integrates with Dynamic Yield by Mastercard",
 	"main": "build/module.js",
 	"scripts": {

@@ -12,6 +12,12 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         contextPageLocation: string;
         useLexicon: boolean;
         conditions: any[];
+        useLocale: boolean;
+        useIPAddress: boolean;
+        useDYID: boolean;
+        dyID: string;
+        useDYSession: boolean;
+        dySession: string;
         advancedConditions: any[];
         logConditions: boolean;
         storeLocation: string;
@@ -19,6 +25,20 @@ export interface IChooseParams extends INodeFunctionBaseParams {
         inputKey: string;
     };
 }
+
+interface IDYUser {
+    dyid?: string;
+    dyid_server?: string;
+}
+
+interface IDYSession {
+    dy?: string;
+}
+
+interface IDYDevice {
+    ip?: string;
+}
+
 export const chooseNode = createNodeDescriptor({
     type: "choose",
     defaultLabel: {
@@ -220,6 +240,82 @@ export const chooseNode = createNodeDescriptor({
                 key: "storeLocation",
                 value: "context",
             }
+        },
+        {
+            key: "useLocale",
+            label: {
+                default: "Use Locale",
+                deDE: "Standort verwenden"
+            },
+            description: {
+                default: "If the user locale should be used, such as de_DE or en_US etc. for affinity.",
+                deDE: "Ob das Benutzergebietsschema verwendet werden soll, z. B. de_DE oder en_US usw. für die Affinität."
+            },
+            type: "toggle",
+            defaultValue: false
+        },
+        {
+            key: "useIPAddress",
+            label: {
+                default: "Use IP Address",
+                deDE: "IP Adresse verwenden"
+            },
+            description: {
+                default: "If the ip address of the user should be used for affinity.",
+                deDE: "Ob die IP Adresse der Nutzerin für die Affinität verwendet werden soll."
+            },
+            type: "toggle",
+            defaultValue: false
+        },
+        {
+            key: "useDYSession",
+            label: {
+                default: "Use Dynamic Yield Session",
+                deDE: "Dynamic Yield Session verwenden"
+            },
+            description: {
+                default: "If the Dynamic Yield session should be used for affinity.",
+                deDE: "Ob die Dynamic Yield Session für die Affinität verwendet werden soll."
+            },
+            type: "toggle",
+            defaultValue: false
+        },
+        {
+            key: "dySession",
+            label: {
+                default: "Dynamic Yield Session",
+                deDE: "Dynamic Yield Session"
+            },
+            type: "cognigyText",
+            condition: {
+                key: "useDYSession",
+                value: true,
+            }
+        },
+        {
+            key: "useDYID",
+            label: {
+                default: "Use Dynamic Yield ID",
+                deDE: "Dynamic Yield ID verwenden"
+            },
+            description: {
+                default: "If the Dynamic Yield id should be used for affinity.",
+                deDE: "Ob die Dynamic Yield ID für die Affinität verwendet werden soll."
+            },
+            type: "toggle",
+            defaultValue: false
+        },
+        {
+            key: "dyID",
+            label: {
+                default: "Dynamic Yield ID",
+                deDE: "Dynamic Yield ID"
+            },
+            type: "cognigyText",
+            condition: {
+                key: "useDYID",
+                value: true,
+            }
         }
     ],
     sections: [
@@ -234,6 +330,22 @@ export const chooseNode = createNodeDescriptor({
                 "useLexicon",
                 "conditions",
                 "advancedConditions"
+            ]
+        },
+        {
+            key: "affinityOptions",
+            label: {
+                default: "Affinity Option",
+                deDE: "Affinitätenoption"
+            },
+            defaultCollapsed: true,
+            fields: [
+                "useLocale",
+                "useIPAddress",
+                "useDYID",
+                "dyID",
+                "useDYSession",
+                "dySession"
             ]
         },
         {
@@ -267,6 +379,7 @@ export const chooseNode = createNodeDescriptor({
         { type: "field", key: "contextPageType" },
         { type: "field", key: "contextPageLocation" },
         { type: "section", key: "conditionsOptions" },
+        { type: "section", key: "affinityOptions" },
         { type: "section", key: "storageOptions" },
         { type: "section", key: "debuggingOptions" }
     ],
@@ -281,10 +394,28 @@ export const chooseNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IChooseParams) => {
         const { api, input } = cognigy;
-        let { selectorNames, contextPageLocation, contextPageType, useLexicon, conditions, logConditions, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
+        let { selectorNames, contextPageLocation, contextPageType, useLexicon, useLocale, useDYID, useDYSession, useIPAddress, dyID, dySession, conditions, logConditions, advancedConditions, connection, storeLocation, contextKey, inputKey } = config;
         const { key, region } = connection;
 
         try {
+            let user: IDYUser = {};
+            let session: IDYSession = {};
+            let device: IDYDevice = {};
+
+            // Check if Dynamic Yield user should be used
+            if (useDYID && dyID?.length !== 0) {
+                user.dyid = dyID;
+            }
+
+            // Check if Dynamic Yield session should be used
+            if (useDYSession && dySession?.length !== 0) {
+                session.dy = dySession;
+            }
+
+            // Check if the ip address of the user should be used
+            if (useIPAddress && input?.ip?.length !== 0) {
+                device.ip = input.ip;
+            }
 
             // Check if the lexicon should be used
             if (useLexicon) {
@@ -344,11 +475,12 @@ export const chooseNode = createNodeDescriptor({
                     "DY-API-Key": key
                 },
                 data: {
-                    "user": {},
+                    user,
+                    session,
                     "selector": {
                         "names": selectorNames,
                         "args": {
-                            "Chatbot_Reco": {
+                            [selectorNames[0]]: {
                                 "realtimeRules": [
                                     {
                                         "type": "include",
@@ -364,10 +496,11 @@ export const chooseNode = createNodeDescriptor({
                     "context": {
                         "page": {
                             "type": contextPageType,
-                            "data": [
-                            ],
-                            "location": contextPageLocation
-                        }
+                            "data": [],
+                            "location": contextPageLocation,
+                            "locale": useLocale && input?.language ? input?.language?.replace("-", "_") : ""
+                        },
+                        device
                     },
                     "options": {
                         "isImplicitPageview": true

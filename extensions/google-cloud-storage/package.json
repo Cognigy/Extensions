@@ -1,0 +1,28 @@
+{
+  "name": "google-cloud-storage",
+  "version": "4.0.0",
+  "description": "Working with files in Google Cloud Storage buckets",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz google-cloud-storage.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Google",
+    "Cloud",
+    "Storage"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.15.1",
+    "@google-cloud/storage": "^7.10.0",
+    "tslint": "^6.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}

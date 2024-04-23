@@ -1,0 +1,29 @@
+{
+  "name": "parcelperform",
+  "version": "4.0.0",
+  "description": "Integrates Parcel Perform",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz parcelperform.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Shipping",
+    "Tracking",
+    "Parcel"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "axios": "^0.21.1",
+    "qs": "^6.12.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/qs": "^6.9.15"
+  }
+}

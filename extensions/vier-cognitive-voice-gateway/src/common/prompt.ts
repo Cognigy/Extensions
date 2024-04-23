@@ -1,7 +1,7 @@
 import { INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor";
 import t from "../translations";
-import { bargeInFields } from "./bargeIn";
 import { languageSelectField } from "./shared";
+import { bargeInFieldsWithToggleToUseDefault } from "./bargeIn";
 
 export const promptFields: Array<INodeField> = [
   {
@@ -29,5 +29,5 @@ export const promptFields: Array<INodeField> = [
     label: t.shared.inputSynthesizersLabel,
     description: t.shared.inputSynthesizersDescription,
   },
-  ...bargeInFields,
+  ...bargeInFieldsWithToggleToUseDefault(),
 ];

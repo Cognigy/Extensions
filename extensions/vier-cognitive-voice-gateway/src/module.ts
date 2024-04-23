@@ -23,13 +23,15 @@ import {
 } from './nodes/checkOutboundResult';
 import {
   checkReferResultNode,
-  onReferDefault, 
+  onReferDefault,
   onReferFailure,
-  onReferSuccess
+  onReferSuccess,
 } from './nodes/checkReferResult';
+import { changeDefaultsNode } from "./nodes/changeDefault";
 
 export default createExtension({
   nodes: [
+    changeDefaultsNode,
     promptForNumberNode,
     promptForMultipleChoice,
     recordingStartNode,

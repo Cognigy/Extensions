@@ -10,10 +10,10 @@ import {
   normalizeTextArray,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
   BargeInInputs,
-  bargeInSection,
+  bargeInSectionWithToggleToUseDefault,
   convertBargeIn,
 } from "../common/bargeIn";
 import { promptFields } from "../common/prompt";
@@ -46,7 +46,7 @@ export const promptForNumberNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFields,
+    ...bargeInFieldsWithToggleToUseDefault(),
     {
       type: 'textArray',
       key: 'submitInputs',
@@ -82,7 +82,7 @@ export const promptForNumberNode = createNodeDescriptor({
       label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
     {
       key: 'additional',
       fields: ['language', 'synthesizers'],

@@ -18,7 +18,7 @@ import t from '../translations';
  *
  * TODO replace this by an option resolver
  */
-const supportedLanguages: readonly string[] = [
+export const supportedLanguages: readonly string[] = [
   'en-US',
   'en-GB',
   'de-DE',
@@ -99,6 +99,18 @@ export function languageSelectField(key: string, required: boolean, label: INode
       options: extraEntries.concat(languageEntries),
     },
   };
+}
+
+export function synthesizersField(key: string): INodeField {
+  return {
+    type: 'textArray',
+    key: key,
+    label: t.shared.synthesizersLabel,
+    description: t.shared.synthesizersDescription,
+    params: {
+      required: false,
+    },
+  }
 }
 
 export interface EndFlowInputs {

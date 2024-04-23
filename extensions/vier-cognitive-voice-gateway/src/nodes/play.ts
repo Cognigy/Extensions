@@ -7,10 +7,10 @@ import {
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
   BargeInInputs,
-  bargeInSection,
+  bargeInSectionWithToggleToUseDefault,
   convertBargeIn,
 } from "../common/bargeIn";
 import {
@@ -56,11 +56,11 @@ export const playNode = createNodeDescriptor({
         placeholder: '',
       },
     },
-    ...bargeInFields,
+    ...bargeInFieldsWithToggleToUseDefault(),
   ],
   sections: [
     generalSection(['url', 'fallbackText']),
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
   ],
   form: [
     generalSectionFormElement,

@@ -7,15 +7,17 @@ import {
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
   BargeInInputs,
-  bargeInSection,
+  bargeInSectionWithToggleToUseDefault,
   convertBargeIn,
 } from "../common/bargeIn";
 import {
   generalSection,
   generalSectionFormElement,
+  languageSelectField,
+  synthesizersField,
 } from "../common/shared";
 
 interface ISpeakNodeInputs extends BargeInInputs {
@@ -24,6 +26,10 @@ interface ISpeakNodeInputs extends BargeInInputs {
   // additionalText: Array<string>,
   linear?: boolean,
   loop?: boolean,
+  language: string | null,
+  overwriteSynthesizers: boolean,
+  synthesizers: Array<string> | null,
+  overwriteBargeIn: boolean,
 }
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
@@ -266,7 +272,22 @@ export const speakNode = createNodeDescriptor({
         ],
       },
     },
-    ...bargeInFields,
+    languageSelectField('language', false, t.speak.languageLabel),
+    {
+      type: 'toggle',
+      key: 'overwriteSynthesizers',
+      label: t.speak.changeSynthesizersSwitchLabel,
+      description: t.speak.changeSynthesizersSwitchDescription,
+      defaultValue: false,
+    },
+    {
+      ...synthesizersField('synthesizers'),
+      condition: {
+        key: 'overwriteSynthesizers',
+        value: true,
+      }
+    },
+    ...bargeInFieldsWithToggleToUseDefault(),
     // will be needed for later implementation
     // {
     //   key: 'additionalText',
@@ -293,7 +314,7 @@ export const speakNode = createNodeDescriptor({
   },
   sections: [
     generalSection(['text']),
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
     // {
     //   fields: ['additionalText'],
     //   key: 'textOptions',
@@ -308,6 +329,18 @@ export const speakNode = createNodeDescriptor({
     // },
   ],
   form: [
+    {
+      key: 'language',
+      type: 'field',
+    },
+    {
+      key: 'overwriteSynthesizers',
+      type: 'field',
+    },
+    {
+      key: 'synthesizers',
+      type: 'field',
+    },
     generalSectionFormElement,
     bargeInForm,
     // {
@@ -354,8 +387,9 @@ export const speakNode = createNodeDescriptor({
     const payload = {
       interpretAs: 'SSML',
       bargeIn: convertBargeIn(api, config),
+      language: config.language,
+      synthesizers: config.overwriteSynthesizers ? config.synthesizers : null,
     };
     cognigy.api.say(text, payload);
   },
 });
-

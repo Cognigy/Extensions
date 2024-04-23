@@ -8,10 +8,10 @@ import {
   normalizeTextArray,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
   BargeInInputs,
-  bargeInSection,
+  bargeInSectionWithToggleToUseDefault,
   convertBargeIn,
 } from "../common/bargeIn";
 import { promptFields } from "../common/prompt";
@@ -42,7 +42,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFields,
+    ...bargeInFieldsWithToggleToUseDefault(),
     {
       type: 'json',
       label: t.multipleChoicePrompt.inputChoicesLabel,
@@ -75,7 +75,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       label: t.multipleChoicePrompt.sectionChoicesSectionLabel,
       defaultCollapsed: false,
     },
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
     {
       key: 'additional',
       fields: ['language', 'synthesizers'],

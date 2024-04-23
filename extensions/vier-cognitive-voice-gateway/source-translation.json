@@ -1,4 +1,22 @@
 {
+    "changeDefaults": {
+        "ttsSectionLabel": "Text to speech",
+        "overwriteStrategy": {
+            "doNotChange": "Do not change",
+            "reset": "Reset to CVG default",
+            "useValue": "Set a new default value"
+        },
+        "nodeLabel": "Change Default settings",
+        "nodeSummary": "Change the settings used by nodes by default",
+        "synthesizersOverwriteStrategyLabel": "Change default synthesizers?",
+        "synthesizersOverwriteStrategyDescription": "Do you want to change the default synthesizers?",
+        "ttsLanguageOverwriteStrategyLabel": "Change default tts language?",
+        "ttsLanguageOverwriteStrategyDescription": "Do you want to change the default tts language?",
+        "ttsLanguageLabel": "Default TTS language",
+        "ttsLanguageDescription": "Change the default tts language",
+        "ttsBargeInOverwriteStrategyLabel": "Change default bargeIn settings?",
+        "ttsBargeInOverwriteStrategyDescription": "Do you want to overwrite the default bargeIn settings?"
+    },
     "sendData": {
         "nodeLabel": "Send Data",
         "nodeSummary": "Attach custom data to a dialog",
@@ -106,9 +124,13 @@
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default",
         "sectionSipLabel": "SIP",
-        "sectionGeneralLabel": "General Settings"
+        "sectionGeneralLabel": "General Settings",
+        "synthesizersLabel": "A list of synthesizers",
+        "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list"
     },
     "bargeIn": {
+        "useDefaultToggleLabel": "Change bargeIn from default?",
+        "useDefaultToggleDescription": "Do you want to change the bargeIn settings for this node?",
         "input": {
             "onSpeechLabel": "On Speech",
             "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
@@ -130,7 +152,10 @@
         "nodeSummary": "Speak something out to the caller with SSML Support",
         "inputTextLabel": "Text",
         "sectionTextOptionsLabel": "Additional Text Section",
-        "inputAdditionalTextLabel": "Additional Text"
+        "inputAdditionalTextLabel": "Additional Text",
+        "languageLabel": "Language",
+        "changeSynthesizersSwitchLabel": "Change synthesizers from default?",
+        "changeSynthesizersSwitchDescription": "Do you want to change the synthesizers settings for this node?"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",

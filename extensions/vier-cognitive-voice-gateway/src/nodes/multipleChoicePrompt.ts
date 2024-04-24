@@ -10,9 +10,9 @@ import {
 import {
   bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputs,
+  BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeIn,
+  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
 import { promptFields } from "../common/prompt";
 import {
@@ -20,7 +20,7 @@ import {
   generalSectionFormElement,
 } from "../common/shared";
 
-interface IMultipleChoicePromptNodeInputs extends BargeInInputs {
+interface IMultipleChoicePromptNodeInputs extends BargeInInputsWithToggleToUseDefault {
   text: string,
   timeout: number,
   language?: string,
@@ -107,7 +107,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
       synthesizers: normalizeTextArray(config.synthesizers),
-      bargeIn: convertBargeIn(api, config),
+      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       type: {
         name: 'MultipleChoice',
         choices: config.choices,

@@ -20,6 +20,10 @@ export interface BargeInInputs {
   bargeInPhraseListFromContext?: string;
 }
 
+export interface BargeInInputsWithToggleToUseDefault extends BargeInInputs {
+  changeBargeIn: boolean;
+}
+
 export function bargeInFields(
   condition: TNodeFieldCondition,
 ): Array<INodeField> {
@@ -140,4 +144,12 @@ export function convertBargeIn(api: INodeExecutionAPI, inputs: BargeInInputs): B
     confidence: confidence,
     phraseList: phraseList,
   };
+}
+
+export function convertBargeInRespectToggleToUseDefault(api: INodeExecutionAPI, inputs: BargeInInputsWithToggleToUseDefault): BargeInOptions | null {
+  if (!inputs.changeBargeIn) {
+    return null
+  } else {
+    return convertBargeIn(api, inputs)
+  }
 }

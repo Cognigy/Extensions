@@ -9,9 +9,9 @@ import {
 import {
   bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputs,
+  BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeIn,
+  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
 import {
   generalSection,
@@ -20,7 +20,7 @@ import {
   synthesizersField,
 } from "../common/shared";
 
-interface ISpeakNodeInputs extends BargeInInputs {
+interface ISpeakNodeInputs extends BargeInInputsWithToggleToUseDefault {
   text: string,
   timeout?: number,
   // additionalText: Array<string>,
@@ -386,7 +386,7 @@ export const speakNode = createNodeDescriptor({
 
     const payload = {
       interpretAs: 'SSML',
-      bargeIn: convertBargeIn(api, config),
+      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       language: config.language,
       synthesizers: config.overwriteSynthesizers ? config.synthesizers : null,
     };

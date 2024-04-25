@@ -5,7 +5,6 @@ import {
 import t from '../translations';
 import {
   convertDurationFromSecondsToMillis,
-  normalizeTextArray,
 } from "../helpers/util";
 import {
   bargeInFieldsWithToggleToUseDefault,
@@ -19,12 +18,16 @@ import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
+import {
+  convertSynthesiersRespectToggleToUseDefault,
+  SynthesizersInputsWithToggleToUseDefault,
+  synthesizersWithToggleToUseDefaultFieldKeys
+} from '../common/synthesizers';
 
-interface IMultipleChoicePromptNodeInputs extends BargeInInputsWithToggleToUseDefault {
+interface IMultipleChoicePromptNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
   text: string,
   timeout: number,
   language?: string,
-  synthesizers?: Array<string>,
   choices: object,
 }
 
@@ -78,7 +81,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     bargeInSectionWithToggleToUseDefault,
     {
       key: 'additional',
-      fields: ['language', 'synthesizers'],
+      fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -106,7 +109,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
       status: 'prompt',
       timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
-      synthesizers: normalizeTextArray(config.synthesizers),
+      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       type: {
         name: 'MultipleChoice',

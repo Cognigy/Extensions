@@ -126,7 +126,9 @@
         "sectionSipLabel": "SIP",
         "sectionGeneralLabel": "General Settings",
         "synthesizersLabel": "A list of synthesizers",
-        "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list"
+        "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
+        "changeSynthesizersSwitchLabel": "Change synthesizers from default?",
+        "changeSynthesizersSwitchDescription": "Do you want to change the synthesizers settings for this node?"
     },
     "bargeIn": {
         "useDefaultToggleLabel": "Change bargeIn from default?",
@@ -153,9 +155,7 @@
         "inputTextLabel": "Text",
         "sectionTextOptionsLabel": "Additional Text Section",
         "inputAdditionalTextLabel": "Additional Text",
-        "languageLabel": "Language",
-        "changeSynthesizersSwitchLabel": "Change synthesizers from default?",
-        "changeSynthesizersSwitchDescription": "Do you want to change the synthesizers settings for this node?"
+        "languageLabel": "Language"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",

@@ -16,8 +16,8 @@ import {
 } from "@cognigy/extension-tools/build";
 import {
   languageSelectField,
-  synthesizersField,
 } from "../common/shared";
+import { synthesizersField } from '../common/synthesizers';
 
 export enum OverwriteStrategy {
   RESET_DEFAULT = "RESET_DEFAULT",

@@ -101,18 +101,6 @@ export function languageSelectField(key: string, required: boolean, label: INode
   };
 }
 
-export function synthesizersField(key: string): INodeField {
-  return {
-    type: 'textArray',
-    key: key,
-    label: t.shared.synthesizersLabel,
-    description: t.shared.synthesizersDescription,
-    params: {
-      required: false,
-    },
-  }
-}
-
 export interface EndFlowInputs {
   endFlow: boolean,
 }

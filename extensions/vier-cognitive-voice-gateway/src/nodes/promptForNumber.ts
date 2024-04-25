@@ -21,12 +21,16 @@ import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
+import {
+  convertSynthesiersRespectToggleToUseDefault,
+  synthesizersForm,
+  SynthesizersInputsWithToggleToUseDefault
+} from '../common/synthesizers';
 
-interface INumberPromptNodeInputs extends BargeInInputsWithToggleToUseDefault {
+interface INumberPromptNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
   text: string,
   timeout: number,
   language?: string,
-  synthesizers?: Array<string>,
   submitInputs?: Array<string>,
   minDigits?: number,
   maxDigits?: number,
@@ -85,7 +89,7 @@ export const promptForNumberNode = createNodeDescriptor({
     bargeInSectionWithToggleToUseDefault,
     {
       key: 'additional',
-      fields: ['language', 'synthesizers'],
+      fields: ['language', ...synthesizersForm.map(it => it.key)],
       label: t.forward.sectionAdditionalSettingsLabel,
       defaultCollapsed: true,
     },
@@ -124,7 +128,7 @@ export const promptForNumberNode = createNodeDescriptor({
       status: 'prompt',
       timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: config.language ? config.language : undefined,
-      synthesizers: normalizeTextArray(config.synthesizers),
+      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       type: {
         name: 'Number',

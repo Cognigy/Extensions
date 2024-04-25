@@ -17,10 +17,15 @@ import {
   generalSection,
   generalSectionFormElement,
   languageSelectField,
-  synthesizersField,
 } from "../common/shared";
+import {
+  convertSynthesiersRespectToggleToUseDefault,
+  synthesizersFieldWithToggleToUseDefault,
+  synthesizersForm,
+  SynthesizersInputsWithToggleToUseDefault
+} from '../common/synthesizers';
 
-interface ISpeakNodeInputs extends BargeInInputsWithToggleToUseDefault {
+interface ISpeakNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
   text: string,
   timeout?: number,
   // additionalText: Array<string>,
@@ -273,20 +278,7 @@ export const speakNode = createNodeDescriptor({
       },
     },
     languageSelectField('language', false, t.speak.languageLabel),
-    {
-      type: 'toggle',
-      key: 'overwriteSynthesizers',
-      label: t.speak.changeSynthesizersSwitchLabel,
-      description: t.speak.changeSynthesizersSwitchDescription,
-      defaultValue: false,
-    },
-    {
-      ...synthesizersField('synthesizers'),
-      condition: {
-        key: 'overwriteSynthesizers',
-        value: true,
-      }
-    },
+    ...synthesizersFieldWithToggleToUseDefault(),
     ...bargeInFieldsWithToggleToUseDefault(),
     // will be needed for later implementation
     // {
@@ -333,14 +325,7 @@ export const speakNode = createNodeDescriptor({
       key: 'language',
       type: 'field',
     },
-    {
-      key: 'overwriteSynthesizers',
-      type: 'field',
-    },
-    {
-      key: 'synthesizers',
-      type: 'field',
-    },
+    ...synthesizersForm,
     generalSectionFormElement,
     bargeInForm,
     // {
@@ -388,7 +373,7 @@ export const speakNode = createNodeDescriptor({
       interpretAs: 'SSML',
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       language: config.language,
-      synthesizers: config.overwriteSynthesizers ? config.synthesizers : null,
+      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
     };
     cognigy.api.say(text, payload);
   },

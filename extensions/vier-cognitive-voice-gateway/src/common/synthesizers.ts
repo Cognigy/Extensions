@@ -26,7 +26,7 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
   return [
     {
       type: 'toggle',
-      key: 'overwriteSynthesizers',
+      key: 'changeSynthesizers',
       label: t.shared.changeSynthesizersSwitchLabel,
       description: t.shared.changeSynthesizersSwitchDescription,
       defaultValue: false,
@@ -34,7 +34,7 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
     {
       ...synthesizersField('synthesizers'),
       condition: {
-        key: 'overwriteSynthesizers',
+        key: 'changeSynthesizers',
         value: true,
       }
     }]
@@ -42,7 +42,7 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
 
 export const synthesizersForm: Array<INodeFieldAndSectionFormElement> = [
     {
-      key: 'overwriteSynthesizers',
+      key: 'changeSynthesizers',
       type: 'field',
     },
     {

@@ -4,33 +4,24 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertDurationFromSecondsToMillis,
   DEFAULT_NUMBER_VALUE,
   normalizeInteger,
   normalizeTextArray,
 } from "../helpers/util";
 import {
-  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
-import { promptFields } from "../common/prompt";
+import { promptFields, promptFieldsToPayload, PromptInputs } from "../common/prompt";
 import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
 import {
-  convertSynthesiersRespectToggleToUseDefault,
   synthesizersForm,
-  SynthesizersInputsWithToggleToUseDefault
 } from '../common/synthesizers';
 
-interface INumberPromptNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
-  text: string,
-  timeout: number,
-  language?: string,
+interface INumberPromptNodeInputs extends PromptInputs {
   submitInputs?: Array<string>,
   minDigits?: number,
   maxDigits?: number,
@@ -50,7 +41,6 @@ export const promptForNumberNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFieldsWithToggleToUseDefault(),
     {
       type: 'textArray',
       key: 'submitInputs',
@@ -125,11 +115,7 @@ export const promptForNumberNode = createNodeDescriptor({
 
     const maxDigits = normalizeInteger(config.maxDigits, 1, undefined);
     const payload = {
-      status: 'prompt',
-      timeout: convertDurationFromSecondsToMillis(config.timeout),
-      language: config.language ? config.language : undefined,
-      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
-      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+      ...promptFieldsToPayload(api, config),
       type: {
         name: 'Number',
         submitInputs: submitInputs,

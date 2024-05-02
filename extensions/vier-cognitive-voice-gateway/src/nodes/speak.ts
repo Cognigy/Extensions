@@ -14,6 +14,7 @@ import {
   convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
 import {
+  convertLanguageSelect,
   generalSection,
   generalSectionFormElement,
   languageSelectField,
@@ -372,7 +373,7 @@ export const speakNode = createNodeDescriptor({
     const payload = {
       interpretAs: 'SSML',
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
-      language: config.language,
+      language: convertLanguageSelect(config.language),
       synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
     };
     cognigy.api.say(text, payload);

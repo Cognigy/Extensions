@@ -4,30 +4,19 @@ import {
 } from '@cognigy/extension-tools';
 import t from '../translations';
 import {
-  convertDurationFromSecondsToMillis,
-} from "../helpers/util";
-import {
-  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
-import { promptFields } from "../common/prompt";
+import { promptFields, promptFieldsToPayload, PromptInputs } from "../common/prompt";
 import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
 import {
-  convertSynthesiersRespectToggleToUseDefault,
-  SynthesizersInputsWithToggleToUseDefault,
   synthesizersWithToggleToUseDefaultFieldKeys
 } from '../common/synthesizers';
 
-interface IMultipleChoicePromptNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
-  text: string,
-  timeout: number,
-  language?: string,
+interface IMultipleChoicePromptNodeInputs extends PromptInputs {
   choices: object,
 }
 
@@ -45,7 +34,6 @@ export const promptForMultipleChoice = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFieldsWithToggleToUseDefault(),
     {
       type: 'json',
       label: t.multipleChoicePrompt.inputChoicesLabel,
@@ -106,11 +94,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     const { api } = cognigy;
 
     const payload = {
-      status: 'prompt',
-      timeout: convertDurationFromSecondsToMillis(config.timeout),
-      language: config.language ? config.language : undefined,
-      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
-      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+      ...promptFieldsToPayload(api, config),
       type: {
         name: 'MultipleChoice',
         choices: config.choices,

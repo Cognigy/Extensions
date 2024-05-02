@@ -8,7 +8,7 @@ import {
   TNodeFieldCondition,
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
-import { languageSelectField } from "../common/shared";
+import { convertLanguageSelect, languageSelectField } from "../common/shared";
 import {
   getStringListFromContext,
   normalizedBoolean,
@@ -277,7 +277,7 @@ export const transcriptionSwitchNode = createNodeDescriptor({
 
     const payload = {
       status: 'transcription-switch',
-      language: config.language,
+      language: convertLanguageSelect(config.language),
       transcribers: transcriber.length ? transcriber : null,
     };
     api.say('', payload);

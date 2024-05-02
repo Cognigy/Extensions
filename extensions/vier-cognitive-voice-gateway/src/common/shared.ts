@@ -94,11 +94,20 @@ export function languageSelectField(key: string, required: boolean, label: INode
     key: key,
     label: label,
     description: description,
+    defaultValue: '',
     params: {
       required: required,
       options: extraEntries.concat(languageEntries),
     },
   };
+}
+
+
+export function convertLanguageSelect(language: string): string {
+  if (language === '') {
+    return undefined
+  }
+  return language
 }
 
 export interface EndFlowInputs {

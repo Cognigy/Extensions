@@ -15,6 +15,7 @@ import {
   INodeFunctionBaseParams,
 } from "@cognigy/extension-tools/build";
 import {
+  convertLanguageSelect,
   languageSelectField,
 } from "../common/shared";
 import { synthesizersField } from '../common/synthesizers';
@@ -135,7 +136,7 @@ export const changeDefaultsNode = createNodeDescriptor({
 
     const payload : IChangeDefaultsPayload = {
       status: 'change-defaults',
-      language: new Default<string>(config.ttsLanguage, config.ttsLanguageOverwriteStrategy),
+      language: new Default<string>(convertLanguageSelect(config.ttsLanguage), config.ttsLanguageOverwriteStrategy),
       synthesizers: new Default<Array<string>>(synthesizers, config.synthesizersOverwriteStrategy),
       bargeInOptions: new Default<BargeInOptions>(convertBargeIn(api, config), config.ttsBargeInOverwriteStrategy),
     };

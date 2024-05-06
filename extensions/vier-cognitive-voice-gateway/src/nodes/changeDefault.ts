@@ -21,18 +21,18 @@ import {
 import { synthesizersField } from '../common/synthesizers';
 
 export enum OverwriteStrategy {
-  RESET_DEFAULT = "RESET_DEFAULT",
-  IGNORE = "DO_NOT_CHANGE",
-  USE_VALUE = "USE_VALUE",
+  RESET_DEFAULT = "UseProjectValue",
+  IGNORE = "LeaveUnchanged",
+  USE_VALUE = "OverwriteWith",
 }
 
 export class Default<T> {
   value: T | null;
-  strategy: OverwriteStrategy;
+  type: OverwriteStrategy;
 
   constructor(value: T | null, strategyOnMissing: OverwriteStrategy) {
     this.value = value;
-    this.strategy = strategyOnMissing;
+    this.type = strategyOnMissing;
   }
 }
 
@@ -116,7 +116,7 @@ export const changeDefaultsNode = createNodeDescriptor({
         'ttsBargeInOverwriteStrategy', ...bargeInFieldKeys,
       ],
       label: t.changeDefaults.ttsSectionLabel,
-      defaultCollapsed: true,
+      defaultCollapsed: false,
     },
   ],
   form: [

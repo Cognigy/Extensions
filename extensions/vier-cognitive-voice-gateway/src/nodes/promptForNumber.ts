@@ -17,9 +17,7 @@ import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
-import {
-  synthesizersForm,
-} from '../common/synthesizers';
+import { synthesizersWithToggleToUseDefaultFieldKeys } from '../common/synthesizers';
 
 interface INumberPromptNodeInputs extends PromptInputs {
   submitInputs?: Array<string>,
@@ -78,9 +76,9 @@ export const promptForNumberNode = createNodeDescriptor({
     },
     bargeInSectionWithToggleToUseDefault,
     {
-      key: 'additional',
-      fields: ['language', ...synthesizersForm.map(it => it.key)],
-      label: t.forward.sectionAdditionalSettingsLabel,
+      key: 'additional', // Same issue as in multipleChoicePrompt
+      fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
+      label: t. shared.sectionTTSLabel,
       defaultCollapsed: true,
     },
   ],

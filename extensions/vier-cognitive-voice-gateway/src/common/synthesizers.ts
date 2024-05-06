@@ -1,4 +1,4 @@
-import { INodeField, INodeFieldAndSectionFormElement } from "@cognigy/extension-tools/build/interfaces/descriptor"
+import { INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor"
 import { normalizeTextArray } from "../helpers/util"
 import t from '../translations';
 
@@ -39,17 +39,6 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
       }
     }]
 }
-
-export const synthesizersForm: Array<INodeFieldAndSectionFormElement> = [
-    {
-      key: 'changeSynthesizers',
-      type: 'field',
-    },
-    {
-      key: 'synthesizers',
-      type: 'field',
-    },
-]
 
 export function convertSynthesiersRespectToggleToUseDefault(inputs: SynthesizersInputsWithToggleToUseDefault): Array<string> | null {
   return inputs.changeSynthesizers ? normalizeTextArray(inputs.synthesizers) : null

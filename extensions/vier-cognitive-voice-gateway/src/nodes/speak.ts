@@ -22,8 +22,8 @@ import {
 import {
   convertSynthesiersRespectToggleToUseDefault,
   synthesizersFieldWithToggleToUseDefault,
-  synthesizersForm,
-  SynthesizersInputsWithToggleToUseDefault
+  SynthesizersInputsWithToggleToUseDefault,
+  synthesizersWithToggleToUseDefaultFieldKeys
 } from '../common/synthesizers';
 
 interface ISpeakNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
@@ -308,6 +308,12 @@ export const speakNode = createNodeDescriptor({
   sections: [
     generalSection(['text']),
     bargeInSectionWithToggleToUseDefault,
+    {
+      key: 'tts',
+      fields: [...synthesizersWithToggleToUseDefaultFieldKeys, 'language'],
+      label: t.shared.sectionTTSLabel,
+      defaultCollapsed: true,
+    }
     // {
     //   fields: ['additionalText'],
     //   key: 'textOptions',
@@ -322,13 +328,12 @@ export const speakNode = createNodeDescriptor({
     // },
   ],
   form: [
-    {
-      key: 'language',
-      type: 'field',
-    },
-    ...synthesizersForm,
     generalSectionFormElement,
     bargeInForm,
+    {
+      key: 'tts',
+      type: 'section',
+    },
     // {
     //   key: 'textOptions',
     //   type: 'section'

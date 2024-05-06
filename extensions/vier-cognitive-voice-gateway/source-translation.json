@@ -3,10 +3,10 @@
         "ttsSectionLabel": "Text to speech",
         "overwriteStrategy": {
             "doNotChange": "Do not change",
-            "reset": "Reset to CVG default",
+            "reset": "Reset to Project value",
             "useValue": "Set a new default value"
         },
-        "nodeLabel": "Change Default settings",
+        "nodeLabel": "Set Synthesizer (TTS) Defaults",
         "nodeSummary": "Change the settings used by nodes by default",
         "synthesizersOverwriteStrategyLabel": "Change default synthesizers?",
         "synthesizersOverwriteStrategyDescription": "Do you want to change the default synthesizers?",
@@ -125,6 +125,7 @@
         "childDefaultLabel": "Default",
         "sectionSipLabel": "SIP",
         "sectionGeneralLabel": "General Settings",
+        "sectionTTSLabel": "Synthesizer (TTS) Settings",
         "synthesizersLabel": "A list of synthesizers",
         "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
         "changeSynthesizersSwitchLabel": "Change synthesizers from default?",

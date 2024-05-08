@@ -91,7 +91,7 @@ export const changeDefaultsNode = createNodeDescriptor({
       }
     },
 
-    overwriteStrategyField('ttsLanguageOverwriteStrategy', t.changeDefaults.ttsLanguageLabel, t.changeDefaults.ttsLanguageDescription),
+    overwriteStrategyField('ttsLanguageOverwriteStrategy', t.changeDefaults.ttsLanguageOverwriteStrategyLabel, t.changeDefaults.ttsLanguageOverwriteStrategyDescription),
     {
       ...languageSelectField('ttsLanguage', true, t.changeDefaults.ttsLanguageLabel, t.changeDefaults.ttsLanguageDescription),
       condition: {

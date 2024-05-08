@@ -40,8 +40,28 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
     }]
 }
 
-export function convertSynthesiersRespectToggleToUseDefault(inputs: SynthesizersInputsWithToggleToUseDefault): Array<string> | null {
-  return inputs.changeSynthesizers ? normalizeTextArray(inputs.synthesizers) : null
+export function convertSynthesizers(synthesizers: Array<string>): Array<any> {
+  const result = new Array<any>()
+  const normalizedArray = normalizeTextArray(synthesizers)
+  if (!normalizedArray) {
+    return result
+  }
+  for (var normalizedUserInput of normalizeTextArray(synthesizers) ) {
+    try {
+      result.push(JSON.parse(normalizedUserInput))
+    } catch (_) {
+      result.push(normalizedUserInput)
+    }
+  }
+  return result
+}
+
+export function convertSynthesizersRespectToggleToUseDefault(inputs: SynthesizersInputsWithToggleToUseDefault): Array<any> | null {
+  if (!inputs.changeSynthesizers) {
+    return null
+  }
+
+  return convertSynthesizers(inputs.synthesizers)
 }
 
 export const synthesizersWithToggleToUseDefaultFieldKeys: readonly string[] = synthesizersFieldWithToggleToUseDefault().map(field => field.key);

@@ -20,7 +20,7 @@ import {
   languageSelectField,
 } from "../common/shared";
 import {
-  convertSynthesiersRespectToggleToUseDefault,
+  convertSynthesizersRespectToggleToUseDefault,
   synthesizersFieldWithToggleToUseDefault,
   SynthesizersInputsWithToggleToUseDefault,
   synthesizersWithToggleToUseDefaultFieldKeys
@@ -379,7 +379,7 @@ export const speakNode = createNodeDescriptor({
       interpretAs: 'SSML',
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       language: convertLanguageSelect(config.language),
-      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
+      synthesizers: convertSynthesizersRespectToggleToUseDefault(config),
     };
     cognigy.api.say(text, payload);
   },

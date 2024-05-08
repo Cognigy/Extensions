@@ -2,7 +2,7 @@ import { INodeExecutionAPI, INodeField } from "@cognigy/extension-tools/build/in
 import t from "../translations";
 import { convertLanguageSelect, languageSelectField } from "./shared";
 import { BargeInInputsWithToggleToUseDefault, bargeInFieldsWithToggleToUseDefault, convertBargeInRespectToggleToUseDefault } from "./bargeIn";
-import { SynthesizersInputsWithToggleToUseDefault, convertSynthesiersRespectToggleToUseDefault, synthesizersFieldWithToggleToUseDefault } from "./synthesizers";
+import { SynthesizersInputsWithToggleToUseDefault, convertSynthesizersRespectToggleToUseDefault, synthesizersFieldWithToggleToUseDefault } from "./synthesizers";
 import { convertDurationFromSecondsToMillis } from "../helpers/util";
 
 export interface PromptInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
@@ -16,7 +16,7 @@ export function promptFieldsToPayload(api: INodeExecutionAPI, config: PromptInpu
       status: 'prompt',
       timeout: convertDurationFromSecondsToMillis(config.timeout),
       language: convertLanguageSelect(config.language),
-      synthesizers: convertSynthesiersRespectToggleToUseDefault(config),
+      synthesizers: convertSynthesizersRespectToggleToUseDefault(config),
       bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
     }
 }

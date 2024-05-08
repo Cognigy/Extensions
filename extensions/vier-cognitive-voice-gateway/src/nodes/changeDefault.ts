@@ -18,7 +18,7 @@ import {
   convertLanguageSelect,
   languageSelectField,
 } from "../common/shared";
-import { synthesizersField } from '../common/synthesizers';
+import { convertSynthesizers, synthesizersField } from '../common/synthesizers';
 
 export enum OverwriteStrategy {
   RESET_DEFAULT = "UseProjectValue",
@@ -137,7 +137,7 @@ export const changeDefaultsNode = createNodeDescriptor({
     const payload : IChangeDefaultsPayload = {
       status: 'change-defaults',
       language: new Default<string>(convertLanguageSelect(config.ttsLanguage), config.ttsLanguageOverwriteStrategy),
-      synthesizers: new Default<Array<string>>(synthesizers, config.synthesizersOverwriteStrategy),
+      synthesizers: new Default<Array<string>>(convertSynthesizers(synthesizers), config.synthesizersOverwriteStrategy),
       bargeInOptions: new Default<BargeInOptions>(convertBargeIn(api, config), config.ttsBargeInOverwriteStrategy),
     };
     api.say('', payload);

@@ -311,7 +311,7 @@ export const speakNode = createNodeDescriptor({
     {
       key: 'tts',
       fields: [...synthesizersWithToggleToUseDefaultFieldKeys, 'language'],
-      label: t.shared.sectionTTSLabel,
+      label: t.shared.sectionTtsLabel,
       defaultCollapsed: true,
     }
     // {

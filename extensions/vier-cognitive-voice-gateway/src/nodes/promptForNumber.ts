@@ -78,7 +78,7 @@ export const promptForNumberNode = createNodeDescriptor({
     {
       key: 'additional', // Same issue as in multipleChoicePrompt
       fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
-      label: t. shared.sectionTTSLabel,
+      label: t.shared.sectionTtsLabel,
       defaultCollapsed: true,
     },
   ],

@@ -126,7 +126,7 @@
         "childDefaultLabel": "Default",
         "sectionSipLabel": "SIP",
         "sectionGeneralLabel": "General Settings",
-        "sectionTTSLabel": "Synthesizer (TTS) Settings",
+        "sectionTtsLabel": "Synthesizer (TTS) Settings",
         "synthesizersLabel": "A list of synthesizers",
         "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
         "changeSynthesizersSwitchLabel": "Change synthesizers from default?",

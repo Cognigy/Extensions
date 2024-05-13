@@ -512,7 +512,7 @@ export default {
             'default': "Stop Condition",
             'deDE': "Stoppbedingung",
         },
-        sectionTTSLabel: {
+        sectionTtsLabel: {
             'default': "Synthesizer (TTS) Settings",
         },
         synthesizersDescription: {

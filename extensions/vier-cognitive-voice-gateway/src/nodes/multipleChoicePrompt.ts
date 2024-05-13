@@ -70,7 +70,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     {
       key: 'additional', // This should probably be something like tts, but we cannot simply change the name of the key as it would be a breaking change.
       fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
-      label: t.shared.sectionTTSLabel,
+      label: t.shared.sectionTtsLabel,
       defaultCollapsed: true,
     },
   ],

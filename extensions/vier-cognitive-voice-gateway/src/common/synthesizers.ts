@@ -17,7 +17,7 @@ export function synthesizersField(key: string): INodeField {
     label: t.shared.synthesizersLabel,
     description: t.shared.synthesizersDescription,
     params: {
-      required: false,
+      required: true,
     },
   }
 }

@@ -76,6 +76,12 @@ export default {
                 'deDE': "Barge-in",
             },
         },
+        useDefaultToggleDescription: {
+            'default': "Do you want to change the bargeIn settings for this node?",
+        },
+        useDefaultToggleLabel: {
+            'default': "Change bargeIn from default?",
+        },
     },
     bridge: {
         inputExtensionLengthDescription: {
@@ -101,6 +107,52 @@ export default {
         nodeSummary: {
             'default': "Forward the call to a contact center for agent assistance",
             'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
+        },
+    },
+    changeDefaults: {
+        nodeLabel: {
+            'default': "Set Synthesizer (TTS) Defaults",
+        },
+        nodeSummary: {
+            'default': "Change the settings used by nodes by default",
+        },
+        overwriteStrategy: {
+            doNotChange: {
+                'default': "Do not change",
+            },
+            reset: {
+                'default': "Reset to Project value",
+            },
+            useValue: {
+                'default': "Set a new default value",
+            },
+        },
+        synthesizersOverwriteStrategyDescription: {
+            'default': "Do you want to change the default synthesizers?",
+        },
+        synthesizersOverwriteStrategyLabel: {
+            'default': "Change default synthesizers?",
+        },
+        ttsBargeInOverwriteStrategyDescription: {
+            'default': "Do you want to overwrite the default bargeIn settings?",
+        },
+        ttsBargeInOverwriteStrategyLabel: {
+            'default': "Change default bargeIn settings?",
+        },
+        ttsLanguageDescription: {
+            'default': "Change the default tts language",
+        },
+        ttsLanguageLabel: {
+            'default': "Default TTS language",
+        },
+        ttsLanguageOverwriteStrategyDescription: {
+            'default': "Do you want to change the default tts language?",
+        },
+        ttsLanguageOverwriteStrategyLabel: {
+            'default': "Change default tts language?",
+        },
+        ttsSectionLabel: {
+            'default': "Text to speech",
         },
     },
     forward: {
@@ -304,6 +356,12 @@ export default {
         },
     },
     shared: {
+        changeSynthesizersSwitchDescription: {
+            'default': "Do you want to change the synthesizers settings for this node?",
+        },
+        changeSynthesizersSwitchLabel: {
+            'default': "Change synthesizers from default?",
+        },
         childDefaultLabel: {
             'default': "Default",
             'deDE': "Default",
@@ -451,6 +509,15 @@ export default {
             'default': "Stop Condition",
             'deDE': "Stoppbedingung",
         },
+        sectionTTSLabel: {
+            'default': "Synthesizer (TTS) Settings",
+        },
+        synthesizersDescription: {
+            'default': "See the CVG documentation for the format of the synthesizers list",
+        },
+        synthesizersLabel: {
+            'default': "A list of synthesizers",
+        },
     },
     speak: {
         inputAdditionalTextLabel: {
@@ -460,6 +527,9 @@ export default {
         inputTextLabel: {
             'default': "Text",
             'deDE': "Text",
+        },
+        languageLabel: {
+            'default': "Language",
         },
         nodeLabel: {
             'default': "Speak (with SSML formatting)",

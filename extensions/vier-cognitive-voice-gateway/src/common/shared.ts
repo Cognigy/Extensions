@@ -84,7 +84,7 @@ export const supportedLanguages: readonly string[] = [
 ];
 
 export function languageSelectField(key: string, required: boolean, label: INodeFieldTranslations, description?: INodeFieldTranslations): INodeField {
-  const extraEntries = required ? [] : [{ value: '', label: 'n/a' }];
+  const extraEntries = required ? [] : [{ value: '', label: t.shared.inputLanguageDefaultLabel }];
   const languageEntries = supportedLanguages.map(lang => {
     return { value: lang, label: lang };
   });

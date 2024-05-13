@@ -83,9 +83,14 @@ export const supportedLanguages: readonly string[] = [
   'zh-TW',
 ];
 
+interface LanguageEntry {
+  value: string
+  label: string | INodeFieldTranslations
+}
+
 export function languageSelectField(key: string, required: boolean, label: INodeFieldTranslations, description?: INodeFieldTranslations): INodeField {
-  const extraEntries = required ? [] : [{ value: '', label: t.shared.inputLanguageDefaultLabel }];
-  const languageEntries = supportedLanguages.map(lang => {
+  const extraEntries: Array<LanguageEntry> = required ? [] : [{ value: '', label: t.shared.inputLanguageDefaultLabel }];
+  const languageEntries: Array<LanguageEntry> = supportedLanguages.map(lang => {
     return { value: lang, label: lang };
   });
 

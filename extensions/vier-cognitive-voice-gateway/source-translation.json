@@ -97,6 +97,7 @@
         "inputTimeoutDescription": "The duration in seconds after which the prompt will be cancelled",
         "inputLanguageLabel": "Language",
         "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
+        "inputLanguageDefaultLabel": "Use default language",
         "inputSynthesizersLabel": "Synthesizers",
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
         "inputCallerIdLabel": "Displayed Caller ID",

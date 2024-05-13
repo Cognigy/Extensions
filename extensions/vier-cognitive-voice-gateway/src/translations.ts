@@ -434,6 +434,9 @@ export default {
             'default': "Enable Ringing Tone",
             'deDE': "Klingelton aktivieren",
         },
+        inputLanguageDefaultLabel: {
+            'default': "Use default language",
+        },
         inputLanguageDescription: {
             'default': "To overwrite the Text-to-Speech language for specific messages, enter the language you want.",
             'deDE': "Um die Text-to-Speech-Sprache für bestimmte Nachrichten zu überschreiben, geben Sie die gewünschte Sprache ein.",

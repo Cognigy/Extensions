@@ -19,10 +19,6 @@ import t from '../translations';
  * TODO replace this by an option resolver
  */
 export const supportedLanguages: readonly string[] = [
-  'en-US',
-  'en-GB',
-  'de-DE',
-  'fr-FR',
   'ar-EG',
   'ar-SA',
   'bg-BG',
@@ -32,9 +28,12 @@ export const supportedLanguages: readonly string[] = [
   'da-DK',
   'de-AT',
   'de-CH',
+  'de-DE',
   'el-GR',
   'en-AU',
+  'en-GB',
   'en-IN',
+  'en-US',
   'es-ES',
   'es-MX',
   'es-US',
@@ -44,6 +43,7 @@ export const supportedLanguages: readonly string[] = [
   'fr-BE',
   'fr-CA',
   'fr-CH',
+  'fr-FR',
   'gu-IN',
   'he-IL',
   'hi-IN',

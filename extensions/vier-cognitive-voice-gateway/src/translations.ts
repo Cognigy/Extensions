@@ -77,10 +77,11 @@ export default {
             },
         },
         useDefaultToggleDescription: {
-            'default': "Do you want to change the barge-in settings for this node?",
+            'default': "Do you want to change the bargeIn settings for this node?",
         },
         useDefaultToggleLabel: {
-            'default': "Change barge-in from default?",
+            'default': "Overwrite preset",
+            'deDE': "Voreinstellungen überschreiben",
         },
     },
     bridge: {
@@ -111,49 +112,62 @@ export default {
     },
     changeDefaults: {
         nodeLabel: {
-            'default': "Set text-to-speech service defaults",
+            'default': "Set presets for nodes",
+            'deDE': "Voreinstellungen für Nodes festlegen",
         },
         nodeSummary: {
-            'default': "Change the settings used by nodes by default",
+            'default': "Set presets of nodes",
+            'deDE': "Voreinstellungen von Nodes ändern",
         },
         overwriteStrategy: {
             doNotChange: {
                 'default': "Do not change",
+                'deDE': "Beibehalten",
             },
             reset: {
-                'default': "Reset to project value",
+                'default': "Reset to project settings",
+                'deDE': "Auf Projekteinstellungen zurücksetzen",
             },
             useValue: {
-                'default': "Set a new default value",
+                'default': "Set new language",
+                'deDE': "Neue Sprache festlegen",
             },
         },
         synthesizersOverwriteStrategyDescription: {
-            'default': "Do you want to change the default text-to-speech services?",
+            'default': "Here you can change the presets from your CVG project for the text-to-speech services. This setting overwrites your project settings.",
+            'deDE': "Hier können Sie die Voreinstellungen aus Ihrem CVG-Projekt für die Text-to-Speech-Dienste ändern. Diese Einstellung überschreibt Ihre Projekteinstellungen.",
         },
         synthesizersOverwriteStrategyLabel: {
-            'default': "Change default text-to-speech services?",
+            'default': "Default text-to-speech services",
+            'deDE': "Standard-Text-to-Speech-Dienste",
         },
         ttsBargeInOverwriteStrategyDescription: {
-            'default': "This setting overwrites the default barge-in settings.",
+            'default': "Set the default settings for barge-in.",
+            'deDE': "Legen Sie die Standardeinstellungen für Barge-in fest.",
         },
         ttsBargeInOverwriteStrategyLabel: {
-            'default': "Change default barge-in settings?",
+            'default': "Default barge-in settings",
+            'deDE': "Standardeinstellungen für Barge-in",
         },
         ttsLanguageDescription: {
-            'default': "Change the default text-to-speech language",
+            'default': "Change the preset text-to-speech language",
+            'deDE': "Voreingestellte Text-to-Speech-Sprache ändern",
         },
         ttsLanguageLabel: {
             'default': "Default text-to-speech language",
             'deDE': "Standard-Text-to-Speech-Sprache",
         },
         ttsLanguageOverwriteStrategyDescription: {
-            'default': "Do you want to change the default text-to-speech language?",
+            'default': "Here you can change the presets from your CVG project for the text-to-speech language. This setting overwrites your project settings.",
+            'deDE': "Hier können Sie die Voreinstellungen aus Ihrem CVG-Projekt für die Text-to-Speech-Sprache ändern. Diese Einstellung überschreibt Ihre Projekteinstellungen.",
         },
         ttsLanguageOverwriteStrategyLabel: {
-            'default': "Change default text-to-speech language?",
+            'default': "Default text-to-speech language",
+            'deDE': "Standard-Text-to-Speech-Sprache",
         },
         ttsSectionLabel: {
             'default': "Text to speech",
+            'deDE': "Text-to-Speech",
         },
     },
     forward: {
@@ -358,10 +372,11 @@ export default {
     },
     shared: {
         changeSynthesizersSwitchDescription: {
-            'default': "Do you want to change the text-to-speech service settings for this node?",
+            'default': "Do you want to change the synthesizers settings for this node?",
         },
         changeSynthesizersSwitchLabel: {
-            'default': "Change text-to-speech services from default?",
+            'default': "Set new text-to-speech services",
+            'deDE': "Neuen Text-to-Speech-Dienst festlegen",
         },
         childDefaultLabel: {
             'default': "Default",
@@ -436,7 +451,8 @@ export default {
             'deDE': "Klingelton aktivieren",
         },
         inputLanguageDefaultLabel: {
-            'default': "Use default language",
+            'default': "Use preset language",
+            'deDE': "Voreingestellte Sprache verwenden",
         },
         inputLanguageDescription: {
             'default': "To overwrite the Text-to-Speech language for specific messages, enter the language you want.",
@@ -515,6 +531,7 @@ export default {
         },
         sectionTtsLabel: {
             'default': "Text-to-speech service settings",
+            'deDE': "Text-to-Speech-Dienst-Einstellungen",
         },
         synthesizersDescription: {
             'default': "See the CVG documentation for the format of the text-to-speech service list",
@@ -611,8 +628,8 @@ export default {
             'deDE': "Speech-to-Text-Dienst festlegen",
         },
         nodeSummary: {
-            'default': "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
-            'deDE': "Speech-to-Text-Dienste müssen verwendet werden, um die erwartete Eingabe bestmöglich zu transkribieren",
+            'default': "Change Speech-to-Text services to transcribe the expected input in the best possible way",
+            'deDE': "Speech-to-Text-Dienste wechseln, um die erwartete Eingabe bestmöglich zu transkribieren",
         },
         sectionDynamicProfileSettings: {
             'default': "Dynamic Profile",

@@ -1,7 +1,25 @@
-import { INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor";
+import { INodeExecutionAPI, INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor";
 import t from "../translations";
-import { bargeInFields } from "./bargeIn";
-import { languageSelectField } from "./shared";
+import { convertLanguageSelect, languageSelectField } from "./shared";
+import { BargeInInputsWithToggleToUseDefault, bargeInFieldsWithToggleToUseDefault, convertBargeInRespectToggleToUseDefault } from "./bargeIn";
+import { SynthesizersInputsWithToggleToUseDefault, convertSynthesizersRespectToggleToUseDefault, synthesizersFieldWithToggleToUseDefault } from "./synthesizers";
+import { convertDurationFromSecondsToMillis } from "../helpers/util";
+
+export interface PromptInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
+  text: string,
+  timeout: number,
+  language?: string,
+}
+
+export function promptFieldsToPayload(api: INodeExecutionAPI, config: PromptInputs) {
+  return {
+      status: 'prompt',
+      timeout: convertDurationFromSecondsToMillis(config.timeout),
+      language: convertLanguageSelect(config.language),
+      synthesizers: convertSynthesizersRespectToggleToUseDefault(config),
+      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+    }
+}
 
 export const promptFields: Array<INodeField> = [
   {
@@ -23,11 +41,6 @@ export const promptFields: Array<INodeField> = [
     },
   },
   languageSelectField('language', false, t.shared.inputLanguageLabel, t.shared.inputLanguageDescription),
-  {
-    type: 'textArray',
-    key: 'synthesizers',
-    label: t.shared.inputSynthesizersLabel,
-    description: t.shared.inputSynthesizersDescription,
-  },
-  ...bargeInFields,
+  ...synthesizersFieldWithToggleToUseDefault(),
+  ...bargeInFieldsWithToggleToUseDefault(),
 ];

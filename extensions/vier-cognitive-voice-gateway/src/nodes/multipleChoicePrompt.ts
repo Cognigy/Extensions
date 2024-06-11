@@ -4,23 +4,19 @@ import {
 } from '@cognigy/extension-tools';
 import t from '../translations';
 import {
-  convertDurationFromSecondsToMillis,
-  normalizeTextArray,
-} from "../helpers/util";
-import {
-  bargeInFields,
   bargeInForm,
-  BargeInInputs,
-  bargeInSection,
-  convertBargeIn,
+  bargeInSectionWithToggleToUseDefault,
 } from "../common/bargeIn";
-import { promptFields } from "../common/prompt";
+import { promptFields, promptFieldsToPayload, PromptInputs } from "../common/prompt";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
+import {
+  synthesizersWithToggleToUseDefaultFieldKeys
+} from '../common/synthesizers';
 
-interface IMultipleChoicePromptNodeInputs extends BargeInInputs {
-  text: string,
-  timeout: number,
-  language?: string,
-  synthesizers?: Array<string>,
+interface IMultipleChoicePromptNodeInputs extends PromptInputs {
   choices: object,
 }
 
@@ -38,7 +34,6 @@ export const promptForMultipleChoice = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFields,
     {
       type: 'json',
       label: t.multipleChoicePrompt.inputChoicesLabel,
@@ -64,31 +59,23 @@ export const promptForMultipleChoice = createNodeDescriptor({
     },
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['text', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['text', 'timeout']),
     {
       key: 'choicesSection',
       fields: ['choices'],
       label: t.multipleChoicePrompt.sectionChoicesSectionLabel,
       defaultCollapsed: false,
     },
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
     {
-      key: 'additional',
-      fields: ['language', 'synthesizers'],
-      label: t.forward.sectionAdditionalSettingsLabel,
+      key: 'additional', // This should probably be something like tts, but we cannot simply change the name of the key as it would be a breaking change.
+      fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
+      label: t.shared.sectionTtsLabel,
       defaultCollapsed: true,
     },
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     {
       key: 'choicesSection',
       type: 'section',
@@ -107,11 +94,7 @@ export const promptForMultipleChoice = createNodeDescriptor({
     const { api } = cognigy;
 
     const payload = {
-      status: 'prompt',
-      timeout: convertDurationFromSecondsToMillis(config.timeout),
-      language: config.language ? config.language : undefined,
-      synthesizers: normalizeTextArray(config.synthesizers),
-      bargeIn: convertBargeIn(api, config),
+      ...promptFieldsToPayload(api, config),
       type: {
         name: 'MultipleChoice',
         choices: config.choices,

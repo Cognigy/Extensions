@@ -7,14 +7,18 @@ import {
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputs,
-  bargeInSection,
-  convertBargeIn,
+  BargeInInputsWithToggleToUseDefault,
+  bargeInSectionWithToggleToUseDefault,
+  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
-interface IPlayNodeInputs extends BargeInInputs {
+interface IPlayNodeInputs extends BargeInInputsWithToggleToUseDefault {
   url: string,
   fallbackText?: string,
 }
@@ -52,22 +56,14 @@ export const playNode = createNodeDescriptor({
         placeholder: '',
       },
     },
-    ...bargeInFields,
+    ...bargeInFieldsWithToggleToUseDefault(),
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['url', 'fallbackText'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
-    bargeInSection,
+    generalSection(['url', 'fallbackText']),
+    bargeInSectionWithToggleToUseDefault,
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     bargeInForm,
   ],
   function: async ({ cognigy, config }: IPlayNodeParams) => {
@@ -76,7 +72,7 @@ export const playNode = createNodeDescriptor({
     const payload = {
       status: 'play',
       url: config.url,
-      bargeIn: convertBargeIn(api, config),
+      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
       fallbackText: normalizeText(config.fallbackText),
     };
 

@@ -4,25 +4,22 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  convertDurationFromSecondsToMillis,
   DEFAULT_NUMBER_VALUE,
   normalizeInteger,
   normalizeTextArray,
 } from "../helpers/util";
 import {
-  bargeInFields,
   bargeInForm,
-  BargeInInputs,
-  bargeInSection,
-  convertBargeIn,
+  bargeInSectionWithToggleToUseDefault,
 } from "../common/bargeIn";
-import { promptFields } from "../common/prompt";
+import { promptFields, promptFieldsToPayload, PromptInputs } from "../common/prompt";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
+import { synthesizersWithToggleToUseDefaultFieldKeys } from '../common/synthesizers';
 
-interface INumberPromptNodeInputs extends BargeInInputs {
-  text: string,
-  timeout: number,
-  language?: string,
-  synthesizers?: Array<string>,
+interface INumberPromptNodeInputs extends PromptInputs {
   submitInputs?: Array<string>,
   minDigits?: number,
   maxDigits?: number,
@@ -42,7 +39,6 @@ export const promptForNumberNode = createNodeDescriptor({
   tags: ['message'],
   fields: [
     ...promptFields,
-    ...bargeInFields,
     {
       type: 'textArray',
       key: 'submitInputs',
@@ -71,31 +67,23 @@ export const promptForNumberNode = createNodeDescriptor({
     },
   ],
   sections: [
-    {
-      key: 'general',
-      fields: ['text', 'timeout'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection(['text', 'timeout']),
     {
       key: 'stopCondition',
       fields: ['submitInputs', 'minDigits', 'maxDigits'],
       label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
-    bargeInSection,
+    bargeInSectionWithToggleToUseDefault,
     {
-      key: 'additional',
-      fields: ['language', 'synthesizers'],
-      label: t.forward.sectionAdditionalSettingsLabel,
+      key: 'additional', // Same issue as in multipleChoicePrompt
+      fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],
+      label: t.shared.sectionTtsLabel,
       defaultCollapsed: true,
     },
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     {
       key: 'stopCondition',
       type: 'section',
@@ -125,11 +113,7 @@ export const promptForNumberNode = createNodeDescriptor({
 
     const maxDigits = normalizeInteger(config.maxDigits, 1, undefined);
     const payload = {
-      status: 'prompt',
-      timeout: convertDurationFromSecondsToMillis(config.timeout),
-      language: config.language ? config.language : undefined,
-      synthesizers: normalizeTextArray(config.synthesizers),
-      bargeIn: convertBargeIn(api, config),
+      ...promptFieldsToPayload(api, config),
       type: {
         name: 'Number',
         submitInputs: submitInputs,

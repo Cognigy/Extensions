@@ -55,7 +55,7 @@ export default {
             },
             phraseListDescription: {
                 'default': "Enter the words and phrases that trigger a barge-in.",
-                'deDE': "Geben Sie die Wörter und Sätze ein, die ein Barge-in auslösen sollen.",
+                'deDE': "Geben Sie die Begriffe und Sätze ein, die ein Barge-in auslösen sollen.",
             },
             phraseListFromContextDescription: {
                 'default': "Enter the key for which a phrase list is stored at Context. If this node contains a phrase list, then it will be merged with the referenced phrase list.",
@@ -75,6 +75,13 @@ export default {
                 'default': "Barge-in",
                 'deDE': "Barge-in",
             },
+        },
+        useDefaultToggleDescription: {
+            'default': "Do you want to change the bargeIn settings for this node?",
+        },
+        useDefaultToggleLabel: {
+            'default': "Overwrite preset",
+            'deDE': "Voreinstellungen überschreiben",
         },
     },
     bridge: {
@@ -103,6 +110,66 @@ export default {
             'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
         },
     },
+    changeDefaults: {
+        nodeLabel: {
+            'default': "Set presets for nodes",
+            'deDE': "Voreinstellungen für Nodes festlegen",
+        },
+        nodeSummary: {
+            'default': "Set presets of nodes",
+            'deDE': "Voreinstellungen von Nodes ändern",
+        },
+        overwriteStrategy: {
+            doNotChange: {
+                'default': "Do not change",
+                'deDE': "Beibehalten",
+            },
+            reset: {
+                'default': "Reset to project settings",
+                'deDE': "Auf Projekteinstellungen zurücksetzen",
+            },
+            useValue: {
+                'default': "Set new language",
+                'deDE': "Neue Sprache festlegen",
+            },
+        },
+        synthesizersOverwriteStrategyDescription: {
+            'default': "Here you can change the presets from your CVG project for the text-to-speech services. This setting overwrites your project settings.",
+            'deDE': "Hier können Sie die Voreinstellungen aus Ihrem CVG-Projekt für die Text-to-Speech-Dienste ändern. Diese Einstellung überschreibt Ihre Projekteinstellungen.",
+        },
+        synthesizersOverwriteStrategyLabel: {
+            'default': "Default text-to-speech services",
+            'deDE': "Standard-Text-to-Speech-Dienste",
+        },
+        ttsBargeInOverwriteStrategyDescription: {
+            'default': "Set the default settings for barge-in.",
+            'deDE': "Legen Sie die Standardeinstellungen für Barge-in fest.",
+        },
+        ttsBargeInOverwriteStrategyLabel: {
+            'default': "Default barge-in settings",
+            'deDE': "Standardeinstellungen für Barge-in",
+        },
+        ttsLanguageDescription: {
+            'default': "Change the preset text-to-speech language",
+            'deDE': "Voreingestellte Text-to-Speech-Sprache ändern",
+        },
+        ttsLanguageLabel: {
+            'default': "Default text-to-speech language",
+            'deDE': "Standard-Text-to-Speech-Sprache",
+        },
+        ttsLanguageOverwriteStrategyDescription: {
+            'default': "Here you can change the presets from your CVG project for the text-to-speech language. This setting overwrites your project settings.",
+            'deDE': "Hier können Sie die Voreinstellungen aus Ihrem CVG-Projekt für die Text-to-Speech-Sprache ändern. Diese Einstellung überschreibt Ihre Projekteinstellungen.",
+        },
+        ttsLanguageOverwriteStrategyLabel: {
+            'default': "Default text-to-speech language",
+            'deDE': "Standard-Text-to-Speech-Sprache",
+        },
+        ttsSectionLabel: {
+            'default': "Text to speech",
+            'deDE': "Text-to-Speech",
+        },
+    },
     forward: {
         nodeLabel: {
             'default': "Forward Call",
@@ -123,10 +190,6 @@ export default {
         sectionCallLabel: {
             'default': "Call Settings",
             'deDE': "Anruf-Einstellungen",
-        },
-        sectionGeneralLabel: {
-            'default': "General Settings",
-            'deDE': "Allgemeine Einstellungen",
         },
     },
     multipleChoicePrompt: {
@@ -205,8 +268,8 @@ export default {
             'deDE': "Erforderliche Mindestanzahl von Ziffern",
         },
         inputSubmitInputsDescription: {
-            'default': "Select one or more characters with which the caller should confirm the phone number entry. Allowed are 0-9, * and #. You can enter only one character per line.",
-            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Rufnummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
+            'default': "Select one or more characters with which the caller should confirm the number entry. Allowed are 0-9, * and #. You can enter only one character per line.",
+            'deDE': "Wählen Sie ein oder mehrere Zeichen, mit dem der:die Anrufer:in die Nummerneingabe bestätigen soll. Erlaubt sind 0-9, * und #. Pro Zeile können Sie nur ein Zeichen eingeben.",
         },
         inputSubmitInputsLabel: {
             'default': "Submit Inputs",
@@ -308,6 +371,13 @@ export default {
         },
     },
     shared: {
+        changeSynthesizersSwitchDescription: {
+            'default': "Do you want to change the synthesizers settings for this node?",
+        },
+        changeSynthesizersSwitchLabel: {
+            'default': "Set new text-to-speech services",
+            'deDE': "Neuen Text-to-Speech-Dienst festlegen",
+        },
         childDefaultLabel: {
             'default': "Default",
             'deDE': "Default",
@@ -380,6 +450,10 @@ export default {
             'default': "Enable Ringing Tone",
             'deDE': "Klingelton aktivieren",
         },
+        inputLanguageDefaultLabel: {
+            'default': "Use preset language",
+            'deDE': "Voreingestellte Sprache verwenden",
+        },
         inputLanguageDescription: {
             'default': "To overwrite the Text-to-Speech language for specific messages, enter the language you want.",
             'deDE': "Um die Text-to-Speech-Sprache für bestimmte Nachrichten zu überschreiben, geben Sie die gewünschte Sprache ein.",
@@ -432,7 +506,8 @@ export default {
             'default': "A list of opaque strings that are send as User-To-User SIP headers.",
         },
         inputUserToUserLabel: {
-            'default': "User-To-User Information",
+            'default': "User-To-User Information (UUI)",
+            'deDE': "User-to-User-Information (UUI)",
         },
         inputWhisperingTextDescription: {
             'default': "Enter the text that should be announced to the agent the call is forwarded to before the call partners are connected.",
@@ -442,12 +517,27 @@ export default {
             'default': "Whispering Announcement",
             'deDE': "Whispering-Ansage",
         },
+        sectionGeneralLabel: {
+            'default': "General Settings",
+            'deDE': "Allgemeine Einstellungen",
+        },
         sectionSipLabel: {
-            'default': "SIP",
+            'default': "Use SIP Header",
+            'deDE': "SIP-Header verwenden",
         },
         sectionStopConditionLabel: {
             'default': "Stop Condition",
             'deDE': "Stoppbedingung",
+        },
+        sectionTtsLabel: {
+            'default': "Text-to-speech service settings",
+            'deDE': "Text-to-Speech-Dienst-Einstellungen",
+        },
+        synthesizersDescription: {
+            'default': "See the CVG documentation for the format of the text-to-speech service list",
+        },
+        synthesizersLabel: {
+            'default': "A list of text-to-speech services",
         },
     },
     speak: {
@@ -458,6 +548,10 @@ export default {
         inputTextLabel: {
             'default': "Text",
             'deDE': "Text",
+        },
+        languageLabel: {
+            'default': "Language",
+            'deDE': "Sprache",
         },
         nodeLabel: {
             'default': "Speak (with SSML formatting)",
@@ -473,9 +567,33 @@ export default {
         },
     },
     speechToText: {
+        inputBoostedPhrasesDescription: {
+            'default': "Enter the list of phrases that receive an increased weight during voice recognition.",
+            'deDE': "Geben Sie die Liste der Begriffe ein, die bei der Spracherkennung eine höhere Gewichtung erhalten sollen.",
+        },
+        inputBoostedPhrasesFromContextDescription: {
+            'default': "Enter the key for which a list of phrases to be preferred is stored in the Context. If this node contains a list of preferred phrases, then it will be merged with the list from the Context.",
+            'deDE': "Geben Sie den Schlüssel ein, für den im Context eine Liste mit bevorzugten Begriffen hinterlegt ist. Wenn dieser Knoten eine Liste enthält, wird diese mit der referenzierten Liste zusammengeführt.",
+        },
+        inputBoostedPhrasesFromContextLabel: {
+            'default': "Boosted Phrases from Context",
+            'deDE': "Stärker gewichtete Begriffe aus Context",
+        },
+        inputBoostedPhrasesLabel: {
+            'default': "Boosted Phrases",
+            'deDE': "Stärker gewichtete Begriffe",
+        },
         inputLanguageLabel: {
             'default': "Language",
             'deDE': "Sprache",
+        },
+        inputProfanityFilterDescription: {
+            'default': "To activate the profanity filter, activate this switch.",
+            'deDE': "Um Schimpfwörter herauszufiltern, aktivieren Sie diesen Schalter.",
+        },
+        inputProfanityFilterLabel: {
+            'default': "Enable the Profanity Filter",
+            'deDE': "Filtern von Schimpfwörtern aktivieren",
         },
         inputProfileTokenDescription: {
             'default': "Use the profile token as displayed in VIER Cognitive Voice Gateway under Speech service profiles > Profile token.",
@@ -510,8 +628,12 @@ export default {
             'deDE': "Speech-to-Text-Dienst festlegen",
         },
         nodeSummary: {
-            'default': "Speech-to-Text services need to be used to transcribe the expected input in the best possible way",
-            'deDE': "Speech-to-Text-Dienste müssen verwendet werden, um die erwartete Eingabe bestmöglich zu transkribieren",
+            'default': "Change Speech-to-Text services to transcribe the expected input in the best possible way",
+            'deDE': "Speech-to-Text-Dienste wechseln, um die erwartete Eingabe bestmöglich zu transkribieren",
+        },
+        sectionDynamicProfileSettings: {
+            'default': "Dynamic Profile",
+            'deDE': "Dynamisches Profil",
         },
         sectionFallback: {
             'default': "Fallback Option",

@@ -11,8 +11,9 @@ import { promptForNumberNode } from './nodes/promptForNumber';
 import { promptForMultipleChoice } from './nodes/multipleChoicePrompt';
 import { speakNode } from './nodes/speak';
 import { inactivityTimerNode } from './nodes/inactivityTimer';
-import { setSpeechtoTextServiceNode } from './nodes/setSpeechToTextService';
+import { transcriptionSwitchNode } from './nodes/transcriptionSwitch';
 import { aggregateInputNode } from "./nodes/aggregateInput";
+import { referCallNode } from './nodes/referCall';
 import {
   checkOutboundResultNode,
   onOutboundDefault,
@@ -22,14 +23,15 @@ import {
 } from './nodes/checkOutboundResult';
 import {
   checkReferResultNode,
-  onReferDefault, 
+  onReferDefault,
   onReferFailure,
-  onReferSuccess
+  onReferSuccess,
 } from './nodes/checkReferResult';
-import { referCallNode } from './nodes/referCall';
+import { changeDefaultsNode } from "./nodes/changeDefault";
 
 export default createExtension({
   nodes: [
+    changeDefaultsNode,
     promptForNumberNode,
     promptForMultipleChoice,
     recordingStartNode,
@@ -51,7 +53,7 @@ export default createExtension({
     onReferSuccess, // child
     onReferFailure, // child
     onReferDefault, // child
-    setSpeechtoTextServiceNode,
+    transcriptionSwitchNode,
     inactivityTimerNode,
     aggregateInputNode,
   ],

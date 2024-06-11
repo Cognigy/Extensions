@@ -1,4 +1,22 @@
 {
+    "changeDefaults": {
+        "ttsSectionLabel": "Text to speech",
+        "overwriteStrategy": {
+            "doNotChange": "Do not change",
+            "reset": "Reset to Project value",
+            "useValue": "Set a new default value"
+        },
+        "nodeLabel": "Set Synthesizer (TTS) Defaults",
+        "nodeSummary": "Change the settings used by nodes by default",
+        "synthesizersOverwriteStrategyLabel": "Change default synthesizers?",
+        "synthesizersOverwriteStrategyDescription": "Do you want to change the default synthesizers?",
+        "ttsLanguageOverwriteStrategyLabel": "Change default tts language?",
+        "ttsLanguageOverwriteStrategyDescription": "Do you want to change the default tts language?",
+        "ttsLanguageLabel": "Default TTS language",
+        "ttsLanguageDescription": "Change the default tts language",
+        "ttsBargeInOverwriteStrategyLabel": "Change default bargeIn settings?",
+        "ttsBargeInOverwriteStrategyDescription": "Do you want to overwrite the default bargeIn settings?"
+    },
     "sendData": {
         "nodeLabel": "Send Data",
         "nodeSummary": "Attach custom data to a dialog",
@@ -7,7 +25,6 @@
     "forward": {
         "nodeLabel": "Forward Call",
         "nodeSummary": "Forward the call to a different destination",
-        "sectionGeneralLabel": "General Settings",
         "sectionCallLabel": "Call Settings",
         "sectionAdditionalDataLabel": "Data",
         "sectionAdditionalSettingsLabel": "Additional Settings"
@@ -80,6 +97,7 @@
         "inputTimeoutDescription": "The duration in seconds after which the prompt will be cancelled",
         "inputLanguageLabel": "Language",
         "inputLanguageDescription": "This allows to override the synthesizer language for specific messages",
+        "inputLanguageDefaultLabel": "Use default language",
         "inputSynthesizersLabel": "Synthesizers",
         "inputSynthesizersDescription": "If specified, this parameter overrides the synthesizer list from the project settings",
         "inputCallerIdLabel": "Displayed Caller ID",
@@ -106,31 +124,40 @@
         "childFailureLabel": "On Failure",
         "childTerminationLabel": "On Termination",
         "childDefaultLabel": "Default",
-        "sectionSipLabel": "SIP"
+        "sectionSipLabel": "SIP",
+        "sectionGeneralLabel": "General Settings",
+        "sectionTtsLabel": "Synthesizer (TTS) Settings",
+        "synthesizersLabel": "A list of synthesizers",
+        "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
+        "changeSynthesizersSwitchLabel": "Change synthesizers from default?",
+        "changeSynthesizersSwitchDescription": "Do you want to change the synthesizers settings for this node?"
     },
     "bargeIn": {
-      "input": {
-        "onSpeechLabel": "On Speech",
-        "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
-        "onDtmfLabel": "On DTMF",
-        "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
-        "confidenceLabel": "Confidence Threshold",
-        "confidenceDescription": "The transcription confidence that must be reached for barge-in",
-        "phraseListLabel": "Phrase List",
-        "phraseListDescription": "A list of spoken phrases that trigger barge-in",
-        "phraseListFromContextLabel": "Phrase List from Context",
-        "phraseListFromContextDescription": "A context key that supplies a list of phrases"
-      },
-      "section": {
-        "label": "Barge-In"
-      }
+        "useDefaultToggleLabel": "Change bargeIn from default?",
+        "useDefaultToggleDescription": "Do you want to change the bargeIn settings for this node?",
+        "input": {
+            "onSpeechLabel": "On Speech",
+            "onSpeechDescription": "Allows the audio to be interrupted by the speaker",
+            "onDtmfLabel": "On DTMF",
+            "onDtmfDescription": "Allows the audio to be interrupted by pressing keys",
+            "confidenceLabel": "Confidence Threshold",
+            "confidenceDescription": "The transcription confidence that must be reached for barge-in",
+            "phraseListLabel": "Phrase List",
+            "phraseListDescription": "A list of spoken phrases that trigger barge-in",
+            "phraseListFromContextLabel": "Phrase List from Context",
+            "phraseListFromContextDescription": "A context key that supplies a list of phrases"
+        },
+        "section": {
+            "label": "Barge-In"
+        }
     },
     "speak": {
         "nodeLabel": "Speak out (SSML)",
         "nodeSummary": "Speak something out to the caller with SSML Support",
         "inputTextLabel": "Text",
         "sectionTextOptionsLabel": "Additional Text Section",
-        "inputAdditionalTextLabel": "Additional Text"
+        "inputAdditionalTextLabel": "Additional Text",
+        "languageLabel": "Language"
     },
     "terminate": {
         "nodeLabel": "Terminate Call",
@@ -149,7 +176,14 @@
         "inputProfileTokenFallbackDescription": "Profile Token Fallback",
         "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
         "sectionFallback": "Fallback Option",
-        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token"
+        "inputTranscriberDescription": "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token",
+        "inputProfanityFilterLabel": "Enable the Profanity Filter",
+        "inputProfanityFilterDescription": "Enable the Profanity Filter",
+        "inputBoostedPhrasesLabel": "Phrases to boost",
+        "inputBoostedPhrasesDescription": "Enter the list of phrases that receive an increased weight during voice recognition.",
+        "inputBoostedPhrasesFromContextLabel": "Phrases to boost from Context",
+        "inputBoostedPhrasesFromContextDescription": "Enter the key for which a list of phrases to be boosted is stored in the Context. If this node contains a list of boosted phrases, then it will be merged with the list from the Context.",
+        "sectionDynamicProfileSettings": "Dynamic Profile"
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",

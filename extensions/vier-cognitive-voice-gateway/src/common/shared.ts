@@ -2,7 +2,9 @@ import {
   INodeAppearance,
   INodeConstraints,
   INodeField,
+  INodeFieldAndSectionFormElement,
   INodeFieldTranslations,
+  INodeSection,
 } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import t from '../translations';
 
@@ -16,11 +18,7 @@ import t from '../translations';
  *
  * TODO replace this by an option resolver
  */
-const supportedLanguages: readonly string[] = [
-  'en-US',
-  'en-GB',
-  'de-DE',
-  'fr-FR',
+export const supportedLanguages: readonly string[] = [
   'ar-EG',
   'ar-SA',
   'bg-BG',
@@ -30,9 +28,12 @@ const supportedLanguages: readonly string[] = [
   'da-DK',
   'de-AT',
   'de-CH',
+  'de-DE',
   'el-GR',
   'en-AU',
+  'en-GB',
   'en-IN',
+  'en-US',
   'es-ES',
   'es-MX',
   'es-US',
@@ -42,6 +43,7 @@ const supportedLanguages: readonly string[] = [
   'fr-BE',
   'fr-CA',
   'fr-CH',
+  'fr-FR',
   'gu-IN',
   'he-IL',
   'hi-IN',
@@ -81,9 +83,14 @@ const supportedLanguages: readonly string[] = [
   'zh-TW',
 ];
 
+interface LanguageEntry {
+  value: string
+  label: string | INodeFieldTranslations
+}
+
 export function languageSelectField(key: string, required: boolean, label: INodeFieldTranslations, description?: INodeFieldTranslations): INodeField {
-  const extraEntries = required ? [] : [{ value: null, label: 'n/a' }];
-  const languageEntries = supportedLanguages.map(lang => {
+  const extraEntries: Array<LanguageEntry> = required ? [] : [{ value: '', label: t.shared.inputLanguageDefaultLabel }];
+  const languageEntries: Array<LanguageEntry> = supportedLanguages.map(lang => {
     return { value: lang, label: lang };
   });
 
@@ -92,11 +99,20 @@ export function languageSelectField(key: string, required: boolean, label: INode
     key: key,
     label: label,
     description: description,
+    defaultValue: '',
     params: {
       required: required,
       options: extraEntries.concat(languageEntries),
     },
   };
+}
+
+
+export function convertLanguageSelect(language: string): string {
+  if (language === '') {
+    return undefined
+  }
+  return language
 }
 
 export interface EndFlowInputs {
@@ -134,4 +150,20 @@ export const commonChildNodeFields: {
     textColor: 'white',
     variant: 'mini',
   },
+}
+
+const generalSectionKey = 'general'
+
+export const generalSectionFormElement: INodeFieldAndSectionFormElement = {
+  type: "section",
+  key: generalSectionKey,
+}
+
+export function generalSection(fieldKeys: Array<string>, defaultCollapsed: boolean = false): INodeSection {
+  return {
+    key: generalSectionKey,
+    fields: fieldKeys,
+    label: t.shared.sectionGeneralLabel,
+    defaultCollapsed: defaultCollapsed,
+  };
 }

@@ -18,6 +18,10 @@ import {
   TransferCallInputs,
   transferCallSections,
 } from "../common/transferCall";
+import {
+  generalSection,
+  generalSectionFormElement,
+} from "../common/shared";
 
 interface IBridgeCallInputs extends TransferCallInputs {
   headNumber: string;
@@ -27,6 +31,8 @@ interface IBridgeCallInputs extends TransferCallInputs {
 export interface IBridgeCallParams extends INodeFunctionBaseParams {
   config: IBridgeCallInputs;
 }
+
+const headNumberFieldKey: keyof IBridgeCallInputs = 'headNumber'
 
 export const bridgeCallNode = createNodeDescriptor({
   type: 'bridge',
@@ -42,7 +48,7 @@ export const bridgeCallNode = createNodeDescriptor({
   fields: [
     {
       type: 'cognigyText',
-      key: 'headNumber',
+      key: headNumberFieldKey,
       label: t.bridge.inputHeadNumberLabel,
       description: t.bridge.inputHeadNumberDescription,
       params: {
@@ -65,23 +71,15 @@ export const bridgeCallNode = createNodeDescriptor({
     ...transferCallFields,
   ],
   preview: {
-    key: 'headNumber',
+    key: headNumberFieldKey,
     type: 'text',
   },
   sections: [
-    {
-      key: 'general',
-      fields: ['headNumber', 'extensionLength'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
+    generalSection([headNumberFieldKey, 'extensionLength']),
     ...transferCallSections,
   ],
   form: [
-    {
-      key: 'general',
-      type: 'section',
-    },
+    generalSectionFormElement,
     ...transferCallForm,
   ],
   function: async ({ cognigy, config }: IBridgeCallParams) => {

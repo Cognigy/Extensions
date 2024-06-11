@@ -7,19 +7,35 @@ import {
   normalizeText,
 } from "../helpers/util";
 import {
-  bargeInFields,
+  bargeInFieldsWithToggleToUseDefault,
   bargeInForm,
-  BargeInInputs,
-  bargeInSection,
-  convertBargeIn,
+  BargeInInputsWithToggleToUseDefault,
+  bargeInSectionWithToggleToUseDefault,
+  convertBargeInRespectToggleToUseDefault,
 } from "../common/bargeIn";
+import {
+  convertLanguageSelect,
+  generalSection,
+  generalSectionFormElement,
+  languageSelectField,
+} from "../common/shared";
+import {
+  convertSynthesizersRespectToggleToUseDefault,
+  synthesizersFieldWithToggleToUseDefault,
+  SynthesizersInputsWithToggleToUseDefault,
+  synthesizersWithToggleToUseDefaultFieldKeys
+} from '../common/synthesizers';
 
-interface ISpeakNodeInputs extends BargeInInputs {
+interface ISpeakNodeInputs extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
   text: string,
   timeout?: number,
   // additionalText: Array<string>,
   linear?: boolean,
   loop?: boolean,
+  language: string | null,
+  overwriteSynthesizers: boolean,
+  synthesizers: Array<string> | null,
+  overwriteBargeIn: boolean,
 }
 
 export interface ISpeakNodeParams extends INodeFunctionBaseParams {
@@ -262,7 +278,9 @@ export const speakNode = createNodeDescriptor({
         ],
       },
     },
-    ...bargeInFields,
+    languageSelectField('language', false, t.speak.languageLabel),
+    ...synthesizersFieldWithToggleToUseDefault(),
+    ...bargeInFieldsWithToggleToUseDefault(),
     // will be needed for later implementation
     // {
     //   key: 'additionalText',
@@ -288,13 +306,14 @@ export const speakNode = createNodeDescriptor({
     type: 'text',
   },
   sections: [
+    generalSection(['text']),
+    bargeInSectionWithToggleToUseDefault,
     {
-      key: 'general',
-      fields: ['text'],
-      label: t.forward.sectionGeneralLabel,
-      defaultCollapsed: false,
-    },
-    bargeInSection,
+      key: 'tts',
+      fields: [...synthesizersWithToggleToUseDefaultFieldKeys, 'language'],
+      label: t.shared.sectionTtsLabel,
+      defaultCollapsed: true,
+    }
     // {
     //   fields: ['additionalText'],
     //   key: 'textOptions',
@@ -309,11 +328,12 @@ export const speakNode = createNodeDescriptor({
     // },
   ],
   form: [
+    generalSectionFormElement,
+    bargeInForm,
     {
-      key: 'general',
+      key: 'tts',
       type: 'section',
     },
-    bargeInForm,
     // {
     //   key: 'textOptions',
     //   type: 'section'
@@ -357,9 +377,10 @@ export const speakNode = createNodeDescriptor({
 
     const payload = {
       interpretAs: 'SSML',
-      bargeIn: convertBargeIn(api, config),
+      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+      language: convertLanguageSelect(config.language),
+      synthesizers: convertSynthesizersRespectToggleToUseDefault(config),
     };
     cognigy.api.say(text, payload);
   },
 });
-

@@ -5,9 +5,11 @@ import * as qs from 'qs';
 export interface IFlightOffersSearch extends INodeFunctionBaseParams {
     config: {
         oauth2Connection: {
+            apiUrl: string;
             clientId: string;
             clientSecret: string;
         };
+        searchOption: string;
         originLocationCode: string;
         destinationLocationCode: string;
         departureDate: string;
@@ -46,6 +48,25 @@ export const flightOffersSearchNode = createNodeDescriptor({
             }
         },
         {
+            key: "searchOption",
+            label: "Search Option",
+            type: "select",
+            defaultValue: "standard",
+            params: {
+                required: true,
+                options: [
+                    {
+                        label: "Standard",
+                        value: "standard"
+                    },
+                    {
+                        label: "Cheapest Date",
+                        value: "cheapestDate"
+                    }
+                ]
+            }
+        },
+        {
             key: "originLocationCode",
             label: "Origin Location Code",
             type: "cognigyText",
@@ -79,6 +100,10 @@ export const flightOffersSearchNode = createNodeDescriptor({
             description: "The date of the flight return, such as 2024-01-01",
             params: {
                 required: true
+            },
+            condition: {
+                key: "searchOption",
+                value: "standard"
             }
         },
         {
@@ -150,6 +175,38 @@ export const flightOffersSearchNode = createNodeDescriptor({
     ],
     sections: [
         {
+            key: "flightConnectionSection",
+            label: "Connection",
+            defaultCollapsed: false,
+            fields: [
+                "originLocationCode",
+                "destinationLocationCode"
+            ]
+        },
+        {
+            key: "flightDatesSection",
+            label: "Dates",
+            defaultCollapsed: false,
+            fields: [
+                "departureDate",
+                "returnDate"
+            ]
+        },
+        {
+            key: "flightPassengersSection",
+            label: "Passengers",
+            defaultCollapsed: false,
+            fields: [
+                "adults",
+                "children",
+                "infants"
+            ],
+            condition: {
+                key: "searchOption",
+                value: "standard"
+            }
+        },
+        {
             key: "storageOption",
             label: "Storage Option",
             defaultCollapsed: true,
@@ -162,13 +219,10 @@ export const flightOffersSearchNode = createNodeDescriptor({
     ],
     form: [
         { type: "field", key: "oauth2Connection" },
-        { type: "field", key: "originLocationCode" },
-        { type: "field", key: "destinationLocationCode" },
-        { type: "field", key: "departureDate" },
-        { type: "field", key: "returnDate" },
-        { type: "field", key: "adults" },
-        { type: "field", key: "children" },
-        { type: "field", key: "infants" },
+        { type: "field", key: "searchOption" },
+        { type: "section", key: "flightConnectionSection" },
+        { type: "section", key: "flightDatesSection" },
+        { type: "section", key: "flightPassengersSection" },
         { type: "section", key: "storageOption" }
     ],
     appearance: {
@@ -182,8 +236,8 @@ export const flightOffersSearchNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IFlightOffersSearch) => {
         const { api } = cognigy;
-        const { oauth2Connection, originLocationCode, destinationLocationCode, departureDate, returnDate, adults, children, infants, storeLocation, inputKey, contextKey } = config;
-        const { clientId, clientSecret } = oauth2Connection;
+        const { oauth2Connection, searchOption, originLocationCode, destinationLocationCode, departureDate, returnDate, adults, children, infants, storeLocation, inputKey, contextKey } = config;
+        const { apiUrl, clientId, clientSecret } = oauth2Connection;
 
         try {
 
@@ -195,7 +249,7 @@ export const flightOffersSearchNode = createNodeDescriptor({
 
             const authenticationResponse: AxiosResponse = await axios({
                 method: "post",
-                url: "https://test.api.amadeus.com/v1/security/oauth2/token",
+                url: `${apiUrl}/v1/security/oauth2/token`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/x-www-form-urlencoded"
@@ -203,21 +257,36 @@ export const flightOffersSearchNode = createNodeDescriptor({
                 data
             });
 
-            const flightOffersSearchResponse: AxiosResponse = await axios({
-                method: "get",
-                url: `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&children=${children}&infants=${infants}&max=10`,
-                headers: {
-                    "Authorization": `Bearer ${authenticationResponse.data.access_token}`
-                }
-            });
+            let flightsSearchResponse: AxiosResponse;
 
-            if (flightOffersSearchResponse.data?.data?.length !== 0) {
+            switch(searchOption) {
+                case "standard":
+                    flightsSearchResponse = await axios({
+                        method: "get",
+                        url: `${apiUrl}/v2/shopping/flight-offers?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&children=${children}&infants=${infants}&max=10`,
+                        headers: {
+                            "Authorization": `Bearer ${authenticationResponse.data.access_token}`
+                        }
+                    });
+                    break;
+                case "cheapestDate":
+                    flightsSearchResponse = await axios({
+                        method: "get",
+                        url: `${apiUrl}/v1/shopping/flight-dates?origin=${originLocationCode}&destination=${destinationLocationCode}&departureDate=${departureDate}`,
+                        headers: {
+                            "Authorization": `Bearer ${authenticationResponse.data.access_token}`
+                        }
+                    });
+                    break;
+            }
+
+            if (flightsSearchResponse.data?.data?.length !== 0) {
                 const onSuccessChild = childConfigs.find(child => child.type === "onFoundFlightOffers");
                 api.setNextNode(onSuccessChild.id);
 
 
             if (storeLocation === 'context') {
-                api.addToContext(contextKey, flightOffersSearchResponse.data.data, 'simple');
+                api.addToContext(contextKey, flightsSearchResponse.data.data, 'simple');
             } else {
                 // @ts-ignore
                 api.addToInput(inputKey, flightOffersSearchResponse.data.data);
@@ -233,10 +302,10 @@ export const flightOffersSearchNode = createNodeDescriptor({
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === 'context') {
-                api.addToContext(contextKey, { error: error }, 'simple');
+                api.addToContext(contextKey, { error: error.message }, 'simple');
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, { error: error });
+                api.addToInput(inputKey, { error: error.message });
             }
         }
     }

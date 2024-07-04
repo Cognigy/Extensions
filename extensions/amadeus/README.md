@@ -23,3 +23,12 @@ Based on the selected `searchOption`, this Flow Node uses one of the following A
 ## Node: Search Airports
 
 Based on the provided `keyword`, this Flow Node uses the [Airport Search API](https://developers.amadeus.com/self-service/category/flights/api-doc/airport-and-city-search/api-reference) in order to find one or more airports.
+
+## Node: Search Hotels
+
+Based on provided `city` or `geocode`, this Flow Node uses one of the following API Endpoints:
+
+- Search Option: "City"
+  - API: [Hotel List by city](https://developers.amadeus.com/self-service/category/hotels/api-doc/hotel-list/api-reference)
+- Search Option: "Geocode"
+  - API: [Hotel List by geocode](https://developers.amadeus.com/self-service/category/hotels/api-doc/hotel-list/api-reference)

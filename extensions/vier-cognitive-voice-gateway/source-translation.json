@@ -129,12 +129,10 @@
         "sectionTtsLabel": "Synthesizer (TTS) Settings",
         "synthesizersLabel": "A list of synthesizers",
         "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
-        "changeSynthesizersSwitchLabel": "Change synthesizers from default?",
-        "changeSynthesizersSwitchDescription": "Do you want to change the synthesizers settings for this node?"
+        "changeSynthesizersSwitchLabel": "Change synthesizers from default?"
     },
     "bargeIn": {
         "useDefaultToggleLabel": "Change bargeIn from default?",
-        "useDefaultToggleDescription": "Do you want to change the bargeIn settings for this node?",
         "input": {
             "onSpeechLabel": "On Speech",
             "onSpeechDescription": "Allows the audio to be interrupted by the speaker",

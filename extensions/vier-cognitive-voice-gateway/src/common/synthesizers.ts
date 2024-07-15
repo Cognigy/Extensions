@@ -28,7 +28,6 @@ export function synthesizersFieldWithToggleToUseDefault(): Array<INodeField> {
       type: 'toggle',
       key: 'changeSynthesizers',
       label: t.shared.changeSynthesizersSwitchLabel,
-      description: t.shared.changeSynthesizersSwitchDescription,
       defaultValue: false,
     },
     {

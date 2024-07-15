@@ -91,7 +91,6 @@ export function bargeInFieldsWithToggleToUseDefault(): Array<INodeField> {
       type: 'toggle',
       key: changeBargeInKey,
       label: t.bargeIn.useDefaultToggleLabel,
-      description: t.bargeIn.useDefaultToggleDescription,
       defaultValue: false,
     },
     ...bargeInFields({

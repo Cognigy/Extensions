@@ -4,7 +4,7 @@ import {
 } from '@cognigy/extension-tools/build';
 import t from '../translations';
 import {
-  normalizeText,
+    normalizeText, playInBackgroundToMode,
 } from "../helpers/util";
 import {
   bargeInFieldsWithToggleToUseDefault,
@@ -21,6 +21,7 @@ import {
 interface IPlayNodeInputs extends BargeInInputsWithToggleToUseDefault {
   url: string,
   fallbackText?: string,
+  playInBackground: boolean,
 }
 
 export interface IPlayNodeParams extends INodeFunctionBaseParams {
@@ -56,10 +57,17 @@ export const playNode = createNodeDescriptor({
         placeholder: '',
       },
     },
+    {
+      type: 'toggle',
+      key: 'playInBackground',
+      label: t.play.playInBackgroundLabel,
+      description: t.play.playInBackgroundDescription,
+      defaultValue: false,
+    },
     ...bargeInFieldsWithToggleToUseDefault(),
   ],
   sections: [
-    generalSection(['url', 'fallbackText']),
+    generalSection(['url', 'fallbackText', 'playInBackground']),
     bargeInSectionWithToggleToUseDefault,
   ],
   form: [
@@ -72,6 +80,7 @@ export const playNode = createNodeDescriptor({
     const payload = {
       status: 'play',
       url: config.url,
+      mode: playInBackgroundToMode(config.playInBackground),
       bargeIn: convertBargeInIfChanged(api, config),
       fallbackText: normalizeText(config.fallbackText),
     };

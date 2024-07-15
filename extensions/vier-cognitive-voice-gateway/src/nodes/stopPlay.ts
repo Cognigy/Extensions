@@ -7,9 +7,11 @@ import {
   generalSection,
   generalSectionFormElement,
 } from "../common/shared";
+import { playInBackgroundToMode } from '../helpers/util';
 
 interface IStopPlayNodeInputs {
   url: string,
+  playInBackground: boolean,
 }
 
 export interface IStopPlayNodeParams extends INodeFunctionBaseParams {
@@ -35,9 +37,16 @@ export const stopPlayNode = createNodeDescriptor({
         placeholder: '',
       },
     },
+    {
+      type: 'toggle',
+      key: 'playInBackground',
+      label: t.play.playInBackgroundLabel,
+      description: t.play.playInBackgroundDescription,
+      defaultValue: false
+    },
   ],
   sections: [
-    generalSection(['url']),
+    generalSection(['url', 'playInBackground']),
   ],
   form: [
     generalSectionFormElement,
@@ -48,6 +57,7 @@ export const stopPlayNode = createNodeDescriptor({
     const payload = {
       status: 'play-stop',
       url: config.url,
+      mode: playInBackgroundToMode(config.playInBackground),
     };
 
     api.say('', payload);

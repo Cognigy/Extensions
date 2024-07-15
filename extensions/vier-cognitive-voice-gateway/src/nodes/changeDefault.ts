@@ -55,20 +55,36 @@ export interface IChangeDefaultsParams extends INodeFunctionBaseParams {
   config: IChangeDefaultsInputs;
 }
 
-export function overwriteStrategyField(key: string, label: INodeFieldTranslations, description: INodeFieldTranslations): INodeField {
+interface OverwriteStrategyFieldParams {
+  key: string,
+  label: INodeFieldTranslations,
+  description: INodeFieldTranslations,
+  ignoreLabel: INodeFieldTranslations | undefined,
+  resetDefaultLabel: INodeFieldTranslations | undefined,
+  useValueLabel: INodeFieldTranslations | undefined,
+}
+
+function overwriteStrategyField(params: OverwriteStrategyFieldParams): INodeField {
+
+  const options = []
+  const addOption = (strategy: OverwriteStrategy, label: INodeFieldTranslations | undefined) => {
+    if (label !== undefined) {
+      options.push({ value: strategy, label: label })
+    }
+  }
+  addOption(OverwriteStrategy.IGNORE, params.ignoreLabel)
+  addOption(OverwriteStrategy.RESET_DEFAULT, params.resetDefaultLabel)
+  addOption(OverwriteStrategy.USE_VALUE, params.useValueLabel)
+
   return {
     type: 'select',
-    key: key,
-    label: label,
-    description: description,
+    key: params.key,
+    label: params.label,
+    description: params.description,
     defaultValue: OverwriteStrategy.IGNORE,
     params: {
       required: true,
-      options: [
-        { value: OverwriteStrategy.IGNORE, label: t.changeDefaults.overwriteStrategy.doNotChange },
-        { value: OverwriteStrategy.RESET_DEFAULT, label: t.changeDefaults.overwriteStrategy.reset },
-        { value: OverwriteStrategy.USE_VALUE, label: t.changeDefaults.overwriteStrategy.useValue },
-      ],
+      options: options,
     },
   }
 }
@@ -82,7 +98,14 @@ export const changeDefaultsNode = createNodeDescriptor({
   },
   tags: ['service'],
   fields: [
-    overwriteStrategyField('synthesizersOverwriteStrategy', t.changeDefaults.synthesizersOverwriteStrategyLabel, t.changeDefaults.synthesizersOverwriteStrategyDescription),
+    overwriteStrategyField({
+      key: 'synthesizersOverwriteStrategy',
+      label: t.changeDefaults.synthesizersOverwriteStrategyLabel,
+      description: t.changeDefaults.synthesizersOverwriteStrategyDescription,
+      ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.synthesizers,
+      resetDefaultLabel: t.changeDefaults.overwriteStrategy.reset.synthesizers,
+      useValueLabel: t.changeDefaults.overwriteStrategy.useValue.synthesizers,
+    }),
     {
       ...synthesizersField('defaultSynthesizers'),
       condition: {
@@ -91,7 +114,14 @@ export const changeDefaultsNode = createNodeDescriptor({
       }
     },
 
-    overwriteStrategyField('ttsLanguageOverwriteStrategy', t.changeDefaults.ttsLanguageOverwriteStrategyLabel, t.changeDefaults.ttsLanguageOverwriteStrategyDescription),
+    overwriteStrategyField({
+      key: 'ttsLanguageOverwriteStrategy',
+      label: t.changeDefaults.ttsLanguageOverwriteStrategyLabel,
+      description: t.changeDefaults.ttsLanguageOverwriteStrategyDescription,
+      ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.ttsLanguage,
+      resetDefaultLabel: t.changeDefaults.overwriteStrategy.reset.ttsLanguage,
+      useValueLabel: t.changeDefaults.overwriteStrategy.useValue.ttsLanguage,
+    }),
     {
       ...languageSelectField('ttsLanguage', true, t.changeDefaults.ttsLanguageLabel, t.changeDefaults.ttsLanguageDescription),
       condition: {
@@ -100,8 +130,14 @@ export const changeDefaultsNode = createNodeDescriptor({
       }
     },
 
-
-    overwriteStrategyField('ttsBargeInOverwriteStrategy', t.changeDefaults.ttsBargeInOverwriteStrategyLabel, t.changeDefaults.ttsBargeInOverwriteStrategyDescription),
+    overwriteStrategyField({
+      key: 'ttsBargeInOverwriteStrategy',
+      label: t.changeDefaults.ttsBargeInOverwriteStrategyLabel,
+      description: t.changeDefaults.ttsBargeInOverwriteStrategyDescription,
+      ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.bargeIn,
+      resetDefaultLabel: undefined,
+      useValueLabel: t.changeDefaults.overwriteStrategy.useValue.bargeIn,
+    }),
     ...bargeInFields({
       key: 'ttsBargeInOverwriteStrategy',
       value: OverwriteStrategy.USE_VALUE,

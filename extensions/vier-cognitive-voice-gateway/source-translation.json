@@ -2,9 +2,20 @@
     "changeDefaults": {
         "ttsSectionLabel": "Text to speech",
         "overwriteStrategy": {
-            "doNotChange": "Do not change",
-            "reset": "Reset to Project value",
-            "useValue": "Set a new default value"
+            "doNotChange": {
+                "synthesizers": "Do not change",
+                "ttsLanguage": "Do not change",
+                "bargeIn": "Do not change"
+            },
+            "reset": {
+                "synthesizers": "Reset to Project value",
+                "ttsLanguage": "Reset to Project value"
+            },
+            "useValue": {
+                "synthesizers": "Set new default synthesizers",
+                "ttsLanguage": "Set new default tts language",
+                "bargeIn": "Set new default bargeIn settings"
+            }
         },
         "nodeLabel": "Set Synthesizer (TTS) Defaults",
         "nodeSummary": "Change the settings used by nodes by default",

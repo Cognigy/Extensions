@@ -55,7 +55,7 @@ export function convertSynthesizers(synthesizers: Array<string>): Array<any> {
   return result
 }
 
-export function convertSynthesizersRespectToggleToUseDefault(inputs: SynthesizersInputsWithToggleToUseDefault): Array<any> | null {
+export function convertSynthesizersIfChanged(inputs: SynthesizersInputsWithToggleToUseDefault): Array<any> | null {
   if (!inputs.changeSynthesizers) {
     return null
   }

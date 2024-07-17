@@ -144,7 +144,7 @@ export function convertBargeIn(api: INodeExecutionAPI, inputs: BargeInInputs): B
   };
 }
 
-export function convertBargeInRespectToggleToUseDefault(api: INodeExecutionAPI, inputs: BargeInInputsWithToggleToUseDefault): BargeInOptions | null {
+export function convertBargeInIfChanged(api: INodeExecutionAPI, inputs: BargeInInputsWithToggleToUseDefault): BargeInOptions | null {
   if (!inputs.changeBargeIn) {
     return null
   } else {

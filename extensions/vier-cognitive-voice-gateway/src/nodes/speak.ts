@@ -11,7 +11,7 @@ import {
   bargeInForm,
   BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeInRespectToggleToUseDefault,
+  convertBargeInIfChanged,
 } from "../common/bargeIn";
 import {
   convertLanguageSelect,
@@ -20,7 +20,7 @@ import {
   languageSelectField,
 } from "../common/shared";
 import {
-  convertSynthesizersRespectToggleToUseDefault,
+  convertSynthesizersIfChanged,
   synthesizersFieldWithToggleToUseDefault,
   SynthesizersInputsWithToggleToUseDefault,
   synthesizersWithToggleToUseDefaultFieldKeys
@@ -377,9 +377,9 @@ export const speakNode = createNodeDescriptor({
 
     const payload = {
       interpretAs: 'SSML',
-      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+      bargeIn: convertBargeInIfChanged(api, config),
       language: convertLanguageSelect(config.language),
-      synthesizers: convertSynthesizersRespectToggleToUseDefault(config),
+      synthesizers: convertSynthesizersIfChanged(config),
     };
     cognigy.api.say(text, payload);
   },

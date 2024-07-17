@@ -11,7 +11,7 @@ import {
   bargeInForm,
   BargeInInputsWithToggleToUseDefault,
   bargeInSectionWithToggleToUseDefault,
-  convertBargeInRespectToggleToUseDefault,
+  convertBargeInIfChanged,
 } from "../common/bargeIn";
 import {
   generalSection,
@@ -72,7 +72,7 @@ export const playNode = createNodeDescriptor({
     const payload = {
       status: 'play',
       url: config.url,
-      bargeIn: convertBargeInRespectToggleToUseDefault(api, config),
+      bargeIn: convertBargeInIfChanged(api, config),
       fallbackText: normalizeText(config.fallbackText),
     };
 

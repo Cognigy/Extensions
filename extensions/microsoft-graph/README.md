@@ -6,3 +6,4 @@ The Microsoft Extension enables the Cognigy.AI virtual agent to login a user to 
 
 1. [Login to Microsoft](./docs/authentication.md)
 2. [Use the Graph API](./docs/graph-api.md)
+3. [Microsoft Search](./docs/search.md)

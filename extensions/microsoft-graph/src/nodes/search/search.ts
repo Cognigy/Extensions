@@ -50,12 +50,14 @@ export const searchNode = createNodeDescriptor({
             key: "entityTypes",
             label: "Entity Types",
             type: "textArray",
+            description: "The Microsoft entity types that should be searched through",
             defaultValue: ["site", "listItem"],
         },
         {
             key: "region",
-            label: "Query",
+            label: "Region",
             type: "cognigyText",
+            description: "The region of the search, such as US or DEU",
             defaultValue: "DEU"
         },
         {

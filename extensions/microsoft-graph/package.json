@@ -1,6 +1,6 @@
 {
 	"name": "microsoft-graph",
-	"version": "4.2.1",
+	"version": "4.3.0",
 	"description": "Integrates with Microsoft Graph",
 	"main": "build/module.js",
 	"scripts": {
@@ -18,7 +18,8 @@
 		"ADAL",
 		"Authentication",
 		"Azure",
-		"Graph API"
+		"Graph API",
+		"Search"
 	],
 	"author": "Cognigy GmbH",
 	"license": "MIT",

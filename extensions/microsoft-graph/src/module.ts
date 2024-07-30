@@ -9,6 +9,8 @@ import { sendChannelMessageNode } from "./nodes/microsoft-teams/sendChannelMessa
 import { getTodoListsNode } from "./nodes/todo/getTodoLists";
 import { createTodoNode } from "./nodes/todo/createTodo";
 import { sendOutlookMailNode } from "./nodes/outlook/sendMail";
+import { searchConnection } from "./connections/searchConnection";
+import { onFound, onNotFound, searchNode } from "./nodes/search/search";
 
 
 export default createExtension({
@@ -21,11 +23,16 @@ export default createExtension({
 		sendChannelMessageNode,
 		getTodoListsNode,
 		createTodoNode,
-		sendOutlookMailNode
+		sendOutlookMailNode,
+
+		searchNode,
+		onFound,
+		onNotFound
 
 	],
 	connections: [
-		loginConnection
+		loginConnection,
+		searchConnection
 	],
 
 	options: {

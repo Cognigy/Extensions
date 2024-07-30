@@ -29,10 +29,11 @@
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.13.0",
+		"@cognigy/extension-tools": "^0.14.0",
 		"@microsoft/microsoft-graph-client": "^2.2.1",
 		"axios": "^0.20.0",
 		"isomorphic-fetch": "^3.0.0",
+		"qs": "^6.12.3",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6"
 	}

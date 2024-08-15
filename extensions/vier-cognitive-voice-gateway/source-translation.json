@@ -140,8 +140,6 @@
         "sectionSipLabel": "SIP",
         "sectionGeneralLabel": "General Settings",
         "sectionTtsLabel": "Synthesizer (TTS) Settings",
-        "synthesizersLabel": "A list of synthesizers",
-        "synthesizersDescription": "See the CVG documentation for the format of the synthesizers list",
         "changeSynthesizersSwitchLabel": "Change synthesizers from default?"
     },
     "bargeIn": {
@@ -195,6 +193,20 @@
         "inputBoostedPhrasesFromContextLabel": "Phrases to boost from Context",
         "inputBoostedPhrasesFromContextDescription": "Enter the key for which a list of phrases to be boosted is stored in the Context. If this node contains a list of boosted phrases, then it will be merged with the list from the Context.",
         "sectionDynamicProfileSettings": "Dynamic Profile"
+    },
+    "textToSpeech": {
+        "inputServiceLabel": "Set Text-to-Speech Service",
+        "inputServiceDescription": "The synthesizer service that should be used tried first.",
+        "inputServiceFallbackLabel": "Set Fallback Text-to-Speech Service",
+        "inputServiceFallbackDescription": "The synthesizer service that should be used as fallback.",
+        "inputVoiceLabel": "Vendor specific voice name for primary service",
+        "inputVoiceDescription": "See the vier documentation and the documentation of the service you specified above.",
+        "inputVoiceFallbackLabel": "Vendor specific voice name for fallback service",
+        "inputVoiceFallbackDescription": "See the vier documentation and the documentation of the service you specified above.",
+        "inputProfileTokenLabel": "Profile Token",
+        "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
+        "inputProfileTokenFallbackLabel": "Profile Token Fallback",
+        "inputProfileTokenFallbackDescription": "Profile Token Fallback"
     },
     "outboundService": {
         "nodeLabel": "Check Outbound Result",

@@ -18,7 +18,7 @@ import {
   convertLanguageSelect,
   languageSelectField,
 } from "../common/shared";
-import { convertSynthesizers, synthesizersField } from '../common/synthesizers';
+import { SynthesizersInputs, convertSynthesizers, synthesizerFieldKeys, synthesizersFields } from '../common/synthesizers';
 
 export enum OverwriteStrategy {
   RESET_DEFAULT = "UseProjectValue",
@@ -43,9 +43,8 @@ interface IChangeDefaultsPayload {
   bargeInOptions: Default<BargeInOptions>,
 }
 
-interface IChangeDefaultsInputs extends BargeInInputs {
+interface IChangeDefaultsInputs extends BargeInInputs, SynthesizersInputs  {
   synthesizersOverwriteStrategy?: OverwriteStrategy,
-  defaultSynthesizers?: Array<string>,
   ttsLanguageOverwriteStrategy?: OverwriteStrategy,
   ttsLanguage?: string,
   ttsBargeInOverwriteStrategy?: OverwriteStrategy,
@@ -106,14 +105,10 @@ export const changeDefaultsNode = createNodeDescriptor({
       resetDefaultLabel: t.changeDefaults.overwriteStrategy.reset.synthesizers,
       useValueLabel: t.changeDefaults.overwriteStrategy.useValue.synthesizers,
     }),
-    {
-      ...synthesizersField('defaultSynthesizers'),
-      condition: {
-        key: 'synthesizersOverwriteStrategy',
-        value: OverwriteStrategy.USE_VALUE,
-      }
-    },
-
+    ...synthesizersFields({
+      key: 'synthesizersOverwriteStrategy',
+      value: OverwriteStrategy.USE_VALUE,
+    }),
     overwriteStrategyField({
       key: 'ttsLanguageOverwriteStrategy',
       label: t.changeDefaults.ttsLanguageOverwriteStrategyLabel,
@@ -147,7 +142,7 @@ export const changeDefaultsNode = createNodeDescriptor({
     {
       key: 'tts',
       fields: [
-        'synthesizersOverwriteStrategy', 'defaultSynthesizers',
+        'synthesizersOverwriteStrategy', ...synthesizerFieldKeys,
         'ttsLanguageOverwriteStrategy', 'ttsLanguage',
         'ttsBargeInOverwriteStrategy', ...bargeInFieldKeys,
       ],
@@ -165,15 +160,10 @@ export const changeDefaultsNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IChangeDefaultsParams) => {
     const { api } = cognigy;
 
-    let synthesizers = config.defaultSynthesizers
-    if (!synthesizers) {
-      synthesizers = []
-    }
-
     const payload : IChangeDefaultsPayload = {
       status: 'change-defaults',
       language: new Default<string>(convertLanguageSelect(config.ttsLanguage), config.ttsLanguageOverwriteStrategy),
-      synthesizers: new Default<Array<string>>(convertSynthesizers(synthesizers), config.synthesizersOverwriteStrategy),
+      synthesizers: new Default<Array<string>>(convertSynthesizers(config), config.synthesizersOverwriteStrategy),
       bargeInOptions: new Default<BargeInOptions>(convertBargeIn(api, config), config.ttsBargeInOverwriteStrategy),
     };
     api.say('', payload);

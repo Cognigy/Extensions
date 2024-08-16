@@ -12,7 +12,7 @@ export interface SynthesizersInputs {
 
 export function synthesizersFields(extraCondition?: TNodeFieldCondition): INodeField[] {
   const makeVendorSelect = (key: string, label: INodeFieldTranslations, description: INodeFieldTranslations, required: boolean): INodeField => {
-    const options: any[] = [
+    const options = [
       { value: 'PROFILE_TOKEN', label: 'Profile Token' },
       { value: 'GOOGLE', label: 'Google' },
       { value: 'MICROSOFT', label: 'Microsoft' },

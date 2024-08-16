@@ -18,6 +18,10 @@ export function normalizeText(text: string | undefined | null) {
 
 export function normalizeTextArray(texts: Array<string | undefined> | string | undefined | null): Array<string> | undefined {
   if (typeof texts === 'string') {
+    const normalizedText = normalizeText(texts);
+    if (normalizedText === undefined) {
+      return undefined
+    }
     return [normalizeText(texts)];
   }
   if (!Array.isArray(texts) || texts.length === 0) {

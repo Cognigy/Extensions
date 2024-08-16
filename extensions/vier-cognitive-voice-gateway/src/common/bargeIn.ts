@@ -84,19 +84,21 @@ export function bargeInFields(
   ]
 }
 
-export function bargeInFieldsWithToggleToUseDefault(): Array<INodeField> {
+export function bargeInFieldsWithToggleToUseDefault(extraCondition?: TNodeFieldCondition): Array<INodeField> {
   const changeBargeInKey = 'changeBargeIn';
+
+  const isToggleTrue: TNodeFieldCondition = { key: changeBargeInKey, value: true }
+  const bargeInCondition: TNodeFieldCondition = extraCondition ? { and: [extraCondition, isToggleTrue] } : isToggleTrue
+
   return [
     {
       type: 'toggle',
       key: changeBargeInKey,
       label: t.bargeIn.useDefaultToggleLabel,
       defaultValue: false,
+      condition: extraCondition,
     },
-    ...bargeInFields({
-      key: changeBargeInKey,
-      value: true,
-    }),
+    ...bargeInFields(bargeInCondition),
   ];
 }
 

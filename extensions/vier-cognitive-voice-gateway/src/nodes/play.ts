@@ -64,7 +64,10 @@ export const playNode = createNodeDescriptor({
       description: t.play.playInBackgroundDescription,
       defaultValue: false,
     },
-    ...bargeInFieldsWithToggleToUseDefault(),
+    ...bargeInFieldsWithToggleToUseDefault({
+      key: 'playInBackground',
+      value: false,
+    }),
   ],
   sections: [
     generalSection(['url', 'fallbackText', 'playInBackground']),
@@ -77,13 +80,15 @@ export const playNode = createNodeDescriptor({
   function: async ({ cognigy, config }: IPlayNodeParams) => {
     const { api } = cognigy;
 
-    const payload = {
+    const payload: any = {
       status: 'play',
       url: config.url,
       mode: playInBackgroundToMode(config.playInBackground),
-      bargeIn: convertBargeInIfChanged(api, config),
       fallbackText: normalizeText(config.fallbackText),
     };
+    if (!config.playInBackground) {
+      payload.bargeIn = convertBargeInIfChanged(api, config)
+    }
 
     api.say('', payload);
   },

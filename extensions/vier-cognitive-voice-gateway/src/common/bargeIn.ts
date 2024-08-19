@@ -105,11 +105,14 @@ export function bargeInFieldsWithToggleToUseDefault(extraCondition?: TNodeFieldC
 export const bargeInFieldKeys: readonly string[] = bargeInFields(null).map(field => field.key);
 export const bargeInFieldWithToggleToUseDefaultKeys: readonly string[] = bargeInFieldsWithToggleToUseDefault().map(field => field.key);
 
-export const bargeInSectionWithToggleToUseDefault: INodeSection = {
-  key: 'bargeIn',
-  fields: [...bargeInFieldWithToggleToUseDefaultKeys],
-  label: t.bargeIn.section.label,
-  defaultCollapsed: true,
+export function bargeInSectionWithToggleToUseDefault(extraCondition?: TNodeFieldCondition): INodeSection {
+  return {
+    key: 'bargeIn',
+    fields: [...bargeInFieldWithToggleToUseDefaultKeys],
+    label: t.bargeIn.section.label,
+    defaultCollapsed: true,
+    condition: extraCondition,
+  }
 };
 
 export const bargeInForm: INodeFieldAndSectionFormElement = {

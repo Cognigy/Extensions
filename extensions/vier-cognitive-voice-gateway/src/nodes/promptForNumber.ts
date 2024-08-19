@@ -74,7 +74,7 @@ export const promptForNumberNode = createNodeDescriptor({
       label: t.shared.sectionStopConditionLabel,
       defaultCollapsed: false,
     },
-    bargeInSectionWithToggleToUseDefault,
+    bargeInSectionWithToggleToUseDefault(),
     {
       key: 'additional', // Same issue as in multipleChoicePrompt
       fields: ['language', ...synthesizersWithToggleToUseDefaultFieldKeys],

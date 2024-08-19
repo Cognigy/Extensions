@@ -307,7 +307,7 @@ export const speakNode = createNodeDescriptor({
   },
   sections: [
     generalSection(['text']),
-    bargeInSectionWithToggleToUseDefault,
+    bargeInSectionWithToggleToUseDefault(),
     {
       key: 'tts',
       fields: [...synthesizersWithToggleToUseDefaultFieldKeys, 'language'],

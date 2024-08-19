@@ -1,30 +1,33 @@
 {
-  "name": "vier-voice",
-  "description": "Enable phone bots with VIER Cognitive Voice Gateway",
-  "version": "4.7.0",
-  "main": "build/module.js",
-  "author": "VIER GmbH",
-  "license": "MIT",
-  "dependencies": {
-    "@cognigy/extension-tools": "^0.15.1",
-    "@types/node": "^20.9.0",
-    "eslint": "^8.53.0",
-    "typescript": "^5.2.2"
-  },
-  "scripts": {
-    "rm": "rm -f vier_voice.tar.gz",
-    "pack": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json",
-    "build": "tsc -p .",
-    "lint": "eslint --ext .",
-    "lint:fix": "eslint --fix",
-    "rebuild": "npm run-script rm && npm run-script build && npm run-script pack"
-  },
-  "devDependencies": {},
-  "keywords": [
-    "VIER",
-    "Voice",
-    "Voicebot",
-    "Cognitive Voice Gateway",
-    "Contact Center"
-  ]
+    "name": "vier-voice",
+    "description": "Enable phone bots with VIER Cognitive Voice Gateway",
+    "version": "4.7.0",
+    "main": "build/module.js",
+    "author": "VIER GmbH",
+    "license": "MIT",
+    "dependencies": {
+        "@cognigy/extension-tools": "^0.15.1",
+        "@types/node": "^20.9.0",
+        "eslint": "^8.53.0",
+        "typescript": "^5.2.2"
+    },
+    "scripts": {
+        "rm": "rm -f vier_voice.tar.gz",
+        "pack": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json",
+        "build": "tsc -p .",
+        "lint": "eslint --ext .",
+        "lint:fix": "eslint --fix",
+        "format": "prettier --write .",
+        "rebuild": "npm run-script rm && npm run-script build && npm run-script pack"
+    },
+    "devDependencies": {
+        "prettier": "3.3.3"
+    },
+    "keywords": [
+        "VIER",
+        "Voice",
+        "Voicebot",
+        "Cognitive Voice Gateway",
+        "Contact Center"
+    ]
 }

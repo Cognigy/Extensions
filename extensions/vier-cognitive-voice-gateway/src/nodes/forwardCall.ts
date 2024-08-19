@@ -1,95 +1,83 @@
+import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools/build"
 import {
-  createNodeDescriptor,
-  INodeFunctionBaseParams,
-} from '@cognigy/extension-tools/build';
+    normalizeData,
+    normalizeSipHeaders,
+    convertWhisperText,
+    normalizeText,
+    convertDurationFromSecondsToMillis,
+    delay,
+    normalizeUserToUserInformation,
+} from "../helpers/util"
+import t from "../translations"
 import {
-  normalizeData,
-  normalizeSipHeaders,
-  convertWhisperText,
-  normalizeText,
-  convertDurationFromSecondsToMillis,
-  delay,
-  normalizeUserToUserInformation,
-} from '../helpers/util';
-import t from '../translations';
-import {
-  transferCallFields,
-  transferCallForm,
-  TransferCallInputs,
-  transferCallSections,
-} from "../common/transferCall";
-import {
-  generalSection,
-  generalSectionFormElement,
-} from "../common/shared";
+    transferCallFields,
+    transferCallForm,
+    TransferCallInputs,
+    transferCallSections,
+} from "../common/transferCall"
+import { generalSection, generalSectionFormElement } from "../common/shared"
 
 interface IForwardCallInputs extends TransferCallInputs {
-  destinationNumber: string;
+    destinationNumber: string
 }
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
-  config: IForwardCallInputs;
+    config: IForwardCallInputs
 }
 
-const destinationFieldKey: keyof IForwardCallInputs = 'destinationNumber'
+const destinationFieldKey: keyof IForwardCallInputs = "destinationNumber"
 
 export const forwardCallNode = createNodeDescriptor({
-  type: 'forward',
-  defaultLabel: t.forward.nodeLabel,
-  summary: t.forward.nodeSummary,
-  appearance: {
-    color: 'blue',
-  },
-
-  tags: ['service'],
-  fields: [
-    {
-      type: 'cognigyText',
-      key: destinationFieldKey,
-      label: t.shared.inputDestinationLabel,
-      description: t.shared.inputDestinationDescription,
-      params: {
-        required: true,
-      },
+    type: "forward",
+    defaultLabel: t.forward.nodeLabel,
+    summary: t.forward.nodeSummary,
+    appearance: {
+        color: "blue",
     },
-    ...transferCallFields,
-  ],
 
-  preview: {
-    key: destinationFieldKey,
-    type: 'text',
-  },
+    tags: ["service"],
+    fields: [
+        {
+            type: "cognigyText",
+            key: destinationFieldKey,
+            label: t.shared.inputDestinationLabel,
+            description: t.shared.inputDestinationDescription,
+            params: {
+                required: true,
+            },
+        },
+        ...transferCallFields,
+    ],
 
-  sections: [
-    generalSection([destinationFieldKey]),
-    ...transferCallSections,
-  ],
-  form: [
-    generalSectionFormElement,
-    ...transferCallForm,
-  ],
+    preview: {
+        key: destinationFieldKey,
+        type: "text",
+    },
 
-  function: async ({ cognigy, config }: IForwardCallParams) => {
-    const { api } = cognigy;
+    sections: [generalSection([destinationFieldKey]), ...transferCallSections],
+    form: [generalSectionFormElement, ...transferCallForm],
 
-    const payload = {
-      status: 'forward',
-      destinationNumber: normalizeText(config.destinationNumber),
-      callerId: normalizeText(config.callerId),
-      customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
-      userToUserInformation: normalizeUserToUserInformation(config.userToUserInformation),
-      ringTimeout: convertDurationFromSecondsToMillis(config.ringTimeout),
-      acceptAnsweringMachines: config.acceptAnsweringMachines,
-      data: normalizeData(api, config.data),
-      whispering: convertWhisperText(config.whisperingText),
-      experimentalEnableRingingTone: config.experimentalEnableRingingTone,
-    };
+    function: async ({ cognigy, config }: IForwardCallParams) => {
+        const { api } = cognigy
 
-    return delay(100, () => {
-      api.say('', payload);
-      if (config.endFlow) {
-        api.stopExecution();
-      }
-    });
-  },
-});
+        const payload = {
+            status: "forward",
+            destinationNumber: normalizeText(config.destinationNumber),
+            callerId: normalizeText(config.callerId),
+            customSipHeaders: normalizeSipHeaders(config.customSipHeaders),
+            userToUserInformation: normalizeUserToUserInformation(config.userToUserInformation),
+            ringTimeout: convertDurationFromSecondsToMillis(config.ringTimeout),
+            acceptAnsweringMachines: config.acceptAnsweringMachines,
+            data: normalizeData(api, config.data),
+            whispering: convertWhisperText(config.whisperingText),
+            experimentalEnableRingingTone: config.experimentalEnableRingingTone,
+        }
+
+        return delay(100, () => {
+            api.say("", payload)
+            if (config.endFlow) {
+                api.stopExecution()
+            }
+        })
+    },
+})

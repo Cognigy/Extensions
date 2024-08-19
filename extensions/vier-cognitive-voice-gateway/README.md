@@ -2,9 +2,10 @@
 
 Enable phone bots with VIER Cognitive Voice Gateway (CVG) and integration in various contact centers.
 
-This extension needs 
-* an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
-* a link between the project in  CVG and the endpoint in Cognigy to be set up in CVG.
+This extension needs
+
+-   an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
+-   a link between the project in CVG and the endpoint in Cognigy to be set up in CVG.
 
 See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html for further information.
 
@@ -15,6 +16,7 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 > The bot says the given text. SSML formatting is supported with a simple editor.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -62,6 +64,7 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 > Starts or resumes a recording of a call. You can record the caller, the agent (bot), or both. If you record both lines, you will get a stereo recording.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
   <thead>
     <tr style="text-align: left;">
@@ -94,6 +97,7 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 > Pauses or stops recording a call.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -118,20 +122,21 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 
 ## Node: Play Audio File
 
-> Plays an audio file to the call. 
+> Plays an audio file to the call.
 
 Note the following requirements and limitations:
 
-* The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
-* The audio file must be a valid wav file (waveform audio file format).
-* The file format must be one of the following:
-* Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
-* A-law with a sample rate of 8000 Hz
-* µ-law with a sample rate of 8000 Hz
+-   The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
+-   The audio file must be a valid wav file (waveform audio file format).
+-   The file format must be one of the following:
+-   Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
+-   A-law with a sample rate of 8000 Hz
+-   µ-law with a sample rate of 8000 Hz
 
-The  audio file is subject to caching, which means repeated use of the same URL *might* not lead to repeated requests to the audio file. These standard caching headers will be respected/sent: `Cache-Control`, `Expires`, `Last-Modified` and `ETag`. Note that caching is not guaranteed to happen and the systems delivering the audio files should be prepared to handle the load for each individual play operation being made.
+The audio file is subject to caching, which means repeated use of the same URL _might_ not lead to repeated requests to the audio file. These standard caching headers will be respected/sent: `Cache-Control`, `Expires`, `Last-Modified` and `ETag`. Note that caching is not guaranteed to happen and the systems delivering the audio files should be prepared to handle the load for each individual play operation being made.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -181,9 +186,10 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 
 ## Node: Stop Audio Playback
 
-> Stops the audio playback started using the "Play Audio File" node. 
+> Stops the audio playback started using the "Play Audio File" node.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -201,16 +207,16 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</tbody>
 </table>
 
-
 ## Node: Inactivity Timeout
 
 > Enable or disable inactivity detection with a specified timeout.
 
 The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available in Cognigy.
 
-When there is no activity within the call or session, meaning neither the bot provides an output nor the user initiates an input for the defined timeout period, CVG triggers an inactivity event to com-municate with Cognigy. In this event, the value of ci.data.status is "inactive". 
+When there is no activity within the call or session, meaning neither the bot provides an output nor the user initiates an input for the defined timeout period, CVG triggers an inactivity event to com-municate with Cognigy. In this event, the value of ci.data.status is "inactive".
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -238,6 +244,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 > Sets the Speech-to-Text Service and Fallback Service for transcription of voice input
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -280,6 +287,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 > Prompts the user to enter a number. This number needs to be entered via DTMF.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -357,6 +365,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 > Prompts the user to select one of several choices (e.g. yes/no answers)
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -424,6 +433,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 > Attaches custom data to a dialog. This custom data is stored in CVG and can be read e.g. by a downstream system after an agent handover.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -448,6 +458,7 @@ When there is no activity within the call or session, meaning neither the bot pr
 > Forwards the call to a different destination, e.g. to perform an agent handover.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -518,6 +529,7 @@ The called number is constructed by appending a random n-digit number to `Head N
 After a successful bridge, the bot will not receive further messages and will not be able to send any commands. Recordings will be stopped automatically if there are any running.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -586,17 +598,19 @@ After a successful bridge, the bot will not receive further messages and will no
 </table>
 
 ## Node: Check Call Forwarding Result
- 
+
 > Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Forward Call" and each "Forward Call for Agent Assist" a "Wait for Input" node and a “Check Call Forward Result" node are used to handle the result.
 
 ### Arguments
+
 <i>None.</i>
 
 ## Node: Use SIP REFER
 
-> Transfer the call to a different destination using [https://datatracker.ietf.org/doc/html/rfc3515](SIP REFER), if this call supports it, e.g. to perform an agent handover. Upstream systems must support the receipt of SIP REFER requests. After a successful transfer, the bot is now out of the loop and will neither receive further messages nor can send any commands. If the call is being recorded by CVG, the recording will also be stopped automatically. 
+> Transfer the call to a different destination using [https://datatracker.ietf.org/doc/html/rfc3515](SIP REFER), if this call supports it, e.g. to perform an agent handover. Upstream systems must support the receipt of SIP REFER requests. After a successful transfer, the bot is now out of the loop and will neither receive further messages nor can send any commands. If the call is being recorded by CVG, the recording will also be stopped automatically.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -635,17 +649,19 @@ After a successful bridge, the bot will not receive further messages and will no
 </table>
 
 ## Node: Check Use SIP Refer Result
- 
+
 > Check result after a call has been forwarded by using SIP Refer. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Use SIP Refer" node a "Wait for user input" and a "Check Use SIP Refer Result" node are used to handle the result.
 
 ### Arguments
+
 <i>None.</i>
 
 ## Node: End Call
- 
+
 > Hangs up the call.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">

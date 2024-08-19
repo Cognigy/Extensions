@@ -63,7 +63,7 @@ export const playNode = createNodeDescriptor({
         ...bargeInFieldsWithToggleToUseDefault(),
     ],
     sections: [
-        generalSection(["url", "fallbackText", "playInBackground"]),
+        generalSection(["url", "playInBackground", "fallbackText"]),
         bargeInSectionWithToggleToUseDefault({
             key: "playInBackground",
             value: false,

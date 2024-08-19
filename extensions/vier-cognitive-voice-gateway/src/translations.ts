@@ -109,25 +109,35 @@ export default {
     },
     changeDefaults: {
         nodeLabel: {
-            'default': "Set presets for nodes",
-            'deDE': "Voreinstellungen für Nodes festlegen",
+            'default': "Configure presets for nodes",
+            'deDE': "Voreinstellungen für Nodes konfigurieren",
         },
         nodeSummary: {
-            'default': "Set presets of nodes",
+            'default': "Change presets of nodes",
             'deDE': "Voreinstellungen von Nodes ändern",
         },
         overwriteStrategy: {
-            doNotChange: {
-                'default': "Do not change",
+            doNotChangeOption: {
+                'default': "Keep",
                 'deDE': "Beibehalten",
             },
-            reset: {
-                'default': "Reset to project settings",
+            resetOption: {
+                'default': "Reset to project value",
                 'deDE': "Auf Projekteinstellungen zurücksetzen",
             },
             useValue: {
-                'default': "Set new language",
-                'deDE': "Neue Sprache festlegen",
+                bargeInOption: {
+                    'default': "Configure new default barge-in settings",
+                    'deDE': "Neue Barge-in-Einstellungen konfiguieren",
+                },
+                synthesizersOption: {
+                    'default': "Configure new default text-to-speech services",
+                    'deDE': "Neue Standard-Text-to-Speech-Dienste konfigurieren",
+                },
+                ttsLanguageOption: {
+                    'default': "Configure new default text-to-speech language",
+                    'deDE': "Neue Standard-Text-to-Speech-Sprache konfigurieren",
+                },
             },
         },
         synthesizersOverwriteStrategyDescription: {
@@ -139,20 +149,20 @@ export default {
             'deDE': "Standard-Text-to-Speech-Dienste",
         },
         ttsBargeInOverwriteStrategyDescription: {
-            'default': "Set the default settings for barge-in.",
-            'deDE': "Legen Sie die Standardeinstellungen für Barge-in fest.",
+            'default': "Select the default settings for barge-in.",
+            'deDE': "Wählen Sie die Standardeinstellungen für Barge-in.",
         },
         ttsBargeInOverwriteStrategyLabel: {
             'default': "Default barge-in settings",
             'deDE': "Standardeinstellungen für Barge-in",
         },
         ttsLanguageDescription: {
-            'default': "Change the preset text-to-speech language",
-            'deDE': "Voreingestellte Text-to-Speech-Sprache ändern",
+            'default': "Select the new text-to-speech language.",
+            'deDE': "Ändern Sie die voreingestellte Text-to-Speech-Sprache.",
         },
         ttsLanguageLabel: {
-            'default': "Default text-to-speech language",
-            'deDE': "Standard-Text-to-Speech-Sprache",
+            'default': "New text-to-speech language",
+            'deDE': "Neue Text-to-Speech-Sprache",
         },
         ttsLanguageOverwriteStrategyDescription: {
             'default': "Here you can change the presets from your CVG project for the text-to-speech language. This setting overwrites your project settings.",
@@ -163,7 +173,7 @@ export default {
             'deDE': "Standard-Text-to-Speech-Sprache",
         },
         ttsSectionLabel: {
-            'default': "Text to speech",
+            'default': "Text-to-speech",
             'deDE': "Text-to-Speech",
         },
     },
@@ -237,6 +247,22 @@ export default {
         inputUrlLabelDescription: {
             'default': "Enter the location of the audio file. \nAllowed formats: Linear PCM with signed 16 bits (8 kHz or 16 kHz), A-law or µ-law 8 kHz.",
             'deDE': "Geben Sie den Speicherort für die Audiodatei ein. Erlaubte Formate: Linear-PCM mit vorzeichenbehafteten 16 Bit (8 kHz oder 16 kHz), A-law oder µ-law 8 kHz.",
+        },
+        modeBackgroundOption: {
+            'default': "Background",
+            'deDE': "Hintergrund",
+        },
+        modeDescription: {
+            'default': "Select where the audio file should be played. \n\nTo stop the music, you must configure exactly the same settings under Settings in the Stop Audio Playback node as in this node.",
+            'deDE': "Wählen Sie, wo die Audiodatei abgespielt werden soll.\n\nZum Stoppen der Musik, müssen Sie unter Audiowiedergabe stoppen > Allgemeine Einstellungen  genau dieselben Einstellungen konfigurieren wie hier.",
+        },
+        modeForegroundOption: {
+            'default': "Foreground",
+            'deDE': "Vordergrund",
+        },
+        modeLabel: {
+            'default': "Play audio file in",
+            'deDE': "Audiodatei abspielen im",
         },
         nodeLabel: {
             'default': "Play Audio File",
@@ -369,8 +395,8 @@ export default {
     },
     shared: {
         changeSynthesizersSwitchLabel: {
-            'default': "Set new text-to-speech services",
-            'deDE': "Neuen Text-to-Speech-Dienst festlegen",
+            'default': "Configure new text-to-speech services",
+            'deDE': "Neuen Text-to-Speech-Dienst konfigurieren",
         },
         childDefaultLabel: {
             'default': "Default",
@@ -527,12 +553,6 @@ export default {
             'default': "Text-to-speech service settings",
             'deDE': "Text-to-Speech-Dienst-Einstellungen",
         },
-        synthesizersDescription: {
-            'default': "See the CVG documentation for the format of the text-to-speech service list",
-        },
-        synthesizersLabel: {
-            'default': "A list of text-to-speech services",
-        },
     },
     speak: {
         inputAdditionalTextLabel: {
@@ -614,15 +634,15 @@ export default {
             'deDE': "Speech-to-Text-Dienst",
         },
         inputTranscriberDescription: {
-            'default': "Type in one of the follow Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.",
-            'deDE': "Geben Sie einen der folgenden Speech-to-Text-Dienste ein: 'GOOGLE', 'IBM', 'MICROSOFT' oder lassen Sie das Feld leer, um über das Profiltoken einen Dienst festzulegen.",
+            'default': "Select a speech-to-text service.",
+            'deDE': "Wählen Sie einen Speech-to-Text-Dienst.",
         },
         nodeLabel: {
-            'default': "Set Speech-to-Text Service",
-            'deDE': "Speech-to-Text-Dienst festlegen",
+            'default': "Configure speech-to-text service",
+            'deDE': "Speech-to-Text-Dienst konfigurieren",
         },
         nodeSummary: {
-            'default': "Change Speech-to-Text services to transcribe the expected input in the best possible way",
+            'default': "Change speech-to-text services to transcribe the expected input in the best possible way",
             'deDE': "Speech-to-Text-Dienste wechseln, um die erwartete Eingabe bestmöglich zu transkribieren",
         },
         sectionDynamicProfileSettings: {
@@ -664,6 +684,52 @@ export default {
         nodeSummary: {
             'default': "Cancel the call",
             'deDE': "Anruf abbrechen",
+        },
+    },
+    textToSpeech: {
+        inputProfileTokenDescription: {
+            'default': "Enter the profile token as displayed in CVG under Speech service profiles > Profile basic data > Profile token.",
+            'deDE': "Geben Sie das Profiltoken so ein, wie es in CVG unter Sprachdienst-Profile > Profil-Basisdaten > Profiltoken angezeigt wird.",
+        },
+        inputProfileTokenFallbackDescription: {
+            'default': "Enter the profile token fallback as displayed in CVG under Speech service profiles > Profile basic data > Profile token.",
+            'deDE': "Geben Sie das Profiltoken-Fallback so ein, wie es in CVG unter Sprachdienst-Profile > Profil-Basis-Daten > Profiltoken angezeigt wird.",
+        },
+        inputProfileTokenFallbackLabel: {
+            'default': "Profile token fallback",
+            'deDE': "Profiltoken-Fallback",
+        },
+        inputProfileTokenLabel: {
+            'default': "Profile token",
+            'deDE': "Profiltoken",
+        },
+        inputServiceDescription: {
+            'default': "Select the text-to-speech service to be used as the default.",
+            'deDE': "Wählen Sie den Text-to-Speech-Dienst, der als Standard verwendet werden soll.",
+        },
+        inputServiceFallbackDescription: {
+            'default': "Select the text-to-speech service to be used as the fallback.",
+            'deDE': "Wählen Sie den Text-to-Speech-Dienst, der als Fallback verwendet werden soll.",
+        },
+        inputServiceFallbackLabel: {
+            'default': "New fallback text-to-speech service",
+            'deDE': "Neuer Speech-to-Text-Dienst für Fallback",
+        },
+        inputServiceLabel: {
+            'default': "New text-to-speech service",
+            'deDE': "Neuer Speech-to-Text-Dienst",
+        },
+        inputVoiceDescription: {
+            'default': "Enter the voice name exactly as the provider specifies it.\nFor the correct spelling see the provider documentation of the service you specified above.",
+            'deDE': "Geben Sie die Stimmbezeichnung genau so ein, wie der Hersteller ihn angibt.\nDie korrekte Schreibweise finden Sie in der Dokumentation des Herstellers, den Sie oben angegeben haben.",
+        },
+        inputVoiceFallbackLabel: {
+            'default': "Provider specific voice name for fallback service",
+            'deDE': "Stimmenbezeichnung des Herstellers für den Fallback-Dienst",
+        },
+        inputVoiceLabel: {
+            'default': "Provider specific voice name for default service",
+            'deDE': "Stimmenbezeichnung des Herstellers für den Standarddienst",
         },
     },
     timer: {

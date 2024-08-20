@@ -102,7 +102,7 @@ export function synthesizersFields(extraCondition?: TNodeFieldCondition): INodeF
             type: "text",
             key: "SynthesizerVoiceFallback",
             label: t.textToSpeech.inputVoiceFallbackLabel,
-            description: t.textToSpeech.inputVoiceFallbackDescription,
+            description: t.textToSpeech.inputVoiceDescription,
             params: { required: true },
             condition: {
                 and: [

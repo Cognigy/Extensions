@@ -1,11 +1,10 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools/build"
 import t from "../translations"
 import { generalSection, generalSectionFormElement } from "../common/shared"
-import { playInBackgroundToMode } from "../helpers/util"
 
 interface IStopPlayNodeInputs {
     url: string
-    playInBackground: boolean
+    mode: string
 }
 
 export interface IStopPlayNodeParams extends INodeFunctionBaseParams {
@@ -32,14 +31,21 @@ export const stopPlayNode = createNodeDescriptor({
             },
         },
         {
-            type: "toggle",
-            key: "playInBackground",
-            label: t.play.playInBackgroundLabel,
-            description: t.play.playInBackgroundDescription,
-            defaultValue: false,
+            type: "select",
+            key: "mode",
+            label: t.play.modeLabel,
+            description: t.play.modeDescription,
+            defaultValue: "FOREGROUND",
+            params: {
+                required: true,
+                options: [
+                    { value: "FOREGROUND", label: "Foreground" },
+                    { value: "BACKGROUND", label: "Background" },
+                ],
+            },
         },
     ],
-    sections: [generalSection(["url", "playInBackground"])],
+    sections: [generalSection(["url", "mode"])],
     form: [generalSectionFormElement],
     function: async ({ cognigy, config }: IStopPlayNodeParams) => {
         const { api } = cognigy
@@ -47,7 +53,7 @@ export const stopPlayNode = createNodeDescriptor({
         const payload = {
             status: "play-stop",
             url: config.url,
-            mode: playInBackgroundToMode(config.playInBackground),
+            mode: config.mode,
         }
 
         api.say("", payload)

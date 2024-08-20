@@ -57,9 +57,8 @@ interface OverwriteStrategyFieldParams {
     key: string
     label: INodeFieldTranslations
     description: INodeFieldTranslations
-    ignoreLabel: INodeFieldTranslations | undefined
-    resetDefaultLabel: INodeFieldTranslations | undefined
-    useValueLabel: INodeFieldTranslations | undefined
+    resetDefaultOption: INodeFieldTranslations | undefined
+    useValueOption: INodeFieldTranslations | undefined
 }
 
 function overwriteStrategyField(params: OverwriteStrategyFieldParams): INodeField {
@@ -69,9 +68,9 @@ function overwriteStrategyField(params: OverwriteStrategyFieldParams): INodeFiel
             options.push({ value: strategy, label: label })
         }
     }
-    addOption(OverwriteStrategy.IGNORE, params.ignoreLabel)
-    addOption(OverwriteStrategy.RESET_DEFAULT, params.resetDefaultLabel)
-    addOption(OverwriteStrategy.USE_VALUE, params.useValueLabel)
+    addOption(OverwriteStrategy.IGNORE, t.changeDefaults.overwriteStrategy.doNotChangeOption)
+    addOption(OverwriteStrategy.RESET_DEFAULT, params.resetDefaultOption)
+    addOption(OverwriteStrategy.USE_VALUE, params.useValueOption)
 
     return {
         type: "select",
@@ -99,9 +98,8 @@ export const changeDefaultsNode = createNodeDescriptor({
             key: "synthesizersOverwriteStrategy",
             label: t.changeDefaults.synthesizersOverwriteStrategyLabel,
             description: t.changeDefaults.synthesizersOverwriteStrategyDescription,
-            ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.synthesizers,
-            resetDefaultLabel: t.changeDefaults.overwriteStrategy.reset.synthesizers,
-            useValueLabel: t.changeDefaults.overwriteStrategy.useValue.synthesizers,
+            resetDefaultOption: t.changeDefaults.overwriteStrategy.resetOption,
+            useValueOption: t.changeDefaults.overwriteStrategy.useValue.synthesizersOption,
         }),
         ...synthesizersFields({
             key: "synthesizersOverwriteStrategy",
@@ -111,9 +109,8 @@ export const changeDefaultsNode = createNodeDescriptor({
             key: "ttsLanguageOverwriteStrategy",
             label: t.changeDefaults.ttsLanguageOverwriteStrategyLabel,
             description: t.changeDefaults.ttsLanguageOverwriteStrategyDescription,
-            ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.ttsLanguage,
-            resetDefaultLabel: t.changeDefaults.overwriteStrategy.reset.ttsLanguage,
-            useValueLabel: t.changeDefaults.overwriteStrategy.useValue.ttsLanguage,
+            resetDefaultOption: t.changeDefaults.overwriteStrategy.resetOption,
+            useValueOption: t.changeDefaults.overwriteStrategy.useValue.ttsLanguageOption,
         }),
         {
             ...languageSelectField(
@@ -132,9 +129,8 @@ export const changeDefaultsNode = createNodeDescriptor({
             key: "ttsBargeInOverwriteStrategy",
             label: t.changeDefaults.ttsBargeInOverwriteStrategyLabel,
             description: t.changeDefaults.ttsBargeInOverwriteStrategyDescription,
-            ignoreLabel: t.changeDefaults.overwriteStrategy.doNotChange.bargeIn,
-            resetDefaultLabel: undefined,
-            useValueLabel: t.changeDefaults.overwriteStrategy.useValue.bargeIn,
+            resetDefaultOption: undefined,
+            useValueOption: t.changeDefaults.overwriteStrategy.useValue.bargeInOption,
         }),
         ...bargeInFields({
             key: "ttsBargeInOverwriteStrategy",

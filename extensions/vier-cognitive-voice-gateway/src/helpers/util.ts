@@ -156,10 +156,6 @@ export function normalizeUserToUserInformation(
     return information
 }
 
-export function playInBackgroundToMode(playInBackground: boolean): string {
-    return playInBackground ? "BACKGROUND" : "FOREGROUND"
-}
-
 export const DEFAULT_NUMBER_VALUE = "none"
 
 function toNumberOrUndefined(numeric: number | string | undefined | null): number | undefined {

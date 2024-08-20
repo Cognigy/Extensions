@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools/build"
 import t from "../translations"
-import { normalizeText, playInBackgroundToMode } from "../helpers/util"
+import { normalizeText } from "../helpers/util"
 import {
     bargeInFieldsWithToggleToUseDefault,
     bargeInForm,
@@ -13,7 +13,7 @@ import { generalSection, generalSectionFormElement } from "../common/shared"
 interface IPlayNodeInputs extends BargeInInputsWithToggleToUseDefault {
     url: string
     fallbackText?: string
-    playInBackground: boolean
+    mode?: string
 }
 
 export interface IPlayNodeParams extends INodeFunctionBaseParams {
@@ -49,36 +49,45 @@ export const playNode = createNodeDescriptor({
                 placeholder: "",
             },
             condition: {
-                key: "playInBackground",
-                value: false,
+                key: "mode",
+                value: "FOREGROUND",
             },
         },
         {
-            type: "toggle",
-            key: "playInBackground",
-            label: t.play.playInBackgroundLabel,
-            description: t.play.playInBackgroundDescription,
-            defaultValue: false,
+            type: "select",
+            key: "mode",
+            label: t.play.modeLabel,
+            description: t.play.modeDescription,
+            defaultValue: "FOREGROUND",
+            params: {
+                required: true,
+                options: [
+                    { value: "FOREGROUND", label: "Foreground" },
+                    { value: "BACKGROUND", label: "Background" },
+                ],
+            },
         },
         ...bargeInFieldsWithToggleToUseDefault(),
     ],
     sections: [
-        generalSection(["url", "playInBackground", "fallbackText"]),
+        generalSection(["url", "mode", "fallbackText"]),
         bargeInSectionWithToggleToUseDefault({
-            key: "playInBackground",
-            value: false,
+            key: "mode",
+            value: "FOREGROUND",
         }),
     ],
     form: [generalSectionFormElement, bargeInForm],
     function: async ({ cognigy, config }: IPlayNodeParams) => {
         const { api } = cognigy
 
+        const playInBackground: boolean = config.mode === "BACKGROUND"
+
         const payload = {
             status: "play",
             url: config.url,
-            mode: playInBackgroundToMode(config.playInBackground),
-            bargeIn: config.playInBackground ? undefined : convertBargeInIfChanged(api, config),
-            fallbackText: config.playInBackground ? undefined : normalizeText(config.fallbackText),
+            mode: config.mode,
+            bargeIn: playInBackground ? undefined : convertBargeInIfChanged(api, config),
+            fallbackText: playInBackground ? undefined : normalizeText(config.fallbackText),
         }
 
         api.say("", payload)

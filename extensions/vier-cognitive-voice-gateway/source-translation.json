@@ -69,8 +69,8 @@
         "inputUrlLabelDescription": "Location of audio file. Allowed formats: Linear PCM with signed 16 bits 8 kHz or 16 Hz, A-law or µ-law 8 kHz.",
         "inputFallbackTextLabel": "Fallback Text",
         "inputFallbackTextDescription": "The fallback text is used when the audio playback did not succeed.",
-        "playInBackgroundLabel": "Background Playback",
-        "playInBackgroundDescription": "Enable to Playback the audio in the background. Must the same in the start and stop playback nodes."
+        "modeLabel": "Playback in",
+        "modeDescription": "Whether the audio file should be played back in the foreground or background. Must the same in the start and stop playback nodes."
     },
     "stopPlay": {
         "nodeLabel": "Stop Audio Playback",
@@ -195,7 +195,6 @@
         "inputVoiceLabel": "Vendor specific voice name for primary service",
         "inputVoiceDescription": "See the vier documentation and the documentation of the service you specified above.",
         "inputVoiceFallbackLabel": "Vendor specific voice name for fallback service",
-        "inputVoiceFallbackDescription": "See the vier documentation and the documentation of the service you specified above.",
         "inputProfileTokenLabel": "Profile Token",
         "inputProfileTokenDescription": "Please use the profile token as displayed in VIER CVG, Speech Service Profiles",
         "inputProfileTokenFallbackLabel": "Profile Token Fallback",

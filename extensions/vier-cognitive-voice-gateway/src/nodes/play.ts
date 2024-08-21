@@ -9,6 +9,7 @@ import {
     convertBargeInIfChanged,
 } from "../common/bargeIn"
 import { generalSection, generalSectionFormElement } from "../common/shared"
+import { INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor"
 
 interface IPlayNodeInputs extends BargeInInputsWithToggleToUseDefault {
     url: string
@@ -18,6 +19,21 @@ interface IPlayNodeInputs extends BargeInInputsWithToggleToUseDefault {
 
 export interface IPlayNodeParams extends INodeFunctionBaseParams {
     config: IPlayNodeInputs
+}
+
+export const playModeField: INodeField = {
+    type: "select",
+    key: "mode",
+    label: t.play.modeLabel,
+    description: t.play.modeDescription,
+    defaultValue: "FOREGROUND",
+    params: {
+        required: true,
+        options: [
+            { value: "FOREGROUND", label: t.play.modeForegroundOption },
+            { value: "BACKGROUND", label: t.play.modeBackgroundOption },
+        ],
+    },
 }
 
 export const playNode = createNodeDescriptor({
@@ -53,20 +69,7 @@ export const playNode = createNodeDescriptor({
                 value: "FOREGROUND",
             },
         },
-        {
-            type: "select",
-            key: "mode",
-            label: t.play.modeLabel,
-            description: t.play.modeDescription,
-            defaultValue: "FOREGROUND",
-            params: {
-                required: true,
-                options: [
-                    { value: "FOREGROUND", label: "Foreground" },
-                    { value: "BACKGROUND", label: "Background" },
-                ],
-            },
-        },
+        playModeField,
         ...bargeInFieldsWithToggleToUseDefault(),
     ],
     sections: [

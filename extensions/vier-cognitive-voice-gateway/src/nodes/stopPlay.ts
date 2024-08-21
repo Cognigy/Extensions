@@ -1,6 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools/build"
 import t from "../translations"
 import { generalSection, generalSectionFormElement } from "../common/shared"
+import { playModeField } from "./play"
 
 interface IStopPlayNodeInputs {
     url: string
@@ -30,20 +31,7 @@ export const stopPlayNode = createNodeDescriptor({
                 placeholder: "",
             },
         },
-        {
-            type: "select",
-            key: "mode",
-            label: t.play.modeLabel,
-            description: t.play.modeDescription,
-            defaultValue: "FOREGROUND",
-            params: {
-                required: true,
-                options: [
-                    { value: "FOREGROUND", label: "Foreground" },
-                    { value: "BACKGROUND", label: "Background" },
-                ],
-            },
-        },
+        playModeField,
     ],
     sections: [generalSection(["url", "mode"])],
     form: [generalSectionFormElement],

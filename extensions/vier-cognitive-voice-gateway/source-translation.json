@@ -70,7 +70,9 @@
         "inputFallbackTextLabel": "Fallback Text",
         "inputFallbackTextDescription": "The fallback text is used when the audio playback did not succeed.",
         "modeLabel": "Playback in",
-        "modeDescription": "Whether the audio file should be played back in the foreground or background. Must the same in the start and stop playback nodes."
+        "modeDescription": "Whether the audio file should be played back in the foreground or background. Must the same in the start and stop playback nodes.",
+        "modeForegroundOption": "Foreground",
+        "modeBackgroundOption": "Background"
     },
     "stopPlay": {
         "nodeLabel": "Stop Audio Playback",

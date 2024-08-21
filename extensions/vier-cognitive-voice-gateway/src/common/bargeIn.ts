@@ -41,8 +41,7 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
                 max: 100,
             },
             condition: {
-                key: "bargeInOnSpeech",
-                value: true,
+                and: [condition, { key: "bargeInOnSpeech", value: true }],
             },
         },
         {
@@ -52,8 +51,7 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
             description: t.bargeIn.input.phraseListDescription,
             defaultValue: undefined,
             condition: {
-                key: "bargeInOnSpeech",
-                value: true,
+                and: [condition, { key: "bargeInOnSpeech", value: true }],
             },
         },
         {
@@ -63,8 +61,7 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
             description: t.bargeIn.input.phraseListFromContextDescription,
             defaultValue: undefined,
             condition: {
-                key: "bargeInOnSpeech",
-                value: true,
+                and: [condition, { key: "bargeInOnSpeech", value: true }],
             },
         },
         {

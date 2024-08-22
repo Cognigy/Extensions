@@ -447,7 +447,8 @@ When there is no activity within the call or session, meaning neither the bot pr
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. You can use Cognigy input and context objects as usual. E.g.</i><br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;"accountID": "{{context.accountID}}",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{{context.contactReason}}"<br>}
+&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{{context.contactReason}}"<br>}<br>
+                Values that are not of type `string` will be automatically transformed into strings using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">JSON.stringify</a>.
 </td>
 		</tr>
 	</tbody>

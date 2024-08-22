@@ -4,6 +4,7 @@ import {
     TNodeFieldCondition,
 } from "@cognigy/extension-tools/build/interfaces/descriptor"
 import t from "../translations"
+import { normalizeTextArray } from "../helpers/util"
 
 export interface SynthesizersInputs {
     SynthesizerVendorSelectPrimary: string
@@ -12,6 +13,7 @@ export interface SynthesizersInputs {
     SynthesizerVoicePrimary: string
     SynthesizerProfileTokenFallback: string
     SynthesizerVoiceFallback: string
+    synthesizers: string[] // depricated
 }
 
 export function synthesizersFields(extraCondition?: TNodeFieldCondition): INodeField[] {
@@ -112,6 +114,21 @@ export function synthesizersFields(extraCondition?: TNodeFieldCondition): INodeF
                 ],
             },
         },
+        // For backwards compatibility only!
+        {
+            type: "textArray",
+            key: "synthesizers",
+            label: t.shared.inputSynthesizersLabel,
+            description: t.shared.inputSynthesizersDescription,
+            defaultValue: [""],
+            condition: {
+                and: [
+                    extraCondition,
+                    // Cannot hide when empty: setting value to '[] as string[]' results in not being able to install the extension.
+                    { key: "synthesizers", value: [""], negate: true },
+                ],
+            },
+        },
     ]
 }
 
@@ -158,12 +175,16 @@ function convertVendorSelect(
 }
 
 export function convertSynthesizers(inputs: SynthesizersInputs): Array<any> {
+    const result = []
+
     const primary = convertVendorSelect(
         inputs.SynthesizerVendorSelectPrimary,
         inputs.SynthesizerProfileTokenPrimary,
         inputs.SynthesizerVoicePrimary,
     )
-    const result = [primary]
+    if (result !== undefined) {
+        result.push(primary)
+    }
 
     const fallback = convertVendorSelect(
         inputs.SynthesizerVendorSelectFallback,
@@ -172,6 +193,11 @@ export function convertSynthesizers(inputs: SynthesizersInputs): Array<any> {
     )
     if (fallback !== undefined) {
         result.push(fallback)
+    }
+
+    const legacySynthesizers = normalizeTextArray(inputs.synthesizers)
+    if (legacySynthesizers !== undefined) {
+        result.push(legacySynthesizers)
     }
 
     return result

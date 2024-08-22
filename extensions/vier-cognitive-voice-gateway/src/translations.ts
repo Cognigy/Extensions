@@ -499,12 +499,12 @@ export default {
             'deDE': "Zeitüberschreitung beim Klingeln (in s)",
         },
         inputSynthesizersDescription: {
-            'default': "If specified, this parameter overwrites the Text-to-Speech list from the project settings.",
-            'deDE': "Sofern angegeben, überschreibt dieser Parameter die Text-to-Speech-Liste aus den Projekteinstellungen.",
+            'default': "DEPRECATED Please use the settings above.",
+            'deDE': "VERALTET Um die Text-to-Speech Sprache einzustellen, nutzen Sie die oben gezeigten Einstellungen.",
         },
         inputSynthesizersLabel: {
-            'default': "Text-to-Speech Profiles",
-            'deDE': "Text-to-Speech-Profile",
+            'default': "Text-to-Speech Profiles DEPRECATED",
+            'deDE': "Text-to-Speech-Profile VERALTET",
         },
         inputTextDescription: {
             'default': "Enter the message to introduce the prompt to the caller.",

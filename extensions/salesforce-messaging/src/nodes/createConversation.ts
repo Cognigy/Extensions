@@ -11,6 +11,7 @@ export interface ICreateConversationParams extends INodeFunctionBaseParams {
 		};
 		handoverAcceptedMessage: string;
 		routingAttributes: any;
+		sendTranscript: boolean;
 		storeLocation: string;
 		contextKey: string;
 		inputKey: string;
@@ -55,6 +56,15 @@ export const createConversationNode = createNodeDescriptor({
 			type: "json",
 			description: "Information about the conversation captured from the pre-chat form that the end user completes",
 			defaultValue: "{}",
+			params: {
+				required: false
+			}
+		},
+		{
+			key: "sendTranscript",
+			label: "Send Transcript",
+			type: "toggle",
+			defaultValue: false,
 			params: {
 				required: false
 			}
@@ -115,7 +125,8 @@ export const createConversationNode = createNodeDescriptor({
 			label: "Prechat",
 			defaultCollapsed: true,
 			fields: [
-				"routingAttributes"
+				"routingAttributes",
+				"sendTranscript"
 			]
 		},
 	],
@@ -129,8 +140,8 @@ export const createConversationNode = createNodeDescriptor({
 		color: "#009EDB"
 	},
 	function: async ({ cognigy, config }: ICreateConversationParams) => {
-		const { api, input } = cognigy;
-		const { handoverAcceptedMessage, routingAttributes, connection, storeLocation, contextKey, inputKey } = config;
+		const { api, input, context } = cognigy;
+		const { handoverAcceptedMessage, routingAttributes, sendTranscript, connection, storeLocation, contextKey, inputKey } = config;
 		const { url, orgId, esDeveloperName } = connection;
 
 		// Send handover accepted message
@@ -189,7 +200,7 @@ export const createConversationNode = createNodeDescriptor({
 							"messageType": "StaticContentMessage",
 							"staticContent": {
 								"formatType": "Text",
-								"text": input.text
+								"text": sendTranscript ? context.transcript : input.text
 							}
 						},
 						esDeveloperName
@@ -203,7 +214,6 @@ export const createConversationNode = createNodeDescriptor({
 					handover: true,
 					accessToken
 				});
-
 
 				if (storeLocation === "context") {
 					api.addToContext(contextKey, createConversationResponse.data, "simple");

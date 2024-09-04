@@ -3,10 +3,15 @@ import axios from "axios";
 
 export interface ICreateTicketParams extends INodeFunctionBaseParams {
 	config: {
-		connection: {
+		connectionType: string;
+		userConnection: {
 			username: string;
 			password: string;
 			subdomain: string;
+		};
+		apiTokenConnection: {
+			emailAddress: string;
+			apiToken: string;
 		};
 		subject: string;
 		description: string;
@@ -40,7 +45,30 @@ export const createTicketNode = createNodeDescriptor({
 	},
 	fields: [
 		{
-			key: "connection",
+			key: "connectionType",
+			label: {
+				default: "Connection Type",
+				deDE: "Verbindungstyp",
+				esES: "Tipo de conexión"
+			},
+			type: "select",
+			defaultValue: "user",
+			params: {
+				required: true,
+				options: [
+					{
+						label: "API Token",
+						value: "apiToken"
+					},
+					{
+						label: "User",
+						value: "user"
+					}
+				]
+			}
+		},
+		{
+			key: "userConnection",
 			label: {
 				default: "Zendesk Connection",
 				deDE: "Zendesk Verbindung",
@@ -50,6 +78,25 @@ export const createTicketNode = createNodeDescriptor({
 			params: {
 				connectionType: "zendesk",
 				required: true
+			},
+			condition: {
+				key: "connectionType",
+				value: "user"
+			}
+		},
+		{
+			key: "apiTokenConnection",
+			label: {
+				default: "Zendesk API Token Connection"
+			},
+			type: "connection",
+			params: {
+				connectionType: "zendesk-api-token",
+				required: true
+			},
+			condition: {
+				key: "connectionType",
+				value: "apiToken"
 			}
 		},
 		{
@@ -365,7 +412,9 @@ export const createTicketNode = createNodeDescriptor({
 		}
 	],
 	form: [
-		{ type: "field", key: "connection" },
+		{ type: "field", key: "connectionType" },
+		{ type: "field", key: "userConnection" },
+		{ type: "field", key: "apiTokenConnection" },
 		{ type: "field", key: "subject" },
 		{ type: "field", key: "description" },
 		{ type: "field", key: "priority" },
@@ -378,8 +427,9 @@ export const createTicketNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: ICreateTicketParams) => {
 		const { api } = cognigy;
-		const { connection, description, priority, subject, specifyRequester, requesterName, requesterEmail, requesterLocaleId, specifyBrand, brandId, useCustomFields, customFields, addTags, tags, storeLocation, contextKey, inputKey } = config;
-		const { username, password, subdomain } = connection;
+		const { userConnection, apiTokenConnection, connectionType, description, priority, subject, specifyRequester, requesterName, requesterEmail, requesterLocaleId, specifyBrand, brandId, useCustomFields, customFields, addTags, tags, storeLocation, contextKey, inputKey } = config;
+		const { username, password, subdomain } = userConnection;
+		const { emailAddress, apiToken } = apiTokenConnection;
 
 		let data = {
 			ticket: {
@@ -418,8 +468,8 @@ export const createTicketNode = createNodeDescriptor({
 				},
 				data: data,
 				auth: {
-					username,
-					password
+					username: connectionType === "apiToken" ? `${emailAddress}/token` : username,
+					password: connectionType === "apiToken" ? apiToken : password
 				}
 			});
 

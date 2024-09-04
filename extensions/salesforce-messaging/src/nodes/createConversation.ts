@@ -18,6 +18,11 @@ export interface ICreateConversationParams extends INodeFunctionBaseParams {
 	};
 }
 
+interface ICognigyTranscriptTurn {
+	source: string | "bot" | "user";
+	text: string;
+}
+
 
 const generateUUID = () => {
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -186,26 +191,54 @@ export const createConversationNode = createNodeDescriptor({
 
 				api.log("info", `[Salesforce MIAW] Send last user message to conversation for session with id ${input.sessionId}`);
 
-				// Send user message to agent
-				await axios({
-					method: "POST",
-					url: `${url}/iamessage/api/v2/conversation/${input.sessionId.replace('session-', '')}/message`,
-					headers: {
-						"Content-Type": "application/json",
-						"Authorization": `Bearer ${accessToken}`
-					},
-					data: {
-						message: {
-							"id": generateUUID(),
-							"messageType": "StaticContentMessage",
-							"staticContent": {
-								"formatType": "Text",
-								"text": sendTranscript ? context.transcript : input.text
-							}
-						},
-						esDeveloperName
+				if (sendTranscript) {
+					if (context.transcript) {
+						for (const message of context.transcript as ICognigyTranscriptTurn[]) {
+							// Send user message to agent
+							await axios({
+								method: "POST",
+								url: `${url}/iamessage/api/v2/conversation/${input.sessionId.replace('session-', '')}/message`,
+								headers: {
+									"Content-Type": "application/json",
+									"Authorization": `Bearer ${accessToken}`
+								},
+								data: {
+									message: {
+										"id": generateUUID(),
+										"messageType": "StaticContentMessage",
+										"staticContent": {
+											"formatType": "Text",
+											"text": message?.source === 'bot' ? `Virtual Agent: ${message.text}` : message.text
+								}
+									},
+									esDeveloperName
+								}
+							});
+						}
 					}
-				});
+
+				} else {
+					// Send user message to agent
+					await axios({
+						method: "POST",
+						url: `${url}/iamessage/api/v2/conversation/${input.sessionId.replace('session-', '')}/message`,
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${accessToken}`
+						},
+						data: {
+							message: {
+								"id": generateUUID(),
+								"messageType": "StaticContentMessage",
+								"staticContent": {
+									"formatType": "Text",
+									"text": input.text
+								}
+							},
+							esDeveloperName
+						}
+					});
+				}
 
 				api.log("info", `[Salesforce MIAW] Prepare Endpoint Transformer for session with id ${input.sessionId}`);
 

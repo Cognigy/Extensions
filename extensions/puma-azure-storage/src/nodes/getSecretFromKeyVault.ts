@@ -20,6 +20,7 @@ export interface IGetSecretFromKeyVaultParams extends INodeFunctionBaseParams {
 export const getSecretFromKeyVault = createNodeDescriptor({
   type: "getSecretFromAzureKeyVault",
   defaultLabel: "Get Secret",
+  preview: { key: "secretName", type: "text" },
   fields: [
     {
       key: "connection",
@@ -81,7 +82,7 @@ export const getSecretFromKeyVault = createNodeDescriptor({
     {
       key: "storageOption",
       label: "Storage Option",
-      defaultCollapsed: true,
+      defaultCollapsed: false,
       fields: ["storeLocation", "inputKey", "contextKey"]
     }
   ],
@@ -92,9 +93,7 @@ export const getSecretFromKeyVault = createNodeDescriptor({
     { type: "field", key: "secretName" },
     { type: "section", key: "storageOption" }
   ],
-  appearance: {
-    color: "#007fff"
-  },
+  appearance: { color: "#181818" },
   function: async ({ cognigy, config }: IGetSecretFromKeyVaultParams) => {
     const { api } = cognigy;
     const { connection, tenantId, vaultName, secretName, storeLocation, inputKey, contextKey } = config;
@@ -114,7 +113,7 @@ export const getSecretFromKeyVault = createNodeDescriptor({
         api.addToContext(contextKey, secret.value, 'simple');
       }
     } catch (error) {
-      api.log('error', `Azure Storage Extension / Key Vault error: ${error.message}`);
+      api.log('error', `Puma Azure Storage extension / Get Secret from Key Vault error: ${error.message}`);
     }
   }
 });

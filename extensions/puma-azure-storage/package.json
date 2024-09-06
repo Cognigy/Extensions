@@ -1,26 +1,24 @@
 {
   "name": "microsoft-azure-cloud-storage",
   "version": "4.0.0",
-  "description": "Microsoft Azure Cloud Storage",
+  "description": "Azure Storage for Puma",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz microsoft-azure-cloud-storage.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz puma-azure-storage.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
-  "keywords": [
-    "Azure",
-    "Microsoft",
-    "Storage"
-  ],
+  "keywords": [ "Azure", "Microsoft", "Puma", "Storage"],
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "^0.16.1",
     "@azure/keyvault-secrets": "^4.8.0",
     "@azure/identity": "^4.4.1",
-    "@azure/storage-blob": "^12.24.0"
+    "@azure/storage-blob": "^12.24.0",
+    "axios": "^1.7.7",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",

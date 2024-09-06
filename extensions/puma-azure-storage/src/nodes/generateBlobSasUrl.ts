@@ -26,6 +26,7 @@ export interface IGenerateBlobSasUrlParams extends INodeFunctionBaseParams {
 export const generateBlobSasUrl = createNodeDescriptor({
   type: "generateAzureBlobSasUrl",
   defaultLabel: "Blob SAS URL",
+  preview: { key: "blobName", type: "text" },
   fields: [
     {
       key: "tenantId",
@@ -115,7 +116,7 @@ export const generateBlobSasUrl = createNodeDescriptor({
     {
       key: "storageOption",
       label: "Storage Option",
-      defaultCollapsed: true,
+      defaultCollapsed: false,
       fields: ["storeLocation", "inputKey", "contextKey"]
     }
   ],
@@ -130,7 +131,7 @@ export const generateBlobSasUrl = createNodeDescriptor({
     { type: "field", key: "permissions" },
     { type: "section", key: "storageOption" }
   ],
-  appearance: { color: "#007fff" },
+  appearance: { color: "#181818" },
   function: async ({ cognigy, config }: IGenerateBlobSasUrlParams) => {
     const { api } = cognigy;
     const { tenantId, clientId, clientSecret, accountName, containerName, blobName, expiresIn, permissions, storeLocation, inputKey, contextKey } = config;
@@ -143,7 +144,7 @@ export const generateBlobSasUrl = createNodeDescriptor({
 
       // Best practice: set start time a little before current time to make sure any clock issues are avoided
       const startsOn = new Date(nowMilliseconds - 10 * 60 * 1000); // 10 minutes before now
-      const expiresOn = new Date(nowMilliseconds + (parseInt(expiresIn) || TEN_MINUTES));
+      const expiresOn = new Date(nowMilliseconds + (parseInt(expiresIn) * 1000 || TEN_MINUTES));
 
       const credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
       const blobServiceClient = new BlobServiceClient(accountUrl, credential);
@@ -167,7 +168,7 @@ export const generateBlobSasUrl = createNodeDescriptor({
         api.addToContext(contextKey, blobSasUrl, 'simple');
       }
     } catch (error) {
-      api.log('error', `Azure Storage Extension / Generate Blob SAS URL error: ${error.message}`);
+      api.log('error', `Puma Azure Storage extension / Generate Blob SAS URL error: ${error.message}`);
     }
   }
 });

@@ -1,10 +1,15 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { azureKeyVaultConnection } from "./connections/azureKeyVaultConnection";
-import { generateBlobSasUrl } from "./nodes/generateBlobSasUrl";
 import { getSecretFromKeyVault } from "./nodes/getSecretFromKeyVault";
+import { generateBlobSasUrl } from "./nodes/generateBlobSasUrl";
+import { processReturnLabel } from "./nodes/processReturnLabel";
 
 export default createExtension({
-  nodes: [getSecretFromKeyVault, generateBlobSasUrl],
   connections: [azureKeyVaultConnection],
-  options: { label: "Azure Cloud Storage" }
+  nodes: [
+    getSecretFromKeyVault,
+    generateBlobSasUrl,
+    processReturnLabel
+  ],
+  options: { label: "Puma Azure Storage" }
 });

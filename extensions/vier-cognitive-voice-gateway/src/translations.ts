@@ -713,11 +713,11 @@ export default {
         },
         inputServiceFallbackLabel: {
             'default': "New fallback text-to-speech service",
-            'deDE': "Neuer Speech-to-Text-Dienst für Fallback",
+            'deDE': "Neuer Text-to-Speech-Dienst für Fallback",
         },
         inputServiceLabel: {
             'default': "New text-to-speech service",
-            'deDE': "Neuer Speech-to-Text-Dienst",
+            'deDE': "Neuer Text-to-Speech-Dienst",
         },
         inputVoiceDescription: {
             'default': "Enter the voice name exactly as the provider specifies it.\nFor the correct spelling see the provider documentation of the service you specified above.",

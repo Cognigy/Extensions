@@ -24,7 +24,7 @@ export default {
         },
         timeoutFieldLabel: {
             'default': "Utterance Aggregation Timeout in (s)",
-            'deDE': "Zeit in (s), nach der die Aggregation der Aussagen endet",
+            'deDE': "Zeit (in s), nach der die Aggregation der Aussagen endet",
         },
     },
     bargeIn: {

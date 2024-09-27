@@ -17,3 +17,11 @@ coverage/
 *.tar.gz
 /**/.DS_Store
 .history
+extensions/puma-azure-storage/test/mockData.ts
+extensions/puma-azure-storage/test/poc-blobs.ts
+extensions/puma-azure-storage/test/poc-key-vault.ts
+extensions/puma-azure-storage/test/poc-move-blob.ts
+extensions/puma-azure-storage/test/poc-return-label-axios.ts
+extensions/puma-azure-storage/test/poc-return-label-azure-client.ts
+extensions/puma-azure-storage/test/PUMA storage.txt
+extensions/puma-azure-storage/test/test.ts

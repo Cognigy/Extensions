@@ -1,0 +1,38 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "build",
+    "sourceMap": true,
+    "moduleResolution": "node",
+
+    "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "alwaysStrict": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitOverride": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "./vscode"
+  ],
+  "include": [
+    "../../common/cognigy.d.ts",
+    "src/**/*"
+  ]
+}

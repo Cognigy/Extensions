@@ -3,8 +3,8 @@
 export default {
     aggregateInput: {
         enableFieldDescription: {
-            'default': "To activate the aggregation of utterances, activate this switch.",
-            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Sie diesen Schalter.",
+            'default': "To activate the aggregation of utterances, activate this setting.",
+            'deDE': "Um die Aggregation von Aussagen einzuschalten, aktivieren Sie diese Einstellung.",
         },
         enableFieldLabel: {
             'default': "Enable or disable the utterance aggregation",
@@ -39,7 +39,7 @@ export default {
             },
             onDtmfDescription: {
                 'default': "To allow the call partner to interrupt the bot by pressing keys, select this checkbox.",
-                'deDE': "Damit der:dieGesprächspartner:in den Bot durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Checkbox.",
+                'deDE': "Damit der:dieGesprächspartner:in den Bot durch Drücken von Tasten unterbrechen kann, aktivieren Sie diese Einstellung.",
             },
             onDtmfLabel: {
                 'default': "By pressing keys",
@@ -47,7 +47,7 @@ export default {
             },
             onSpeechDescription: {
                 'default': "To allow the call partner to interrupt the bot by speaking, select this checkbox.",
-                'deDE': "Damit der:die Gesprächspartner:in den Bot durch Sprechen unterbrechen kann, aktivieren Sie diese Checkbox.",
+                'deDE': "Damit der:die Gesprächspartner:in den Bot durch Sprechen unterbrechen kann, aktivieren Sie diese Einstellung.",
             },
             onSpeechLabel: {
                 'default': "By speaking",
@@ -343,8 +343,8 @@ export default {
     },
     recordingStop: {
         inputTerminateDescription: {
-            'default': "To stop the call recording rather than to pause, activate this checkbox.",
-            'deDE': "Um die Gesprächsaufzeichnung zu beenden und nicht zu unterbrechen, aktivieren Sie diese Checkbox.",
+            'default': "To stop the call recording rather than to pause, activate this setting.",
+            'deDE': "Um die Gesprächsaufzeichnung zu beenden und nicht zu unterbrechen, aktivieren Sie diese Einstellung.",
         },
         inputTerminateLabel: {
             'default': "Stop Call Recording",
@@ -455,16 +455,16 @@ export default {
             'deDE': "Ziel",
         },
         inputEndFlowDescription: {
-            'default': "To stop the flow after executing this node, activate this checkbox.",
-            'deDE': "Um den Flow nach der Ausführung dieses Knotens zu stoppen, aktivieren Sie diese Checkbox.",
+            'default': "To stop the flow after executing this node, activate this setting.",
+            'deDE': "Um den Flow nach der Ausführung dieses Knotens zu stoppen, aktivieren Sie diese Einstellung.",
         },
         inputEndFlowLabel: {
             'default': "Quit Flow",
             'deDE': "Flow beenden",
         },
         inputExperimentalEnableRingingToneDescription: {
-            'default': "To play a ringing tone during a pending call, activate this checkbox. This setting may change in the future.",
-            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, einen Klingelton abzuspielen, aktivieren Sie diese Checkbox. Hinweis! Diese Einstellung kann sich in Zukunft ändern.",
+            'default': "To play a ringing tone during a pending call, activate this setting. This setting may change in the future.",
+            'deDE': "Um während eines Anrufes, der sich im Rufaufbau befindet, einen Klingelton abzuspielen, aktivieren Sie diese Einstellung. Hinweis! Diese Einstellung kann sich in Zukunft ändern.",
         },
         inputExperimentalEnableRingingToneLabel: {
             'default': "Enable Ringing Tone",
@@ -602,8 +602,8 @@ export default {
             'deDE': "Sprache",
         },
         inputProfanityFilterDescription: {
-            'default': "To activate the profanity filter, activate this switch.",
-            'deDE': "Um Schimpfwörter herauszufiltern, aktivieren Sie diesen Schalter.",
+            'default': "To activate the profanity filter, activate this setting.",
+            'deDE': "Um Schimpfwörter herauszufiltern, aktivieren Sie diese Einstellung.",
         },
         inputProfanityFilterLabel: {
             'default': "Enable the Profanity Filter",
@@ -734,8 +734,8 @@ export default {
     },
     timer: {
         enableTimerDescription: {
-            'default': "To activate the Inactivity Timeout, activate this switch.",
-            'deDE': "Um die Zeitüberschreitung bei Inaktivität zu aktivieren, aktivieren Sie diesen Schalter.",
+            'default': "To activate the Inactivity Timeout, activate this setting.",
+            'deDE': "Um die Zeitüberschreitung bei Inaktivität zu aktivieren, aktivieren Sie diese Einstellung.",
         },
         enableTimerLabel: {
             'default': "Enable or disable the inactivity timer",

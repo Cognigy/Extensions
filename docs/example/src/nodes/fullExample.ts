@@ -218,9 +218,8 @@ export const fullExample = createNodeDescriptor({
 			key: "adaptivecard",
 			type: "adaptivecard",
 			label: "Adaptive Card",
-			description: "A code editor for Adaptive Cards",
+			description: "A code editor for Adaptive Cards with a built-in preview",
 			defaultValue: {
-				"$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
 				"type": "AdaptiveCard",
 				"version": "1.5",
 				"body": [
@@ -302,11 +301,11 @@ export const fullExample = createNodeDescriptor({
 				]
 			}
 		},
-		/* {
+		{
 			key: "backgroundSelector",
 			type: "backgroundSelector",
 			label: "Background Selector",
-		}, */
+		},
 		{
 			key: "select",
 			type: "select",
@@ -324,19 +323,21 @@ export const fullExample = createNodeDescriptor({
 				]
 			}
 		},
-		/*
 		{
 			key: "selectoptionresolver",
 			type: "select",
 			label: "Select with Option Resolvers",
+			description: "Dynmically loads information from an API when the Background Selector above is changed",
 			optionsResolver: {
-				dependencies: ["credentials"],
+				dependencies: ["backgroundSelector"],
 				resolverFunction: async ({ api, config }) => {
 				  // fetch list of files using http request
 				  const response = await api.httpRequest({
 					method: "GET",
 					url: `https://swapi.info/api/people/all.json`,
 				  });
+
+				  console.log(JSON.stringify(response.data, null, 2));
 
 				  // map file list to "options array"
 				  return response.data.map((person) => {
@@ -347,7 +348,7 @@ export const fullExample = createNodeDescriptor({
 				  });
 				},
 			  },
-		}*/
+		}
 	],
 	sections: [ // you can (but don't have to) sort fields into collapsible sections. Sections can also contain conditions.
 		{
@@ -371,8 +372,8 @@ export const fullExample = createNodeDescriptor({
 				"number",
 				"toggle",
 				"slider",
-				// "backgroundSelector",
-				// "selectoptionresolver"
+				"backgroundSelector",
+				"selectoptionresolver"
 			]
 		},
 		{

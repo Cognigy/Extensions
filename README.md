@@ -6,6 +6,10 @@ In [Cognigy.AI](https://cognigy.com/product/), so-called [Flows](https://docs.co
 
 [![npm](https://img.shields.io/npm/v/@cognigy/extension-tools/latest.svg)](https://www.npmjs.com/package/@cognigy/extension-tools)
 
+## All you want is to see some example code?
+
+Check out the example extension [right here](./docs/example/).
+
 ## Contents
 
 - [Get Started](https://support.cognigy.com/hc/en-us/articles/360016534459)

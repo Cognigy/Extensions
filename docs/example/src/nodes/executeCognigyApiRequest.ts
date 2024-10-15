@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import fetch, { Response } from "node-fetch";
+import axios from 'axios';
 
 /**
  * This file contains a more advanced example as it will also use
@@ -44,19 +44,20 @@ export const executeCognigyApiRequest = createNodeDescriptor({
 		let response, rawResponse: Response;
 
 		try {
-			rawResponse = await fetch(path);
-			response = await rawResponse.json();
+			rawResponse = await axios.get(path);
+			response = rawResponse.body;
 
-			api.say("The response of your API call is stored in the Context object");
-
-			/* write response into 'input object' */
+			/* write response into 'context' object */
 			context.apiResponse = response;
 
+			// confirm
+			api.output("The response of your API call is stored in the Context object");
+
 			/* output the connection that was used in this execution */
-			api.say(`The connection that was used during this call: `, connection);
+			api.output(`We could've used the following connection, but we didn't: `, connection);
 		} catch (err) {
 			// /* communicate the error in the interaction panel */
-			api.say(`Your response failed. Error was: ${err}`);
+			api.output(`Your response failed. Error was: ${err}`);
 		}
 	}
 });

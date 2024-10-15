@@ -53,8 +53,9 @@ This Node shows the possible input field types that can be exposed in the Extens
 - XML
 - Say
 - Connection
+- Adapative Cards
+- Background Selector
+- Select
 
 
 <img align="center" width="250" height="496" src="https://github.com/Cognigy/Extensions/blob/master/docs/images/input-fields.JPG">
-
-

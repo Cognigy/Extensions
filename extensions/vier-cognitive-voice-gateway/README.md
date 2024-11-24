@@ -2,9 +2,10 @@
 
 Enable phone bots with VIER Cognitive Voice Gateway (CVG) and integration in various contact centers.
 
-This extension needs 
-* an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
-* a link between the project in  CVG and the endpoint in Cognigy to be set up in CVG.
+This extension needs
+
+-   an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
+-   a link between the project in CVG and the endpoint in Cognigy to be set up in CVG.
 
 See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html for further information.
 
@@ -15,6 +16,7 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 > The bot says the given text. SSML formatting is supported with a simple editor.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -30,13 +32,8 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 			<td style="border: 1px solid #ddd; padding: 8px;">Your contract &lt;say-as interpret-as=&quot;characters&quot;&gt;{{context.contractno}}&lt;/say-as&gt; is beeing updated. &lt;break time=&quot;300ms&quot;&gt;Thank you.</td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speech</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -54,14 +51,20 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
 	</tbody>
 </table>
 
-## Node: Start Recording
+## Node: Start Call Recording
 
 > Starts or resumes a recording of a call. You can record the caller, the agent (bot), or both. If you record both lines, you will get a stereo recording.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
   <thead>
     <tr style="text-align: left;">
@@ -72,28 +75,29 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
   </thead>
   <tbody>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Maximum Recording Duration</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Maximum Call Recording Duration</td>
       <td style="border: 1px solid #ddd; padding: 8px;">The duration in seconds after which the recording will be <b>stopped</b>. Leaving this field empty, the recording will not be stopped automatically. For this purpose use the <b>Stop Recording</b> node.</td>
       <td style="border: 1px solid #ddd; padding: 8px;">60 (<i>for 60 seconds</i>)</td>
     </tr>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Recording ID</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Call Recording ID</td>
       <td style="border: 1px solid #ddd; padding: 8px;">An arbitrary string to identify the recording in case multiple recordings are created in the same dialog. By leaving this field empty, the default value default will be used.</td>
       <td style="border: 1px solid #ddd; padding: 8px;">survey recording</td>
     </tr>
     <tr>
-      <td style="border: 1px solid #ddd; padding: 8px;">Speakers to record</td>
-      <td style="border: 1px solid #ddd; padding: 8px;">Choose if you want to record both lines (Customer & Agent) or only one of both lines</td>
-      <td style="border: 1px solid #ddd; padding: 8px;">Both Lines</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Speaker to record</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Choose if you want to record both call partners (Customer & Agent) or only one of both lines</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Both Call Partners</td>
     </tr>
   </tbody>
 </table>
 
-## Node: Stop Recording
+## Node: Stop Call Recording
 
 > Pauses or stops recording a call.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -104,12 +108,12 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Recording ID</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Call Recording ID</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The ID used to start a recording. If left empty the default value <i>default</i> will be used.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">survey recording</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Terminate Recording</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Call Recording</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the recording will be terminated rather than paused</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
@@ -118,20 +122,21 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 
 ## Node: Play Audio File
 
-> Plays an audio file to the call. 
+> Plays an audio file to the call.
 
 Note the following requirements and limitations:
 
-* The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
-* The audio file must be a valid wav file (waveform audio file format).
-* The file format must be one of the following:
-* Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
-* A-law with a sample rate of 8000 Hz
-* µ-law with a sample rate of 8000 Hz
+-   The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
+-   The audio file must be a valid wav file (waveform audio file format).
+-   The file format must be one of the following:
+-   Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
+-   A-law with a sample rate of 8000 Hz
+-   µ-law with a sample rate of 8000 Hz
 
-The  audio file is subject to caching, which means repeated use of the same URL *might* not lead to repeated requests to the audio file. These standard caching headers will be respected/sent: `Cache-Control`, `Expires`, `Last-Modified` and `ETag`. Note that caching is not guaranteed to happen and the systems delivering the audio files should be prepared to handle the load for each individual play operation being made.
+The audio file is subject to caching, which means repeated use of the same URL _might_ not lead to repeated requests to the audio file. These standard caching headers will be respected/sent: `Cache-Control`, `Expires`, `Last-Modified` and `ETag`. Note that caching is not guaranteed to happen and the systems delivering the audio files should be prepared to handle the load for each individual play operation being made.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -142,7 +147,7 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio file URL*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The URL of the audio file</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
@@ -152,13 +157,8 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 			<td style="border: 1px solid #ddd; padding: 8px;">Welcome at VIER! </td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -173,7 +173,12 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
@@ -181,9 +186,10 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 
 ## Node: Stop Audio Playback
 
-> Stops the audio playback started using the "Play Audio File" node. 
+> Stops the audio playback started using the "Play Audio File" node.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -194,22 +200,23 @@ The  audio file is subject to caching, which means repeated use of the same URL 
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Audio URL*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Audio File URL*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The exact URL of the audio file started with the "Play Audio File" node.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">https://example.com/audio/prerecorded.wav</td>
 		</tr>
 	</tbody>
 </table>
 
+## Node: Inactivity Timeout
 
-## Node: Set Inactivity Timeout
+> Enable or disable inactivity detection with a specified timeout.
 
-> Start inactivity detection with a specified timeout.
+The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available in Cognigy.
 
-The automatic inactivity timeout in the CVG project settings must be disabled for this feature to be available.
-
+When there is no activity within the call or session, meaning neither the bot provides an output nor the user initiates an input for the defined timeout period, CVG triggers an inactivity event to com-municate with Cognigy. In this event, the value of ci.data.status is "inactive".
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -221,17 +228,23 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	<tbody>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Enable or disable the timer</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Check this option to enable the inactivity timer, uncheck it to disable the timer. If checked a timeout (in seconds) has to be entered.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Disabled</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Check this option to enable the inactivity timer, uncheck it to disable the timer.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enabled</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Activate Inactivity Timer (in s)</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If inactivity timeout is enabled a timeout (in seconds) has to be entered.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">10</td>
 		</tr>
 	</tbody>
 </table>
 
 ## Node: Set Speech-to-Text Service
 
-> Sets the Speech-to-Text Service for transcription of voice input
+> Sets the Speech-to-Text Service and Fallback Service for transcription of voice input
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -248,22 +261,33 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Microsoft </td>
 		</tr>
         <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Profile Token</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Use the profile token as displayed in VIER Cognitive Voice Gateway un-der Speech service profiles > Profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"> </td>
+		</tr>
+        <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Speech-To-Text Service Fallback</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Fallback if main Speech-to-Text Service is not available. One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or set a service via profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Fallback if main Speech-to-Text Service is not available. One of the following Speech-to-Text Services: 'GOOGLE', 'IBM', 'MICROSOFT' or leave empty to set a service via profile token.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Google </td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Profile Token Fallback</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Use the profile token as displayed in VIER Cognitive Voice Gateway un-der Speech service profiles > Profile token.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"> </td>
 		</tr>
 	</tbody>
 </table>
 
-## Node: Get Number from Caller
+## Node: Ask for a Number
 
 > Prompts the user to enter a number. This number needs to be entered via DTMF.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -274,33 +298,33 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Please enter your 4 or 5 digit code using your number keypad.</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Duration in seconds after which the prompt should be cancelled.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Submit Inputs</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">One or more characters with which the caller should confirm the number entry. Allowed are 0-9, * and #.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">#</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Synthesizers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Minimum Required Digits</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Minimum number of digits required for the prompt to succeed.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>4</i></td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Stop Condition Maximum Allowed Digits</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Maximum number of digits that the number can have. If this option is enabled, then the input ends as soon as the amount of digits is reached.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>5</i></td>
 		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -315,37 +339,33 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Use Submit Inputs</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the two stop conditions to signal the end of the user input</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Submit Inputs</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If <b>Use Submit Inputs</b> has been selected, use this input to define either a Text-To-Speech text or a DTMF signal to end the user input</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>DTMF_#</i> or <i>Done</i></td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Use Max Digits</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">One of the two stop conditions to signal the end of the user input</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Maximum Allowed Digits</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If <b>Use Max Digits</b> has been selected, use this input to define a maximum amount of digits a user can enter. The input will end once the limit has been reached</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">5</td>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text-to-Speech-Profiles</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If specified, this parameter overwrites the Text-to-Speech list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
 	</tbody>
 </table>
 
-## Node: Get Multiple Choice Answer from Caller
+## Node: Ask a Multiple Choice Question
 
 > Prompts the user to select one of several choices (e.g. yes/no answers)
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -356,13 +376,13 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Text*</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Message*</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The text to be synthesized and played to the caller.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Hello!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Do you like cats or dogs?</td>
 		</tr>
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Timeout*</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">The time of silence needed to send an inactivity event to the bot</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Duration in seconds after which the prompt should be cancelled.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>60</i> for 60 seconds</td>
 		</tr>
         <tr>
@@ -370,24 +390,9 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">A map of key-value pairs that describe the possible answers. Each key describes the topic of the answer whereas the value is an array of strings denoting the possible answers to the respective topic</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><i>Please refer to the default value provided in the input field of the node</i></td>
 		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
-		</tr>
-		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Synthesizers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Define synthesizers that override the synthesizer list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
-		</tr>
         <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on speech</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by speaking</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by the speaker.</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
-		</tr>
-        <tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in on DTMF</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
         <tr>
@@ -402,17 +407,33 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Phrase list from context</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Context variable that contains a list of phrases that trigger a barge-in. If this node contains a phrase list, then it will be merged with the referenced phrase list in the context variable.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Barge-in by pressing keys</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If checked, the playing of the audio file can be interrupted by pressing keys.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Language</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A language code different from the projects selected language.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>de-DE</i> or <i>en-US</i></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Text-to-Speech-Profiles</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">If specified, this parameter overwrites the Text-to-Speech list from the project settings. When using custom synthesizer profiles attach the profile name after the vendor with a dash.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>GOOGLE</i> or <i>GOOGLE-profilename</i></td>
 		</tr>
 	</tbody>
 </table>
 
 ## Node: Send Data
 
-> Attaches custom data to a dialog. This custom data can be read e.g. after an agent handover.
+> Attaches custom data to a dialog. This custom data is stored in CVG and can be read e.g. by a downstream system after an agent handover.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -425,7 +446,10 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 		<tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. You can use Cognigy input and context objects as usual. E.g.</i><br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;"accountID": "{{context.accountID}}",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"contactReason": "{{context.contactReason}}"<br>}<br>
+                Values that are not of type `string` will be automatically transformed into strings using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify">JSON.stringify</a>.
+</td>
 		</tr>
 	</tbody>
 </table>
@@ -435,6 +459,7 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 > Forwards the call to a different destination, e.g. to perform an agent handover.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -445,7 +470,7 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 	</thead>
 	<tbody>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Destination Phone Number</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Destination</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">The phone number to forward the call to. Must be in +E.164 format or a SIP address.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">+4921123456789 or sip:+4921123456789@sip.cognitivevoice.io</td>
 		</tr>
@@ -464,15 +489,20 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">Wether to talk with answering machines or immediately hang up on them. This is a best-effort feature since this mechanism relies on heuristics to determine of the callee is an answering machine.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP User-to-User Header</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of opaque strings that are send as User-To-User Information (UUI) SIP headers. The UUI SIP header can be used to send meta data (e.g. the dialogID) about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only 128 bytes of data will be accepted for UUI and Custom SIP Headers. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr> 
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP Custom SIP Headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. The Custom SIP headers can be used to send meta data  about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. This custom data is stored in CVG and can be read using CVG’s API e.g. by a downstream system after an agent handover.</i></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Whispering Announcement</td>
@@ -485,8 +515,8 @@ The automatic inactivity timeout in the CVG project settings must be disabled fo
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">(EXPERIMENTAL) Enable Ringing Tone</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tine while the call is in the process of transferring. This is an experimental feature flag that may be removed in the future!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enable Ringing Tone</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tone while the call is in the process of transferring.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
@@ -500,6 +530,7 @@ The called number is constructed by appending a random n-digit number to `Head N
 After a successful bridge, the bot will not receive further messages and will not be able to send any commands. Recordings will be stopped automatically if there are any running.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">
@@ -534,15 +565,20 @@ After a successful bridge, the bot will not receive further messages and will no
 			<td style="border: 1px solid #ddd; padding: 8px;">Wether to talk with answering machines or immediately hang up on them. This is a best-effort feature since this mechanism relies on heuristics to determine of the callee is an answering machine.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP User-to-User Header</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of opaque strings that are send as User-To-User Information (UUI) SIP headers. The UUI SIP header can be used to send meta data (e.g. the dialogID) about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only 128 bytes of data will be accepted for UUI and Custom SIP Headers. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr> 
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with an <i>x-</i>. Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP Custom SIP Headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. The Custom SIP headers can be used to send meta data  about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
 			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
-			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string</i></td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. This custom data is stored in CVG and can be read using CVG’s API e.g. by a downstream system after an agent handover.</i></td>
 		</tr>
         <tr>
 			<td style="border: 1px solid #ddd; padding: 8px;">Whispering Announcement</td>
@@ -555,25 +591,78 @@ After a successful bridge, the bot will not receive further messages and will no
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 		<tr>
-			<td style="border: 1px solid #ddd; padding: 8px;">(EXPERIMENTAL) Enable Ringing Tone</td>
-			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tine while the call is in the process of transferring. This is an experimental feature flag that may be removed in the future!</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enable Ringing Tone</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Enables the playback of a ringing tone while the call is in the process of transferring.</td>
 			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
 		</tr>
 	</tbody>
 </table>
 
 ## Node: Check Call Forwarding Result
- 
-> Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.
+
+> Check result after a call has been forwarded. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Forward Call" and each "Forward Call for Agent Assist" a "Wait for Input" node and a “Check Call Forward Result" node are used to handle the result.
 
 ### Arguments
+
+<i>None.</i>
+
+## Node: Use SIP REFER
+
+> Transfer the call to a different destination using [https://datatracker.ietf.org/doc/html/rfc3515](SIP REFER), if this call supports it, e.g. to perform an agent handover. Upstream systems must support the receipt of SIP REFER requests. After a successful transfer, the bot is now out of the loop and will neither receive further messages nor can send any commands. If the call is being recorded by CVG, the recording will also be stopped automatically.
+
+### Arguments
+
+<table style="border-collapse: collapse;">
+	<thead>
+		<tr style="text-align: left;">
+			<th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+			<th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Destination</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">The phone number to forward the call to. Must be in +E.164 format or a SIP address.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">+4921123456789 or sip:+4921123456789@sip.cognitivevoice.io</td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">User-to-User Information</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">A list of opaque strings that are send as User-To-User Information (UUI) SIP headers. The UUI SIP header can be used to send meta data (e.g. the dialogID) about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only 128 bytes of data will be accepted for UUI and Custom SIP Headers. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers.</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr> 
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom SIP Headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">SIP headers that can be attached to the request. Headers need to be in the form of <code>[key: string]: [string]</code>. Keys need to be prefixed with a <i>x-</i>. The Custom SIP headers can be used to send meta data  about the call being forwarded. This data is inserted in the SIP messages by CVG and used by the application accepting the call.<br><br>Due to limitations, only <b>128 bytes</b> of data will be accepted. Any SIP proxy on the path to the system, that is supposed to read the information, can alter or drop headers</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><code>{ "x-some-header": ["some", "data"] }</code></td>
+		</tr>
+        <tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom Data</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Custom data that is attached to the dialog</td>
+			<td style="border: 1px solid #ddd; padding: 8px;"><i>Any valid JSON data consisting of key value pairs where the value is a string. This custom data is stored in CVG and can be read using CVG’s API e.g. by a downstream system after an agent handover.</i></td>
+		</tr>
+		<tr>
+			<td style="border: 1px solid #ddd; padding: 8px;">Quit Flow</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">Wether the flow should be terminated after this node did execute</td>
+			<td style="border: 1px solid #ddd; padding: 8px;">✔️</td>
+		</tr>
+	</tbody>
+</table>
+
+## Node: Check Use SIP Refer Result
+
+> Check result after a call has been forwarded by using SIP Refer. Enables fallback handling if call couldn't be forwarded successfully.<br><br>The forwarding of a call can fail for various reasons. Therefore, we strongly recommend that after each "Use SIP Refer" node a "Wait for user input" and a "Check Use SIP Refer Result" node are used to handle the result.
+
+### Arguments
+
 <i>None.</i>
 
 ## Node: End Call
- 
+
 > Hangs up the call.
 
 ### Arguments
+
 <table style="border-collapse: collapse;">
 	<thead>
 		<tr style="text-align: left;">

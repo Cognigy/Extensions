@@ -1,33 +1,61 @@
-import { INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor";
-import t from "../translations";
-import { bargeInFields } from "./bargeIn";
-import { languageSelectField } from "./shared";
+import { INodeExecutionAPI, INodeField } from "@cognigy/extension-tools/build/interfaces/descriptor"
+import t from "../translations"
+import { convertLanguageSelect, languageSelectField } from "./shared"
+import {
+    BargeInInputsWithToggleToUseDefault,
+    bargeInFieldsWithToggleToUseDefault,
+    convertBargeInIfChanged,
+} from "./bargeIn"
+import {
+    SynthesizersInputsWithToggleToUseDefault,
+    convertSynthesizersIfChanged,
+    synthesizersFieldWithToggleToUseDefault,
+} from "./synthesizers"
+import { convertDurationFromSecondsToMillis } from "../helpers/util"
+
+export interface PromptInputs
+    extends BargeInInputsWithToggleToUseDefault,
+        SynthesizersInputsWithToggleToUseDefault {
+    text: string
+    timeout: number
+    language?: string
+}
+
+export function promptFieldsToPayload(api: INodeExecutionAPI, config: PromptInputs) {
+    return {
+        status: "prompt",
+        timeout: convertDurationFromSecondsToMillis(config.timeout),
+        language: convertLanguageSelect(config.language),
+        synthesizers: convertSynthesizersIfChanged(config),
+        bargeIn: convertBargeInIfChanged(api, config),
+    }
+}
 
 export const promptFields: Array<INodeField> = [
-  {
-    type: 'cognigyText',
-    key: 'text',
-    label: t.shared.inputTextLabel,
-    description: t.shared.inputTextDescription,
-    params: {
-      required: true,
+    {
+        type: "cognigyText",
+        key: "text",
+        label: t.shared.inputTextLabel,
+        description: t.shared.inputTextDescription,
+        params: {
+            required: true,
+        },
     },
-  },
-  {
-    type: 'number',
-    key: 'timeout',
-    label: t.shared.inputTimeoutLabel,
-    description: t.shared.inputTimeoutDescription,
-    params: {
-      required: true,
+    {
+        type: "number",
+        key: "timeout",
+        label: t.shared.inputTimeoutLabel,
+        description: t.shared.inputTimeoutDescription,
+        params: {
+            required: true,
+        },
     },
-  },
-  languageSelectField('language', false, t.shared.inputLanguageLabel, t.shared.inputLanguageDescription),
-  {
-    type: 'textArray',
-    key: 'synthesizers',
-    label: t.shared.inputSynthesizersLabel,
-    description: t.shared.inputSynthesizersDescription,
-  },
-  ...bargeInFields,
-];
+    languageSelectField(
+        "language",
+        false,
+        t.shared.inputLanguageLabel,
+        t.shared.inputLanguageDescription,
+    ),
+    ...synthesizersFieldWithToggleToUseDefault(),
+    ...bargeInFieldsWithToggleToUseDefault(),
+]

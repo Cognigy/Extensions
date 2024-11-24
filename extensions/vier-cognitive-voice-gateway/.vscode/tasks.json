@@ -1,16 +1,16 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "npm",
-			"script": "pack",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": [],
-			"label": "npm: pack",
-			"detail": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json"
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "pack",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "label": "npm: pack",
+            "detail": "tar -cf vier_voice.tar.gz build/* icon.png README.md package.json package-lock.json"
+        }
+    ]
 }

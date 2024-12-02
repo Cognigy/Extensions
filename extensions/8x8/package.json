@@ -39,7 +39,7 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.14.0",
-		"axios": "0.27.2",
+		"axios": "0.28.0",
 		"fast-xml-parser": "^4.0.11"
 	}
 }

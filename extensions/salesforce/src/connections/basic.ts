@@ -1,8 +1,8 @@
 import { IConnectionSchema } from "@cognigy/extension-tools";
 
-export const salesforceConnection: IConnectionSchema = {
-	type: "salesforce-crm",
-	label: "Salesforce CRM Credentials",
+export const basic: IConnectionSchema = {
+	type: "basic",
+	label: "Salesforce Basic Auth",
 	fields: [
 		{ fieldName: "username" },
 		{ fieldName: "password" },

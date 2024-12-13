@@ -1,11 +1,17 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import jsforce from 'jsforce';
+import { authenticate } from "../authenticate";
 
 export interface IQueryParams extends INodeFunctionBaseParams {
     config: {
-        connection: {
+        connectionType: string;
+        basicConnection: {
             username: string;
             password: string;
+            loginUrl: string;
+        };
+        oauthConnection: {
+            clientId: string;
+            clientSecret: string;
             loginUrl: string;
         };
         soql: string,
@@ -17,14 +23,42 @@ export interface IQueryParams extends INodeFunctionBaseParams {
 }
 export const queryNode = createNodeDescriptor({
     type: "salesforceQuery",
-    defaultLabel: "Query (SOQL)",
+    defaultLabel: "Query",
     fields: [
         {
-            key: "connection",
-            label: "Salesforce CRM Credentials",
+            key: "connectionType",
+            label: "Connection Type",
+            type: "select",
+            defaultValue: "oauth",
+            params: {
+                options: [
+                    {
+                        label: "OAuth2",
+                        value: "oauth"
+                    },
+                    {
+                        label: "Basic Auth",
+                        value: "basic"
+                    }
+                ],
+                required: true
+            }
+        },
+        {
+            key: "basicConnection",
+            label: "Salesforce Credentials",
             type: "connection",
             params: {
-                connectionType: "salesforce-crm",
+                connectionType: "oauth",
+                required: true
+            }
+        },
+        {
+            key: "oauthConnection",
+            label: "Salesforce Credentials",
+            type: "connection",
+            params: {
+                connectionType: "basic",
                 required: true
             }
         },
@@ -109,7 +143,9 @@ export const queryNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connection" },
+        { type: "field", key: "connectionType" },
+        { type: "field", key: "basicConnection" },
+        { type: "field", key: "oauthConnection" },
         { type: "field", key: "soql" },
         { type: "section", key: "options" },
         { type: "section", key: "storage" },
@@ -125,18 +161,14 @@ export const queryNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IQueryParams) => {
         const { api } = cognigy;
-        const { soql, maxFetch, connection, storeLocation, contextKey, inputKey } = config;
-        const { username, password, loginUrl } = connection;
-
+        const { soql, maxFetch, connectionType, basicConnection, oauthConnection, storeLocation, contextKey, inputKey } = config;
 
         try {
 
-            const conn = new jsforce.Connection({ loginUrl });
-
-            await conn.login(username, password);
+            const salesforceConnection = await authenticate(connectionType, basicConnection, oauthConnection);
 
             // Run SOQL query:
-            const queryResult = await conn.query(soql, { autoFetch: true, maxFetch: Number(maxFetch) });
+            const queryResult = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: Number(maxFetch) });
 
             if (queryResult.records.length === 0) {
                 const onEmptyQueryResultsChild = childConfigs.find(child => child.type === "onEmptyQueryResults");
@@ -182,7 +214,8 @@ export const onFoundQueryResults = createNodeDescriptor({
     appearance: {
         color: "#61d188",
         textColor: "white",
-        variant: "mini"
+        variant: "mini",
+        showIcon: false
     }
 });
 
@@ -204,6 +237,7 @@ export const onEmptyQueryResults = createNodeDescriptor({
     appearance: {
         color: "#61d188",
         textColor: "white",
-        variant: "mini"
+        variant: "mini",
+        showIcon: false
     }
 });

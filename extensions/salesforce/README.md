@@ -1,83 +1,43 @@
-# Salesforce CRM
+# Salesforce
 
-Integrates Cognigy.AI with Salesforce CRM (https://www.salesforce.com)
+Integrates Cognigy.AI with Salesforce (https://www.salesforce.com)
 
 This Extension is based on jsforce (https://jsforce.github.io/)
 
-### Connection
+> **WARNING** This is Extension is a replacement for the deprecated "Salesforce CRM" Extension. As this new Extension uses both, Basic and OAuth2 authentication, the old Connections cannot be used anymore. Updating to this new "Salesforce" Extension results in migrating from the old one. If you still want to upload and use the depcrecated "Salesforce CRM" Extension, please find the latest release here: https://github.com/Cognigy/Extensions/releases/tag/salesforce-crm423
 
+### Connections
+
+**Baic Auth (DEPCRATED by Salesforce)**
+   
 - username
 - password
     - Maybe one need to add the **Security Token** to the password
 - loginUrl
     - Salesforce login url, e.g. 'https://test.salesforce.com' or https://login.salesforce.com for production
 
+**OAuth2**
 
-## Node: Log In
+- clientId
+- clientSecret
+- loginUrl
+  - Salesforce domain, such as https://cognigy.my.salesforce.com
 
-This Node can be used with user-supplied Username and Password in order to **login** and **identify** the user as a Salesforce platform user. For this function, the *username*, *password*, and *login Url* are required.
-
-Note: This Node does **_not_** need to run before other Nodes listed below. It is primarily to verify runtime-supplied Salesforce credentials and return information about the owner of those credentials from Salesforce. Since the the credentials need to be obtained and used in a Flow, security should be considered, such as 'Blind' mode, and this Node may only be applicable to secure, internal use cases.
-
-After signing in the Salesforce user, the following information will be stored to the input or context object:
-
-```json
-{
-"salesforce": {
-    "login": {
-      "id": "...",
-      "organizationId": "...",
-      "url": "https://login.salesforce.com/id/..."
-    },
-    "user": {
-      "id": "https://login.salesforce.com/id/...",
-      "asserted_user": true,
-      "user_id": "...",
-      "organization_id": "...",
-      "username": "a.teusz@cognigy.com",
-      "nick_name": "a.teusz",
-      "display_name": "Alexander Teusz",
-      "email": "a.teusz@cognigy.com",
-      "email_verified": true,
-      "first_name": "Alexander",
-      "last_name": "Teusz",
-      "timezone": "Europe/Berlin",
-      "photos": {
-        "picture": "https://c.salesforce.content.force.com/profilephoto/005/F",
-        "thumbnail": "https://c.salesforce.content.force.com/profilephoto/005/T"
-      },
-      "addr_street": "Speditionstraße 1",
-      "addr_city": "Düsseldorf",
-      "addr_state": "NRW",
-      "addr_country": "DE",
-      "addr_zip": "40221",
-      "mobile_phone": "+49123456789",
-      "mobile_phone_verified": true,
-      "is_lightning_login_user": false,
-      "status": {
-        "created_date": null,
-        "body": null
-      },
-      "urls": {},
-      "active": true,
-      "user_type": "STANDARD",
-      "language": "en_US",
-      "locale": "de_DE_EURO",
-      "utcOffset": 3600000,
-      "last_modified_date": "2021-03-05T15:55:20Z"
-    }
-  }
-}
-```
+Please read the following official Salesforce guide in order to create a "Connected App" that provides the Consumer key and Consumer secret that are used as client Id and client Secret in this type of authentication: https://help.salesforce.com/s/articleView?id=sf.connected_app_client_credentials_setup.htm&type=5
 
 
-## Node: Create Entity
+---
+
+
+## Node: Entity Reuqest
 
 All **Salesforce API Fields** are listed in the following PDF File: 
 [Salesforce API Fields](https://resources.docs.salesforce.com/206/latest/en-us/sfdc/pdf/salesforce_field_names_reference.pdf)
 
 ### API Version Number
 Some Salesforce fields can only be modified when the API version is defined. You can find these settings by activating **Specify Salesforce API Version**.
+
+Please find some examples for **creating** entities here:
 
 ### Entity: Event
 
@@ -158,62 +118,8 @@ Creates a new **case** in the **Cases** Salesforce table. The JSON in *Case JSON
 
 **IMPORTANT: The Description field is required and can not be empty!**
 
-## Node: Retrieve Entity
 
-Retrieves the entity by searching for the given ID.
-
-```json
-{
- "sf_retrieve": {
-     "attributes": {
-       "type": "Account",
-       "url": "/services/data/v42.0/sobjects/Account/0011t00000FIlUTAA1"
-     },
-     "Id": "0011t00000FIlUTAA1",
-     "IsDeleted": false,
-     "MasterRecordId": null,
-     "Name": "My Account #1",
-     "Type": null,
-     "ParentId": null,
-     "BillingStreet": null,
-     "BillingCity": null,
-     "BillingState": null,
-     "BillingPostalCode": null,
-     "BillingCountry": null
-}
-
-```
-
-## Node: Delete Entity
-
-Deletes an entity by ID. Specify the type of **entity**, such as **Contact**. The response looks like the following: 
-
-```json
-    "id": "0031t00000D508kAAB",
-    "success": true,
-    "errors": []
-```
-
-## Node: Update Entity
-
-Updates an entity by ID and JSON arguments. The following code shows an example for updating a **Contact**:
-
-```json
-{
-    "FirstName": "Peter", 
-    "LastName": "Parker"
-}
-```
-
-The response looks like the following: 
-
-```json
-    "id": "0031t00000D508kAAB",
-    "success": true,
-    "errors": []
-```
-
-## Node: Query (SOQL)
+## Node: Query
 
 Carries out a ['Salesforce Object Query Language'](https://developer.salesforce.com/search#stq=SOQL%20Introduction) query, against specific fields in a specific entity type, and returning entity records. The syntax is similar to SQL.
 
@@ -244,36 +150,3 @@ The response returned into the input or context key will be like:
   // ...
 ]
 ```
-
-## Node: Search (SOSL)
-
-Carries out a ['Salesforce Object Search Language'](https://developer.salesforce.com/search#stq=SOSL%20Introduction) search, searching across fields, and potentially returning aggregate records based on multiple entities. The syntax deviates more from SQL.
-
-Note that SOSL will search across a maximum of 2000 records, being an inherent limit of the Salesforce search facility. By more carefully targeting your search queries, you are less likely to be impacted by this limit.
-
-The response returned into the input or context key will be like:
-```json
-// By default, in 'input.salesforce.search':
-"searchRecords": [
-  {
-    "attributes": {
-      "type": "Contact",
-      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5feAAA"
-    },
-    "Id": "0035g000003j5feAAA",
-    "FirstName": "Jane",
-    "LastName": "Grey"
-  },
-  {
-    "attributes": {
-      "type": "Contact",
-      "url": "/services/data/v42.0/sobjects/Contact/0035g000003j5fZAAQ"
-    },
-    "Id": "0035g000003j5fZAAQ",
-    "FirstName": "John",
-    "LastName": "Bond"
-  }
-]
-
-```
-

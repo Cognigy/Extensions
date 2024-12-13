@@ -49,8 +49,12 @@ export const queryNode = createNodeDescriptor({
             label: "Salesforce Credentials",
             type: "connection",
             params: {
-                connectionType: "oauth",
+                connectionType: "basic",
                 required: true
+            },
+            condition: {
+                key: "connectionType",
+                value: "basic"
             }
         },
         {
@@ -58,8 +62,12 @@ export const queryNode = createNodeDescriptor({
             label: "Salesforce Credentials",
             type: "connection",
             params: {
-                connectionType: "basic",
+                connectionType: "oauth",
                 required: true
+            },
+            condition: {
+                key: "connectionType",
+                value: "oauth"
             }
         },
         {

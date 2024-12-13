@@ -7,8 +7,8 @@ interface IConnection {
         loginUrl: string;
     };
     oauthConnection: {
-        clientId: string;
-        clientSecret: string;
+        consumerKey: string;
+        consumerSecret: string;
         loginUrl: string;
     };
 }
@@ -16,7 +16,7 @@ interface IConnection {
 export const authenticate = async (connectionType: (string | "basic" | "oauth"), basicConnection: IConnection["basicConnection"], oauthConnection: IConnection["oauthConnection"], apiVersion: string = "62.0") => {
 
     const { username, password } = basicConnection;
-    const { clientId, clientSecret } = oauthConnection;
+    const { consumerKey, consumerSecret } = oauthConnection;
 
     const salesforceAPIVersion: string = apiVersion !== "62.0" ? apiVersion : "62.0";
     let salesforceConnection: Connection;
@@ -24,8 +24,8 @@ export const authenticate = async (connectionType: (string | "basic" | "oauth"),
     if (connectionType === "oauth") {
 
         const oauth2 = new jsforce.OAuth2({
-            clientId,
-            clientSecret,
+            clientId: consumerKey,
+            clientSecret: consumerSecret,
             loginUrl: oauthConnection.loginUrl
         });
 

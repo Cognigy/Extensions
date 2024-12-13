@@ -10,8 +10,8 @@ export interface IQueryParams extends INodeFunctionBaseParams {
             loginUrl: string;
         };
         oauthConnection: {
-            clientId: string;
-            clientSecret: string;
+            consumerKey: string;
+            consumerSecret: string;
             loginUrl: string;
         };
         soql: string,

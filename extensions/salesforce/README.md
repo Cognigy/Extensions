@@ -18,8 +18,8 @@ This Extension is based on jsforce (https://jsforce.github.io/)
 
 **OAuth2**
 
-- clientId
-- clientSecret
+- consumerKey
+- consumerSecret
 - loginUrl
   - Salesforce domain, such as https://cognigy.my.salesforce.com
 

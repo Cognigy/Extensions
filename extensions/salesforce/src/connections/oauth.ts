@@ -4,8 +4,8 @@ export const oauth: IConnectionSchema = {
 	type: "oauth",
 	label: "Salesforce OAuth",
 	fields: [
-		{ fieldName: "clientId" },
-		{ fieldName: "clientSecret" },
+		{ fieldName: "consumerKey" },
+		{ fieldName: "consumerSecret" },
 		{ fieldName: "loginUrl" }
 	]
 };

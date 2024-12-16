@@ -3,12 +3,6 @@ import { authenticate } from "../authenticate";
 
 export interface ISearchContactParams extends INodeFunctionBaseParams {
     config: {
-        connectionType: string;
-        basicConnection: {
-            username: string;
-            password: string;
-            loginUrl: string;
-        };
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
@@ -26,48 +20,12 @@ export const searchContactNode = createNodeDescriptor({
     defaultLabel: "Search Contact",
     fields: [
         {
-            key: "connectionType",
-            label: "Connection Type",
-            type: "select",
-            defaultValue: "oauth",
-            params: {
-                options: [
-                    {
-                        label: "OAuth2",
-                        value: "oauth"
-                    },
-                    {
-                        label: "Basic Auth",
-                        value: "basic"
-                    }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "basicConnection",
-            label: "Salesforce Credentials",
-            type: "connection",
-            params: {
-                connectionType: "basic",
-                required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "basic"
-            }
-        },
-        {
             key: "oauthConnection",
             label: "Salesforce Credentials",
             type: "connection",
             params: {
                 connectionType: "oauth",
                 required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "oauth"
             }
         },
         {
@@ -153,8 +111,6 @@ export const searchContactNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connectionType" },
-        { type: "field", key: "basicConnection" },
         { type: "field", key: "oauthConnection" },
         { type: "field", key: "contactField" },
         { type: "field", key: "contactFieldValue" },
@@ -171,11 +127,11 @@ export const searchContactNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: ISearchContactParams) => {
         const { api } = cognigy;
-        const { contactField, contactFieldValue, connectionType, basicConnection, oauthConnection, storeLocation, contextKey, inputKey } = config;
+        const { contactField, contactFieldValue, oauthConnection, storeLocation, contextKey, inputKey } = config;
 
         try {
 
-            const salesforceConnection = await authenticate(connectionType, basicConnection, oauthConnection);
+            const salesforceConnection = await authenticate(oauthConnection);
 
             const soql: string = `SELECT FIELDS(All) FROM Contact WHERE ${contactField} LIKE '${contactFieldValue}' LIMIT 200`;
             const record = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: 1 });

@@ -3,12 +3,6 @@ import { authenticate } from "../authenticate";
 
 export interface IQueryParams extends INodeFunctionBaseParams {
     config: {
-        connectionType: string;
-        basicConnection: {
-            username: string;
-            password: string;
-            loginUrl: string;
-        };
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
@@ -26,48 +20,12 @@ export const queryNode = createNodeDescriptor({
     defaultLabel: "Query",
     fields: [
         {
-            key: "connectionType",
-            label: "Connection Type",
-            type: "select",
-            defaultValue: "oauth",
-            params: {
-                options: [
-                    {
-                        label: "OAuth2",
-                        value: "oauth"
-                    },
-                    {
-                        label: "Basic Auth",
-                        value: "basic"
-                    }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "basicConnection",
-            label: "Salesforce Credentials",
-            type: "connection",
-            params: {
-                connectionType: "basic",
-                required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "basic"
-            }
-        },
-        {
             key: "oauthConnection",
             label: "Salesforce Credentials",
             type: "connection",
             params: {
                 connectionType: "oauth",
                 required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "oauth"
             }
         },
         {
@@ -151,8 +109,6 @@ export const queryNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connectionType" },
-        { type: "field", key: "basicConnection" },
         { type: "field", key: "oauthConnection" },
         { type: "field", key: "soql" },
         { type: "section", key: "options" },
@@ -169,14 +125,14 @@ export const queryNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IQueryParams) => {
         const { api } = cognigy;
-        const { soql, maxFetch, connectionType, basicConnection, oauthConnection, storeLocation, contextKey, inputKey } = config;
+        const { soql, maxFetch, oauthConnection, storeLocation, contextKey, inputKey } = config;
 
         try {
 
-            const salesforceConnection = await authenticate(connectionType, basicConnection, oauthConnection);
+            const salesforceConnection = await authenticate(oauthConnection);
 
             // Run SOQL query:
-            const queryResult = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: Number(maxFetch) });
+            const queryResult = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: Number(maxFetch)});
 
             if (queryResult.records.length === 0) {
                 const onEmptyQueryResultsChild = childConfigs.find(child => child.type === "onEmptyQueryResults");

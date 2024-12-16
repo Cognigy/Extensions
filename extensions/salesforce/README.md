@@ -8,14 +8,6 @@ This Extension is based on jsforce (https://jsforce.github.io/)
 
 ### Connections
 
-**Baic Auth (DEPCRATED by Salesforce)**
-   
-- username
-- password
-    - Maybe one need to add the **Security Token** to the password
-- loginUrl
-    - Salesforce login url, e.g. 'https://test.salesforce.com' or https://login.salesforce.com for production
-
 **OAuth2**
 
 - consumerKey

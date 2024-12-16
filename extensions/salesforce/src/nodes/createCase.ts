@@ -3,12 +3,6 @@ import { authenticate } from "../authenticate";
 
 export interface ICreateCaseParams extends INodeFunctionBaseParams {
     config: {
-        connectionType: string;
-        basicConnection: {
-            username: string;
-            password: string;
-            loginUrl: string;
-        };
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
@@ -24,42 +18,20 @@ export interface ICreateCaseParams extends INodeFunctionBaseParams {
         inputKey: string;
     };
 }
+
+interface ISalesforceCaseStatus {
+    attributes: any[];
+    Id: string;
+    MasterLabel: string;
+    SortOrder: number;
+    IsDefault: boolean;
+    IsClosed: boolean;
+}
+
 export const createCaseNode = createNodeDescriptor({
     type: "createCase",
     defaultLabel: "Create Case",
     fields: [
-        {
-            key: "connectionType",
-            label: "Connection Type",
-            type: "select",
-            defaultValue: "oauth",
-            params: {
-                options: [
-                    {
-                        label: "OAuth2",
-                        value: "oauth"
-                    },
-                    {
-                        label: "Basic Auth",
-                        value: "basic"
-                    }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "basicConnection",
-            label: "Salesforce Credentials",
-            type: "connection",
-            params: {
-                connectionType: "basic",
-                required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "basic"
-            }
-        },
         {
             key: "oauthConnection",
             label: "Salesforce Credentials",
@@ -67,29 +39,109 @@ export const createCaseNode = createNodeDescriptor({
             params: {
                 connectionType: "oauth",
                 required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "oauth"
             }
         },
         {
             key: "Status",
-            type: "cognigyText",
+            type: "select",
             label: "Status",
-            defaultValue: "NEW",
             params: {
-                required: true
+                // required: true
             },
+            optionsResolver: {
+                dependencies: ["oauthConnection"],
+                resolverFunction: async ({ api, config }) => {
+                    try {
+                        const { consumerKey, consumerSecret, loginUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
+
+                        const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
+
+                        // Step 1: Authenticate with Salesforce using OAuth2
+                        const authResponse = await api.httpRequest({
+                            method: "POST",
+                            url: `${loginUrl}/services/oauth2/token`,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            // @ts-ignore
+                            data: data
+                        });
+
+                        // Step 2: Query Salesforce to get Case Statuses
+                        const queryResponse = await api.httpRequest({
+                            method: "GET",
+                            url: `${loginUrl}/services/data/v56.0/query?q=${encodeURIComponent(
+                                "SELECT Id, MasterLabel FROM CaseStatus"
+                            )}`,
+                            headers: {
+                                Authorization: `Bearer ${authResponse?.data?.access_token}`,
+                            },
+                        });
+
+                        const statuses: ISalesforceCaseStatus[] = queryResponse?.data?.records;
+
+                        // Step 3: Map statuses to "options array"
+                        return statuses.map((status: ISalesforceCaseStatus) => ({
+                            label: status.MasterLabel,
+                            value: status.Id,
+                        }));
+                    } catch (error) {
+                        throw new Error(error);
+                    }
+                }
+            }
         },
         {
             key: "Origin",
-            type: "cognigyText",
+            type: "select",
             label: "Origin",
-            defaultValue: "Web",
             params: {
-                required: true
+                // required: true
             },
+            optionsResolver: {
+                dependencies: ["oauthConnection"],
+                resolverFunction: async ({ api, config }) => {
+                    try {
+                        const { consumerKey, consumerSecret, loginUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
+
+                        // Step 1: Authenticate with Salesforce using OAuth2
+                        const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
+
+                        const authResponse = await api.httpRequest({
+                            method: "POST",
+                            url: `${loginUrl}/services/oauth2/token`,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            // @ts-ignore
+                            data: data,
+                        });
+
+                        // Step 2: Retrieve picklist values for the 'Case.Origin' field
+                        const metadataResponse = await api.httpRequest({
+                            method: "GET",
+                            url: `${loginUrl}/services/data/v56.0/sobjects/Case/describe`,
+                            headers: {
+                                Authorization: `Bearer ${ authResponse?.data?.access_token}`,
+                            },
+                        });
+
+                        const fields = metadataResponse?.data?.fields || [];
+                        const originField = fields.find((field: any) => field.name === 'Origin');
+
+                        // Step 3: Map active picklist values to the options array
+                        return originField.picklistValues
+                            .filter((picklistValue: any) => picklistValue.active)
+                            .map((picklistValue: any) => ({
+                                label: picklistValue.label,
+                                value: picklistValue.label,
+                            }));
+
+                    } catch (error) {
+                        throw new Error(error);
+                    }
+                },
+            }
         },
         {
             key: "Subject",
@@ -167,21 +219,19 @@ export const createCaseNode = createNodeDescriptor({
             ]
         },
         {
-            key: "addionalCaseDetailsSection",
-            label: "Additional Case Details",
+            key: "advanced",
+            label: "Advanced",
             defaultCollapsed: true,
             fields: ["additionalCaseDetails"]
         },
     ],
     form: [
-        { type: "field", key: "connectionType" },
-        { type: "field", key: "basicConnection" },
         { type: "field", key: "oauthConnection" },
         { type: "field", key: "Status" },
         { type: "field", key: "Origin" },
         { type: "field", key: "Subject" },
         { type: "field", key: "Description" },
-        { type: "field", key: "additionalCaseDetails" },
+        { type: "section", key: "advanced" },
         { type: "section", key: "storage" },
     ],
     appearance: {
@@ -195,11 +245,11 @@ export const createCaseNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: ICreateCaseParams) => {
         const { api } = cognigy;
-        const { Status, Origin, Subject, Description, additionalCaseDetails, connectionType, basicConnection, oauthConnection, storeLocation, contextKey, inputKey } = config;
+        const { Status, Origin, Subject, Description, additionalCaseDetails, oauthConnection, storeLocation, contextKey, inputKey } = config;
 
         try {
 
-            const salesforceConnection = await authenticate(connectionType, basicConnection, oauthConnection);
+            const salesforceConnection = await authenticate(oauthConnection);
 
             // Single record creation
             const record = await salesforceConnection.sobject("Case").create({

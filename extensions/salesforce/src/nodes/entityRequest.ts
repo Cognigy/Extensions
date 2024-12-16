@@ -3,12 +3,6 @@ import { authenticate } from "../authenticate";
 
 export interface IEntityRequestParams extends INodeFunctionBaseParams {
     config: {
-        connectionType: string;
-        basicConnection: {
-            username: string;
-            password: string;
-            loginUrl: string;
-        };
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
@@ -24,42 +18,16 @@ export interface IEntityRequestParams extends INodeFunctionBaseParams {
         inputKey: string;
     };
 }
+
+interface ISalesforceEntity {
+    Label: string;
+    QualifiedApiName: string;
+}
+
 export const entityRequestNode = createNodeDescriptor({
     type: "entityRequest",
     defaultLabel: "Entity Request",
     fields: [
-        {
-            key: "connectionType",
-            label: "Connection Type",
-            type: "select",
-            defaultValue: "oauth",
-            params: {
-                options: [
-                    {
-                        label: "OAuth2",
-                        value: "oauth"
-                    },
-                    {
-                        label: "Basic Auth",
-                        value: "basic"
-                    }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "basicConnection",
-            label: "Salesforce Credentials",
-            type: "connection",
-            params: {
-                connectionType: "basic",
-                required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "basic"
-            }
-        },
         {
             key: "oauthConnection",
             label: "Salesforce Credentials",
@@ -67,10 +35,6 @@ export const entityRequestNode = createNodeDescriptor({
             params: {
                 connectionType: "oauth",
                 required: true
-            },
-            condition: {
-                key: "connectionType",
-                value: "oauth"
             }
         },
         {
@@ -102,11 +66,56 @@ export const entityRequestNode = createNodeDescriptor({
         },
         {
             key: "entityType",
-            type: "cognigyText",
+            type: "select",
             label: "Entity Type",
             defaultValue: "Contact",
             params: {
                 required: true
+            },
+            optionsResolver: {
+                dependencies: ["oauthConnection"],
+                resolverFunction: async ({ api, config }) => {
+                    try {
+                        const { consumerKey, consumerSecret, loginUrl }: IEntityRequestParams["config"]["oauthConnection"] = config.oauthConnection;
+
+                        // Step 1: Authenticate with Salesforce using OAuth2
+                        const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
+
+                        const authResponse = await api.httpRequest({
+                            method: "POST",
+                            url: `${loginUrl}/services/oauth2/token`,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            // @ts-ignore
+                            data: data,
+                        });
+
+                        const accessToken = authResponse?.data?.access_token;
+
+                        const query = `SELECT QualifiedApiName, Label FROM EntityDefinition ORDER BY QualifiedApiName`;
+                        const url = `${loginUrl}/services/data/v56.0/query?q=${encodeURIComponent(query)}`;
+
+                        const response = await api.httpRequest({
+                            method: "GET",
+                            url: url,
+                            headers: {
+                                Authorization: `Bearer ${accessToken}`,
+                            },
+                        });
+
+                        const records = response?.data?.records || [];
+
+                        // Filter and map results for the desired fields
+                        return records.map((entity: ISalesforceEntity) => ({
+                            label: entity.Label,
+                            value: entity.QualifiedApiName,
+                        }));
+
+                    } catch (error) {
+                        throw new Error(error);
+                    }
+                },
             },
         },
         {
@@ -215,8 +224,6 @@ export const entityRequestNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connectionType" },
-        { type: "field", key: "basicConnection" },
         { type: "field", key: "oauthConnection" },
         { type: "field", key: "requestType" },
         { type: "field", key: "entityType" },
@@ -236,11 +243,11 @@ export const entityRequestNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config, childConfigs }: IEntityRequestParams) => {
         const { api } = cognigy;
-        const { connectionType, basicConnection, oauthConnection, requestType, entityRecord, entityId, entityType, apiVersion, storeLocation, contextKey, inputKey } = config;
+        const { oauthConnection, requestType, entityRecord, entityId, entityType, apiVersion, storeLocation, contextKey, inputKey } = config;
 
         try {
 
-            const salesforceConnection = await authenticate(connectionType, basicConnection, oauthConnection, apiVersion);
+            const salesforceConnection = await authenticate(oauthConnection, apiVersion);
 
             let record: any;
 

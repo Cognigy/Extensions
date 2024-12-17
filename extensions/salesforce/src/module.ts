@@ -1,6 +1,5 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { oauth } from "./connections/oauth";
-import { basic } from "./connections/basic";
 import { onEmptyQueryResults, onFoundQueryResults, queryNode } from "./nodes/query";
 import { createCaseNode, onErrorCreateCase, onSuccessCreateCase } from "./nodes/createCase";
 import { getCaseNode, onErrorGetCase, onSuccessGetCase } from "./nodes/getCase";
@@ -31,7 +30,6 @@ export default createExtension({
 	],
 
 	connections: [
-		basic,
 		oauth
 	],
 

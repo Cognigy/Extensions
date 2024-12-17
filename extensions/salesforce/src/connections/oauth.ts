@@ -2,10 +2,10 @@ import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const oauth: IConnectionSchema = {
 	type: "oauth",
-	label: "Salesforce OAuth",
+	label: "Salesforce Connected App",
 	fields: [
 		{ fieldName: "consumerKey" },
 		{ fieldName: "consumerSecret" },
-		{ fieldName: "loginUrl" }
+		{ fieldName: "instanceUrl" }
 	]
 };

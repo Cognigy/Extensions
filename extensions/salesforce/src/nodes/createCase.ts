@@ -6,7 +6,7 @@ export interface ICreateCaseParams extends INodeFunctionBaseParams {
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
-            loginUrl: string;
+            instanceUrl: string;
         };
         Status: string;
         Origin: string;
@@ -28,13 +28,28 @@ interface ISalesforceCaseStatus {
     IsClosed: boolean;
 }
 
+interface ISalesforceAuthResponse {
+    access_token: string;
+    instance_url: string;
+}
+
 export const createCaseNode = createNodeDescriptor({
     type: "createCase",
-    defaultLabel: "Create Case",
+    defaultLabel: {
+        deDE: "Case erstellen",
+        default: "Create Case",
+    },
+    summary: {
+        deDE: "Erstelle einen detaillierten Salesforce Case",
+        default: "Create a detailed Salesforce Case",
+    },
     fields: [
         {
             key: "oauthConnection",
-            label: "Salesforce Credentials",
+            label: {
+                deDE: "Salesforce Connected App",
+                default: "Salesforce Connected App",
+            },
             type: "connection",
             params: {
                 connectionType: "oauth",
@@ -44,22 +59,25 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "Status",
             type: "select",
-            label: "Status",
+            label: {
+                deDE: "Status",
+                default: "Status",
+            },
             params: {
-                // required: true
+                required: true
             },
             optionsResolver: {
                 dependencies: ["oauthConnection"],
                 resolverFunction: async ({ api, config }) => {
                     try {
-                        const { consumerKey, consumerSecret, loginUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
+                        const { consumerKey, consumerSecret, instanceUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
 
                         const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
 
                         // Step 1: Authenticate with Salesforce using OAuth2
                         const authResponse = await api.httpRequest({
                             method: "POST",
-                            url: `${loginUrl}/services/oauth2/token`,
+                            url: `${instanceUrl}/services/oauth2/token`,
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded",
                             },
@@ -70,7 +88,7 @@ export const createCaseNode = createNodeDescriptor({
                         // Step 2: Query Salesforce to get Case Statuses
                         const queryResponse = await api.httpRequest({
                             method: "GET",
-                            url: `${loginUrl}/services/data/v56.0/query?q=${encodeURIComponent(
+                            url: `${instanceUrl}/services/data/v56.0/query?q=${encodeURIComponent(
                                 "SELECT Id, MasterLabel FROM CaseStatus"
                             )}`,
                             headers: {
@@ -94,22 +112,25 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "Origin",
             type: "select",
-            label: "Origin",
+            label: {
+                deDE: "Herkunft",
+                default: "Origin"
+            },
             params: {
-                // required: true
+                required: true
             },
             optionsResolver: {
                 dependencies: ["oauthConnection"],
                 resolverFunction: async ({ api, config }) => {
                     try {
-                        const { consumerKey, consumerSecret, loginUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
+                        const { consumerKey, consumerSecret, instanceUrl }: ICreateCaseParams["config"]["oauthConnection"] = config.oauthConnection;
 
                         // Step 1: Authenticate with Salesforce using OAuth2
                         const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
 
                         const authResponse = await api.httpRequest({
                             method: "POST",
-                            url: `${loginUrl}/services/oauth2/token`,
+                            url: `${instanceUrl}/services/oauth2/token`,
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded",
                             },
@@ -120,9 +141,9 @@ export const createCaseNode = createNodeDescriptor({
                         // Step 2: Retrieve picklist values for the 'Case.Origin' field
                         const metadataResponse = await api.httpRequest({
                             method: "GET",
-                            url: `${loginUrl}/services/data/v56.0/sobjects/Case/describe`,
+                            url: `${instanceUrl}/services/data/v56.0/sobjects/Case/describe`,
                             headers: {
-                                Authorization: `Bearer ${ authResponse?.data?.access_token}`,
+                                Authorization: `Bearer ${authResponse?.data?.access_token}`,
                             },
                         });
 
@@ -146,7 +167,10 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "Subject",
             type: "cognigyText",
-            label: "Subject",
+            label: {
+                deDE: "Betreff",
+                default: "Subject"
+            },
             defaultValue: "",
             params: {
                 required: true
@@ -155,7 +179,10 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "Description",
             type: "cognigyText",
-            label: "Description",
+            label: {
+                deDE: "Beschreibung",
+                default: "Description"
+            },
             defaultValue: "{{input.text}}",
             params: {
                 required: true
@@ -164,13 +191,19 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "additionalCaseDetails",
             type: "json",
-            label: "Additional Case Details",
+            label: {
+                deDE: "Weitere Case Details",
+                default: "Additional Case Details"
+            },
             defaultValue: `{}`,
         },
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Where to store the result"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -189,28 +222,37 @@ export const createCaseNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "text",
-            label: "Input Key to store Result",
+            label: {
+                deDE: "Input Schlüssel für Ergebnisspeicherung",
+                default: "Input Key to store Result"
+            },
             defaultValue: "salesforce.case",
             condition: {
                 key: "storeLocation",
-                value: "input",
+                value: "input"
             }
         },
         {
             key: "contextKey",
             type: "text",
-            label: "Context Key to store Result",
+            label: {
+                deDE: "Context Schlüssel für Ergebnisspeicherung",
+                default: "Context Key to store Result"
+            },
             defaultValue: "salesforce.case",
             condition: {
                 key: "storeLocation",
-                value: "context",
+                value: "context"
             }
         },
     ],
     sections: [
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -220,7 +262,10 @@ export const createCaseNode = createNodeDescriptor({
         },
         {
             key: "advanced",
-            label: "Advanced",
+            label: {
+                deDE: "Erweitert",
+                default: "Advanced"
+            },
             defaultCollapsed: true,
             fields: ["additionalCaseDetails"]
         },

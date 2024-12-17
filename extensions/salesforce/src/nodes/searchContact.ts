@@ -6,7 +6,7 @@ export interface ISearchContactParams extends INodeFunctionBaseParams {
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
-            loginUrl: string;
+            instanceUrl: string;
         };
         contactField: string;
         contactFieldValue: string;
@@ -15,13 +15,35 @@ export interface ISearchContactParams extends INodeFunctionBaseParams {
         inputKey: string;
     };
 }
+
+interface ISalesforceContactField {
+    name: string;                // API Name of the field (e.g., "FirstName")
+    label: string;               // Display label for the field (e.g., "First Name")
+    type: string;
+    length?: number;
+    nillable: boolean;
+    custom: boolean;
+    defaultedOnCreate: boolean;
+    sortable: boolean;
+    unique: boolean;
+    updateable: boolean;
+    calculated: boolean;
+    creatable: boolean;
+    deprecatedAndHidden: boolean;
+}
+
+
 export const searchContactNode = createNodeDescriptor({
     type: "searchContact",
     defaultLabel: "Search Contact",
+    summary: "Find Salesforce Contacts by any field value",
     fields: [
         {
             key: "oauthConnection",
-            label: "Salesforce Credentials",
+            label: {
+                deDE: "Salesforce Connected App",
+                default: "Salesforce Connected App",
+            },
             type: "connection",
             params: {
                 connectionType: "oauth",
@@ -31,28 +53,69 @@ export const searchContactNode = createNodeDescriptor({
         {
             key: "contactField",
             type: "select",
-            label: "Field",
-            description: "The Contact field, such as FirstName, LastName, Email, Phone, etc. It might be called different in your Salesforce instance.",
+            label: {
+                deDE: "Feld",
+                default: "Field"
+            },
+            description: {
+                deDE: "Welches Feld zur Kontaktsuche verwendet werden soll",
+                default: "Which field should be used for searching for the contact"
+            },
             defaultValue: "Phone",
             params: {
                 required: true,
-                options: [
-                    { label: "Email", value: "Email" },
-                    { label: "First Name", value: "FirstName" },
-                    { label: "Last Name", value: "LastName" },
-                    { label: "Fax", value: "Fax" },
-                    { label: "Home Phone", value: "HomePhone" },
-                    { label: "Mobile Phone", value: "MobilePhone" },
-                    { label: "Other Phone", value: "OtherPhone" },
-                    { label: "Phone", value: "Phone" },
-                ]
             },
+            optionsResolver: {
+                dependencies: ["oauthConnection"],
+                resolverFunction: async ({ api, config }) => {
+                    try {
+                        const { consumerKey, consumerSecret, instanceUrl }: ISearchContactParams["config"]["oauthConnection"] = config.oauthConnection;
+
+                        // Step 1: Authenticate with Salesforce using OAuth2
+                        const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
+
+                        const authResponse = await api.httpRequest({
+                            method: "POST",
+                            url: `${instanceUrl}/services/oauth2/token`,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                            // @ts-ignore
+                            data: data,
+                        });
+
+                        // Step 2: Retrieve the metadata for the "Contact" object
+                        const describeResponse = await api.httpRequest({
+                            method: "GET",
+                            url: `${instanceUrl}/services/data/v56.0/sobjects/Contact/describe`,
+                            headers: {
+                                Authorization: `Bearer ${authResponse?.data?.access_token}`,
+                            },
+                        });
+
+                        // Step 3: Map the fields to an array with label and name
+                        return describeResponse?.data?.fields.map((field: ISalesforceContactField) => ({
+                            label: field.label,
+                            value: field.name,
+                        }));
+
+                    } catch (error) {
+                        throw new Error(`Error retrieving Contact fields: ${error.message}`);
+                    }
+                },
+            }
         },
         {
             key: "contactFieldValue",
             type: "cognigyText",
-            label: "Value",
-            description: "The Contact field, such as FirstName, LastName, Email, Phone, etc. It might be called different in your Salesforce instance.",
+            label: {
+                deDE: "Wert",
+                default: "Value"
+            },
+            description: {
+                deDE: "Der Wert des ausgewählten Kontaktfeldes",
+                default: "The actual value for the selected Contact field"
+            },
             defaultValue: "{{input.userId}}",
             params: {
                 required: true
@@ -61,7 +124,10 @@ export const searchContactNode = createNodeDescriptor({
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Where to store the result"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -80,28 +146,37 @@ export const searchContactNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "text",
-            label: "Input Key to store Result",
+            label: {
+                deDE: "Input Schlüssel für Ergebnisspeicherung",
+                default: "Input Key to store Result"
+            },
             defaultValue: "salesforce.contact",
             condition: {
                 key: "storeLocation",
-                value: "input",
+                value: "input"
             }
         },
         {
             key: "contextKey",
             type: "text",
-            label: "Context Key to store Result",
+            label: {
+                deDE: "Context Schlüssel für Ergebnisspeicherung",
+                default: "Context Key to store Result"
+            },
             defaultValue: "salesforce.contact",
             condition: {
                 key: "storeLocation",
-                value: "context",
+                value: "context"
             }
         },
     ],
     sections: [
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",

@@ -6,7 +6,7 @@ export interface IQueryParams extends INodeFunctionBaseParams {
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
-            loginUrl: string;
+            instanceUrl: string;
         };
         soql: string,
         maxFetch: number;
@@ -18,10 +18,17 @@ export interface IQueryParams extends INodeFunctionBaseParams {
 export const queryNode = createNodeDescriptor({
     type: "salesforceQuery",
     defaultLabel: "Query",
+    summary: {
+        deDE: "Suche jede Entität mit Salesforce SOQL",
+        default: "Search any entity or information in Salesorce using SOQL"
+    },
     fields: [
         {
             key: "oauthConnection",
-            label: "Salesforce Credentials",
+            label: {
+                deDE: "Salesforce Connected App",
+                default: "Salesforce Connected App",
+            },
             type: "connection",
             params: {
                 connectionType: "oauth",
@@ -31,9 +38,11 @@ export const queryNode = createNodeDescriptor({
         {
             key: "soql",
             type: "cognigyText",
-            label: "Salesforce Object Query (SOQL)",
+            label: {
+                deDE: "Salesforce Objektsuche (SOQL)",
+                default: "Salesforce Object Query (SOQL)"
+            },
             defaultValue: "SELECT Id, Name FROM Contact WHERE Name LIKE 'J%'",
-            description: "The SOQL query to run. Refer to Salesforce documentation.",
             params: {
                 required: true
             }
@@ -41,9 +50,15 @@ export const queryNode = createNodeDescriptor({
         {
             key: "maxFetch",
             type: "number",
-            label: "Maximum separate fetches",
+            label: {
+                deDE: "Maximale Anzahl der Abfragen",
+                default: "Maximum separate fetches"
+            },
             defaultValue: 8,
-            description: "Limits how many separate fetch queries (not records) are carried out before stopping. \nUse to limit data size and latency.",
+            description: {
+                deDE: "Begrenzt, wie viele separate Abrufe (nicht Datensätze) vor dem Anhalten ausgeführt werden. Zur Begrenzung der Datengröße und der Latenzzeit.",
+                default: "Limits how many separate fetch queries (not records) are carried out before stopping. Use to limit data size and latency."
+            },
             params: {
                 required: true
             }
@@ -51,7 +66,10 @@ export const queryNode = createNodeDescriptor({
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Where to store the result"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -70,28 +88,37 @@ export const queryNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "text",
-            label: "Input Key to store Result",
+            label: {
+                deDE: "Input Schlüssel für Ergebnisspeicherung",
+                default: "Input Key to store Result"
+            },
             defaultValue: "salesforce.query",
             condition: {
                 key: "storeLocation",
-                value: "input",
+                value: "input"
             }
         },
         {
             key: "contextKey",
             type: "text",
-            label: "Context Key to store Result",
+            label: {
+                deDE: "Context Schlüssel für Ergebnisspeicherung",
+                default: "Context Key to store Result"
+            },
             defaultValue: "salesforce.query",
             condition: {
                 key: "storeLocation",
-                value: "context",
+                value: "context"
             }
         },
     ],
     sections: [
         {
             key: "options",
-            label: "Options",
+            label: {
+                deDE: "Optionen",
+                default: "Options"
+            },
             defaultCollapsed: true,
             fields: [
                 "maxFetch",
@@ -99,7 +126,10 @@ export const queryNode = createNodeDescriptor({
         },
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -132,7 +162,7 @@ export const queryNode = createNodeDescriptor({
             const salesforceConnection = await authenticate(oauthConnection);
 
             // Run SOQL query:
-            const queryResult = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: Number(maxFetch)});
+            const queryResult = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: Number(maxFetch) });
 
             if (queryResult.records.length === 0) {
                 const onEmptyQueryResultsChild = childConfigs.find(child => child.type === "onEmptyQueryResults");

@@ -6,7 +6,7 @@ export interface IEntityRequestParams extends INodeFunctionBaseParams {
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
-            loginUrl: string;
+            instanceUrl: string;
         };
         requestType: "create" | "retrieve" | "update" | "delete";
         entityType: string,
@@ -26,11 +26,21 @@ interface ISalesforceEntity {
 
 export const entityRequestNode = createNodeDescriptor({
     type: "entityRequest",
-    defaultLabel: "Entity Request",
+    defaultLabel: {
+        deDE: "Entitätenanfrage",
+        default: "Entity Request"
+    },
+    summary: {
+        deDE: "Erstellt eine spezielle API Anfrage an Salesforce",
+        default: "Sends a custom request to the Salesforce API"
+    },
     fields: [
         {
             key: "oauthConnection",
-            label: "Salesforce Credentials",
+            label: {
+                deDE: "Salesforce Connected App",
+                default: "Salesforce Connected App",
+            },
             type: "connection",
             params: {
                 connectionType: "oauth",
@@ -40,24 +50,39 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "requestType",
             type: "select",
-            label: "Request Type",
+            label: {
+                deDE: "Anfrage Typ",
+                default: "Request Type"
+            },
             defaultValue: "create",
             params: {
                 options: [
                     {
-                        label: "Create",
+                        label: {
+                            deDE: "Erstellen",
+                            default: "Create"
+                        },
                         value: "create"
                     },
                     {
-                        label: "Retrieve",
+                        label: {
+                            deDE: "Erhalten",
+                            default: "Retrieve"
+                        },
                         value: "retrieve"
                     },
                     {
-                        label: "Update",
+                        label: {
+                            deDE: "Ändern",
+                            default: "Update"
+                        },
                         value: "update"
                     },
                     {
-                        label: "Delete",
+                        label: {
+                            deDE: "Löschen",
+                            default: "Delete"
+                        },
                         value: "delete"
                     }
                 ],
@@ -67,7 +92,10 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "entityType",
             type: "select",
-            label: "Entity Type",
+            label: {
+                deDE: "Entitätentyp",
+                default: "Entity Type"
+            },
             defaultValue: "Contact",
             params: {
                 required: true
@@ -76,14 +104,14 @@ export const entityRequestNode = createNodeDescriptor({
                 dependencies: ["oauthConnection"],
                 resolverFunction: async ({ api, config }) => {
                     try {
-                        const { consumerKey, consumerSecret, loginUrl }: IEntityRequestParams["config"]["oauthConnection"] = config.oauthConnection;
+                        const { consumerKey, consumerSecret, instanceUrl }: IEntityRequestParams["config"]["oauthConnection"] = config.oauthConnection;
 
                         // Step 1: Authenticate with Salesforce using OAuth2
                         const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
 
                         const authResponse = await api.httpRequest({
                             method: "POST",
-                            url: `${loginUrl}/services/oauth2/token`,
+                            url: `${instanceUrl}/services/oauth2/token`,
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded",
                             },
@@ -94,7 +122,7 @@ export const entityRequestNode = createNodeDescriptor({
                         const accessToken = authResponse?.data?.access_token;
 
                         const query = `SELECT QualifiedApiName, Label FROM EntityDefinition ORDER BY QualifiedApiName`;
-                        const url = `${loginUrl}/services/data/v56.0/query?q=${encodeURIComponent(query)}`;
+                        const url = `${instanceUrl}/services/data/v56.0/query?q=${encodeURIComponent(query)}`;
 
                         const response = await api.httpRequest({
                             method: "GET",
@@ -121,7 +149,10 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "entityId",
             type: "cognigyText",
-            label: "Entity ID",
+            label: {
+                deDE: "Entitäts-ID",
+                default: "Entity ID"
+            },
             defaultValue: "",
             params: {
                 required: true
@@ -135,7 +166,10 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "entityRecord",
             type: "json",
-            label: "Entity Record",
+            label: {
+                deDE: "Entitätseintrag",
+                default: "Entity Record"
+            },
             defaultValue: `{}`,
             params: {
                 required: true
@@ -166,7 +200,10 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Where to store the result"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -185,28 +222,37 @@ export const entityRequestNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "text",
-            label: "Input Key to store Result",
+            label: {
+                deDE: "Input Schlüssel für Ergebnisspeicherung",
+                default: "Input Key to store Result"
+            },
             defaultValue: "salesforce.entity",
             condition: {
                 key: "storeLocation",
-                value: "input",
+                value: "input"
             }
         },
         {
             key: "contextKey",
             type: "text",
-            label: "Context Key to store Result",
+            label: {
+                deDE: "Context Schlüssel für Ergebnisspeicherung",
+                default: "Context Key to store Result"
+            },
             defaultValue: "salesforce.entity",
             condition: {
                 key: "storeLocation",
-                value: "context",
+                value: "context"
             }
         },
     ],
     sections: [
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -216,7 +262,10 @@ export const entityRequestNode = createNodeDescriptor({
         },
         {
             key: "apiVersionSection",
-            label: "API Version Settings",
+            label: {
+                deDE: "API Versionseinstellung",
+                default: "API Version Settings"
+            },
             defaultCollapsed: true,
             fields: [
                 "apiVersion"

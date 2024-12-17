@@ -6,7 +6,7 @@ export interface IGetCaseParams extends INodeFunctionBaseParams {
         oauthConnection: {
             consumerKey: string;
             consumerSecret: string;
-            loginUrl: string;
+            instanceUrl: string;
         };
         caseNumber: string;
         storeLocation: string;
@@ -16,11 +16,21 @@ export interface IGetCaseParams extends INodeFunctionBaseParams {
 }
 export const getCaseNode = createNodeDescriptor({
     type: "getCase",
-    defaultLabel: "Get Case",
+    defaultLabel: {
+        deDE: "Case erhalten",
+        default: "Get Case"
+    },
+    summary: {
+        deDE: "Erhalte einen Salesforce Case anhand der Nummer",
+        default: "Get a Salesforce Case by number"
+    },
     fields: [
         {
             key: "oauthConnection",
-            label: "Salesforce Credentials",
+            label: {
+                deDE: "Salesforce Connected App",
+                default: "Salesforce Connected App",
+            },
             type: "connection",
             params: {
                 connectionType: "oauth",
@@ -30,7 +40,10 @@ export const getCaseNode = createNodeDescriptor({
         {
             key: "caseNumber",
             type: "cognigyText",
-            label: "Case Number",
+            label: {
+                deDE: "Case Nummer",
+                default: "Case Number",
+            },
             defaultValue: "",
             params: {
                 required: true
@@ -39,7 +52,10 @@ export const getCaseNode = createNodeDescriptor({
         {
             key: "storeLocation",
             type: "select",
-            label: "Where to store the result",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Where to store the result"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -58,28 +74,37 @@ export const getCaseNode = createNodeDescriptor({
         {
             key: "inputKey",
             type: "text",
-            label: "Input Key to store Result",
+            label: {
+                deDE: "Input Schlüssel für Ergebnisspeicherung",
+                default: "Input Key to store Result"
+            },
             defaultValue: "salesforce.case",
             condition: {
                 key: "storeLocation",
-                value: "input",
+                value: "input"
             }
         },
         {
             key: "contextKey",
             type: "text",
-            label: "Context Key to store Result",
+            label: {
+                deDE: "Context Schlüssel für Ergebnisspeicherung",
+                default: "Context Key to store Result"
+            },
             defaultValue: "salesforce.case",
             condition: {
                 key: "storeLocation",
-                value: "context",
+                value: "context"
             }
         },
     ],
     sections: [
         {
             key: "storage",
-            label: "Storage Option",
+            label: {
+                deDE: "Ergebnisspeicherung",
+                default: "Storage Option"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",

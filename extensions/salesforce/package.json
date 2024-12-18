@@ -1,17 +1,20 @@
 {
-	"name": "salesforce-crm",
-	"version": "4.2.3",
-	"description": "This Extension integrates Cognigy.AI with Salesforce CRM",
+	"name": "salesforce",
+	"version": "4.3.0",
+	"description": "This Extension integrates with all Salesforce Clouds",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",
-		"zip": "tar cfz salesforce-crm.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"zip": "tar cfz salesforce.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",
 		"lint": "tslint -c tslint.json src/**/*.ts"
 	},
 	"keywords": [
 		"Salesforce",
-		"CRM"
+		"Service",
+		"Marketing",
+		"Sales",
+		"Commerce"
 	],
 	"repository": {
 		"type": "git",
@@ -20,13 +23,14 @@
 	"author": "Cognigy GmbH",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/jsforce": "^1.11.5",
 		"@types/node": "^10.12.5",
-		"@types/jsforce": "^1.9.26",
+		"@types/qs": "^6.9.17",
 		"tslint": "^6.1.2",
 		"typescript": "^3.1.6"
 	},
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.12.0",
-		"jsforce": "^1.10.1"
+		"@cognigy/extension-tools": "^0.16.1",
+		"jsforce": "3.6.3"
 	}
 }

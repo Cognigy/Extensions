@@ -28,9 +28,9 @@ interface ISalesforceCaseStatus {
     IsClosed: boolean;
 }
 
-interface ISalesforceAuthResponse {
-    access_token: string;
-    instance_url: string;
+interface SalesforceCase {
+    Id: string;
+    CaseNumber: string;
 }
 
 export const createCaseNode = createNodeDescriptor({
@@ -305,14 +305,16 @@ export const createCaseNode = createNodeDescriptor({
                 ...additionalCaseDetails
             });
 
+            const queryRecord = await salesforceConnection.query<SalesforceCase>(`SELECT Id, CaseNumber from Case Where Id = '${record?.id}'`);
+
             const onSuccessChild = childConfigs.find(child => child.type === "onSuccessCreateCase");
             api.setNextNode(onSuccessChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, record, "simple");
+                api.addToContext(contextKey, queryRecord?.records[0], "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, record);
+                api.addToInput(inputKey, queryRecord?.records[0]);
             }
 
         } catch (error) {

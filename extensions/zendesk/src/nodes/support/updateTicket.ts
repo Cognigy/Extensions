@@ -4,8 +4,8 @@ import axios from "axios";
 export interface IUpdateTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			username: string;
-			password: string;
+			email: string;
+			apiToken: string;
 			subdomain: string;
 		};
 		ticketId: number;
@@ -161,7 +161,7 @@ export const updateTicketNode = createNodeDescriptor({
 	function: async ({ cognigy, config }: IUpdateTicketParams) => {
 		const { api } = cognigy;
 		const { ticketId, ticket, connection, storeLocation, contextKey, inputKey } = config;
-		const { username, password, subdomain } = connection;
+		const { email, apiToken, subdomain } = connection;
 
 		try {
 
@@ -170,13 +170,10 @@ export const updateTicketNode = createNodeDescriptor({
 				url: `https://${subdomain}.zendesk.com/api/v2/tickets/${ticketId}`,
 				headers: {
 					"Accept": "application/json",
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+                    "Authorization": `Basic ${btoa(email + "/token:" + apiToken)}`
 				},
-				data: ticket,
-				auth: {
-					username,
-					password
-				}
+				data: ticket
 			});
 
 			if (storeLocation === "context") {

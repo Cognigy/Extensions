@@ -4,8 +4,8 @@ import axios from "axios";
 export interface IGetCategoriesParams extends INodeFunctionBaseParams {
     config: {
         connection: {
-            username: string;
-            password: string;
+            email: string;
+            apiToken: string;
             subdomain: string;
         };
         storeLocation: string;
@@ -117,7 +117,7 @@ export const getCategoriesNode = createNodeDescriptor({
     function: async ({ cognigy, config }: IGetCategoriesParams) => {
         const { api } = cognigy;
         const { connection, storeLocation, contextKey, inputKey } = config;
-        const { username, password, subdomain } = connection;
+        const { email, apiToken, subdomain } = connection;
 
         try {
 
@@ -126,11 +126,8 @@ export const getCategoriesNode = createNodeDescriptor({
                 url: `https://${subdomain}.zendesk.com/api/v2/help_center/categories`,
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
-                },
-                auth: {
-                    username,
-                    password
+                    "Content-Type": "application/json",
+                    "Authorization": `Basic ${btoa(email + "/token:" + apiToken)}`
                 }
             });
 

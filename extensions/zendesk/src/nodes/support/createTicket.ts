@@ -33,6 +33,7 @@ export interface ICreateTicketParams extends INodeFunctionBaseParams {
     customFields: string;
     addTags: boolean;
     tags: string;
+    isPublic: string;
   };
 }
 export const createTicketNode = createNodeDescriptor({
@@ -137,6 +138,21 @@ export const createTicketNode = createNodeDescriptor({
         required: true,
       },
     },
+    {
+			key: "isPublic",
+			type: "string",
+			label: {
+				default: "Public",
+				deDE: "Öffentlich"
+			},
+			description: {
+				default: "If the description is public",
+				deDE: "Ob die Beschreibung öffentlich ist"
+			},
+			params: {
+				required: false
+			}
+		},
     {
       key: "priority",
       label: {
@@ -462,7 +478,8 @@ export const createTicketNode = createNodeDescriptor({
     let data = {
       ticket: {
         comment: {
-          body: description,
+          html_body: description,
+          public: isPublic || true
         },
         priority,
         subject,

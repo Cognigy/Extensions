@@ -170,9 +170,11 @@ export const getTicketNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connection" },
-        { type: "field", key: "ticketId" },
-        { type: "section", key: "storage" },
+    { type: "field", key: "connectionType" },
+    { type: "field", key: "userConnection" },
+    { type: "field", key: "apiTokenConnection" },   
+    { type: "field", key: "ticketId" },
+    { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#00363d"

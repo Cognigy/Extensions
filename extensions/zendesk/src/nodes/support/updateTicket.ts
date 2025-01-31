@@ -197,7 +197,9 @@ export const updateTicketNode = createNodeDescriptor({
     },
   ],
   form: [
-    { type: "field", key: "connection" },
+    { type: "field", key: "connectionType" },
+    { type: "field", key: "userConnection" },
+    { type: "field", key: "apiTokenConnection" },   
     { type: "field", key: "ticketId" },
     { type: "field", key: "ticket" },
     { type: "section", key: "storage" },

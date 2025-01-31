@@ -139,20 +139,21 @@ export const createTicketNode = createNodeDescriptor({
       },
     },
     {
-			key: "isPublic",
-			type: "cognigyText",
-			label: {
-				default: "Public",
-				deDE: "Öffentlich"
-			},
-			description: {
-				default: "If the description is public",
-				deDE: "Ob die Beschreibung öffentlich ist"
-			},
-			params: {
-				required: false
-			}
-		},
+      key: "isPublic",
+      label: {
+        default: "Public",
+        deDE: "Öffentlich"
+      },
+      type: "cognigyText",
+      description: {
+        default: "If the description is public",
+        deDE: "Ob die Beschreibung öffentlich ist"
+      },
+      params: {
+        required: false
+      },
+      defaultValue: "true",
+    },
     {
       key: "priority",
       label: {
@@ -431,6 +432,7 @@ export const createTicketNode = createNodeDescriptor({
   form: [
     { type: "field", key: "connectionType" },
     { type: "field", key: "userConnection" },
+    { type: "field", key: "isPublic" },
     { type: "field", key: "apiTokenConnection" },
     { type: "field", key: "subject" },
     { type: "field", key: "description" },
@@ -464,6 +466,7 @@ export const createTicketNode = createNodeDescriptor({
       storeLocation,
       contextKey,
       inputKey,
+      isPublic
     } = config;
     const { username, password, subdomain: userSubdomain } = userConnection;
     const {

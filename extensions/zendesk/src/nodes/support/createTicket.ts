@@ -140,7 +140,7 @@ export const createTicketNode = createNodeDescriptor({
     },
     {
 			key: "isPublic",
-			type: "string",
+			type: "cognigyText",
 			label: {
 				default: "Public",
 				deDE: "Öffentlich"

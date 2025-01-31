@@ -156,8 +156,10 @@ export const getCategoriesNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connection" },
-        { type: "section", key: "storage" },
+    { type: "field", key: "connectionType" },
+    { type: "field", key: "userConnection" },
+    { type: "field", key: "apiTokenConnection" },   
+    { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#00363d"

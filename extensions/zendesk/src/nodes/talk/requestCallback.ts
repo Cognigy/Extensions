@@ -188,10 +188,12 @@ export const requestCallbackNode = createNodeDescriptor({
         }
     ],
     form: [
-        { type: "field", key: "connection" },
-        { type: "field", key: "phoneNumberId" },
-        { type: "field", key: "requesterPhoneNumber" },
-        { type: "section", key: "storage" },
+    { type: "field", key: "connectionType" },
+    { type: "field", key: "userConnection" },
+    { type: "field", key: "apiTokenConnection" },   
+    { type: "field", key: "phoneNumberId" },
+    { type: "field", key: "requesterPhoneNumber" },
+    { type: "section", key: "storage" },
     ],
     appearance: {
         color: "#00363d"

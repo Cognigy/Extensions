@@ -313,7 +313,9 @@ export const searchArticlesNode = createNodeDescriptor({
     },
   ],
   form: [
-    { type: "field", key: "connection" },
+    { type: "field", key: "connectionType" },
+    { type: "field", key: "userConnection" },
+    { type: "field", key: "apiTokenConnection" },   
     { type: "field", key: "query" },
     { type: "field", key: "useBrandId" },
     { type: "field", key: "brandId" },

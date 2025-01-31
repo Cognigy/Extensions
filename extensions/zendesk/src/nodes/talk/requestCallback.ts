@@ -3,11 +3,17 @@ import axios from "axios";
 
 export interface IGetTicketParams extends INodeFunctionBaseParams {
     config: {
-        connection: {
-            username: string;
-            password: string;
-            subdomain: string;
-        };
+        connectionType: string,
+        userConnection: {
+            username: string,
+            password: string,
+            subdomain: string,
+        },
+        apiTokenConnection: {
+            emailAddress: string,
+            apiToken: string,
+            subdomain: string,
+        },
         phoneNumberId: string;
         requesterPhoneNumber: string;
         storeLocation: string;
@@ -18,36 +24,78 @@ export interface IGetTicketParams extends INodeFunctionBaseParams {
 export const requestCallbackNode = createNodeDescriptor({
     type: "requestCallback",
     defaultLabel: {
-		default: "Request Callback",
-		deDE: "Rückruf beantragen",
-		esES: "Solicitar una devolución de llamada"
-	},
+        default: "Request Callback",
+        deDE: "Rückruf beantragen",
+        esES: "Solicitar una devolución de llamada"
+    },
     summary: {
-		default: "Creates a new callback request in Zendesk",
-		deDE: "Erstellt eine Rückrufanfrage in Zendesk",
-		esES: "Crea una nueva solicitud de devolución de llamada en Zendesk"
-	},
+        default: "Creates a new callback request in Zendesk",
+        deDE: "Erstellt eine Rückrufanfrage in Zendesk",
+        esES: "Crea una nueva solicitud de devolución de llamada en Zendesk"
+    },
     fields: [
         {
-            key: "connection",
+            key: "connectionType",
             label: {
-				default: "Zendesk Connection",
-				deDE: "Zendesk Verbindung",
-				esES: "Zendesk Conexión"
-			},
+                default: "Connection Type",
+                deDE: "Verbindungstyp",
+                esES: "Tipo de conexión",
+            },
+            type: "select",
+            defaultValue: "user",
+            params: {
+                required: true,
+                options: [
+                    {
+                        label: "API Token",
+                        value: "apiToken",
+                    },
+                    {
+                        label: "User",
+                        value: "user",
+                    },
+                ],
+            },
+        },
+        {
+            key: "userConnection",
+            label: {
+                default: "Zendesk Connection",
+                deDE: "Zendesk Verbindung",
+                esES: "Zendesk Conexión",
+            },
             type: "connection",
             params: {
                 connectionType: "zendesk",
-                required: true
-            }
+                required: true,
+            },
+            condition: {
+                key: "connectionType",
+                value: "user",
+            },
+        },
+        {
+            key: "apiTokenConnection",
+            label: {
+                default: "Zendesk API Token Connection",
+            },
+            type: "connection",
+            params: {
+                connectionType: "zendesk-api-token",
+                required: true,
+            },
+            condition: {
+                key: "connectionType",
+                value: "apiToken",
+            },
         },
         {
             key: "phoneNumberId",
             label: {
-				default: "Phone Number ID",
-				deDE: "Telefonnummer ID",
-				esES: "ID del número de teléfono"
-			},
+                default: "Phone Number ID",
+                deDE: "Telefonnummer ID",
+                esES: "ID del número de teléfono"
+            },
             description: {
                 default: "The ID of the phone number that should be used from Zendesk",
                 deDE: "Die Identifikationsnummer der zu verwendenen Zendesk Telefonnummer",
@@ -61,10 +109,10 @@ export const requestCallbackNode = createNodeDescriptor({
         {
             key: "requesterPhoneNumber",
             label: {
-				default: "User Phone Number",
-				deDE: "Telefonnummer der Nutzer:in",
-				esES: "Número de teléfono de la usuaria"
-			},
+                default: "User Phone Number",
+                deDE: "Telefonnummer der Nutzer:in",
+                esES: "Número de teléfono de la usuaria"
+            },
             type: "cognigyText",
             defaultValue: "+123456789",
             params: {
@@ -75,10 +123,10 @@ export const requestCallbackNode = createNodeDescriptor({
             key: "storeLocation",
             type: "select",
             label: {
-				default: "Where to store the result",
-				deDE: "Wo das Ergebnis gespeichert werden soll",
-				esES: "Dónde almacenar el resultado"
-			},
+                default: "Where to store the result",
+                deDE: "Wo das Ergebnis gespeichert werden soll",
+                esES: "Dónde almacenar el resultado"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -127,10 +175,10 @@ export const requestCallbackNode = createNodeDescriptor({
         {
             key: "storage",
             label: {
-				default: "Storage Option",
-				deDE: "Speicheroption",
-				esES: "Opción de almacenamiento"
-			},
+                default: "Storage Option",
+                deDE: "Speicheroption",
+                esES: "Opción de almacenamiento"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -150,8 +198,20 @@ export const requestCallbackNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IGetTicketParams) => {
         const { api } = cognigy;
-        const { connection, phoneNumberId, requesterPhoneNumber, storeLocation, contextKey, inputKey } = config;
-        const { username, password, subdomain } = connection;
+        const { userConnection,
+            apiTokenConnection,
+            connectionType, phoneNumberId, requesterPhoneNumber, storeLocation, contextKey, inputKey } = config;
+
+        const { username, password, subdomain: userSubdomain } = userConnection;
+
+        const {
+            emailAddress,
+            apiToken,
+            subdomain: tokenSubdomain,
+        } = apiTokenConnection;
+
+        const subdomain =
+            connectionType === "apiToken" ? tokenSubdomain : userSubdomain;
 
         try {
             await axios({
@@ -162,8 +222,9 @@ export const requestCallbackNode = createNodeDescriptor({
                     "Content-Type": "application/json"
                 },
                 auth: {
-                    username,
-                    password
+                    username:
+                        connectionType === "apiToken" ? `${emailAddress}/token` : username,
+                    password: connectionType === "apiToken" ? apiToken : password,
                 },
                 data: {
                     callback_request: {

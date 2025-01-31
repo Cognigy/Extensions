@@ -3,11 +3,17 @@ import axios from "axios";
 
 export interface IGetCategoriesParams extends INodeFunctionBaseParams {
     config: {
-        connection: {
-            username: string;
-            password: string;
-            subdomain: string;
-        };
+        connectionType: string,
+        userConnection: {
+            username: string,
+            password: string,
+            subdomain: string,
+        },
+        apiTokenConnection: {
+            emailAddress: string,
+            apiToken: string,
+            subdomain: string,
+        },
         storeLocation: string;
         contextKey: string;
         inputKey: string;
@@ -16,10 +22,10 @@ export interface IGetCategoriesParams extends INodeFunctionBaseParams {
 export const getCategoriesNode = createNodeDescriptor({
     type: "getCategories",
     defaultLabel: {
-		default: "Get Categories",
-		deDE: "Erhalte Kategorien",
-		esES: "Obtener categorías"
-	},
+        default: "Get Categories",
+        deDE: "Erhalte Kategorien",
+        esES: "Obtener categorías"
+    },
     summary: {
         default: "Retrieves all categories of the Help Center",
         deDE: "Erhalte alle Kategorien des Help Centers",
@@ -27,26 +33,68 @@ export const getCategoriesNode = createNodeDescriptor({
     },
     fields: [
         {
-            key: "connection",
+            key: "connectionType",
             label: {
-				default: "Zendesk Connection",
-				deDE: "Zendesk Verbindung",
-				esES: "Zendesk Conexión"
-			},
+                default: "Connection Type",
+                deDE: "Verbindungstyp",
+                esES: "Tipo de conexión",
+            },
+            type: "select",
+            defaultValue: "user",
+            params: {
+                required: true,
+                options: [
+                    {
+                        label: "API Token",
+                        value: "apiToken",
+                    },
+                    {
+                        label: "User",
+                        value: "user",
+                    },
+                ],
+            },
+        },
+        {
+            key: "userConnection",
+            label: {
+                default: "Zendesk Connection",
+                deDE: "Zendesk Verbindung",
+                esES: "Zendesk Conexión",
+            },
             type: "connection",
             params: {
                 connectionType: "zendesk",
-                required: true
-            }
+                required: true,
+            },
+            condition: {
+                key: "connectionType",
+                value: "user",
+            },
+        },
+        {
+            key: "apiTokenConnection",
+            label: {
+                default: "Zendesk API Token Connection",
+            },
+            type: "connection",
+            params: {
+                connectionType: "zendesk-api-token",
+                required: true,
+            },
+            condition: {
+                key: "connectionType",
+                value: "apiToken",
+            },
         },
         {
             key: "storeLocation",
             type: "select",
             label: {
-				default: "Where to store the result",
-				deDE: "Wo das Ergebnis gespeichert werden soll",
-				esES: "Dónde almacenar el resultado"
-			},
+                default: "Where to store the result",
+                deDE: "Wo das Ergebnis gespeichert werden soll",
+                esES: "Dónde almacenar el resultado"
+            },
             defaultValue: "input",
             params: {
                 options: [
@@ -95,10 +143,10 @@ export const getCategoriesNode = createNodeDescriptor({
         {
             key: "storage",
             label: {
-				default: "Storage Option",
-				deDE: "Speicheroption",
-				esES: "Opción de almacenamiento"
-			},
+                default: "Storage Option",
+                deDE: "Speicheroption",
+                esES: "Opción de almacenamiento"
+            },
             defaultCollapsed: true,
             fields: [
                 "storeLocation",
@@ -116,8 +164,20 @@ export const getCategoriesNode = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IGetCategoriesParams) => {
         const { api } = cognigy;
-        const { connection, storeLocation, contextKey, inputKey } = config;
-        const { username, password, subdomain } = connection;
+        const { userConnection,
+            apiTokenConnection,
+            connectionType, storeLocation, contextKey, inputKey } = config;
+
+        const { username, password, subdomain: userSubdomain } = userConnection;
+
+        const {
+            emailAddress,
+            apiToken,
+            subdomain: tokenSubdomain,
+        } = apiTokenConnection;
+
+        const subdomain =
+            connectionType === "apiToken" ? tokenSubdomain : userSubdomain;
 
         try {
 
@@ -129,9 +189,10 @@ export const getCategoriesNode = createNodeDescriptor({
                     "Content-Type": "application/json"
                 },
                 auth: {
-                    username,
-                    password
-                }
+                    username:
+                        connectionType === "apiToken" ? `${emailAddress}/token` : username,
+                    password: connectionType === "apiToken" ? apiToken : password,
+                },
             });
 
 

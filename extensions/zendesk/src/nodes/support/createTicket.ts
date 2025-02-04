@@ -432,8 +432,8 @@ export const createTicketNode = createNodeDescriptor({
   form: [
     { type: "field", key: "connectionType" },
     { type: "field", key: "userConnection" },
-    { type: "field", key: "isPublic" },
     { type: "field", key: "apiTokenConnection" },
+    { type: "field", key: "isPublic" },
     { type: "field", key: "subject" },
     { type: "field", key: "description" },
     { type: "field", key: "priority" },

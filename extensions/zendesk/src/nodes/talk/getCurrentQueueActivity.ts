@@ -23,7 +23,7 @@ export interface IGetTicketParams extends INodeFunctionBaseParams {
 export const getCurrentQueueActivity = createNodeDescriptor({
     type: "getCurrentQueueActivity",
     defaultLabel: {
-        default: "Get current queue activity",
+        default: "Get Queue Activity",
         deDE: "Warteschlangen Aktivität"
     },
     summary: {
@@ -124,7 +124,7 @@ export const getCurrentQueueActivity = createNodeDescriptor({
                 deDE: "Input Key zum Speichern des Ergebnisses",
                 esES: "Input Key para almacenar el resultado"
             },
-            defaultValue: "zendesk.phoneNumbers",
+            defaultValue: "zendesk.currentQueueActivity",
             condition: {
                 key: "storeLocation",
                 value: "input",
@@ -138,7 +138,7 @@ export const getCurrentQueueActivity = createNodeDescriptor({
                 deDE: "Context Key zum Speichern des Ergebnisses",
                 esES: "Context Key para almacenar el resultado"
             },
-            defaultValue: "zendesk.phoneNumbers",
+            defaultValue: "zendesk.currentQueueActivity",
             condition: {
                 key: "storeLocation",
                 value: "context",
@@ -203,15 +203,15 @@ export const getCurrentQueueActivity = createNodeDescriptor({
                     password: connectionType === "apiToken" ? apiToken : password,
                 },
                 params: {
-                    phoneNumberId: '',
+                    "phone_number_ids": [phoneNumberId],
                 }
             });
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, response.data.current_queue_activity, "simple");
+                api.addToContext(contextKey, response.data, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, response.data.current_queue_activity);
+                api.addToInput(inputKey, response.data);
             }
         } catch (error) {
 

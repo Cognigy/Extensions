@@ -9,6 +9,7 @@ import { getTicketNode, onFoundTicket, onNotFoundTicket } from "./nodes/support/
 import { updateTicketNode } from "./nodes/support/updateTicket";
 import { getPhoneNumbersNode } from "./nodes/talk/getPhoneNumbers";
 import { requestCallbackNode } from "./nodes/talk/requestCallback";
+import { getCurrentQueueActivity } from "./nodes/talk/getCurrentQueueActivity";
 import { startLiveChatNode } from "./nodes/liveChat/startLiveChat";
 import { zendeskChatAccountKeyConnection } from "./connections/zendeskChatAccountKeyConnection";
 import { zendeskAPITokenConnection } from "./connections/zendeskAPITokenConnection";
@@ -37,7 +38,8 @@ export default createExtension({
 		startLiveChatNode,
 
 		getPhoneNumbersNode,
-		requestCallbackNode
+		requestCallbackNode,
+		getCurrentQueueActivity
 	],
 
 	connections: [

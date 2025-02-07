@@ -39,3 +39,4 @@ All exposed Flow Nodes of this Extension follow the [Zendesk API](https://develo
 - *Talk*
   - [Get Phone Numbers](https://developer.zendesk.com/api-reference/voice/talk-api/phone_numbers/#list-phone-numbers)
   - [Request Callback](https://developer.zendesk.com/api-reference/voice/talk-api/callback_requests/)
+  - [Get Queue Activity](https://developer.zendesk.com/api-reference/voice/talk-api/stats/#show-current-queue-activity)

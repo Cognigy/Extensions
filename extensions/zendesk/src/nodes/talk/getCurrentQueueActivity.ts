@@ -192,7 +192,7 @@ export const getCurrentQueueActivity = createNodeDescriptor({
 
             const response = await axios({
                 method: "get",
-                url: `https://${subdomain}.zendesk.com/api/v2/channels/voice/current_queue_activity`,
+                url: `https://${subdomain}.zendesk.com/api/v2/channels/voice/stats/current_queue_activity`,
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json"
@@ -203,7 +203,7 @@ export const getCurrentQueueActivity = createNodeDescriptor({
                     password: connectionType === "apiToken" ? apiToken : password,
                 },
                 params: {
-                    "phone_number_ids": [phoneNumberId],
+                    "phone_number_ids": phoneNumberId,
                 }
             });
 

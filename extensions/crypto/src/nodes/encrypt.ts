@@ -6,6 +6,7 @@ export interface IEncrypt extends INodeFunctionBaseParams {
 		algorithm: string;
 		text: string;
 		key: string;
+		iv: string;
 		storeEncrypt: string;
 		inputKey: string;
 		contextKey: string;
@@ -482,6 +483,15 @@ export const encryptNode = createNodeDescriptor({
 			}
 		},
 		{
+			key: "iv",
+			label: "Initialization Vector (IV)",
+			type: "cognigyText",
+			defaultValue: "{{context.iv.result}}",
+			params: {
+				required: true
+			}
+		},
+		{
 			key: "storeEncrypt",
 			type: "select",
 			label: "Where to store the result",
@@ -537,6 +547,7 @@ export const encryptNode = createNodeDescriptor({
 		{ type: "field", key: "algorithm" },
 		{ type: "field", key: "text" },
 		{ type: "field", key: "key" },
+		{ type: "field", key: "iv" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
@@ -545,19 +556,29 @@ export const encryptNode = createNodeDescriptor({
 
 	function: async ({ cognigy, config }: IEncrypt) => {
 		const { api } = cognigy;
-		const { algorithm, text, key, storeEncrypt, inputKey, contextKey } = config;
+		const { algorithm, text, key, iv, storeEncrypt, inputKey, contextKey } = config;
 		let result = {};
 
 		if (!text) result = Promise.reject("No text defined.");
 		if (!key) result = Promise.reject("No key defined.");
 		if (!algorithm) result = Promise.reject("No algorithm defined.");
-
+		if (!iv) result = Promise.reject("No initialization vector defined.");
 
 		try {
-			const cipher = crypto.createCipher(algorithm, key);
+			// Prepare key with correct length
+			const keyBuffer = Buffer.from(key);
+			
+			const ivBuffer = Buffer.from(iv, 'utf8');
+
+			const cipher = crypto.createCipheriv(algorithm, keyBuffer, ivBuffer);
 			let crypted = cipher.update(text, 'utf8', 'hex');
 			crypted += cipher.final('hex');
-			result = { "result": crypted };
+			
+			// Include the IV with the result for decryption
+			result = { 
+				"result": crypted,
+				"iv": ivBuffer.toString('utf8')
+			};
 
 			if (storeEncrypt === "context") {
 				api.addToContext(contextKey, result, "simple");

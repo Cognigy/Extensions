@@ -6,6 +6,7 @@ export interface IDecrypt extends INodeFunctionBaseParams {
 		algorithm: string;
 		text: string;
 		key: string;
+		iv: string;
 		storeDecrypt: string;
 		inputKey: string;
 		contextKey: string;
@@ -58,7 +59,7 @@ export const decryptNode = createNodeDescriptor({
 					},
 					{
 						label: "aes-128-gcm",
-						value: "shaes-128-gcma"
+						value: "aes-128-gcm"
 					},
 					{
 						label: "aes-128-ofb",
@@ -195,10 +196,6 @@ export const decryptNode = createNodeDescriptor({
 					{
 						label: "camellia-128-ecb",
 						value: "camellia-128-ecb"
-					},
-					{
-						label: "scamellia-128-ofbha",
-						value: "scamellia-128-ofbha"
 					},
 					{
 						label: "camellia-128-ofb",
@@ -482,6 +479,15 @@ export const decryptNode = createNodeDescriptor({
 			}
 		},
 		{
+			key: "iv",
+			label: "Initialization Vector (IV)",
+			type: "cognigyText",
+			defaultValue: "{{context.iv.result}}",
+			params: {
+				required: true
+			}
+		},
+		{
 			key: "storeDecrypt",
 			type: "select",
 			label: "Where to store the result",
@@ -537,6 +543,7 @@ export const decryptNode = createNodeDescriptor({
 		{ type: "field", key: "algorithm" },
 		{ type: "field", key: "text" },
 		{ type: "field", key: "key" },
+		{ type: "field", key: "iv" },
 		{ type: "section", key: "storageOption" },
 	],
 	appearance: {
@@ -545,16 +552,20 @@ export const decryptNode = createNodeDescriptor({
 
 	function: async ({ cognigy, config }: IDecrypt) => {
 		const { api } = cognigy;
-		const { algorithm, text, key, storeDecrypt, inputKey, contextKey } = config;
+		const { algorithm, text, key, iv, storeDecrypt, inputKey, contextKey } = config;
 		let result = {};
 
 		if (!text) result = Promise.reject("No text defined.");
 		if (!key) result = Promise.reject("No key defined.");
+		if (!iv) result = Promise.reject("No initialization vector defined.");
 		if (!algorithm) result = Promise.reject("No algorithm defined.");
 
-
 		try {
-			const decipher = crypto.createDecipher(algorithm, key);
+			// Prepare key and iv with correct lengths
+			const keyBuffer = Buffer.from(key);
+			const ivBuffer = Buffer.from(iv, 'utf8');
+			
+			const decipher = crypto.createDecipheriv(algorithm, keyBuffer, ivBuffer);
 			let decrypted = decipher.update(text, 'hex', 'utf8');
 			decrypted += decipher.final('utf8');
 			result = { "result": decrypted };

@@ -1,6 +1,6 @@
 {
   "name": "crypto",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "description": "Crypto",
   "main": "build/module.js",
   "scripts": {

@@ -11,7 +11,10 @@ This node creates a Hash. It stores the result in the context or input object:
 { 
 	"key": {
 		"result":"5ae9b7f211e23aac3df5f2b8f3b8eada"
-	}
+	},
+	"iv": {
+    		"result": "1234567890abcdef" // utf8
+  	}
  }
 ```
 ## Node: encrypt
@@ -21,7 +24,8 @@ This node encrypts. It stores the result in the context or input object:
 ```json
 { 
 	"encrypt": {
-		"result":"69ce7bfa6a9381f4"
+		"result":"69ce7bfa6a9381f4",
+		"iv": "1234567890abcdef" // utf8
 	}
  }
 ```

@@ -28,10 +28,6 @@ export const createHashNode = createNodeDescriptor({
 						value: "md5"
 					},
 					{
-						label: "sha",
-						value: "sha"
-					},
-					{
 						label: "sha1",
 						value: "sha1"
 					},
@@ -42,6 +38,26 @@ export const createHashNode = createNodeDescriptor({
 					{
 						label: "sha384",
 						value: "sha384"
+					},
+					{
+						label: "sha512",
+						value: "sha512"
+					},
+					{
+						label: "sha3-224",
+						value: "sha3-224"
+					},
+					{
+						label: "sha3-256",
+						value: "sha3-256"
+					},
+					{
+						label: "sha3-384",
+						value: "sha3-384"
+					},
+					{
+						label: "sha3-512",
+						value: "sha3-512"
 					}
 				]
 			}

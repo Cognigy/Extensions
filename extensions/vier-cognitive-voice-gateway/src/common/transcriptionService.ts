@@ -41,7 +41,8 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
                 max: 100,
             },
             condition: {
-                and: [condition, { key: "bargeInOnSpeech", value: true }],
+                key: "bargeInOnSpeech",
+                value: true,
             },
         },
         {
@@ -51,7 +52,8 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
             description: t.bargeIn.input.phraseListDescription,
             defaultValue: undefined,
             condition: {
-                and: [condition, { key: "bargeInOnSpeech", value: true }],
+                key: "bargeInOnSpeech",
+                value: true,
             },
         },
         {
@@ -61,7 +63,8 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
             description: t.bargeIn.input.phraseListFromContextDescription,
             defaultValue: undefined,
             condition: {
-                and: [condition, { key: "bargeInOnSpeech", value: true }],
+                key: "bargeInOnSpeech",
+                value: true,
             },
         },
         {
@@ -75,25 +78,19 @@ export function bargeInFields(condition: TNodeFieldCondition): Array<INodeField>
     ]
 }
 
-export function bargeInFieldsWithToggleToUseDefault(
-    extraCondition?: TNodeFieldCondition,
-): Array<INodeField> {
+export function bargeInFieldsWithToggleToUseDefault(): Array<INodeField> {
     const changeBargeInKey = "changeBargeIn"
-
-    const isToggleTrue: TNodeFieldCondition = { key: changeBargeInKey, value: true }
-    const bargeInCondition: TNodeFieldCondition = extraCondition
-        ? { and: [extraCondition, isToggleTrue] }
-        : isToggleTrue
-
     return [
         {
             type: "toggle",
             key: changeBargeInKey,
             label: t.bargeIn.useDefaultToggleLabel,
             defaultValue: false,
-            condition: extraCondition,
         },
-        ...bargeInFields(bargeInCondition),
+        ...bargeInFields({
+            key: changeBargeInKey,
+            value: true,
+        }),
     ]
 }
 
@@ -101,16 +98,11 @@ export const bargeInFieldKeys: readonly string[] = bargeInFields(null).map(field
 export const bargeInFieldWithToggleToUseDefaultKeys: readonly string[] =
     bargeInFieldsWithToggleToUseDefault().map(field => field.key)
 
-export function bargeInSectionWithToggleToUseDefault(
-    extraCondition?: TNodeFieldCondition,
-): INodeSection {
-    return {
-        key: "bargeIn",
-        fields: [...bargeInFieldWithToggleToUseDefaultKeys],
-        label: t.bargeIn.section.label,
-        defaultCollapsed: true,
-        condition: extraCondition,
-    }
+export const bargeInSectionWithToggleToUseDefault: INodeSection = {
+    key: "bargeIn",
+    fields: [...bargeInFieldWithToggleToUseDefaultKeys],
+    label: t.bargeIn.section.label,
+    defaultCollapsed: true,
 }
 
 export const bargeInForm: INodeFieldAndSectionFormElement = {
@@ -147,7 +139,7 @@ export function convertBargeIn(api: INodeExecutionAPI, inputs: BargeInInputs): B
     }
 }
 
-export function convertBargeInIfChanged(
+export function convertBargeInRespectToggleToUseDefault(
     api: INodeExecutionAPI,
     inputs: BargeInInputsWithToggleToUseDefault,
 ): BargeInOptions | null {

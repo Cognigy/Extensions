@@ -18,7 +18,6 @@
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.16.4",
 		"axios": "1.9.0",
-		"neo4j-driver": "5.28.1",
 		"tslint": "^6.1.2"
 	},
 	"devDependencies": {

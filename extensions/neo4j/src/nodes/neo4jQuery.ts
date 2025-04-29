@@ -1,5 +1,4 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import neo4j, { Driver } from 'neo4j-driver';
 import axios from 'axios';
 
 export interface INeo4jQueryParams extends INodeFunctionBaseParams {
@@ -9,7 +8,7 @@ export interface INeo4jQueryParams extends INodeFunctionBaseParams {
 		neo4jConnection: {
 			Username: string;
 			Password: string;
-			ConnectionURI: string;
+			Host: string;
 		};
 		openAiConnection: {
 			openAiKey: string;
@@ -21,7 +20,7 @@ export interface INeo4jQueryParams extends INodeFunctionBaseParams {
 }
 export const neo4jQuery = createNodeDescriptor({
 	type: "neo4jQuery",
-	defaultLabel: "Neo4j Smart Query",
+	defaultLabel: "Neo4j Query",
 	fields: [
 		{
 			key: "model",
@@ -127,33 +126,32 @@ export const neo4jQuery = createNodeDescriptor({
 	function: async ({ cognigy, config }: INeo4jQueryParams) => {
 		const { api } = cognigy;
 		const { input: userInput, neo4jConnection, openAiConnection, model, storeLocation, inputKey, contextKey } = config;
-		const { Username, Password, ConnectionURI } = neo4jConnection;
+		const { Username, Password, Host } = neo4jConnection;
 		const { openAiKey } = openAiConnection;
 
-		let driver: Driver;
-
 		try {
-			driver = neo4j.driver(
-				ConnectionURI,
-				neo4j.auth.basic(Username, Password)
-			);
+			const neo4jAuth = Buffer.from(`${Username}:${Password}`).toString('base64');
+			const neo4jAxios = axios.create({
+				baseURL: `https://${Host}`,
+				headers: {
+					'Authorization': `Basic ${neo4jAuth}`,
+					'Content-Type': 'application/json',
+				}
+			});
 
-			const session = driver.session();
-
-			// --- 1. Fetch node labels + properties
-			const propResult = await session.run(`
-				CALL db.schema.nodeTypeProperties()
-				YIELD nodeLabels, propertyName, propertyTypes
-				RETURN nodeLabels, propertyName, propertyTypes
-			`);
-
-			api.log("info", "Prop Result: " + JSON.stringify(propResult));
+			const propResult = await neo4jAxios.post('/db/neo4j/query/v2', {
+				statement: `
+					CALL db.schema.nodeTypeProperties()
+					YIELD nodeLabels, propertyName, propertyTypes
+					RETURN nodeLabels, propertyName, propertyTypes
+				`
+			});
 
 			const nodeProperties = {};
-			for (const record of propResult.records) {
-				const labels = record.get('nodeLabels');
-				const prop = record.get('propertyName');
-				const types = record.get('propertyTypes');
+			for (const value of propResult.data.data.values) {
+				const labels = value[0];
+				const prop = value[1];
+				const types = value[2];
 
 				labels.forEach(label => {
 					if (!nodeProperties[label]) nodeProperties[label] = [];
@@ -161,34 +159,28 @@ export const neo4jQuery = createNodeDescriptor({
 				});
 			}
 
-			// --- 2. Fetch relationship types between nodes
-			const schemaResult = await session.run(`
-				CALL db.schema.visualization()
-			`);
+			const schemaResult = await neo4jAxios.post('/db/neo4j/query/v2', {
+				statement: `CALL db.schema.visualization()`
+			});
 
-			api.log("info", "Schema Result: " + JSON.stringify(schemaResult));
-
-			const nodes = schemaResult.records[0].get('nodes');
-			const relationships = schemaResult.records[0].get('relationships');
+			const graphData = schemaResult.data.data.values[0];
+			const nodes = graphData[0];
+			const relationships = graphData[1];
 
 			const nodeIdToLabel = {};
 			nodes.forEach(node => {
-				const nodeId = node.identity.low;
+				const nodeId = node.elementId;
 				const label = node.labels[0];
 				nodeIdToLabel[nodeId] = label;
 			});
 
 			const relationshipTypes = relationships.map(rel => ({
 				type: rel.type,
-				startLabel: nodeIdToLabel[rel.start.low],
-				endLabel: nodeIdToLabel[rel.end.low]
+				startLabel: nodeIdToLabel[rel.startNodeElementId],
+				endLabel: nodeIdToLabel[rel.endNodeElementId]
 			}));
 
-			await session.close();
-
 			const systemPrompt = formatSchemaForPrompt({ nodeProperties, relationshipTypes });
-
-			api.log("info", "System Prompt: " + systemPrompt);
 
 			const openAiResponse = await axios({
 				method: "post",
@@ -208,26 +200,35 @@ export const neo4jQuery = createNodeDescriptor({
 			});
 
 			const cypher = openAiResponse.data.choices[0].message.content.trim();
-			api.say("Cypher: " + cypher);
 
 			if (cypher === "No valid Cypher possible") {
 				throw new Error("No valid Cypher possible");
 			}
 
-			const querySession = driver.session();
-			const finalResult = await querySession.run(cypher);
-			const records = finalResult.records.map(record => record.toObject());
-			await querySession.close();
+			const finalResult = await neo4jAxios.post('/db/neo4j/query/v2', {
+				statement: cypher
+			});
+
+			const records = finalResult.data.data.values.map(value => {
+				// Convert the array values to object based on the fields
+				const fields = finalResult.data.data.fields;
+				return Object.fromEntries(
+					fields.map((field, index) => [field, value[index]])
+				);
+			});
+
+			const resultObj = {
+				cypher,
+				result: records
+			};
 
 			if (storeLocation === "context") {
-				api.addToContext?.(contextKey, records, "simple");
+				api.addToContext?.(contextKey, resultObj, "simple");
 			} else if (storeLocation === "input") {
-				api.addToInput(inputKey, records);
+				api.addToInput(inputKey, resultObj);
 			}
 		} catch (error) {
 			throw new Error(error);
-		} finally {
-			driver.close();
 		}
 	}
 });

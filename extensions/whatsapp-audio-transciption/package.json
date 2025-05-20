@@ -1,0 +1,29 @@
+{
+  "name": "whatsapp-audio-transciption",
+  "version": "4.0.0",
+  "description": "Whatsapp Audio STT Transcription",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz whatsapp-audio-transciption.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Azure",
+    "Microsoft",
+    "STT"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.16.4",
+    "axios": "^1.9.0",
+    "form-data": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "tslint": "^6.1.2",
+    "typescript": "^5.4.5"
+  }
+}

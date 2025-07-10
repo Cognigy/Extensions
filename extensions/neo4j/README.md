@@ -1,1 +1,1 @@
-﻿Classifies an Intent based on a custom string input
+﻿Query a Neo4j using a LLM generated cypher query

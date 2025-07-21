@@ -11,6 +11,9 @@ import { getPhoneNumbersNode } from "./nodes/talk/getPhoneNumbers";
 import { requestCallbackNode } from "./nodes/talk/requestCallback";
 import { startLiveChatNode } from "./nodes/liveChat/startLiveChat";
 import { zendeskChatAccountKeyConnection } from "./connections/zendeskChatAccountKeyConnection";
+import { uploadFilesNode } from "./nodes/support/uploadFiles";
+import { zendeskAPIConnection } from "./connections/zendeskAPIConnection";
+
 
 
 export default createExtension({
@@ -36,13 +39,16 @@ export default createExtension({
 		startLiveChatNode,
 
 		getPhoneNumbersNode,
-		requestCallbackNode
+		requestCallbackNode,
+
+		uploadFilesNode
 	],
 
 	connections: [
 		zendeskConnection,
 		zendeskChatConnection,
-		zendeskChatAccountKeyConnection
+		zendeskChatAccountKeyConnection,
+		zendeskAPIConnection
 	],
 
 	options: {

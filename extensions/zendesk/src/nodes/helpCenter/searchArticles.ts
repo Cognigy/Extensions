@@ -4,8 +4,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 export interface ISearchArticlesParams extends INodeFunctionBaseParams {
     config: {
         connection: {
-            username: string;
-            password: string;
+            email: string;
+            apiToken: string;
             subdomain: string;
         };
         query: number;
@@ -284,7 +284,7 @@ export const searchArticlesNode = createNodeDescriptor({
     function: async ({ cognigy, config, childConfigs }: ISearchArticlesParams) => {
         const { api } = cognigy;
         const { query, connection, storeLocation, useBrandId, brandId, useLocale, locale, useFreeTextQuery, freeTextQuery, contextKey, inputKey } = config;
-        const { username, password, subdomain } = connection;
+        const { email, apiToken, subdomain } = connection;
 
         let endpoint = `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search`;
         let searchParameters;
@@ -309,18 +309,15 @@ export const searchArticlesNode = createNodeDescriptor({
                 query: query
             };
         } else if (useFreeTextQuery === true) {
-           endpoint = `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search?${freeTextQuery}`;
+            endpoint = `https://${subdomain}.zendesk.com/api/v2/help_center/articles/search?${freeTextQuery}`;
         }
 
         const axiosConfig: AxiosRequestConfig = {
             params: searchParameters,
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
-            },
-            auth: {
-                username,
-                password
+                "Content-Type": "application/json",
+                "Authorization": `Basic ${btoa(email + "/token:" + apiToken)}`
             }
         };
 

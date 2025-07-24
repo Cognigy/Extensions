@@ -4,8 +4,8 @@ import axios from "axios";
 export interface IGetTicketParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
-			username: string;
-			password: string;
+			email: string;
+			apiToken: string;
 			subdomain: string;
 		};
 		ticketId: number;
@@ -138,7 +138,7 @@ export const getTicketNode = createNodeDescriptor({
 	function: async ({ cognigy, config, childConfigs }: IGetTicketParams) => {
 		const { api } = cognigy;
 		const { ticketId, connection, storeLocation, contextKey, inputKey } = config;
-		const { username, password, subdomain } = connection;
+		const { email, apiToken, subdomain } = connection;
 
 		try {
 
@@ -147,11 +147,8 @@ export const getTicketNode = createNodeDescriptor({
 				url: `https://${subdomain}.zendesk.com/api/v2/tickets/${ticketId}`,
 				headers: {
 					"Accept": "application/json",
-					"Content-Type": "application/json"
-				},
-				auth: {
-					username,
-					password
+					"Content-Type": "application/json",
+                    "Authorization": `Basic ${btoa(email + "/token:" + apiToken)}`
 				}
 			});
 

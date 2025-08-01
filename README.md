@@ -35,7 +35,7 @@ If you want us to approve your Extension, please note the following approval pro
     - support at cognigy.com
 
 **Important:** \
-Please note, that Cogngiy does not provide enterprise support for developed Extensions. This repository is licensed under MIT, in which the community is responsible for the shared modules. If you found a bug or want to improve yet developed functionalities, please don't hesitate to create a branch.
+Please note, that Cognigy does not provide enterprise support for developed Extensions. This repository is licensed under MIT, in which the community is responsible for the shared modules. If you found a bug or want to improve yet developed functionalities, please don't hesitate to create a branch.
 
 ### Create a new Extension or fix a bug
 

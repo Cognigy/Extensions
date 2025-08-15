@@ -8,16 +8,17 @@
     "rootDir": "src",
     "outDir": "build",
     "sourceMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    // "noImplicitAny": true,
+    // "strict": true
   },
   "exclude": [
     "node_modules",
-    "old",
     "build",
     "./vscode"
   ],
   "include": [
-    "../../common/cognigy.d.ts",
     "src/**/*"
   ]
 }

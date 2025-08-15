@@ -1,4 +1,4 @@
-import * as TurndownService from 'turndown';
+import TurndownService from 'turndown';
 
 interface HeadingData {
     title: string;
@@ -12,10 +12,7 @@ interface HeadingStackItem {
 }
 
 export class ConfluenceDataParser {
-    private targetHeadingsLevel: number;
-    private pageName: string = '';
-    private turndownService: TurndownService;
-    private html: string;
+    private turndownService!: TurndownService;
 
     /**
      * Constructs a new ConfluenceDataParser instance.
@@ -23,7 +20,7 @@ export class ConfluenceDataParser {
      * @param pageName The name of the page
      * @param targetHeadingsLevel The target heading level to extract
      */
-    constructor(html: string, pageName: string, targetHeadingsLevel: number) {
+    constructor(private readonly html: string, private readonly pageName: string, private readonly targetHeadingsLevel: number) {
         this.html = html;
         this.targetHeadingsLevel = targetHeadingsLevel;
         this.pageName = pageName;
@@ -53,10 +50,9 @@ export class ConfluenceDataParser {
 
         // Handle Confluence task lists
         this.turndownService.addRule('confluenceTaskList', {
-            filter: (node) => node.nodeName === 'AC:TASK-LIST',
+            filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:TASK-LIST',
             replacement: (content, node) => {
-                const element = node as any;
-                const tasks = element.querySelectorAll ? element.querySelectorAll('ac\\:task') : [];
+                const tasks: NodeListOf<Element> | Element[] = node.querySelectorAll ? node.querySelectorAll('ac\\:task') : [];
                 if (tasks && tasks.length > 0) {
                     const taskTexts = Array.from(tasks).map((task: any) => {
                         const status = task.querySelector ? task.querySelector('ac\\:task-status') : null;
@@ -72,9 +68,9 @@ export class ConfluenceDataParser {
         });
 
         this.turndownService.addRule('confluenceTaskList', {
-            filter: (node) => node.nodeName === 'AC:IMAGE',
-            replacement: (content, node) => {
-                const captionMatch = (node as Element).outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
+            filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:IMAGE',
+            replacement: (content: string, node: Node) => {
+                const captionMatch = (node as HTMLElement).outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
                 let caption = '';
                 if (captionMatch) {
                     const captionHtml = captionMatch[1];
@@ -92,12 +88,12 @@ export class ConfluenceDataParser {
      * @param node The node being processed
      * @returns A string that represents the content to replace the empty node with
      */
-    private handlingForEmptyNode(content: string, node: any): string {
+    private handlingForEmptyNode(content: string, node: Node): string {
         // Handle TIME directly in blankReplacement,
         // Note: Make sure to check the parent node if parent is also empty,
         // otherwise child node will not be processed
         if (node.nodeName === 'P') {
-            const html = node.outerHTML || '';
+            const html = (node as HTMLElement).outerHTML || '';
 
             // Check if this P element contains a TIME element
             if (html.includes('<time') || html.includes('<TIME')) {
@@ -108,7 +104,7 @@ export class ConfluenceDataParser {
                 return `${datetime}`;
             }
         }
-        return node.isBlock ? '\n\n' : '';
+        return '';
     }
 
     /**

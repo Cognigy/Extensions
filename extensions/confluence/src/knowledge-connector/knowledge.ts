@@ -1,7 +1,8 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
 import { ConfluenceDataParser } from "./confluenceParser";
 import { CharacterTextSplitter } from "@langchain/textsplitters";
-import axios from 'axios';
+import { TKnowledgeSourceEntry, TKnowledgeChunkEntry } from "@cognigy/extension-tools/build/interfaces/descriptor";
+import axios from "axios";
 
 /**
  * Headings less than and equal to this level create new chunks
@@ -48,10 +49,11 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
     ],
-    listSources: async ({ config})  => {
+    listSources: async ({ config })  => {
         const startTime = Date.now();
-        const { connection, confluenceUrl, descendants, source_tag } = config;
+        const { connection, confluenceUrl, descendants, tags } = config;
         const { email, key } = connection as any;
+        const sourceTags = (tags as string[]);
 
         // Helper to parse Confluence URL and prepare baseUrl
         const url = new URL(confluenceUrl as string);
@@ -61,24 +63,23 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
         const pageMatch = url.pathname.match(/pages\/(\d+)/);
         const folderMatch = url.pathname.match(/folder\/(\d+)/);
 
-        let pageId = pageMatch ? pageMatch[1] : "";
-        let folderId = folderMatch ? folderMatch[1] : "";
+        const pageId = pageMatch ? pageMatch[1] : "";
+        const folderId = folderMatch ? folderMatch[1] : "";
 
         // Determine if the URL is for a specific page or a folder
         if (!pageId && !folderId) {
             throw new Error("Invalid Confluence URL: Must contain either a page ID (/pages/{id}) or folder ID (/folder/{id})");
         }
 
-        let page_data = [];
-        let descendants_data = [];
+        let pages_data: TKnowledgeSourceEntry[] = [];
         if (pageId) {
             const api_url = `${baseUrl}/wiki/rest/api/content/${pageId}`;
             const data = await fetch_data(api_url, email, key);
             const pageTitle = data.title || `Page ID ${pageId}`;
-            page_data = [{
+            pages_data = [{
                 name: `${pageTitle}`,
                 description: `Data from ${pageTitle}`,
-                tags: source_tag,
+                tags: sourceTags,
                 data: { pageId: pageId }
             }];
         }
@@ -91,29 +92,29 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             // Get all child pages under the parent page
             const data = await fetch_data(api_url, email, key);
             if (!data.results || data.results.length === 0) {
-                return page_data;
+                return pages_data;
             }
 
             // Filter data to only include pages
-            descendants_data = data.results
-                .filter(item => item.type === "page") // Only include pages, not folders
-                .map(page => ({
+            pages_data.concat(data.results
+                .filter((item: any) => item.type === "page") // Only include pages, not folders
+                .map((page: any) => ({
                     name: page.title,
                     description: `Data from ${page.title}`,
-                    tags: source_tag,
+                    tags: sourceTags,
                     data: { pageId: page.id }
-                }));
+                })));
         }
-        return page_data.concat(descendants_data);
+        return pages_data;
     },
     processSource: async ({ config, source }) => {
-        let result = [];
+        let result = [] as TKnowledgeChunkEntry[];
         try {
             const { connection, confluenceUrl } = config;
-            const { pageId } = source.data;
+            const { pageId } = source.data as { pageId: string };
             const { email, key } = connection as any;
 
-            // Validate and parse Confluce URL
+            // Validate and parse Confluence URL
             const url = new URL(confluenceUrl as string);
             const baseUrl = `${url.protocol}//${url.host}`;
             const api_url = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
@@ -160,7 +161,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
  * @param token The API token for authentication
  * @returns The JSON response from the API
  */
-const fetch_data = async (url, email, token) => {
+const fetch_data = async (url: string, email: string, token: string) => {
     try {
         const response = await axios({
             method: 'get',
@@ -169,7 +170,7 @@ const fetch_data = async (url, email, token) => {
             auth: {username: email, password: token}
         });
         return response.data;
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
     }
 };

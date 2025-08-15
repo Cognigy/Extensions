@@ -1,7 +1,9 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
-import { ConfluenceHtmlParser } from "./confluenceParser";
+import { ConfluenceDataParser } from "./confluenceParser";
+// import { CharacterTextSplitter } from "@langchain/textsplitters";
+import { FixedChunker, NLPChunker } from '@orama/chunker'
 
-const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size for text splitting
+const MAX_CHUNK_TOKEN_SIZE = 512; // Define a maximum chunk size for text splitting
 
 export const confluenceImport = createKnowledgeDescriptor({
     type: "confluenceKnowledgeConnector",
@@ -99,8 +101,6 @@ export const confluenceImport = createKnowledgeDescriptor({
         return page_data.concat(descendants_data);
     },
     processSource: async ({ config, source }) => {
-        const startTime = Date.now();
-
         let result = [];
         try {
             const { connection, confluenceUrl } = config;
@@ -110,14 +110,35 @@ export const confluenceImport = createKnowledgeDescriptor({
             const url = new URL(confluenceUrl);
             const baseUrl = `${url.protocol}//${url.host}`;
             const headers = getAuthHeaders(connection);
-            const api_url = `${baseUrl}/wiki/rest/api/content/${pageId}?expand=body.storage`;
+            const api_url = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
             const data = await fetch_data(api_url, headers);
-            const html = data.body.storage.value;
+            const xhtml = data.body.storage.value;
             const webLink = data._links.webui;
 
-            // Extract headings and text under each heading
-            result = await parse_html(html, baseUrl, webLink, source.name);
+            // Extract headings and text under each heading as chunks
+            const targetHeadingsLevel = 3; // Define the headings levels to parse to define begining of each chunks
+            const parser = new ConfluenceDataParser(xhtml, source.name, targetHeadingsLevel);
+            let headings_data =  parser.parse();
+            for (const heading of headings_data) {
 
+                // Parse body text with better HTML handling
+                const bodyText = heading.result
+                if (bodyText) {
+                    const chunks = await splitTextIntoChunks(bodyText, MAX_CHUNK_TOKEN_SIZE);
+                    chunks.forEach(chunk => {
+                        chunk = source.name + "\n" + heading.hierarchy + "\n" + chunk.trim();
+                        if (chunk) {
+                            result.push({
+                                text: chunk,
+                                data: {
+                                    heading: heading.title,
+                                    url: `${baseUrl}/wiki${webLink}`
+                                },
+                            });
+                        }
+                    });
+                }
+            }
         } catch (error) {
             console.error("Error processing source:", error);
             throw error;
@@ -126,7 +147,12 @@ export const confluenceImport = createKnowledgeDescriptor({
     }
 });
 
-// Helper to prepare auth headers
+
+/**
+ * Prepares the authentication headers for API requests.
+ * @param connection The connection object containing API token and email
+ * @returns The headers to include in the request
+ */
 const getAuthHeaders = (connection) => {
     const apiToken = connection['Api-Token'];
     const email = connection['Email'];
@@ -137,6 +163,13 @@ const getAuthHeaders = (connection) => {
     };
 };
 
+/**
+ * Fetches data from a given URL with the specified headers.
+ *
+ * @param url The URL to fetch data from
+ * @param headers The headers to include in the request
+ * @returns The JSON response from the API
+ */
 const fetch_data = async (url, headers) => {
     const startTime = Date.now();
     const response = await fetch(url, { headers });
@@ -146,64 +179,13 @@ const fetch_data = async (url, headers) => {
     return response.json();
 };
 
-async function parse_html(html, baseUrl, webLink, pageName) {
-    let targetHeadings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']; // Define the headings levels to extract
-    const parser = new ConfluenceHtmlParser(html,
-        pageName,
-        targetHeadings
-    );
-    let headings_data =  parser.parse();
-    var result = [];
-    for (const heading of headings_data) {
-
-        // Parse body text with better HTML handling
-        const bodyText = heading.result
-        if (bodyText) {
-            const chunks = await splitTextIntoChunks(bodyText, MAX_CHUNK_SIZE);
-            chunks.forEach(chunk => {
-                chunk = pageName + "\n" + heading.hierarchy + "\n" + chunk.trim();
-                if (chunk) {
-                    result.push({
-                        text: chunk,
-                        data: {
-                            heading: heading.title,
-                            url: `${baseUrl}/wiki${webLink}`
-                        },
-                    });
-                }
-            });
-        }
-    }
-    return result
+/**
+ * Splits the given text into chunks of a specified maximum size.
+ * @param text The text to be split into chunks
+ * @param maxTokenSize The maximum size of each chunk, in tokens
+ * @returns An array of text chunks
+ */
+async function splitTextIntoChunks(text: string, maxTokenSize: number) {
+    const chunker = new NLPChunker()
+    return await chunker.chunk(text, maxTokenSize)
 }
-
-async function splitTextIntoChunks(text: string, maxChunkSize: number) {
-    if (text.length <= maxChunkSize) {
-        return [text];
-    }
-
-    const chunks = [];
-    const words = text.split(' ');
-    let currentChunk = '';
-
-    for (const word of words) {
-        const testChunk = currentChunk ? `${currentChunk} ${word}` : word;
-
-        // If adding this word would exceed the limit, save current chunk and start new
-        if (testChunk.length > maxChunkSize && currentChunk) {
-            chunks.push(currentChunk.trim());
-            currentChunk = word;
-        } else {
-            currentChunk = testChunk;
-        }
-    }
-
-    // Don't forget the last chunk
-    if (currentChunk.trim()) {
-        chunks.push(currentChunk.trim());
-    }
-
-    return chunks;
-}
-
-// exports.parse_html = parse_html;

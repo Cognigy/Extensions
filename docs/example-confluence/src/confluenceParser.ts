@@ -158,7 +158,7 @@ export class ConfluenceDataParser {
                 headingStack.push({ level, text: processed_heading });
 
                 currentHeading = {
-                    title: processed_heading,
+                    title: processed_heading.replace(/^#+\s*/, ''),
                     hierarchy: headingStack.map(h => h.text).join(' -> '),
                     result: ""
                 };

@@ -1,9 +1,14 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
 import { ConfluenceDataParser } from "./confluenceParser";
 const { CharacterTextSplitter } = require("@langchain/textsplitters");
-// import { FixedChunker, NLPChunker } from '@orama/chunker'
 
-const MAX_CHUNK_SIZE = 512; // Define a maximum chunk size in characters
+const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
+
+/**
+ * Headings less than and equal to this level create new chunks
+ * (H1,H2 → new chunks; H3+ → continue chunk)
+ */
+const TARGET_HEADING_LEVEL = 2;
 
 export const confluenceImport = createKnowledgeDescriptor({
     type: "confluenceKnowledgeConnector",
@@ -116,8 +121,7 @@ export const confluenceImport = createKnowledgeDescriptor({
             const webLink = data._links.webui;
 
             // Extract headings and text under each heading as chunks
-            const targetHeadingsLevel = 3; // Define the headings levels to parse to define begining of each chunks
-            const parser = new ConfluenceDataParser(xhtml, source.name, targetHeadingsLevel);
+            const parser = new ConfluenceDataParser(xhtml, source.name, TARGET_HEADING_LEVEL);
             let headings_data =  parser.parse();
             for (const heading of headings_data) {
 

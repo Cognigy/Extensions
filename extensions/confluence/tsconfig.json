@@ -1,15 +1,14 @@
-﻿{
+{
   "compileOnSave": true,
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017", 
+    "target": "es2017",
     "module": "commonjs",
-    "rootDir": "src", 
+    "rootDir": "src",
     "outDir": "build",
     "sourceMap": true,
-    "moduleResolution": "node",
-    "watch": false
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules",

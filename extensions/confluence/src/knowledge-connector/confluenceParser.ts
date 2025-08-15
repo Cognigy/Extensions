@@ -53,8 +53,8 @@ export class ConfluenceDataParser {
 
         // Handle Confluence task lists
         this.turndownService.addRule('confluenceTaskList', {
-            filter: (node: any) => node.nodeName === 'AC:TASK-LIST',
-            replacement: (content: string, node: any) => {
+            filter: (node) => node.nodeName === 'AC:TASK-LIST',
+            replacement: (content, node) => {
                 const element = node as any;
                 const tasks = element.querySelectorAll ? element.querySelectorAll('ac\\:task') : [];
                 if (tasks && tasks.length > 0) {
@@ -70,6 +70,19 @@ export class ConfluenceDataParser {
                 return '';
             }
         });
+
+        this.turndownService.addRule('confluenceTaskList', {
+            filter: (node) => node.nodeName === 'AC:IMAGE',
+            replacement: (content, node) => {
+                const captionMatch = (node as Element).outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
+                let caption = '';
+                if (captionMatch) {
+                    const captionHtml = captionMatch[1];
+                    caption = captionHtml.replace(/<[^>]*>/g, '').trim();
+                }
+                return `Image ![*${caption}*]`;
+            }
+        });
     }
 
     /**
@@ -79,24 +92,9 @@ export class ConfluenceDataParser {
      * @param node The node being processed
      * @returns A string that represents the content to replace the empty node with
      */
-    private handlingForEmptyNode(content: string, node: any): string { // Fix: Add parameter types
-
-        // Handle AC:IMAGE directly in blankReplacement
-        if (node.nodeName === 'AC:IMAGE') {
-
-            // Extract caption from ac:caption element (handles nested HTML)
-            const captionMatch = node.outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
-            let caption = '';
-            if (captionMatch) {
-                const captionHtml = captionMatch[1];
-                caption = captionHtml.replace(/<[^>]*>/g, '').trim();
-            }
-
-            return `Image ![*${caption}*]`;
-        }
-
+    private handlingForEmptyNode(content: string, node: any): string {
         // Handle TIME directly in blankReplacement,
-        // Node: Make sure to check the parent node if parent is also empty,
+        // Note: Make sure to check the parent node if parent is also empty,
         // otherwise child node will not be processed
         if (node.nodeName === 'P') {
             const html = node.outerHTML || '';
@@ -136,7 +134,6 @@ export class ConfluenceDataParser {
 
         for (const line of lines) {
             const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
-            console.log("line: " + line);
             if (headingMatch && headingMatch[1].length <= this.targetHeadingsLevel) {
 
                 // Save previous section
@@ -152,7 +149,7 @@ export class ConfluenceDataParser {
 
                 // If heading is link, extract text from markdown link format ## [text](url)
                 const linkMatch = line.match(/^(#{1,6})\s*\[([^\]]+)\]/);
-                const processed_heading = linkMatch ? linkMatch[1] + " " + linkMatch[2] : line; // Fix: Add semicolon
+                const processed_heading = linkMatch ? linkMatch[1] + " " + linkMatch[2] : line;
 
                 // Add current heading to stack
                 headingStack.push({ level, text: processed_heading });

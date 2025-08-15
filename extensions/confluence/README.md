@@ -90,9 +90,9 @@ Content is automatically divided into chunks based on the heading hierarchy and 
 - Bulleted and numbered lists
 - Panels (info, warning, error, success)
 - Expandable sections
-- Task lists and decisions
+- Task lists
 - Images (alt text extracted)
-- Internal and external links
+- Links
 
 ----
 **Fields:**

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 /**
  * Headings less than and equal to this level create new chunks
- * (H1,H2 → new chunks; H3+ → continue chunk)
+ * (H1,H2 -> new chunks; H3+ -> continue chunk)
  */
 const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
@@ -94,7 +94,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
                 return page_data;
             }
 
-            // filter data to only include pages
+            // Filter data to only include pages
             descendants_data = data.results
                 .filter(item => item.type === "page") // Only include pages, not folders
                 .map(page => ({
@@ -168,7 +168,7 @@ const fetch_data = async (url, email, token) => {
             headers: {'Content-Type': 'application/json'},
             auth: {username: email, password: token}
         });
-        return response.data;  // Already parsed JSON, no need for .json()
+        return response.data;
     } catch (error) {
         throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
     }

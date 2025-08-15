@@ -19,11 +19,11 @@
   "license": "ISC",
   "dependencies": {
     "@cognigy/extension-tools": "0.16.5-rc1",
-    "axios": "^1.7.7",
+    "axios": "^1.11.0",
     "node-fetch": "^2.7.0",
     "node-html-parser": "7.0.1",
     "turndown": "^7.1.2",
-    "@orama/chunker":"0.0.3"
+    "@langchain/textsplitters": "^0.0.3"
   },
   "devDependencies": {
     "@types/node": "^13.13.15",

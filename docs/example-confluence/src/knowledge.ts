@@ -1,9 +1,9 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
 import { ConfluenceDataParser } from "./confluenceParser";
-// import { CharacterTextSplitter } from "@langchain/textsplitters";
-import { FixedChunker, NLPChunker } from '@orama/chunker'
+const { CharacterTextSplitter } = require("@langchain/textsplitters");
+// import { FixedChunker, NLPChunker } from '@orama/chunker'
 
-const MAX_CHUNK_TOKEN_SIZE = 512; // Define a maximum chunk size for text splitting
+const MAX_CHUNK_SIZE = 512; // Define a maximum chunk size in characters
 
 export const confluenceImport = createKnowledgeDescriptor({
     type: "confluenceKnowledgeConnector",
@@ -124,7 +124,7 @@ export const confluenceImport = createKnowledgeDescriptor({
                 // Parse body text with better HTML handling
                 const bodyText = heading.result
                 if (bodyText) {
-                    const chunks = await splitTextIntoChunks(bodyText, MAX_CHUNK_TOKEN_SIZE);
+                    const chunks = await splitTextIntoChunks(bodyText, MAX_CHUNK_SIZE);
                     chunks.forEach(chunk => {
                         chunk = source.name + "\n" + heading.hierarchy + "\n" + chunk.trim();
                         if (chunk) {
@@ -185,7 +185,7 @@ const fetch_data = async (url, headers) => {
  * @param maxTokenSize The maximum size of each chunk, in tokens
  * @returns An array of text chunks
  */
-async function splitTextIntoChunks(text: string, maxTokenSize: number) {
-    const chunker = new NLPChunker()
-    return await chunker.chunk(text, maxTokenSize)
+async function splitTextIntoChunks(text: string, maxChunkSize: number) {
+    const textSplitter = new CharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});
+    return await textSplitter.splitText(text);
 }

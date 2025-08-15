@@ -129,14 +129,14 @@ export class ConfluenceDataParser {
             if (!currentContent.trim()) return;
 
             const section = currentHeading || { title: this.pageName, hierarchy: "", result: "" };
-            section.result = currentContent.trim();
+            section.result = currentContent.trim() + "\n";
             result.push(section);
             currentContent = '';
         };
 
         for (const line of lines) {
             const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
-
+            console.log("line: " + line);
             if (headingMatch && headingMatch[1].length <= this.targetHeadingsLevel) {
 
                 // Save previous section

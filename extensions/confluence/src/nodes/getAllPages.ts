@@ -118,7 +118,7 @@ export const getAllPagesNode = createNodeDescriptor({
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `${domain}/wiki/rest/api/content?type=page&&spacekey=${space}start=0&limit=99999&expand=body.storage`,
+				url: `${domain}/wiki/rest/api/content?type=page&spacekey=${space}&start=0&limit=99999&expand=body.storage`,
 				headers: {
 					'Content-Type': 'application/json'
 				},

@@ -100,12 +100,12 @@ Content is automatically divided into chunks based on the heading hierarchy and 
 **Connection:**
 
 This modules needs a CognigySecret to be defined and passed to the Nodes. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
-- domain (e.g. https://test.atlassian.net)
+- domain (Not used for Knowledge Connector)
 - username (Your Jira account email address bob@sample.com)
 - key (Can be generated within your Jira Project. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
 
 #### Confluence URL
-URL of the Confluence page or folder
+URL of the Confluence page or folder, that needs to be extracted
 
 #### Extract Descendants
 This field is only relevant if the Confluence URL is of a page. In case it's of a folder, all the pages under the folder are extracted.

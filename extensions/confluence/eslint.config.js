@@ -44,7 +44,8 @@ module.exports = [
       "camelcase": ["error", { "properties": "always" }],
       "no-unused-vars": "off",
       "no-undef": "off",
-      "prefer-const": "error"
+      "prefer-const": "error",
+      "eol-last": ["error", "always"]
     }
   },
   {

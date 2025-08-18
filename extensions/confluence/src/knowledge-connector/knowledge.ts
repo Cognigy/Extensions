@@ -180,3 +180,4 @@ async function splitTextIntoChunks(text: string, maxChunkSize: number): Promise<
     const textSplitter = new CharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});
     return await textSplitter.splitText(text);
 }
+

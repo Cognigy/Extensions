@@ -11,6 +11,10 @@ module.exports = [
         ecmaVersion: 2017,
         sourceType: "module"
       },
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      },
     },
     rules: {
       "prefer-arrow-callback": ["error", { "allowNamedFunctions": true, "allowUnboundThis": true }],
@@ -42,13 +46,11 @@ module.exports = [
       "space-infix-ops": "error",
       "comma-spacing": ["error", { "before": false, "after": true }],
       "camelcase": ["error", { "properties": "always" }],
-      "no-unused-vars": "off",
-      "no-undef": "off",
       "prefer-const": "error",
       "eol-last": ["error", "always"]
     }
   },
   {
-    ignores: ["node_modules/", "build/", "vscode/", "**/*.d.ts"]
+    ignores: ["node_modules/", "build/", "vscode/"]
   }
 ];

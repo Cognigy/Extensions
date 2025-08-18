@@ -4,10 +4,8 @@ import { CharacterTextSplitter } from "@langchain/textsplitters";
 import { TKnowledgeSourceEntry, TKnowledgeChunkEntry } from "@cognigy/extension-tools/build/interfaces/descriptor";
 import axios from "axios";
 
-/**
- * Headings less than and equal to this level create new chunks
- * (H1,H2 -> new chunks; H3+ -> continue chunk)
- */
+// Headings less than and equal to this level create new chunks
+// (H1,H2 -> new chunks; H3+ -> continue chunk)
 const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
 
@@ -41,19 +39,16 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             description: "Extract all child pages under the parent page. For folders, descendants are always extracted."
         },
         {
-            key: "sourceTag",
+            key: "sourceTags",
             label: "Source Tags",
             type: "chipInput",
-            params: { required: false },
             defaultValue: ["confluence"],
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
-    ],
+    ] as const,
     listSources: async ({ config })  => {
-        const startTime = Date.now();
-        const { connection, confluenceUrl, descendants, tags } = config;
+        const { connection, confluenceUrl, descendants, sourceTags } = config;
         const { email, key } = connection as any;
-        const sourceTags = (tags as string[]);
 
         // Helper to parse Confluence URL and prepare baseUrl
         const url = new URL(confluenceUrl as string);
@@ -74,12 +69,12 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
         let pages_data: TKnowledgeSourceEntry[] = [];
         if (pageId) {
             const api_url = `${baseUrl}/wiki/rest/api/content/${pageId}`;
-            const data = await fetch_data(api_url, email, key);
+            const data = await fetchdData(api_url, email, key);
             const pageTitle = data.title || `Page ID ${pageId}`;
             pages_data = [{
                 name: `${pageTitle}`,
                 description: `Data from ${pageTitle}`,
-                tags: sourceTags,
+                tags: sourceTags as string[],
                 data: { pageId: pageId }
             }];
         }
@@ -90,18 +85,18 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
                 `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants`;
 
             // Get all child pages under the parent page
-            const data = await fetch_data(api_url, email, key);
+            const data = await fetchdData(api_url, email, key);
             if (!data.results || data.results.length === 0) {
                 return pages_data;
             }
 
             // Filter data to only include pages
-            pages_data.concat(data.results
+            pages_data = pages_data.concat(data.results
                 .filter((item: any) => item.type === "page") // Only include pages, not folders
                 .map((page: any) => ({
                     name: page.title,
                     description: `Data from ${page.title}`,
-                    tags: sourceTags,
+                    tags: sourceTags as string[],
                     data: { pageId: page.id }
                 })));
         }
@@ -118,7 +113,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             const url = new URL(confluenceUrl as string);
             const baseUrl = `${url.protocol}//${url.host}`;
             const api_url = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
-            const data = await fetch_data(api_url, email, key);
+            const data = await fetchdData(api_url, email, key);
             const xhtml = data.body.storage.value;
             const webLink = data._links.webui;
 
@@ -161,7 +156,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
  * @param token The API token for authentication
  * @returns The JSON response from the API
  */
-const fetch_data = async (url: string, email: string, token: string) => {
+const fetchdData = async (url: string, email: string, token: string) => {
     try {
         const response = await axios({
             method: 'get',

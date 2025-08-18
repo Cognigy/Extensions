@@ -52,7 +52,7 @@ export class ConfluenceDataParser {
         this.turndownService.addRule('confluenceTaskList', {
             filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:TASK-LIST',
             replacement: (content, node) => {
-                const tasks: NodeListOf<Element> | Element[] = node.querySelectorAll ? node.querySelectorAll('ac\\:task') : [];
+                const tasks: NodeListOf<Element> = node.querySelectorAll('ac\\:task');
                 if (tasks && tasks.length > 0) {
                     const taskTexts = Array.from(tasks).map((task: any) => {
                         const status = task.querySelector ? task.querySelector('ac\\:task-status') : null;
@@ -84,9 +84,7 @@ export class ConfluenceDataParser {
     /**
      * A callback function passed to TurndownService to handle empty nodes during
      * the conversion process. Handles specific empty nodes like AC:IMAGE and TIME.
-     * @param content The content of the node being processed
-     * @param node The node being processed
-     * @returns A string that represents the content to replace the empty node with
+     * AC:IMAGE element is empty if no caption of image is present.
      */
     private handlingForEmptyNode(content: string, node: Node): string {
         // Handle TIME directly in blankReplacement,

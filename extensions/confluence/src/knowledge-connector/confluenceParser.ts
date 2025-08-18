@@ -52,7 +52,7 @@ export class ConfluenceDataParser {
         this.turndownService.addRule('confluenceTaskList', {
             filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:TASK-LIST',
             replacement: (content, node) => {
-                const tasks: NodeListOf<Element> = node.querySelectorAll('ac\\:task');
+                const tasks = Array.from(node.querySelectorAll('ac\\:task'));
                 if (tasks && tasks.length > 0) {
                     const taskTexts = Array.from(tasks).map((task: any) => {
                         const status = task.querySelector ? task.querySelector('ac\\:task-status') : null;
@@ -69,7 +69,7 @@ export class ConfluenceDataParser {
 
         this.turndownService.addRule('confluenceTaskList', {
             filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:IMAGE',
-            replacement: (content: string, node: Node) => {
+            replacement: (content, node) => {
                 const captionMatch = (node as HTMLElement).outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
                 let caption = '';
                 if (captionMatch) {
@@ -135,7 +135,6 @@ export class ConfluenceDataParser {
 
                 // Create new heading
                 const level = headingMatch[1].length;
-                const text = headingMatch[2];
 
                 // Remove all headings at the same level or deeper
                 const indexToRemove = headingStack.findIndex(h => h.level >= level);
@@ -143,13 +142,13 @@ export class ConfluenceDataParser {
 
                 // If heading is link, extract text from markdown link format ## [text](url)
                 const linkMatch = line.match(/^(#{1,6})\s*\[([^\]]+)\]/);
-                const processed_heading = linkMatch ? linkMatch[1] + " " + linkMatch[2] : line;
+                const processedHeading = linkMatch ? linkMatch[1] + " " + linkMatch[2] : line;
 
                 // Add current heading to stack
-                headingStack.push({ level, text: processed_heading });
+                headingStack.push({ level, text: processedHeading });
 
                 currentHeading = {
-                    title: processed_heading.replace(/^#+\s*/, ''),
+                    title: processedHeading.replace(/^#+\s*/, ''),
                     hierarchy: headingStack.map(h => h.text).join(' -> '),
                     result: ""
                 };

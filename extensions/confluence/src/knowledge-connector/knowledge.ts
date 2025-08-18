@@ -66,12 +66,12 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             throw new Error("Invalid Confluence URL: Must contain either a page ID (/pages/{id}) or folder ID (/folder/{id})");
         }
 
-        let pages_data: TKnowledgeSourceEntry[] = [];
+        let pagesData: TKnowledgeSourceEntry[] = [];
         if (pageId) {
-            const api_url = `${baseUrl}/wiki/rest/api/content/${pageId}`;
-            const data = await fetchdData(api_url, email, key);
+            const apiUrl = `${baseUrl}/wiki/rest/api/content/${pageId}`;
+            const data = await fetchdData(apiUrl, email, key);
             const pageTitle = data.title || `Page ID ${pageId}`;
-            pages_data = [{
+            pagesData = [{
                 name: `${pageTitle}`,
                 description: `Data from ${pageTitle}`,
                 tags: sourceTags as string[],
@@ -80,18 +80,18 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
         }
 
         if (descendants || folderId) {
-            let api_url = folderId === "" ?
+            const apiUrl = folderId === "" ?
                 `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants` :
                 `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants`;
 
             // Get all child pages under the parent page
-            const data = await fetchdData(api_url, email, key);
+            const data = await fetchdData(apiUrl, email, key);
             if (!data.results || data.results.length === 0) {
-                return pages_data;
+                return pagesData;
             }
 
             // Filter data to only include pages
-            pages_data = pages_data.concat(data.results
+            pagesData = pagesData.concat(data.results
                 .filter((item: any) => item.type === "page") // Only include pages, not folders
                 .map((page: any) => ({
                     name: page.title,
@@ -100,10 +100,10 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
                     data: { pageId: page.id }
                 })));
         }
-        return pages_data;
+        return pagesData;
     },
     processSource: async ({ config, source }) => {
-        let result = [] as TKnowledgeChunkEntry[];
+        const result = [] as TKnowledgeChunkEntry[];
         try {
             const { connection, confluenceUrl } = config;
             const { pageId } = source.data as { pageId: string };
@@ -112,15 +112,15 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             // Validate and parse Confluence URL
             const url = new URL(confluenceUrl as string);
             const baseUrl = `${url.protocol}//${url.host}`;
-            const api_url = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
-            const data = await fetchdData(api_url, email, key);
+            const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
+            const data = await fetchdData(apiUrl, email, key);
             const xhtml = data.body.storage.value;
             const webLink = data._links.webui;
 
             // Extract headings and text under each heading as chunks
             const parser = new ConfluenceDataParser(xhtml, source.name, TARGET_HEADING_LEVEL);
-            let headings_data =  parser.parse();
-            for (const heading of headings_data) {
+            const headingsData =  parser.parse();
+            for (const heading of headingsData) {
 
                 // Parse body text with better HTML handling
                 const bodyText = heading.result;

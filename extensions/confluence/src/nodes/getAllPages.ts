@@ -129,8 +129,8 @@ export const getAllPagesNode = createNodeDescriptor({
 			});
 
 			// Clean up the result
-			let results: IResultPage[] = [];
-			response.data.results.forEach((page: any, index: number) => {
+			const results: IResultPage[] = [];
+			response.data.results.forEach((page: any) => {
 				results.push({
 					id: page.id,
 					type: page.type,

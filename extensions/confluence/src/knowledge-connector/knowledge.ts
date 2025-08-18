@@ -149,12 +149,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
 });
 
 /**
- * Fetches data from a given URL with the specified headers.
- *
- * @param url The URL to fetch data from
- * @param email The email address for authentication
- * @param token The API token for authentication
- * @returns The JSON response from the API
+ * Fetches data from a given URL with the specified email and token.
  */
 const fetchdData = async (url: string, email: string, token: string) => {
     try {
@@ -172,9 +167,6 @@ const fetchdData = async (url: string, email: string, token: string) => {
 
 /**
  * Splits the given text into chunks of a specified maximum size.
- * @param text The text to be split into chunks
- * @param maxTokenSize The maximum size of each chunk, in tokens
- * @returns An array of text chunks
  */
 async function splitTextIntoChunks(text: string, maxChunkSize: number): Promise<string[]> {
     const textSplitter = new CharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});

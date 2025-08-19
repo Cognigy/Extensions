@@ -85,7 +85,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
                 `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants`;
 
             // Get all child pages under the parent page
-            const data = await fetchdData(apiUrl, email, key);
+            const data = await fetchData(apiUrl, email, key);
             if (!data.results || data.results.length === 0) {
                 return pagesData;
             }

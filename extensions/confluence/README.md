@@ -73,11 +73,11 @@ Returns all pages within a specific Confluence Space. In order to get the result
 
  ---
 
- # Confluence Knowledge Connector
+# Confluence Knowledge Connector
 
 Confluence knowledge connector allows you to connect to Confluence and retrieve data from its pages or folders.
 
-The extension uses the [turndown](https://www.npmjs.com/package/turndown/v/4.0.0-rc.1) npm package to convert the content returned by Confluence into Markdown format. With Turndown, you can customize or extend the handling of HTML tags by adding your own rules.
+The extension uses the [Turndown](https://www.npmjs.com/package/turndown) library to transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
 
 ### Heading-Based Chunking
 Content is automatically divided into chunks based on the heading hierarchy and the target heading level defined by TARGET_HEADING_LEVEL. For example, if TARGET_HEADING_LEVEL = 2, the chunking behavior will be as follows:

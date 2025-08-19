@@ -113,7 +113,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             const url = new URL(confluenceUrl as string);
             const baseUrl = `${url.protocol}//${url.host}`;
             const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
-            const data = await fetchdData(apiUrl, email, key);
+            const data = await fetchData(apiUrl, email, key);
             const xhtml = data.body.storage.value;
             const webLink = data._links.webui;
 

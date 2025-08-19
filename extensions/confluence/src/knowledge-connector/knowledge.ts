@@ -151,7 +151,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
 /**
  * Fetches data from a given URL with the specified email and token.
  */
-const fetchdData = async (url: string, email: string, token: string) => {
+const fetchData = async (url: string, email: string, token: string) => {
     try {
         const response = await axios({
             method: 'get',

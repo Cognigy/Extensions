@@ -69,7 +69,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
         let pagesData: TKnowledgeSourceEntry[] = [];
         if (pageId) {
             const apiUrl = `${baseUrl}/wiki/rest/api/content/${pageId}`;
-            const data = await fetchdData(apiUrl, email, key);
+            const data = await fetchData(apiUrl, email, key);
             const pageTitle = data.title || `Page ID ${pageId}`;
             pagesData = [{
                 name: `${pageTitle}`,

@@ -92,7 +92,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
 
             // Filter data to only include pages
             pagesData = pagesData.concat(data.results
-                .filter((item: any) => item.type === "page") // Only include pages, not folders
+                .filter((item: any) => item.type === "page")
                 .map((page: any) => ({
                     name: page.title,
                     description: `Data from ${page.title}`,

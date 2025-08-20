@@ -38,7 +38,7 @@ export class ConfluenceDataParser {
             strongDelimiter: '**',         // Use **strong**
             linkStyle: 'inlined',          // Use [text](url) format
             linkReferenceStyle: 'full',    // Full reference links
-            blankReplacement: this.handlingForEmptyNode.bind(this)
+            blankReplacement: this.handleEmptyNode.bind(this)
         });
         this.addConfluenceRules();
     }
@@ -67,7 +67,9 @@ export class ConfluenceDataParser {
             }
         });
 
-        this.turndownService.addRule('confluenceTaskList', {
+        // Handle Confluence image tag, if image tag is empty (in case no caption is specified),
+        // then it should be handled in blankReplacement callback i.e handleEmptyNode
+        this.turndownService.addRule('confluenceImage', {
             filter: ({ nodeName }: { nodeName: string }) => nodeName === 'AC:IMAGE',
             replacement: (content, node) => {
                 const captionMatch = (node as HTMLElement).outerHTML.match(/<ac:caption>(.*?)<\/ac:caption>/);
@@ -84,9 +86,8 @@ export class ConfluenceDataParser {
     /**
      * A callback function passed to TurndownService to handle empty nodes during
      * the conversion process. Handles specific empty nodes like AC:IMAGE and TIME.
-     * AC:IMAGE element is empty if no caption of image is present.
      */
-    private handlingForEmptyNode(content: string, node: Node): string {
+    private handleEmptyNode(content: string, node: Node): string {
         // Handle TIME directly in blankReplacement,
         // Note: Make sure to check the parent node if parent is also empty,
         // otherwise child node will not be processed

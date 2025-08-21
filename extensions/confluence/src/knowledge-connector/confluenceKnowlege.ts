@@ -1,5 +1,5 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
-import { ConfluenceDataParser } from "./confluenceParser";
+import { ConfluenceDataParser } from "./parser/confluenceParser";
 import { CharacterTextSplitter } from "@langchain/textsplitters";
 import { TKnowledgeSourceEntry, TKnowledgeChunkEntry } from "@cognigy/extension-tools/build/interfaces/descriptor";
 import axios from "axios";
@@ -34,7 +34,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
             key: "descendants",
             label: "Extract Descendants",
             type: "toggle",
-            params: { required: true},
+            params: { required: true },
             defaultValue: true,
             description: "Extract all child pages under the parent page. For folders, descendants are always extracted."
         },
@@ -104,11 +104,10 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
     },
     processSource: async ({ config, source }) => {
         const result = [] as TKnowledgeChunkEntry[];
+        const { connection, confluenceUrl } = config;
+        const { pageId } = source.data as { pageId: string };
+        const { email, key } = connection as any;
         try {
-            const { connection, confluenceUrl } = config;
-            const { pageId } = source.data as { pageId: string };
-            const { email, key } = connection as any;
-
             // Validate and parse Confluence URL
             const url = new URL(confluenceUrl as string);
             const baseUrl = `${url.protocol}//${url.host}`;
@@ -141,8 +140,7 @@ export const confluenceKnowledgeExtension = createKnowledgeDescriptor({
                 }
             }
         } catch (error) {
-            console.error("Error processing source:", error);
-            throw error;
+            throw new Error(`Error processing Confluence source, with page Id: ${pageId}: ${error}`);
         }
         return result;
     }

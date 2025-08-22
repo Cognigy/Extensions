@@ -6,8 +6,50 @@ Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/conflu
 Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionality i.e Connectors and Flow Nodes
 
 ## Table of Contents
-- [Confluence Flow Nodes](#confluence-flow-nodes)
 - [Confluence Knowledge Connector](#confluence-knowledge-connector)
+- [Confluence Flow Nodes](#confluence-flow-nodes)
+
+---
+# Confluence Knowledge Connector
+
+### Connector: Page Content Connector
+Confluence page content connector allows you to connect to Confluence and retrieve data from its pages or folders and create chunks from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
+
+#### Heading-Based Chunking
+Content is automatically divided into chunks based on the heading hierarchy and the target heading level defined by TARGET_HEADING_LEVEL. For example, if TARGET_HEADING_LEVEL = 2, the chunking behavior will be as follows:
+- **H1, H2**: Start new chunks
+- **H3, H4, H5, H6**: Included in the current chunk
+
+#### Supported Content Types
+- Plain text and formatted text
+- Tables
+- Bulleted and numbered lists
+- Panels (info, warning, error, success)
+- Expandable sections
+- Task lists
+- Images (alt text extracted)
+- Links
+
+#### Fields:
+
+**Connection:**
+
+This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
+- domain (This field is not required for the Knowledge Connector)
+- username (Your Confluence account email address bob@sample.com)
+- key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
+
+
+**Confluence URL:**
+URL of the Confluence page or folder to be extracted
+
+**Extract Descendants:**
+This field is only relevant if the Confluence URL is of a page. If the URL points to a folder, all pages within that folder are extracted.
+
+**Source Tags:**
+Sets the tags that you want to associate with each knowledge source
+
+**Note:** The connector uses the following MIT-licensed libraries: `turndown`
 
 ---
 # Confluence Flow Nodes
@@ -74,46 +116,3 @@ Returns all pages within a specific Confluence Space. In order to get the result
 ```
 
  **Please Note** : The response object gives back an array of results. If one or more results have been found, the relevant HTML is also returned. This can be used to render the output in the front-end webchat.
-
- ---
-
-# Confluence Knowledge Connector
-
-### Connector: Page Content Connector
-Confluence page content connector allows you to connect to Confluence and retrieve data from its pages or folders and create chunks from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
-
-#### Heading-Based Chunking
-Content is automatically divided into chunks based on the heading hierarchy and the target heading level defined by TARGET_HEADING_LEVEL. For example, if TARGET_HEADING_LEVEL = 2, the chunking behavior will be as follows:
-- **H1, H2**: Start new chunks
-- **H3, H4, H5, H6**: Included in the current chunk
-
-#### Supported Content Types
-- Plain text and formatted text
-- Tables
-- Bulleted and numbered lists
-- Panels (info, warning, error, success)
-- Expandable sections
-- Task lists
-- Images (alt text extracted)
-- Links
-
-#### Fields:
-
-**Connection:**
-
-This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
-- domain (This field is not required for the Knowledge Connector)
-- username (Your Confluence account email address bob@sample.com)
-- key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
-
-
-**Confluence URL:**
-URL of the Confluence page or folder to be extracted
-
-**Extract Descendants:**
-This field is only relevant if the Confluence URL is of a page. If the URL points to a folder, all pages within that folder are extracted.
-
-**Source Tags:**
-Sets the tags that you want to associate with each knowledge source
-
-**Note:** The connector uses the following MIT-licensed libraries: `turndown`

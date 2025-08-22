@@ -3,20 +3,24 @@
 
 Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/confluence)
 
-Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. This conversational AI can then be released cross-channel.
+Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionality i.e Connectors and Flow Nodes
 
+## Table of Contents
+- [Confluence Flow Nodes](#confluence-flow-nodes)
+- [Confluence Knowledge Connector](#confluence-knowledge-connector)
+
+---
+# Confluence Flow Nodes
 
 **Connection:**
 
-This modules needs a CognigySecret to be defined and passed to the Nodes. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
+This module needs a CognigySecret to be defined and passed to the Nodes. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
 
 - domain (e.g. https://test.atlassian.net)
-
 - username (Your Jira account email address bob@sample.com)
+- key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
 
-- key (Can be generated within your Jira Project. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
-
-## Node: Search
+### Node: Search
 
 This function allows Cognigy to search through a specific Confluence workspace based on an input text.  The SearchInput field can be filled with anything ranging from - repeating what the user just said (e.g. {{ci.text}} ) - to specific key phrases.
 
@@ -45,10 +49,10 @@ This function allows Cognigy to search through a specific Confluence workspace b
 }
 ```
 
- **Please Note** : The response object gives back an array of results. If one or more results have been found, the relevant HTML is also returned. This can be used to render the output in the front-end webchat.
+**Please Note** : The response object gives back an array of results. If one or more results have been found, the relevant HTML is also returned. This can be used to render the output in the front-end webchat.
 
 
-## Node: Get All Pages
+### Node: Get All Pages
 
 Returns all pages within a specific Confluence Space. In order to get the result, one needs to get the **Key** of a space. In most cases, this is a three-character identifier, such as COG or GEN. For example, one can find it in the confluence url of a space: `https://domain.atlassian.net/wiki/spaces/   GEN   /overview` -> space = GEN
 
@@ -75,16 +79,15 @@ Returns all pages within a specific Confluence Space. In order to get the result
 
 # Confluence Knowledge Connector
 
-Confluence knowledge connector allows you to connect to Confluence and retrieve data from its pages or folders.
+### Connector: Page Content Connector
+Confluence page content connector allows you to connect to Confluence and retrieve data from its pages or folders and create chunks from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
 
-The extension uses the [Turndown](https://www.npmjs.com/package/turndown) library to transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
-
-### Heading-Based Chunking
+#### Heading-Based Chunking
 Content is automatically divided into chunks based on the heading hierarchy and the target heading level defined by TARGET_HEADING_LEVEL. For example, if TARGET_HEADING_LEVEL = 2, the chunking behavior will be as follows:
 - **H1, H2**: Start new chunks
 - **H3, H4, H5, H6**: Included in the current chunk
 
-### Supported Content Types
+#### Supported Content Types
 - Plain text and formatted text
 - Tables
 - Bulleted and numbered lists
@@ -94,21 +97,23 @@ Content is automatically divided into chunks based on the heading hierarchy and 
 - Images (alt text extracted)
 - Links
 
-----
-**Fields:**
+#### Fields:
 
 **Connection:**
 
-This modules needs a CognigySecret to be defined and passed to the Nodes. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
-- domain (Not used for Knowledge Connector)
-- username (Your Jira account email address bob@sample.com)
-- key (Can be generated within your Jira Project. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
+This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
+- domain (This field is not required for the Knowledge Connector)
+- username (Your Confluence account email address bob@sample.com)
+- key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
 
-#### Confluence URL
-URL of the Confluence page or folder, that needs to be extracted
 
-#### Extract Descendants
-This field is only relevant if the Confluence URL is of a page. In case it's of a folder, all the pages under the folder are extracted.
+**Confluence URL:**
+URL of the Confluence page or folder to be extracted
 
-#### Source Tags
+**Extract Descendants:**
+This field is only relevant if the Confluence URL is of a page. If the URL points to a folder, all pages within that folder are extracted.
+
+**Source Tags:**
 Sets the tags that you want to associate with each knowledge source
+
+**Note:** The connector uses the following MIT-licensed libraries: `turndown`

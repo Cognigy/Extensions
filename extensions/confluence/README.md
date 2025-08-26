@@ -34,7 +34,7 @@ Content is automatically divided into chunks based on the heading hierarchy in C
 
 **Connection:**
 
-This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
+This module needs a CognigySecret to be defined and passed to the knowledge connector and flow node. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
 - domain (This field is not required for the Knowledge Connector)
 - username (Your Confluence account email address bob@sample.com)
 - key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)

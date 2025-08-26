@@ -6,7 +6,7 @@ Confluence is a popular collaboration tool that allows teams to work together by
 
 ## Table of Contents
 - [Connection](#connection)
-- [Confluence Knowledge Connector](#confluence-knowledge-connector)
+- [Confluence Knowledge Connectors](#confluence-knowledge-connectors)
 - [Confluence Flow Nodes](#confluence-flow-nodes)
 
 ---
@@ -14,21 +14,24 @@ Confluence is a popular collaboration tool that allows teams to work together by
 # Connection
 
 This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
-- domain (The base URL of your Confluence application i.e, https://abc.atlassian.net. This field is not required for the Knowledge Connectors)
-- username (Your Confluence account email address bob@sample.com)
-- key (Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.)
+- **domain:** The base URL of your Confluence application i.e, https://xyz.atlassian.net. This field is not required for the Knowledge Connectors
+- **username:** Your Confluence account email address bob@sample.com
+- **key:** Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.
 
+---
 # Confluence Knowledge Connectors
 
 ### Knowledge Connector: Page Content Connector
 Confluence page content knowledge connector allows you to connect to Confluence and retrieve data from its pages or folders. It adds knowledge sources from the pages retrieved from the confluence. The extension transforms Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
+
+**Note:** The connector uses the following MIT-licensed libraries: [`Dom Christie@turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
 
 #### Heading-Based Chunking
 Content is automatically divided into chunks based on the heading hierarchy in Confluence. The chunking behavior will be as follows:
 - **H1, H2**: Start new chunks
 - **H3, H4, H5, H6**: Included in the current chunk
 
-If a chunk exceeds the default length of 2000 characters (configurable), it will be further divided into smaller chunks.
+If a chunk exceeds the default length of 2000 characters, it will be further divided into smaller chunks.
 
 #### Supported Confluence Content Types
 - Plain text and formatted text
@@ -52,8 +55,6 @@ When enabled, extracts content from the specified page and all its descendant pa
 
 **Source Tags:**
 Sets the tags that you want to associate with each knowledge source
-
-**Note:** The connector uses the following MIT-licensed libraries: [`Dom Christie@turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
 
 ---
 

@@ -13,7 +13,7 @@ Confluence is a popular collaboration tool that allows teams to work together by
 # Confluence Knowledge Connectors
 
 ### Connector: Page Content Connector
-Confluence page content connector allows you to connect to Confluence and retrieve data from its pages or folders and create chunks from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
+Confluence page content knowledge connector allows you to connect to Confluence and retrieve data from its pages or folders. It adds knowledge sources from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
 
 #### Heading-Based Chunking
 Content is automatically divided into chunks based on the heading hierarchy and the target heading level defined by TARGET_HEADING_LEVEL. For example, if TARGET_HEADING_LEVEL = 2, the chunking behavior will be as follows:

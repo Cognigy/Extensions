@@ -1,9 +1,9 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { createQuickReplies } from "../helpers/createQuickReplies";
 import { createList, createPlainText } from "../helpers/createList";
-import { isBreakOrContinueStatement } from "typescript";
+import { IIntent } from "../helpers/types";
 
-export interface intentDisambiguationParams extends INodeFunctionBaseParams {
+export interface IntentDisambiguationParams extends INodeFunctionBaseParams {
 	config: {
 		maxScoreDelta: number,
 		disambiguationQuestion: string;
@@ -14,6 +14,7 @@ export interface intentDisambiguationParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
+
 export const intentDisambiguationNode = createNodeDescriptor({
 	type: "intentDisambiguation",
 	defaultLabel: "Intent Disambiguation",
@@ -157,30 +158,36 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			type: "input"
 		}
 	],
-	function: async ({ cognigy, config }: intentDisambiguationParams) => {
+	function: async ({ cognigy, config }: IntentDisambiguationParams) => {
 		const { input, api } = cognigy;
 		const { maxScoreDelta, disambiguationQuestion, replyType, punctuation, storeLocation, contextKey, inputKey} = config;
 
 		try {
-			let similarIntents = [];
+			const similarIntents: IIntent[] = [];
 			let i = 1;
+
 			// Loop through each intent that was mapped
 			for (i = 1; i < input.nlu.intentMapperResults.scores.length; i++) {
+
 				// Find the score difference between the main intent and the mapped intent
-				let delta = (input.nlu.intentMapperResults.finalIntentScore - input.nlu.intentMapperResults.scores[i].score);
-				// If the delta is less than the limit, add it to the array for similar intnets
+				const delta = (input.nlu.intentMapperResults.finalIntentScore - input.nlu.intentMapperResults.scores[i].score);
+
+				// If the delta is less than the limit, add it to the array for similar intents
 				if (delta < maxScoreDelta) {
-					input.nlu.intentMapperResults.scores[i].delta = delta;
-					similarIntents.push(input.nlu.intentMapperResults.scores[i]);
+					const intent: IIntent = {
+						...input.nlu.intentMapperResults.scores[i],
+						delta
+					};
+					similarIntents.push(intent);
 				}
 			}
 
 			// Sort the similar intents by delta value in decending order
-			let array = similarIntents.sort((a, b) => {
+			const array = similarIntents.sort((a, b) => {
 				return a.delta - b.delta;
 			});
 
-			let output = {
+			const output = {
 				count: array.length,
 				intents: array
 			};
@@ -202,7 +209,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 						});
 						break;
 					case "list":
-						api.say(disambiguationQuestion, '');
+						api.say(disambiguationQuestion, {});
 						api.say('', {
 							"_cognigy": {
     							"_default": {
@@ -216,7 +223,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 						});
 						break;
 					case "plainText":
-						api.say(disambiguationQuestion + createPlainText(input, array) + punctuation, '');
+						api.say(disambiguationQuestion + createPlainText(input, array) + punctuation, {});
 				}
 				}
 	if (storeLocation === "context") {

@@ -1,0 +1,67 @@
+import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
+
+export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
+	type: "chuckNorrisJokes",
+	label: "Get some Chuck Norris jokes",
+	summary: "This will import Chuck Norris jokes",
+	fields: [
+		{
+			key: "name",
+			label: "Source name prefix",
+			type: "text",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "categories",
+			label: "Categories to fetch",
+			type: "textArray",
+			params: {
+				required: true
+			}
+		},
+		{
+			key: "amount",
+			label: "Number of jokes per source",
+			type: "number",
+		},
+        {
+            key: "sourceTags",
+            label: "Source Tags",
+            type: "chipInput",
+            defaultValue: ["chuck norris"],
+            description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
+        }
+	] as const,
+	listSources: async ({config: { name, categories, sourceTags }}) => {
+		return categories.map((category) => (
+			{
+				name: `${name} - ${category}`,
+				description: `Chuck Norris jokes about ${category}`,
+				tags: sourceTags,
+				data: {
+					category
+				}
+			}
+		));
+	},
+	processSource: async ({ config, source }) => {
+		const result = [];
+		const url = `https://api.chucknorris.io/jokes/random?category=${source.data.category}`;
+		for (let i = 0; i < config.amount; i++) {
+			try {
+				const joke = await (await fetch(url)).json();
+				if (joke.value) {
+					result.push({
+						text: joke.value,
+						data: {}
+					});
+				}
+			} catch (error: any) {
+				throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
+			}
+		}
+		return result;
+	}
+});

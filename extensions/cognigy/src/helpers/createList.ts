@@ -1,3 +1,4 @@
+import { IIntent } from "./types";
 interface IList {
 	title: string;
 	subtitle: string;
@@ -6,22 +7,10 @@ interface IList {
 	buttons: any[];
 }
 
-interface IIntent {
-	id: string;
-	name: string;
-	score: number;
-	negated: boolean;
-	confirmationSentence: string;
-	confirmationSentences: any[];
-	disambiguationSentence: string;
-	flow: string;
-	delta: number;
-}
-
 // @ts-ignore
 export function createPlainText(input: any, intents: IIntent[]): string {
 
-	let plainText = [];
+	const plainText = [];
 
 	// Add the main intent at the first position of the quick reply array
 
@@ -52,7 +41,7 @@ export function createPlainText(input: any, intents: IIntent[]): string {
 
 export function createList(input: any, intents: IIntent[]): IList[] {
 
-	let list: IList[] = [];
+	const list: IList[] = [];
 
 	// Add the main intent at the first position of the quick reply array
 	list.push({

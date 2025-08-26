@@ -10,7 +10,7 @@ Confluence is a popular collaboration tool that allows teams to work together by
 - [Confluence Flow Nodes](#confluence-flow-nodes)
 
 ---
-# Confluence Knowledge Connector
+# Confluence Knowledge Connectors
 
 ### Connector: Page Content Connector
 Confluence page content connector allows you to connect to Confluence and retrieve data from its pages or folders and create chunks from the pages retrieved from the confluence. The extension transform Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.

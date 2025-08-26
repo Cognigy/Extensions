@@ -20,7 +20,7 @@ Content is automatically divided into chunks based on the heading hierarchy in C
 - **H1, H2**: Start new chunks
 - **H3, H4, H5, H6**: Included in the current chunk
 
-#### Supported Content Types
+#### Supported Confluence Content Types
 - Plain text and formatted text
 - Tables
 - Bulleted and numbered lists

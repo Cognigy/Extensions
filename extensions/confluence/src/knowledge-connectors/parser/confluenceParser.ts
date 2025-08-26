@@ -1,3 +1,7 @@
+// This module provides functionality to parse Confluence Page content
+// and convert it into structured markdown format, extracting headings
+// and their associated text content.
+
 import TurndownService from 'turndown';
 
 interface HeadingData {

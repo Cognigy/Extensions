@@ -10,8 +10,8 @@ const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
 
 export const pageContentConnector = createKnowledgeDescriptor({
-    type: "confluenceKnowledgeConnector",
-    label: "Confluence",
+    type: "pageContentConnector",
+    label: "Confluence Connector",
     summary: "Imports text under each heading from all pages in a Confluence directory",
     fields: [
 		{

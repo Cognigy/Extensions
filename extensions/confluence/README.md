@@ -3,7 +3,7 @@
 
 Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/confluence)
 
-Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionality i.e Connectors and Flow Nodes
+Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionality Knowledge Connectors and Flow Nodes.
 
 ## Table of Contents
 - [Confluence Knowledge Connector](#confluence-knowledge-connector)

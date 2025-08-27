@@ -1,4 +1,4 @@
-import { IIntent } from "./types";
+import { IIntent } from "./intent";
 
 interface IQuickReply {
 	contentType: string;

@@ -1,7 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { createQuickReplies } from "../helpers/createQuickReplies";
 import { createList, createPlainText } from "../helpers/createList";
-import { IIntent } from "../helpers/types";
+import { IIntent } from "../helpers/intent";
 
 export interface IntentDisambiguationParams extends INodeFunctionBaseParams {
 	config: {

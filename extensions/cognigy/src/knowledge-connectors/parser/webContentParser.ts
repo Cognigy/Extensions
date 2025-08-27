@@ -5,7 +5,7 @@ import { chromium, Page } from "playwright";;
  * opens a website url in headless chromium using playwright,
  * waits until it's "loaded" and returns the page object
  */
-const openPage = async (url: string): Promise<Page> => {
+export const openPage = async (url: string): Promise<Page> => {
     // Chrome's new headless mode is opt-in so we need to specify the channel
     // https://github.com/microsoft/playwright/issues/33566
     const browser = await chromium.launch({ channel: "chromium" });
@@ -85,7 +85,7 @@ export const getTextFromWebPage = async (url: string, options: IGetPageTextFromU
             return await openPage(url);
         } catch (error) {
             const message = `Unable to open web page at URL "${url}"`;
-            throw new Error(message);
+            throw new Error(error.message);
         }
     })();
 

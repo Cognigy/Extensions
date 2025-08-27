@@ -20,14 +20,15 @@
             "variable-declaration": "nospace"
         }],
         "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
-        "variable-name": [true, "ban-keywords"],
+        // "variable-name": [true, "ban-keywords"],
         "whitespace": [true,
             "check-branch",
             "check-decl",
             "check-operator",
             "check-separator",
             "check-type"
-        ]
+        ],
+        "no-console": false
     },
     "extends": [
       "tslint:recommended"

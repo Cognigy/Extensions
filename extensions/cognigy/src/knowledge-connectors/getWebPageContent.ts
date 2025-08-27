@@ -23,7 +23,7 @@ export const webPageConnector = createKnowledgeDescriptor({
             key: "sourceTags",
             label: "Source Tags",
             type: "chipInput",
-            defaultValue: ["chuck norris"],
+            defaultValue: ["Web Page"],
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
 	] as const,

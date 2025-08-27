@@ -11,7 +11,8 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 			type: "text",
 			params: {
 				required: true
-			}
+			},
+			description: "Prefix for the name of each source created, e.g. 'Chuck Norris Jokes'"
 		},
 		{
 			key: "categories",
@@ -19,7 +20,8 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 			type: "textArray",
 			params: {
 				required: true
-			}
+			},
+			description: "Categories of jokes to fetch. Available categories can be found at https://api.chucknorris.io/jokes/categories"
 		},
 		{
 			key: "amount",

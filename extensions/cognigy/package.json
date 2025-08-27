@@ -6,8 +6,9 @@
   "scripts": {
     "transpile": "tsc -p .",
     "zip": "tar cfz cognigy.tar.gz build/* package.json package-lock.json README.md icon.png",
-    "build": "npm run transpile && npm run lint && npm run zip",
-    "lint": "tslint -c tslint.json src/**/*.ts -e node_modules"
+    "build": "npm run transpile && npm run lint && npm run zip && npm run playwright:install:chromium",
+    "lint": "tslint -c tslint.json src/**/*.ts -e node_modules",
+    "playwright:install:chromium": "npx playwright@1.51.0 install chromium --no-shell"
   },
   "keywords": [
     "Cognigy",

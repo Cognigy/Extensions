@@ -2,29 +2,18 @@
 
 Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/confluence)
 
-Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionalities. Knowledge Connectors and Flow Nodes.
+Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it becomes possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions. The Confluence Extension provides 2 types of functionalities, Knowledge Connectors and Flow Nodes.
 
 ## Table of Contents
-- [Connection](#connection)
 - [Confluence Knowledge Connectors](#confluence-knowledge-connectors)
 - [Confluence Flow Nodes](#confluence-flow-nodes)
-
----
-
-# Connection
-
-This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
-- **domain:** The base URL of your Confluence application i.e, https://xyz.atlassian.net. This field is not required for the Knowledge Connectors
-- **username:** Your Confluence account email address bob@sample.com
-- **key:** Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.
+- [Confluence Connection](#confluence-connection)
 
 ---
 # Confluence Knowledge Connectors
 
-### Knowledge Connector: Page Content Connector
+### Knowledge Connector: Confluence
 Confluence page content knowledge connector allows you to connect to Confluence and retrieve data from its pages or folders. It adds knowledge sources from the pages retrieved from the confluence. The extension transforms Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
-
-**Note:** The connector uses the following MIT-licensed libraries: [`Dom Christie@turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
 
 #### Heading-Based Chunking
 Content is automatically divided into chunks based on the heading hierarchy in Confluence. The chunking behavior will be as follows:
@@ -55,6 +44,9 @@ When enabled, extracts content from the specified page and all its descendant pa
 
 **Source Tags:**
 Sets the tags that you want to associate with each knowledge source
+
+
+**Note:** The connector uses the following MIT-licensed libraries: [`turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
 
 ---
 
@@ -113,3 +105,12 @@ Returns all pages within a specific Confluence Space. In order to get the result
 ```
 
  **Please Note** : The response object gives back an array of results. If one or more results have been found, the relevant HTML is also returned. This can be used to render the output in the front-end webchat.
+
+---
+
+# Confluence Connection
+
+This module needs a CognigySecret to be defined and passed to the connector. A Cognigy Secret can be added to any Cognigy project and allows for the encryption of sensitive data. The secret must have the following keys:
+- **domain:** The base URL of your Confluence application i.e, https://xyz.atlassian.net. This field is not required for the Knowledge Connectors
+- **username:** Your Confluence account email address bob@sample.com
+- **key:** Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.

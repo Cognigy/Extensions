@@ -9,9 +9,9 @@ import axios from "axios";
 const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
 
-export const pageContentConnector = createKnowledgeDescriptor({
-    type: "pageContentConnector",
-    label: "Confluence Connector",
+export const confluenceConnector = createKnowledgeDescriptor({
+    type: "confluenceConnector",
+    label: "Confluence",
     summary: "Imports text under each heading from all pages in a Confluence directory",
     fields: [
 		{

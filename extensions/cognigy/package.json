@@ -19,14 +19,9 @@
     "@cognigy/extension-tools": "0.16.5-rc3",
     "@dqbd/tiktoken": "1.0.7",
     "@types/html-to-text": "9.0.4",
-    "axios": "^0.21.2",
     "html-to-text": "9.0.5",
     "jsdom": "22.1.0",
-    "juice": "^7.0.0",
     "langchain": "0.0.141",
-    "moment": "^2.29.2",
-    "nodemailer": "^6.4.16",
-    "playwright": "1.51.0",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
 			key: "name",
 			label: "Source name prefix",
 			type: "text",
-			description: "Optional prefix for the name of each source created, e.g. 'Wiki Page' or 'My Blog'"
+			description: "An optional prefix to be appended to Knowledge source's name e.g. 'Wiki Page' or 'My Blog'"
 		},
 		{
 			key: "url",
@@ -30,7 +30,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
         }
 	] as const,
 	listSources: async ({config: { name, url, sourceTags }}) => {
-		let refinedName = name ? `${name} - ${url}` : url
+		let refinedName = name ? `${name} - ${url}` : url;
 		refinedName = refinedName.replace(/https?:\/\//, "")
 							     .replace(/\//g, "-")
 							     .replace(/\?.*$/, "");

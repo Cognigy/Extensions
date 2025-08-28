@@ -13,5 +13,5 @@ export default createExtension({
 	knowledge: [
 		chuckNorrisJokesConnector,
 		webPageContentConnector
-	],
+	]
 });

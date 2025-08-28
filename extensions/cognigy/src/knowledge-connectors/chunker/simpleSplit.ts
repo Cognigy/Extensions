@@ -16,15 +16,12 @@ const MAX_CHUNK_SIZE = 2000;
  */
 export const getEncodingNameForModelName = (modelName: TiktokenModel): TiktokenEncoding => {
     const encodingName = modelToEncoding[modelName] as TiktokenEncoding;
-
     if (!encodingName)
         return null;
-
     return encodingName;
 }
 
 interface ISimpleSplitOptions extends TokenTextSplitterParams {}
-
 const TokenSplitterDefaultOptions: Partial<ISimpleSplitOptions> = {
     chunkSize: 512,
     chunkOverlap: 128,
@@ -32,7 +29,6 @@ const TokenSplitterDefaultOptions: Partial<ISimpleSplitOptions> = {
 }
 
 interface ITextSplitOptions extends CharacterTextSplitterParams {}
-
 const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
     chunkSize: MAX_CHUNK_SIZE,
     chunkOverlap: 0,
@@ -42,16 +38,16 @@ const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
  * Splits a text into fixed-length chunks.
  *
  * First applies semantic splitting on Token level, then refines it using character level splitting
- * in case the chunks are still too large.
- *
- * Important: the tokens vary in size depending on the selected "encodingName"!
- * Make sure to select the correct encoding! The encoding has to fit the "Answer Extraction" model!
+ * in case the chunks are still greater than the MAX_CHUNK_SIZE.
  *
  * @param text a string that should be split into chunks
  * @param options a set of options that should be passed to the TokenTextSplitter
  * @returns
  */
-export const simpleSplit = async (text: string, options: Partial<ISimpleSplitOptions> = {}): Promise<String[]> => {
+export const simpleSplit = async (
+    text: string,
+    options: Partial<ISimpleSplitOptions> = {}
+): Promise<String[]> => {
     const splitter = new TokenTextSplitter({
         ...TokenSplitterDefaultOptions,
         ...options

@@ -12,7 +12,7 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 			params: {
 				required: true
 			},
-			description: "Prefix for the name of each source created, e.g. 'Chuck Norris Jokes'"
+			description: "A prefix to be appended to Knowledge source's name. e.g. 'Chuck Norris Jokes'"
 		},
 		{
 			key: "categories",

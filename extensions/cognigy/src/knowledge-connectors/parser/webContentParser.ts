@@ -11,7 +11,7 @@ export const getTextFromWebPage = async (url: string): Promise<string> => {
         const html = await response.text();
         const dom = new JSDOM(html, {url, pretendToBeVisual: true });
 
-        // Convert to text using html-to-text with better options
+        // Convert to text using html-to-text
         const textContent = convert(dom.window.document.body.innerHTML, {
             wordwrap: false,
             preserveNewlines: false,
@@ -19,9 +19,7 @@ export const getTextFromWebPage = async (url: string): Promise<string> => {
                 { selector: 'a', options: { ignoreHref: true } },
                 { selector: 'img', format: 'skip' },
                 { selector: 'nav', format: 'skip' },
-                { selector: '.navigation', format: 'skip' },
-                { selector: 'ul', options: { itemPrefix: '• ' } },
-                { selector: 'ol', options: { itemPrefix: '' } }
+                { selector: '.navigation', format: 'skip' }
             ]
         });
 

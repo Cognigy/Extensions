@@ -1,14 +1,13 @@
 {
   "name": "cognigy",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Basic Cognigy Extensions",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
     "zip": "tar cfz cognigy.tar.gz build/* package.json package-lock.json README.md icon.png",
-    "build": "npm run transpile && npm run lint && npm run zip && npm run playwright:install:chromium",
-    "lint": "tslint -c tslint.json src/**/*.ts -e node_modules",
-    "playwright:install:chromium": "npx playwright@1.51.0 install chromium --no-shell"
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
     "Cognigy",
@@ -19,7 +18,10 @@
   "dependencies": {
     "@cognigy/extension-tools": "0.16.5-rc3",
     "@dqbd/tiktoken": "1.0.7",
+    "@types/html-to-text": "9.0.4",
     "axios": "^0.21.2",
+    "html-to-text": "9.0.5",
+    "jsdom": "22.1.0",
     "juice": "^7.0.0",
     "langchain": "0.0.141",
     "moment": "^2.29.2",
@@ -29,8 +31,8 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/jsdom": "21.1.7",
     "@types/node": "13.13.52",
-    "@types/node-fetch": "^2.5.7",
     "typescript": "5.9.2"
   }
 }

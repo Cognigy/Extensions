@@ -1,8 +1,8 @@
 import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
 
 export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
-	type: "chuckNorrisJokes",
-	label: "Get some Chuck Norris jokes",
+	type: "chuckNorrisJokesConnector",
+	label: "Chuck Norris jokes",
 	summary: "This will import Chuck Norris jokes",
 	fields: [
 		{
@@ -57,7 +57,9 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 				if (joke.value) {
 					result.push({
 						text: joke.value,
-						data: {}
+						data: {
+							category: source.data.category as string
+						}
 					});
 				}
 			} catch (error: any) {

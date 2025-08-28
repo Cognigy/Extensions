@@ -1,7 +1,10 @@
 /* Node Modules */
-import { TokenTextSplitter, TokenTextSplitterParams } from "langchain/text_splitter";
+import { TokenTextSplitter, TokenTextSplitterParams, CharacterTextSplitter, CharacterTextSplitterParams } from "langchain/text_splitter";
 import * as modelToEncoding from '@dqbd/tiktoken/model_to_encoding.json';
 import { TiktokenEncoding, TiktokenModel } from "@dqbd/tiktoken";
+
+// Max chunk size limit
+const MAX_CHUNK_SIZE = 2000;
 
 /**
  * This method resolves the proper encoding name for a given language model.
@@ -22,27 +25,27 @@ export const getEncodingNameForModelName = (modelName: TiktokenModel): TiktokenE
 
 interface ISimpleSplitOptions extends TokenTextSplitterParams {}
 
-const defaultOptions: Partial<ISimpleSplitOptions> = {
-    chunkSize: 1024,
+const TokenSplitterDefaultOptions: Partial<ISimpleSplitOptions> = {
+    chunkSize: 512,
     chunkOverlap: 128,
     encodingName: getEncodingNameForModelName('gpt-3.5-turbo')
+}
+
+interface ITextSplitOptions extends CharacterTextSplitterParams {}
+
+const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
+    chunkSize: MAX_CHUNK_SIZE,
+    chunkOverlap: 0,
 }
 
 /**
  * Splits a text into fixed-length chunks.
  *
- * Important: the "chunkSize" is measured in "tokens", not "characters"!
+ * First applies semantic splitting on Token level, then refines it using character level splitting
+ * in case the chunks are still too large.
  *
  * Important: the tokens vary in size depending on the selected "encodingName"!
  * Make sure to select the correct encoding! The encoding has to fit the "Answer Extraction" model!
- *
- * This will produce chunks with character length < 2000 in case
- * the average word letter count stays below ~17 characters on average, therefore
- * we consider it "safe" to produce valid chunks.
- *
- * In case we run into that edge case, here's a proposed follow-up:
- * write a manual splitting function which takes both, the "character length"
- * and the "chunk length" limits into account.
  *
  * @param text a string that should be split into chunks
  * @param options a set of options that should be passed to the TokenTextSplitter
@@ -50,9 +53,22 @@ const defaultOptions: Partial<ISimpleSplitOptions> = {
  */
 export const simpleSplit = async (text: string, options: Partial<ISimpleSplitOptions> = {}): Promise<String[]> => {
     const splitter = new TokenTextSplitter({
-        ...defaultOptions,
+        ...TokenSplitterDefaultOptions,
         ...options
     });
+    const chunks = await splitter.splitText(text);
+    const charSplitter = new CharacterTextSplitter({
+        ...CharSplitDefaultOptions
+    });
 
-    return await splitter.splitText(text);
+    let refinedChunks: string[] = [];
+    for (const chunk of chunks) {
+        if (chunk.length > MAX_CHUNK_SIZE) {
+            const smallerChunks = await charSplitter.splitText(chunk);
+            refinedChunks = refinedChunks.concat(smallerChunks);
+        } else {
+            refinedChunks.push(chunk);
+        }
+    }
+    return refinedChunks;
 }

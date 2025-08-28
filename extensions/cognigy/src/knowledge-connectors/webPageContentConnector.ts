@@ -2,15 +2,17 @@ import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
 import { getTextFromWebPage } from "./parser/webContentParser";
 import { simpleSplit } from "./chunker/simpleSplit";
 
-const MAX_RETRIES = 3;
-const RETRY_INTERVAL = 5;
-const STABILITY_THRESHOLD = 6;
-
-export const webPageConnector = createKnowledgeDescriptor({
-	type: "webPage",
-	label: "Get web page content",
+export const webPageContentConnector = createKnowledgeDescriptor({
+	type: "webPageContentConnector",
+	label: "Web Page Content",
 	summary: "This will import content from a web page",
 	fields: [
+		{
+			key: "name",
+			label: "Source name prefix",
+			type: "text",
+			description: "Optional prefix for the name of each source created, e.g. 'Wiki Page' or 'My Blog'"
+		},
 		{
 			key: "url",
 			label: "Web page URL",
@@ -27,10 +29,14 @@ export const webPageConnector = createKnowledgeDescriptor({
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
 	] as const,
-	listSources: async ({config: { url, sourceTags }}) => {
+	listSources: async ({config: { name, url, sourceTags }}) => {
+		let refinedName = name ? `${name} - ${url}` : url
+		refinedName = refinedName.replace(/https?:\/\//, "")
+							     .replace(/\//g, "-")
+							     .replace(/\?.*$/, "");
 		return [
 			{
-				name: `Web page - ${url}`,
+				name: refinedName,
 				description: `Content from web page at ${url}`,
 				tags: sourceTags,
 				data: {
@@ -45,22 +51,20 @@ export const webPageConnector = createKnowledgeDescriptor({
 		try {
 
 			// Extract text from webpage using playwright
-			const text = await getTextFromWebPage(url, {
-				maxRetries: MAX_RETRIES,
-				retryInterval: RETRY_INTERVAL,
-				stabilityThreshold: STABILITY_THRESHOLD
-			});
+			const text = await getTextFromWebPage(url);
 
-			// Break text into chunks using the "simplesplit128" approach
+			// Break text into chunks
 			let chunks = await simpleSplit(text);
 
 			// Remove any empty chunks
 			chunks = chunks.filter(chunk => chunk.trim().length > 0);
 
-			// chunks to this array { text, data }
+			// Maps chunks to this array { text, data }
 			result = chunks.map(chunk => ({
 				text: chunk as string,
-				data: {}
+				data: {
+					url
+				}
 			}));
 		} catch (error: any) {
 			throw new Error(`Failed to fetch data from ${url}: ${error.message}`);

@@ -212,14 +212,14 @@ export const intentDisambiguationNode = createNodeDescriptor({
 						api.say(disambiguationQuestion, {});
 						api.say('', {
 							"_cognigy": {
-    							"_default": {
-      								"_list": {
-        								"type": "list",
-        								"items": createList(input, array),
-        								"button": { "title": "", "type": "", "payload": "", "condition": "" }
-      								}
-    							}
-  							}
+								"_default": {
+									"_list": {
+										"type": "list",
+										"items": createList(input, array),
+										"button": { "title": "", "type": "", "payload": "", "condition": "" }
+									}
+								}
+							}
 						});
 						break;
 					case "plainText":

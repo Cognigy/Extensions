@@ -14,25 +14,25 @@ const MAX_CHUNK_SIZE = 2000;
  * @param modelName a tiktoken-compatible model name
  * @returns a tiktoken-compatible encoding name
  */
-export const getEncodingNameForModelName = (modelName: TiktokenModel): TiktokenEncoding => {
+const getEncodingNameForModelName = (modelName: TiktokenModel): TiktokenEncoding => {
     const encodingName = modelToEncoding[modelName] as TiktokenEncoding;
     if (!encodingName)
         return null;
     return encodingName;
-}
+};
 
-interface ISimpleSplitOptions extends TokenTextSplitterParams {}
+interface ISimpleSplitOptions extends TokenTextSplitterParams {};
 const TokenSplitterDefaultOptions: Partial<ISimpleSplitOptions> = {
     chunkSize: 512,
     chunkOverlap: 128,
     encodingName: getEncodingNameForModelName('gpt-3.5-turbo')
-}
+};
 
-interface ITextSplitOptions extends CharacterTextSplitterParams {}
+interface ITextSplitOptions extends CharacterTextSplitterParams {};
 const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
     chunkSize: MAX_CHUNK_SIZE,
     chunkOverlap: 0,
-}
+};
 
 /**
  * Splits a text into fixed-length chunks.
@@ -67,4 +67,4 @@ export const simpleSplit = async (
         }
     }
     return refinedChunks;
-}
+};

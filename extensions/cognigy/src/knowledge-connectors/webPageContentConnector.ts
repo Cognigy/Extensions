@@ -31,9 +31,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
 	] as const,
 	listSources: async ({config: { name, url, sourceTags }}) => {
 		let refinedName = name ? `${name} - ${url}` : url;
-		refinedName = refinedName.replace(/https?:\/\//, "")
-							     .replace(/\//g, "-")
-							     .replace(/\?.*$/, "");
+		refinedName = refinedName.replace(/https?:\/\//, "").replace(/\//g, "-").replace(/\?.*$/, "");
 		return [
 			{
 				name: refinedName,
@@ -45,7 +43,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
 			}
 		];
 	},
-	processSource: async ({ config, source }) => {
+	processSource: async ({ source }) => {
 		let result = [];
 		const url = source.data.url as string;
 		try {

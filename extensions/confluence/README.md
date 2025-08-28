@@ -85,7 +85,7 @@ This Node allows Cognigy to search through a specific Confluence workspace based
 
 ### Node: Get All Pages
 
-Returns all pages within a specific Confluence space. In order to get the result, you need to have the key of a space. In most cases, this is a three-character identifier, such as COG or GEN. For example, you can find the key in the Confluence URL of a space: `https://domain.atlassian.net/wiki/spaces/   GEN   /overview` -> key = GEN
+This Node returns all pages within a specific Confluence space. In order to get the result, you need to have the key of a space. In most cases, this is a three-character identifier, such as COG or GEN. For example, you can find the key in the Confluence URL of a space: `https://domain.atlassian.net/wiki/spaces/   GEN   /overview` -> key = GEN
 
 **Response JSON Structure**
 

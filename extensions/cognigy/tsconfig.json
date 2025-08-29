@@ -10,8 +10,7 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-	  "skipLibCheck": true,
-    "noImplicitAny": true
+	  "skipLibCheck": true
   },
   "exclude": [
     "node_modules",

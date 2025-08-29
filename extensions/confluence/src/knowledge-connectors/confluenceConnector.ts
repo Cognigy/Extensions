@@ -12,7 +12,7 @@ const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
 export const confluenceConnector = createKnowledgeDescriptor({
     type: "confluenceConnector",
     label: "Confluence",
-    summary: "Imports text under each heading from all pages in a Confluence directory",
+    summary: "Extract text from confluence pages and creates knowledge chunks",
     fields: [
 		{
 			key: "connection",

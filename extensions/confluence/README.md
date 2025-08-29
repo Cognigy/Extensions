@@ -16,11 +16,11 @@ The Confluence Knowledge Connector allows you to connect to Confluence and retri
 
 ### Heading-Based Chunking
 
-Content is automatically divided into chunks based on the heading hierarchy in Confluence. The chunking behavior is the following:
-- **H1, H2**: Start new chunks
-- **H3, H4, H5, H6**: Included in the current chunk
+Content is automatically divided into Knowledge Chunks based on the heading hierarchy in Confluence. The chunking behavior is the following:
+- **H1, H2**: Start new Knowledge Chunks
+- **H3, H4, H5, H6**: Include in the current Knowledge Chunk
 
-If a chunk exceeds the default length of 2000 characters, it will be further divided into smaller chunks.
+If a Knowledge Chunk exceeds the default max length of 2000 characters, it will be further divided into smaller chunks.
 
 ### Supported Confluence Content Types
 
@@ -110,7 +110,7 @@ This Node returns all pages within a specific Confluence space. In order to get 
 
 # Confluence Connection
 
-This module needs a CognigySecret to be defined and passed to the connector. A CognigySecret can be added to any Cognigy Project and allows for the encryption of sensitive data. The secret must have the following keys:
+This module needs a CognigySecret to be defined and passed to the Extension Node and/or Knowledge Connector. A CognigySecret can be added to any Cognigy Project and allows for the encryption of sensitive data. The secret must have the following keys:
 - **domain:** The base URL of your Confluence application i.e, https://xyz.atlassian.net. This field is not required for the Knowledge Connectors
 - **username:** Your Confluence account email address bob@sample.com
 - **key:** Can be generated within your Confluence account. Click [here](https://confluence.atlassian.com/cloud/api-tokens-938839638.html) for instructions.

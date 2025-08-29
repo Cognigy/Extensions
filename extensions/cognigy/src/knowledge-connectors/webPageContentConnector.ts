@@ -48,7 +48,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
 		const url = source.data.url as string;
 		try {
 
-			// Extract text from webpage using playwright
+			// Extract text from webpage
 			const text = await getTextFromWebPage(url);
 
 			// Break text into chunks

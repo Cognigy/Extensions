@@ -1,0 +1,33 @@
+{
+  "name": "diffbot",
+  "version": "1.0.0",
+  "description": "Basic DiffBot Extensions",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "tar cfz diffbot.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "keywords": [
+    "Diffbot",
+    "Conversational AI",
+    "knowledge extensions"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@appveen/json-utils": "1.1.0",
+    "@cognigy/extension-tools": "0.16.5-rc3",
+    "json-to-plain-text": "1.2.0",
+    "langchain": "0.3.31",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "13.13.52",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "eslint": "^9.32.0",
+    "typescript": "5.9.2"
+  }
+}

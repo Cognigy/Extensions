@@ -1,24 +1,14 @@
+import { IIntent } from "./intent";
+
 interface IQuickReply {
 	contentType: string;
 	payload: string;
 	title: string;
 }
 
-interface IIntent {
-	id: string;
-	name: string;
-	score: number;
-	negated: boolean;
-	confirmationSentence: string;
-	confirmationSentences: any[];
-	disambiguationSentence: string;
-	flow: string;
-	delta: number;
-}
-
 export function createQuickReplies(input: any, intents: IIntent[]): IQuickReply[] {
 
-	let quickReplies: IQuickReply[] = [];
+	const quickReplies: IQuickReply[] = [];
 
 	// Add the main intent at the first position of the quick reply array
 	quickReplies.push({

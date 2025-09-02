@@ -36,7 +36,7 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
 	] as const,
-	listSources: async ({config: { name, categories, sourceTags }}) => {
+	listSources: async ({ config: { name, categories, sourceTags }}) => {
 		return categories.map((category) => (
 			{
 				name: `${name} - ${category}`,

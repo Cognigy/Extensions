@@ -20,14 +20,15 @@
     "@appveen/json-utils": "1.1.0",
     "@cognigy/extension-tools": "0.16.5-rc3",
     "json-to-plain-text": "1.2.0",
-    "langchain": "0.3.31",
-    "typescript": "^5.9.2"
+    "langchain": "0.3.31"
   },
   "devDependencies": {
+    "@eslint/js": "9.34.0",
     "@types/node": "13.13.52",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
-    "eslint": "^9.32.0",
-    "typescript": "5.9.2"
+    "eslint": "9.34.0",
+    "typescript": "5.9.2",
+    "typescript-eslint": "8.41.0"
   }
 }

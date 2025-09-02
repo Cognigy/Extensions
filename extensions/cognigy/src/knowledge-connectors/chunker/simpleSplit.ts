@@ -21,15 +21,14 @@ const getEncodingNameForModelName = (modelName: TiktokenModel): TiktokenEncoding
     return encodingName;
 };
 
-interface ISimpleSplitOptions extends TokenTextSplitterParams {};
-const TokenSplitterDefaultOptions: Partial<ISimpleSplitOptions> = {
+type ISimpleSplitOptions = Partial<TokenTextSplitterParams>;
+const TokenSplitterDefaultOptions: ISimpleSplitOptions = {
     chunkSize: 512,
     chunkOverlap: 128,
     encodingName: getEncodingNameForModelName('gpt-3.5-turbo')
 };
 
-interface ITextSplitOptions extends CharacterTextSplitterParams {};
-const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
+const CharSplitDefaultOptions: Partial<CharacterTextSplitterParams> = {
     chunkSize: MAX_CHUNK_SIZE,
     chunkOverlap: 0,
 };
@@ -46,8 +45,8 @@ const CharSplitDefaultOptions: Partial<ITextSplitOptions> = {
  */
 export const simpleSplit = async (
     text: string,
-    options: Partial<ISimpleSplitOptions> = {}
-): Promise<String[]> => {
+    options: ISimpleSplitOptions = {}
+): Promise<string[]> => {
     const splitter = new TokenTextSplitter({
         ...TokenSplitterDefaultOptions,
         ...options

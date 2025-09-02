@@ -1,4 +1,5 @@
 import { IIntent } from "./intent";
+
 interface IList {
 	title: string;
 	subtitle: string;
@@ -7,7 +8,6 @@ interface IList {
 	buttons: any[];
 }
 
-// @ts-ignore
 export function createPlainText(input: any, intents: IIntent[]): string {
 
 	const plainText = [];

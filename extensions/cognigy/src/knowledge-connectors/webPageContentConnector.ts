@@ -46,27 +46,24 @@ export const webPageContentConnector = createKnowledgeDescriptor({
 	processSource: async ({ source }) => {
 		let result = [];
 		const url = source.data.url as string;
-		try {
 
-			// Extract text from webpage
-			const text = await getTextFromWebPage(url);
+		// Extract text from webpage
+		const text = await getTextFromWebPage(url);
 
-			// Break text into chunks
-			let chunks = await simpleSplit(text);
+		// Break text into chunks
+		let chunks = await simpleSplit(text);
 
-			// Remove any empty chunks
-			chunks = chunks.filter(chunk => chunk.trim().length > 0);
+		// Remove any empty chunks
+		chunks = chunks.filter(chunk => chunk.trim().length > 0);
 
-			// Maps chunks to this array { text, data }
-			result = chunks.map(chunk => ({
-				text: chunk as string,
-				data: {
-					url
-				}
-			}));
-		} catch (error: any) {
-			throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
-		}
+		// Maps chunks to this array { text, data }
+		result = chunks.map(chunk => ({
+			text: chunk as string,
+			data: {
+				url
+			}
+		}));
+
 		return result;
 	}
 });

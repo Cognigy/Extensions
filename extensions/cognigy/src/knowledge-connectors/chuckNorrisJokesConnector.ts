@@ -21,7 +21,7 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 			params: {
 				required: true
 			},
-			description: "Categories of jokes to fetch. Available categories can be found at https://api.chucknorris.io/jokes/categories"
+			description: "Categories of jokes to fetch. Available categories are animal, career, celebrity, dev, explicit, fashion, food, history, money, movie, music, political, religion, science, sport, travel"
 		},
 		{
 			key: "amount",
@@ -62,7 +62,7 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 						}
 					});
 				}
-			} catch (error: any) {
+			} catch (error) {
 				throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
 			}
 		}

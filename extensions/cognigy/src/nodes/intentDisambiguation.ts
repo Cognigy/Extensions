@@ -229,14 +229,12 @@ export const intentDisambiguationNode = createNodeDescriptor({
 	if (storeLocation === "context") {
 		api.addToContext(contextKey, output, "simple");
 		} else {
-					// @ts-ignore
 			api.addToInput(inputKey, output);
 		}
 		} catch (error) {
 	if (storeLocation === "context") {
 		api.addToContext(contextKey, error, "simple");
 	} else {
-		// @ts-ignore
 		api.addToInput(inputKey, error);
 	}
 }

@@ -52,18 +52,14 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 		const result = [];
 		const url = `https://api.chucknorris.io/jokes/random?category=${source.data.category}`;
 		for (let i = 0; i < config.amount; i++) {
-			try {
-				const joke = await (await fetch(url)).json();
-				if (joke.value) {
-					result.push({
-						text: joke.value,
-						data: {
-							category: source.data.category as string
-						}
-					});
-				}
-			} catch (error) {
-				throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
+			const joke = await (await fetch(url)).json();
+			if (joke.value) {
+				result.push({
+					text: joke.value,
+					data: {
+						category: source.data.category as string
+					}
+				});
 			}
 		}
 		return result;

@@ -9,7 +9,7 @@ export const getTextFromWebPage = async (url: string): Promise<string> => {
     try {
         const response = await fetch(url);
         const html = await response.text();
-        const dom = new JSDOM(html, {url, pretendToBeVisual: true });
+        const dom = new JSDOM(html, { url, pretendToBeVisual: true });
 
         // Convert to text using html-to-text
         const textContent = convert(dom.window.document.body.innerHTML, {

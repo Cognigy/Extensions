@@ -29,7 +29,7 @@ export const webPageContentConnector = createKnowledgeDescriptor({
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
         }
 	] as const,
-	listSources: async ({config: { name, url, sourceTags }}) => {
+	listSources: async ({ config: { name, url, sourceTags }}) => {
 		let refinedName = name ? `${name} - ${url}` : url;
 		refinedName = refinedName.replace(/https?:\/\//, "").replace(/\//g, "-").replace(/\?.*$/, "");
 		return [

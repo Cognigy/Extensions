@@ -120,14 +120,12 @@ export const searchtNode = createNodeDescriptor({
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response.data, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, response.data);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
 		}

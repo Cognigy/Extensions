@@ -158,7 +158,7 @@ const fetchData = async (url: string, email: string, token: string) => {
             auth: {username: email, password: token}
         });
         return response.data;
-    } catch (error: any) {
+    } catch (error) {
         throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
     }
 };

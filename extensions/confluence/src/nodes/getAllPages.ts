@@ -144,14 +144,12 @@ export const getAllPagesNode = createNodeDescriptor({
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, results, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, results);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
 		}

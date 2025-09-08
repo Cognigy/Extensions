@@ -22,7 +22,7 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 			key: "seeds",
 			label: "Seed URLs",
 			type: "textArray",
-			description: "Crawling will start from these URLs. Separate multiple URLs with a space.",
+			description: "Crawling will start from these URLs. Enter one URL per line or entry.",
 			params: {
 				required: true
 			}
@@ -32,7 +32,7 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 			type: 'select',
 			label: 'API URL Type',
 			defaultValue: 'analyze',
-			description: 'Type of Extract API to call i.e. Product, List, Job etc. If type is not known then choose \'Analyze\', however the quality of the result may degrade if \'Analyze\' type is chosen.',
+			description: 'Type of Extract API to call i.e. Product, List etc. If type is not known then choose \'Analyze\', however the quality of the result may degrade if \'Analyze\' type is chosen.',
 			params: {
 				options: [
 					{
@@ -46,10 +46,6 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 					{
 						label: 'Article',
 						value: 'article'
-					},
-					{
-						label: 'Job',
-						value: 'job'
 					},
 					{
 						label: 'Event',
@@ -86,7 +82,7 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 		{
 			key: "querystring",
 			label: "Query String",
-			description: "Queryparameters to be passed to Extract API, e.g. fields=title,text",
+			description: "Query parameters to be passed to Extract API (do not include the leading '?'). Separate multiple parameters with '&', e.g. fields=title,text&timeout=10",
 			type: "text",
 
 		},
@@ -339,52 +335,60 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 		const crawler = new DiffbotCrawler(accessToken);
 		const crawlerName = `crawler-${Date.now()}`;
 
-		// Create and run a crawl job
+		// Remove all leading ? or & and all trailing &
+		let apiUrl = `https://api.diffbot.com/v3/${apiUrlType}`;
+		if (querystring) {
+			const cleanedQuerystring = querystring.trim().replace(/^[?&]+|&+$/g, "");
+			apiUrl = `https://api.diffbot.com/v3/${apiUrlType}?${cleanedQuerystring}`;
+		}
+
+		// Create and run a crawl job and get results
 		await crawler.createCrawlJob({
 			...crawlerConfig,
 			name: crawlerName,
-			apiUrl: `https://api.diffbot.com/v3/${apiUrlType}?${querystring}`,
+			apiUrl: apiUrl,
 		});
-
-		// Run the job and wait for results
 		const crawledData = await crawler.monitorJobAndGetResults(crawlerName);
-		const results = []
+
+		// Return sources
+		const results = [];
 		for (const data of crawledData) {
-			try {
-				const refinedName = await cleanTitle(data.title ? data.title : data.pageUrl);
-				results.push({
-					name: refinedName,
-					description: `Content from web page at ${data.pageUrl}`,
-					tags: sourceTags,
-					data: {
-						"crawlerName": crawlerName,
-						url: data.pageUrl,
-						title: data.title,
-						type: data.type
-					}
-				})
-			} catch {
-				// Skip any items that cause errors
-			}
+			if (!data.pageUrl)
+				continue;
+
+			const refinedName = cleanTitle(data.title ? data.title : data.pageUrl);
+			results.push({
+				name: refinedName,
+				description: `Content from web page at ${data.pageUrl}`,
+				tags: sourceTags,
+				data: {
+					"crawlerName": crawlerName,
+					url: data.pageUrl,
+					title: data.title,
+					type: data.type
+				}
+			});
 		}
 		return results;
 	},
 	processSource: async ({ config, source }) => {
-		let result = [];
 		const { accessToken } = config.connection as any;
 		const { url, crawlerName } = source.data as any;
 		const crawler = new DiffbotCrawler(accessToken);
 		const crawledData = await crawler.getJobData(crawlerName);
 		const sourceData = crawledData.find((item: any) => url === item.pageUrl);
 
-		// Create chunks
+		if (!sourceData) {
+			throw new Error(`No data found for URL: ${url}`);
+		}
+
 		const chunkTitle = `title: ${sourceData.title}\n` +
 			`type: ${sourceData.type}\n` +
 			`url: ${sourceData.pageUrl}\n\n`;
 		const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
 
 		// Maps chunks to this array { text, data }
-		result = chunks.map((chunk: string, index: number) => ({
+		const result = chunks.map((chunk: string, index: number) => ({
 			text: chunk,
 			data: {
 				url,

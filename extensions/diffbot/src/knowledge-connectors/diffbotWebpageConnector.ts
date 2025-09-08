@@ -30,8 +30,8 @@ export const diffbotWebpageConnector = createKnowledgeDescriptor({
 			key: 'apiUrlType',
 			type: 'select',
 			label: 'API URL Type',
-			defaultValue: 'analyze',
 			description: 'Type of Extract API to call i.e. Product, List, Job etc. If type is not known then choose \'Analyze\', however the quality of the result may degrade if \'Analyze\' type is chosen.',
+			defaultValue: 'analyze',
 			params: {
 				options: [
 					{
@@ -85,9 +85,9 @@ export const diffbotWebpageConnector = createKnowledgeDescriptor({
         {
             key: "sourceTags",
             label: "Source Tags",
-            type: "chipInput",
-            defaultValue: ["Web Page"],
             description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
+            defaultValue: ["Web Page"],
+			type: "chipInput"
         }
 	] as const,
 	listSources: async ({config: { urls, sourceTags, apiUrlType }}) => {
@@ -110,18 +110,18 @@ export const diffbotWebpageConnector = createKnowledgeDescriptor({
 		let result = [];
 		const { accessToken } = config.connection as any;
 		const { url, apiUrlType } = source.data as any;
-		const params = new URLSearchParams({token: accessToken, url: url});
+		const params = new URLSearchParams({ token: accessToken, url });
 		const diffbotUrl = `https://api.diffbot.com/v3/${apiUrlType}?${params}`;
 		const analyze = await fetchWithRetry(diffbotUrl);
 		if (!analyze || !analyze.objects || analyze.objects.length === 0)
 			throw new Error(`No data returned from Diffbot for URL: ${url}`);
 
 		// Create chunks
-		const chunkTitle = `title: ${analyze.objects[0].title}\n` +
-			`type: ${analyze.objects[0].type}\n` +
+		const object = analyze.objects[0];
+		const chunkTitle = `title: ${object.title}\n` +
+			`type: ${object.type}\n` +
 			`url: ${analyze.request.pageUrl}\n\n`;
 
-		const object = analyze.objects[0];
 		const chunks = await jsonSplit(object, chunkTitle, ['html']);
 
 		// Maps chunks to this array { text, data }

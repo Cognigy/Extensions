@@ -1,4 +1,4 @@
-import { fetchWithRetry } from "../helper/utils";
+import { fetchWithRetry, logMessage } from "../helper/utils";
 
 interface CrawlJobSettings {
     name: string;
@@ -30,19 +30,6 @@ interface CrawlJobSettings {
     referer?: string;
     cookie?: string;
     acceptLanguage?: string;
-}
-
-interface JobStatus {
-    response: string;
-    jobs: Array<{
-        name: string;
-        type: string;
-        jobStatus: {
-            status: number;
-            message: string;
-        };
-        downloadJson: string;
-    }>;
 }
 
 interface DiffbotResult {
@@ -85,7 +72,7 @@ class DiffbotCrawler {
         checkInterval: number = 10000,
         maxWaitTime: number = 3600000
     ): Promise<DiffbotResult[]> {
-        console.log(`Starting crawl job monitoring: ${jobName}`);
+        logMessage(`Starting crawl job monitoring: ${jobName}`);
 
         const startTime = Date.now();
         const maxAttempts = Math.floor(maxWaitTime / checkInterval);
@@ -94,16 +81,16 @@ class DiffbotCrawler {
             const { jobStatus: { status, message } } = (await this.getJobStatus(jobName)).jobs[0];
 
             if (status === 9 || status === 3) {
-                console.log(`Job ${jobName} completed successfully!`);
+                logMessage(`Job ${jobName} completed successfully!`);
 
                 // Return the job data on success
-                return await this.getJobData(jobName);
+                return await this.getJobData(jobName) as DiffbotResult[];
             } else if (status === 10 || status === 8 || status === 2) {
                 throw new Error(`Job ${jobName} failed: ${message}`);
             }
 
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            console.log(`Job ${jobName} status: ${message} (code: ${status}). Elapsed: ${elapsed}s`);
+            logMessage(`Job ${jobName} status: ${message} (code: ${status}). Elapsed: ${elapsed}s`);
 
             await new Promise(resolve => setTimeout(resolve, checkInterval));
         }
@@ -114,11 +101,11 @@ class DiffbotCrawler {
     /**
      * Get status of a crawl job
      */
-    async getJobStatus(jobName: string): Promise<JobStatus> {
+    async getJobStatus(jobName: string): Promise<any> {
         const url = `${this.baseUrl}/v3/crawl`;
         const params = new URLSearchParams({token: this.token,  name: jobName});
         const response = await fetchWithRetry(`${url}?${params}`);
-        return response as JobStatus;
+        return response;
     }
 
     /**
@@ -134,36 +121,6 @@ class DiffbotCrawler {
      * Prepare payload for creating a crawl job, and set default values
      */
     async getPayload(job: CrawlJobSettings): Promise<URLSearchParams> {
-
-        // Default settings
-        const settings: CrawlJobSettings = {
-            crawlDelay: 0.25,
-            urlCrawlPattern: [],
-            urlCrawlRegEx: '',
-            maxToCrawl: 100,
-            maxToCrawlPerSubdomain: 10,
-            maxHops: -1,
-            obeyRobots: true,
-            restrictDomain: false,
-            restrictSubdomain: false,
-            useProxies: false,
-            useCanonical: true,
-
-            // Processing Settings
-            urlProcessPattern: [],
-            urlProcessRegEx: '',
-            pageProcessPattern: [],
-            maxToProcess: 100,
-            maxToProcessPerSubdomain: 10,
-
-            // Custom Headers
-            userAgent: '',
-            referer: '',
-            cookie: '',
-            acceptLanguage: '',
-
-            ...job  // Override defaults with provided values
-        };
         const patternOptions = ['urlCrawlPattern', 'urlProcessPattern', 'pageProcessPattern'];
         const booleanOptions = ['obeyRobots', 'restrictDomain', 'restrictSubdomain', 'useProxies', 'useCanonical'];
         const headerMap: Record<string, string> = {
@@ -175,20 +132,25 @@ class DiffbotCrawler {
 
         // Convert all values to strings for form data
         const params = new URLSearchParams();
-
-        for (const [key, value] of Object.entries(settings)) {
-            if (patternOptions.includes(key)) {
-                params.append(key, value.join("||"));
-            } else if (booleanOptions.includes(key)) {
-                params.append(key, value === true ? '1' : '0');
-            } else if (key in headerMap && value !== '') {
-                params.append('customHeaders', `${headerMap[key]}:${value}`);
-            } else if (key === 'seeds') {
-                params.append(key, value.join(" "));
-            } else {
-                params.append(key, String(value));
+        Object.entries(job).forEach(([key, value]) => {
+            switch (true) {
+                case key === 'seeds':
+                    params.append(key, value.join(" "));
+                    break;
+                case patternOptions.includes(key):
+                    params.append(key, value.join("||"));
+                    break;
+                case booleanOptions.includes(key):
+                    params.append(key, value ? '1' : '0');
+                    break;
+                case key in headerMap:
+                    if (value)
+                        params.append('customHeaders', `${headerMap[key]}:${value}`);
+                    break;
+                default:
+                    params.append(key, String(value));
             }
-        }
+        });
         return params;
     }
 }

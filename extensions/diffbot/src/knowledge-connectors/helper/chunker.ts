@@ -19,7 +19,7 @@ export const jsonSplit = async (jsonObj: any, chunkTitle: string, filterKeys: st
     filterKeys?.forEach(key => delete clonedObj[key]);
 
     const chunks: string[] = [];
-    const flat = flattie(jsonObj);
+    const flat = flattie(clonedObj);
     const text = jsonToPlainText(flat, { squareBracketsForArray: true });
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: MAX_CHUNK_SIZE - chunkTitle.length,

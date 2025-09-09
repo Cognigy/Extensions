@@ -17,7 +17,8 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 
 ## Knowledge Connector: Diffbot Crawler
 Diffbot Crawler automatically creates knowledge sources by crawling web pages from the root page and process their content through Diffbot's extraction service.
-See diffbot [crawl-introduction](https://docs.diffbot.com/reference/crawl-introduction) documentation. The user can also monitor running crawler on [Diffbot dashboard](https://app.diffbot.com/crawls/)
+See diffbot [Crawler](https://docs.diffbot.com/reference/crawl-introduction) documentation. The user can also monitor running crawler on [Diffbot dashboard](https://app.diffbot.com/crawls/)
+
 ### Fields
 
 **Connection:**

@@ -1,32 +1,30 @@
 
-# Cognigy.AI
+# Diffbot
 
-This Extension provides basic diffbot connector, that crawl through the pages and create knowledge sources with chunks. It integrates Cognigy.AI with diffBot (https://www.diffbot.com/)
+This Extension provides basic diffbot connector, that crawl through the pages and create knowledge sources with chunks. It integrates Cognigy.AI with [DiffBot](https://www.diffbot.com/)
 
 ## Table of Contents
 - [Diffbot Knowledge Connectors](#diffbot-knowledge-connectors)
 - [Diffbot Connection](#diffbot-connection)
 
 ---
-# Diffbot Connectors
+# Diffbot Knowledge Connectors
 
 The Diffbot Knowledge Connector enables extraction of structured data from web pages in JSON format.
 
 ### Chunking
-The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks. Each chunk is prefixed with the page title, content type, and URL for web page. Knowledge chunks that exceed the default maximum length of 2000 characters are automatically truncated.
-
-**Note:** The connector uses the following MIT-licensed libraries: [`json-to-plain-text`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain), [`flattie`](https://www.npmjs.com/package/flattie), [`fetch-retry`](https://www.npmjs.com/package/fetch-retry)
+The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks. Each chunk is prefixed with the page title, content type, and URL for web page.
 
 ## Knowledge Connector: Diffbot Crawler
 Diffbot Crawler automatically creates knowledge sources by crawling web pages from the root page and process their content through Diffbot's extraction service.
-
+See diffbot [crawl-introduction](https://docs.diffbot.com/reference/crawl-introduction) documentation. The user can also monitor running crawler on [Diffbot dashboard](https://app.diffbot.com/crawls/)
 ### Fields
 
 **Connection:**
 Connection field as defined in [Connection](#diffbot-connection)
 
 **Seed URLs:**
-Crawling will start from these URLs. Separate multiple URLs with a space.
+Crawling will start from these URLs. Enter one URL per line or entry.
 
 **API URL Type:**
 Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen. Available options:
@@ -129,7 +127,7 @@ Connection field as defined in [Connection](#diffbot-connection)
 URLs of the Web pages to import content from
 
 **Web page Type**
-Type of content the web page have i.e. Product, List, Job etc. If type is not known then choose 'Other' type, however the accuracy of the result may be affected if 'Other' type is chosen.
+Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen. Available options:
 
 **Source Tag:**
 Sets the tags that you want to associate with each Knowledge Source
@@ -141,3 +139,7 @@ Sets the tags that you want to associate with each Knowledge Source
 This module needs a CognigySecret to be defined and passed to the Knowledge Connector. A CognigySecret can be added to any Cognigy Project and allows for the encryption of sensitive data. The secret must have the following keys:
 - **accessToken:** Access token to access the diffbot api
 
+
+---
+
+**Note:** The connector uses the following MIT-licensed libraries: [`json-to-plain-text`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain), [`flattie`](https://www.npmjs.com/package/flattie), [`fetch-retry`](https://www.npmjs.com/package/fetch-retry)

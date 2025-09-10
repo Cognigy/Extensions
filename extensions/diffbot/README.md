@@ -119,7 +119,7 @@ Source tags can be used to filter the search scope from the Flow. Press ENTER to
 ---
 
 ## Knowledge Connector: Diffbot Webpage
-Diffbot Webpage connector automatically creates knowledge sources by procesing the given web page content through Diffbot's extraction service.
+Diffbot Webpage connector automatically creates knowledge sources by procesing the given web page(s) content through Diffbot's extraction service.
 
 ### Fields
 
@@ -146,4 +146,5 @@ This module needs a CognigySecret to be defined and passed to the Knowledge Conn
 ---
 
 **Note:** The connector uses the following MIT-licensed libraries: [`json-to-plain-text`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain), [`flattie`](https://www.npmjs.com/package/flattie), [`fetch-retry`](https://www.npmjs.com/package/fetch-retry)
+
 

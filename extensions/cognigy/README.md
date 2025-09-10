@@ -99,11 +99,11 @@ The following is an example of a stored response:
 
 #### Display Options
 
-| Option                   | Description                                                                                                                                                                                                                                                                                                                           |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Disambiguation Question | The sentence shown when triggering the Node. In the case of **Plain Text**, this option sets the first part of the sentence.                                                                                                                                                                                                        |
-| Reply Type              | Sets the type of message to be posted back to the user. You can select the following options: **Quick Replies**, **List**, **Plain Text**, or **Data Only**. **Data Only** adds only the data to the Context or Input object without sending a message to the user.                                                                              |
-| Punctuation             | For the Plain Text reply type, the answer is displayed as a complete sentence. With this field, you can determine how the sentence should end.                                                                                                                                                                                       |
+| Option                  | Description                                                                                                                                                                                                                                                         |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Disambiguation Question | The sentence shown when triggering the Node. In the case of **Plain Text**, this option sets the first part of the sentence.                                                                                                                                        |
+| Reply Type              | Sets the type of message to be posted back to the user. You can select the following options: **Quick Replies**, **List**, **Plain Text**, or **Data Only**. **Data Only** adds only the data to the Context or Input object without sending a message to the user. |
+| Punctuation             | For the Plain Text reply type, the answer is displayed as a complete sentence. With this field, you can determine how the sentence should end.                                                                                                                      |
 
 **Important**
 

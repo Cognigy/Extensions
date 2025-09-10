@@ -1,64 +1,58 @@
 
 # Cognigy.AI
 
-This Extension provides basic flow nodes to extend the Cognigy.AI core features and also provides Knowledge connectors to integrate external data sources into Cognigy.AI.
+This Extension provides Nodes to extend Cognigy.AI core features and Knowledge Connectors to integrate external data sources into Cognigy.AI.
 
 ## Table of Contents
-- [Cognigy.AI Knowledge Connectors](#cognigyai-connectors)
-- [Cognigy.AI Flow Nodes](#cognigyai-flow-nodes)
+- [Cognigy.AI Knowledge Connectors](#knowledge-connectors)
+- [Cognigy.AI Nodes](#nodes)
 
 ---
-# Cognigy.AI Connectors
 
-This extension provides knowledge connectors that  integrate external data sources into your Cognigy.AI knowledge base. The provided knowledge connectors create knowledge sources by using Web APIs or extracting content from publicly available webpages.
+# Cognigy.AI Extension
 
-### Knowledge Connector: Chuck Norris jokes
-Chuck Norris jokes connector fetches random jokes using the web API and creates a knowledge source with chunks.
+This Extension provides Knowledge Connectors that integrate external data sources into Cognigy.AI. The provided Knowledge Connectors create Knowledge Sources by using web APIs or extracting content from publicly available web pages.
 
-#### Fields:
+## Knowledge Connectors
 
-**Source name prefix**
-A prefix to be appended to Knowledge source's name. e.g. 'Chuck Norris Jokes'.
+### Chuck Norris Jokes
 
-**Categories to fetch**
-Categories of jokes to fetch. Available categories can be found at https://api.chucknorris.io/jokes/categories.
+The Chuck Norris Jokes Knowledge Connector fetches random Chuck Norris Jokes using a web API and creates a Knowledge Source with Knowledge Chunks containing the fetched jokes.
 
-**Number of jokes per source**
-Defines a number of jokes per category.
+The following table shows the fields to configure when using this Knowledge Connector.
 
-**Source Tags:**
-Sets the tags that you want to associate with each knowledge source Source tags can be used to filter the search scope from the Flow.
+| Field                      | Description                                                                                                                                                                     |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Source name prefix         | Sets a prefix to be appended to Knowledge Source's name. For example, if you enter `Chuck Norris Jokes`, the Knowledge Source created is named `Chuck Norris Jokes - <number>`. |
+| Categories to fetch        | Sets the categories of jokes to fetch. You can find the available categories at [chucknorris.io](https://api.chucknorris.io/), in the `Categories` section.                     |
+| Number of jokes per source | Sets a number of jokes per category.                                                                                                                                            |
+| Source Tags                | Sets the Source Tags that you want to add to Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.                      |
 
-### Knowledge Connector: Web page
-Web page content connector allows extraction of web content from publicly available static web pages. It creates a knowledge source and chunks out of webpage content.
+### Web Page
+
+The Web Page Knowledge Connector lets you extract content from publicly available static web pages. This Knowledge Connector creates a Knowledge Source and Knowledge Chunks based on the web page content.
 
 #### Chunking
-Content is automatically divided into chunks based on semantic structure. If a chunk exceeds the default length of 2000 characters, it will be further split into smaller chunks based on character count.
 
-#### Fields:
+The Knowledge Connector divides the web page content automatically into Knowledge Chunks based on semantic structures. If a semantic structure exceeds the 2000 characters, it's split into smaller Knowledge Chunks based on character count.
 
-**Source name prefix**
-An optional prefix to be appended to Knowledge source's name e.g. 'Wiki Page' or 'My Blog'.
+The following table shows the fields to configure when using this Knowledge Connector.
 
-**Web page URL**
-URL of the publicly available static web page to be extracted.
+| Field              | Description                                                                                                                                                             |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Source name prefix | Sets an optional prefix to be appended to the Knowledge Source's name. For example, if you enter `Wiki Page`, the Knowledge Source created is named `Wiki Page - <number>`. |
+| Web page URL       | Sets the URL of the publicly available web page from which the content is extracted.                                                                                    |
+| Source Tags        | Sets the Source Tags that you want to add to the  Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.         |
 
-**Source Tags:**
-Sets the tags that you want to associate with each knowledge source Source tags can be used to filter the search scope from the Flow.
+**Note:** The Knowledge Connector uses the following MIT-licensed libraries: [`html-to-text`](https://www.npmjs.com/package/html-to-text), [`langchain`](https://www.npmjs.com/package/langchain), [`jsdom`](https://www.npmjs.com/package/jsdom)
 
-**Note:** The connector uses the following MIT-licensed libraries: [`html-to-text`](https://www.npmjs.com/package/html-to-text), [`langchain`](https://www.npmjs.com/package/langchain), [`jsdom`](https://www.npmjs.com/package/jsdom)
+## Nodes
 
----
+### Intent Disambiguation
 
-# Cognigy.AI Flow Nodes
+This Node reviews the Intent mapper result from the Cognigy NLU engine and finds Intents that are within the specified score delta. These Intents are stored in order of similarity in the Context object. The disambiguation sentences for each Intent can be posted back to the user as Quick Replies, a list or plain text with a specified `text` message. You can post back up to three disambiguation sentences in addition to the main Intent disambiguation sentence.
 
-This Extension provides basic nodes to extend the Cognigy.AI core features.
-
-## Node: Intent Disambiguation
-
-This node reviews the intent mapper result from the Cognigy NLU and finds intents that are within the specified score delta. These intents are recorded and saved in order of similarity to the Cognigy Context. The disambiguation sentences for each intent can also posted back to the user as quick replies, a list or plaintext with a specified `text` message. A maximum of **three** disambiguation sentences in addition to the main intent disambiguation sentence will be posted back.
-
-The stored response looks like the following:
+The following is an example of a stored response:
 
 ```json
 "cognigy": {
@@ -102,16 +96,15 @@ The stored response looks like the following:
     }
   }
 ```
-### Display Options
 
-Here is a brief summary of the additional options.
+#### Display Options
 
-* **Disambiguation Question**: The sentence which should be shown when triggering the node. In the case of 'Plain Text' it will be the first part of the sentence.
-
-* **Reply Type**: Determines the type of message to be displayed to the user. This can either be 'Quick Replies', 'List', 'Plain Text' or 'Data Only'. 'Data Only' only adds the data to the context or input without sending a message to the user.
-
-* **Punctuation**: If you choose 'Plain Text' as a reply type, the answer will be displayed as a complete sentence. With this field you can determine how the sentence should end.
+| Option                   | Description                                                                                                                                                                                                                                                                                                                           |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Disambiguation Question | The sentence shown when triggering the Node. In the case of **Plain Text**, this option sets the first part of the sentence.                                                                                                                                                                                                        |
+| Reply Type              | Sets the type of message to be posted back to the user. You can select the following options: **Quick Replies**, **List**, **Plain Text**, or **Data Only**. **Data Only** adds only the data to the Context or Input object without sending a message to the user.                                                                              |
+| Punctuation             | For the Plain Text reply type, the answer is displayed as a complete sentence. With this field, you can determine how the sentence should end.                                                                                                                                                                                       |
 
 **Important**
 
-The `maximum delta value` should be between 0 and 1. The smaller the value, the more refined the disambiguation results will be.
+The maximum delta value is between 0 and 1. The smaller the delta value, the more refined the disambiguation results are.

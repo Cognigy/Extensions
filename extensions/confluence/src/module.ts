@@ -2,6 +2,7 @@ import { createExtension } from "@cognigy/extension-tools";
 import { confluenceConnection } from "./connections/confluenceConnection";
 import { searchtNode } from "./nodes/search";
 import { getAllPagesNode } from "./nodes/getAllPages";
+import { confluenceConnector } from "./knowledge-connectors/confluenceConnector";
 
 export default createExtension({
 	nodes: [
@@ -11,6 +12,10 @@ export default createExtension({
 
 	connections: [
 		confluenceConnection
+	],
+
+	knowledge: [
+		confluenceConnector,
 	],
 
 	options: {

@@ -1,32 +1,38 @@
 {
-	"name": "confluence",
-	"version": "4.0.0",
-	"description": "Integrates with the Atlassian's Confluence.",
-	"main": "build/module.js",
-	"scripts": {
-		"transpile": "tsc -p .",
-		"zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
-		"build": "npm run transpile && npm run lint && npm run zip",
-		"lint": "tslint -c tslint.json src/**/*.ts"
-	},
-	"keywords": [
-		"Knowledge",
-		"Wiki"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Cognigy/Extensions"
-	},
-	"author": "Cognigy GmbH",
-	"license": "MIT",
-	"devDependencies": {
-		"@types/axios": "^0.14.0",
-		"@types/node": "^10.17.28",
-		"tslint": "^5.16.0",
-		"typescript": "^3.1.6"
-	},
-	"dependencies": {
-		"@cognigy/extension-tools": "^0.13.0",
-		"axios": "^0.21.2"
-	}
+    "name": "confluence",
+    "version": "5.0.0",
+    "description": "Integrates with the Atlassian's Confluence.",
+    "main": "build/module.js",
+    "scripts": {
+        "transpile": "tsc -p .",
+        "zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
+        "build": "npm run transpile && npm run lint && npm run zip",
+        "lint": "eslint \"src/**/*.ts\""
+    },
+    "keywords": [
+        "Knowledge",
+        "Wiki",
+        "confluence-kai",
+        "extensions"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Cognigy/Extensions"
+    },
+    "author": "Cognigy GmbH",
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/js": "9.34.0",
+        "@types/node": "^24.2.0",
+        "@types/turndown": "^5.0.1",
+        "eslint": "9.34.0",
+        "typescript": "5.9.2",
+        "typescript-eslint": "8.41.0"
+    },
+    "dependencies": {
+        "@cognigy/extension-tools": "0.16.5-rc3",
+        "@langchain/textsplitters": "^0.0.3",
+        "axios": "^1.11.0",
+        "turndown": "^7.1.2"
+    }
 }

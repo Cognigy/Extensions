@@ -118,7 +118,7 @@ export const getAllPagesNode = createNodeDescriptor({
 		try {
 			const response = await axios({
 				method: 'get',
-				url: `${domain}/wiki/rest/api/content?type=page&&spacekey=${space}start=0&limit=99999&expand=body.storage`,
+				url: `${domain}/wiki/rest/api/content?type=page&spacekey=${space}&start=0&limit=99999&expand=body.storage`,
 				headers: {
 					'Content-Type': 'application/json'
 				},
@@ -129,8 +129,8 @@ export const getAllPagesNode = createNodeDescriptor({
 			});
 
 			// Clean up the result
-			let results: IResultPage[] = [];
-			response.data.results.forEach((page: any, index: number) => {
+			const results: IResultPage[] = [];
+			response.data.results.forEach((page: any) => {
 				results.push({
 					id: page.id,
 					type: page.type,
@@ -144,14 +144,12 @@ export const getAllPagesNode = createNodeDescriptor({
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, results, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, results);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
 		}

@@ -1,7 +1,9 @@
 
 # Diffbot
 
-This Extension provides basic diffbot connector, that crawl through the pages and create knowledge sources with chunks. It integrates Cognigy.AI with [DiffBot](https://www.diffbot.com/)
+This extension provides two basic Diffbot connectors to enables integration between Cognigy.AI and Diffbot:
+- One that crawls through web pages and creates knowledge sources with content chunks.
+- Another that accepts webpage URL(s) and generates knowledge sources directly.
 
 ## Table of Contents
 - [Diffbot Knowledge Connectors](#diffbot-knowledge-connectors)
@@ -144,3 +146,4 @@ This module needs a CognigySecret to be defined and passed to the Knowledge Conn
 ---
 
 **Note:** The connector uses the following MIT-licensed libraries: [`json-to-plain-text`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain), [`flattie`](https://www.npmjs.com/package/flattie), [`fetch-retry`](https://www.npmjs.com/package/fetch-retry)
+

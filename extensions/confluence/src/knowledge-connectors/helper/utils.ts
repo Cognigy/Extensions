@@ -1,7 +1,4 @@
 import { IKnowledge } from "@cognigy/extension-tools";
-type CreateKnowledgeChunkParams = IKnowledge.CreateKnowledgeChunkParams;
-type CreateKnowledgeSourceParams = IKnowledge.CreateKnowledgeSourceParams;
-
 import { ConfluenceDataParser } from "./confluenceParser";
 import { CharacterTextSplitter } from "@langchain/textsplitters";
 import axios from "axios";
@@ -10,86 +7,62 @@ import axios from "axios";
 // (H1,H2 -> new chunks; H3+ -> continue chunk)
 const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
+type ChunkContent = Pick<IKnowledge.CreateKnowledgeChunkParams, 'text' | 'data'>;
 
 /**
  * Fetch data of a given page or folder from a Confluence Rest API endpoint and
- * returns a map of knowledge source params with pageId as key.
+ * returns a map of pageId => pageTitle
  */
-export const getSources = async (
-    confluenceUrl: string,
+export const getPageIds = async (
+    baseUrl: string,
+    url: URL,
     auth: { username: string, password: string },
     descendants: boolean,
-    sourceTags: string[]
-): Promise<{[pageId: string]: CreateKnowledgeSourceParams}> =>
+): Promise<Record<string, string>> =>
 {
-    const pageIds: string[] = [];
-    // Parse Confluence URL and prepare baseUrl
-    const url = new URL(confluenceUrl as string);
-    const baseUrl = `${url.protocol}//${url.host}`;
-
-    // Match 'pages/<id>' or 'folder/<id>' in the URL using regex
+    // Match 'pages/<id>' or 'folder/<id>' in the URL
     const pageMatch = url.pathname.match(/pages\/(\d+)/);
     const folderMatch = url.pathname.match(/folder\/(\d+)/);
-    const pageId = pageMatch ? pageMatch[1] : "";
-    const folderId = folderMatch ? folderMatch[1] : "";
-
-    // Determine if the URL is for a specific page or a folder
-    if (!pageId && !folderId) {
+    const pageId = pageMatch?.[1] ?? "";
+    const folderId = folderMatch?.[1] ?? "";
+    if (!pageId && !folderId)
         throw new Error("Invalid Confluence URL: Must contain either a page ID or folder ID");
-    }
 
-    let knowledgeSourceData: Record<string, CreateKnowledgeSourceParams> = {};
+    const pageIds: Record<string, string> = {};
     if (pageId) {
         const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}`;
         const data = await fetchData(apiUrl, auth);
-        const pageTitle = data.title || `Page ID ${pageId}`;
-        knowledgeSourceData[pageId] = {
-            name: `${pageTitle}`,
-            description: `Data from ${pageTitle}`,
-            tags: sourceTags as string[],
-            chunkCount: 0
-        };
+        pageIds[pageId] = data.title;
     }
 
+    // Get all child pages under the parent page or folder
     if (descendants || folderId) {
         const apiUrl = folderId === "" ?
             `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants?depth=5&limit=250` :
             `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants?depth=5&limit=250`;
-
-        // Get all child pages under the parent page
         const data = await fetchData(apiUrl, auth);
         if (data.results) {
-
-            // Filter data to only include pages and maps it to CreateKnowledgeSourceParams
-            data.results.forEach((item: any) => {
-                item.type === "page" && (knowledgeSourceData[item.id] = {
-                    name: item.title,
-                    description: `Data from ${item.title}`,
-                    tags: sourceTags as string[],
-                    chunkCount: 0
-                });
-            });
+            for (const item of data.results) {
+                if (item.type === "page")
+                    pageIds[item.id] = item.title;
+            }
         }
     }
-    return knowledgeSourceData;
+    return pageIds;
 }
 
 /**
  * Fetch detail data for given Confluence page ID using Confluence Rest API and
  * convert the data into chunks
  */
-export const getChunks = async (
-    confluenceUrl: string,
+export const getPageChunks = async (
+    baseUrl: string,
     auth: { username: string, password: string },
     pageId: string,
-    sourceName: string,
-    knowledgeSourceId: string = ''
-): Promise<CreateKnowledgeChunkParams[]> =>
-{
-    const result: CreateKnowledgeChunkParams[] = [];
+    sourceName: string
+): Promise<ChunkContent[]> => {
+    const result: {text: string, data: any}[] = [];
     try {
-        const url = new URL(confluenceUrl as string);
-        const baseUrl = `${url.protocol}//${url.host}`;
 
         // Validate and parse Confluence URL
         const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
@@ -105,23 +78,19 @@ export const getChunks = async (
                 return;
 
             const chunks = await splitTextIntoChunks(heading.content, MAX_CHUNK_SIZE);
-            chunks.forEach(chunk => {
-                result.push({
-                    knowledgeSourceId: knowledgeSourceId,
-                    text: sourceName + "\n" + heading.hierarchy + "\n" + chunk.trim(),
-                    data: {
-                        heading: heading.title,
-                        url: `${baseUrl}/wiki${webLink}`
-                    },
-                });
-            });
+            result.push(...chunks.map(chunk => ({
+                text: `${sourceName}\n${heading.hierarchy}\n${chunk.trim()}`,
+                data: {
+                    heading: heading.title,
+                    url: `${baseUrl}/wiki${webLink}`
+                }
+            })));
         });
     } catch (error) {
         throw new Error(`Error processing Confluence source, with page Id: ${pageId}: ${error}`);
     }
     return result;
 };
-
 
 /**
  * Fetches data from a given URL with the specified email and token.

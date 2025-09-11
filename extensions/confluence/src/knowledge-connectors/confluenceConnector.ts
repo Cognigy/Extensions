@@ -1,8 +1,5 @@
-import { createKnowledgeConnector, IKnowledge } from "@cognigy/extension-tools";
-import { getChunks, getSources } from "./helper/utils";
-
-type CreateKnowledgeChunkParams = IKnowledge.CreateKnowledgeChunkParams;
-type CreateKnowledgeSourceParams = IKnowledge.CreateKnowledgeSourceParams;
+import { createKnowledgeConnector } from "@cognigy/extension-tools";
+import { getPageChunks, getPageIds } from "./helper/utils";
 
 export const confluenceConnector = createKnowledgeConnector({
     type: "confluenceConnector",
@@ -46,23 +43,32 @@ export const confluenceConnector = createKnowledgeConnector({
         const {email, key} = connection as {email: string, key: string};
         const auth = { username: email, password: key };
 
-        // Fetch knowledge sources
-        const knowledgeSources: Record<string, CreateKnowledgeSourceParams> =
-            await getSources(confluenceUrl, auth, descendants, sourceTags);
+        // Parse Confluence URL and prepare baseUrl
+        const url = new URL(confluenceUrl as string);
+        const baseUrl = `${url.protocol}//${url.host}`;
 
-        // Iterate over each knowledge source
-        for (const [pageId, page] of Object.entries(knowledgeSources)) {
+        // Fetch all page ids to parse
+        const pageIds = await getPageIds(baseUrl, url, auth, descendants);
 
-            // Fetch chunks for each source
-            const chunks: CreateKnowledgeChunkParams[] =
-                await getChunks(confluenceUrl, auth, pageId, page.name);
-            page.chunkCount = chunks.length;
+        // Iterate over each page
+        for (const [pageId, pageTitle] of Object.entries(pageIds)) {
+
+            // Fetch chunks for each page
+            const chunks = await getPageChunks(baseUrl, auth, pageId, pageTitle);
 
             // Create knowledge source and add chunks to it
-            const { knowledgeSourceId } = await api.createKnowledgeSource(page);
+            const { knowledgeSourceId } = await api.createKnowledgeSource({
+                name: pageTitle,
+                description: `Data from ${pageTitle}`,
+                tags: sourceTags,
+                chunkCount: chunks.length
+
+            });
             chunks.forEach(async (chunk) => {
-                chunk.knowledgeSourceId = knowledgeSourceId;
-                api.createKnowledgeChunk(chunk);
+                api.createKnowledgeChunk({
+                    knowledgeSourceId: knowledgeSourceId,
+                    ...chunk
+                });
             });
         }
     }

@@ -7,7 +7,7 @@ import TurndownService from 'turndown';
 interface HeadingData {
     title: string;
     hierarchy: string;
-    result: string;
+    content: string;
 }
 
 interface HeadingStackItem {
@@ -125,8 +125,8 @@ export class ConfluenceDataParser {
         const saveCurrentSection = () => {
             if (!currentContent.trim()) return;
 
-            const section = currentHeading || { title: this.pageName, hierarchy: "", result: "" };
-            section.result = currentContent.trim() + "\n";
+            const section = currentHeading || { title: this.pageName, hierarchy: "", content: "" };
+            section.content = currentContent.trim() + "\n";
             result.push(section);
             currentContent = '';
         };
@@ -155,7 +155,7 @@ export class ConfluenceDataParser {
                 currentHeading = {
                     title: processedHeading.replace(/^#+\s*/, ''),
                     hierarchy: headingStack.map(h => h.text).join(' -> '),
-                    result: ""
+                    content: ""
                 };
             } else {
                 currentContent += line + '\n';

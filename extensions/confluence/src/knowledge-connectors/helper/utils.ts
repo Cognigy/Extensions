@@ -18,8 +18,8 @@ export const getPageIds = async (
     url: URL,
     auth: { username: string, password: string },
     descendants: boolean,
-): Promise<Record<string, string>> =>
-{
+): Promise<Record<string, string>> => {
+
     // Match 'pages/<id>' or 'folder/<id>' in the URL
     const pageMatch = url.pathname.match(/pages\/(\d+)/);
     const folderMatch = url.pathname.match(/folder\/(\d+)/);
@@ -49,7 +49,7 @@ export const getPageIds = async (
         }
     }
     return pageIds;
-}
+};
 
 /**
  * Fetch detail data for given Confluence page ID using Confluence Rest API and
@@ -61,7 +61,7 @@ export const getPageChunks = async (
     pageId: string,
     sourceName: string
 ): Promise<ChunkContent[]> => {
-    const result: {text: string, data: any}[] = [];
+    const result: ChunkContent[] = [];
     try {
 
         // Validate and parse Confluence URL

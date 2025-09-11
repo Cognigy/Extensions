@@ -30,9 +30,10 @@
         "typescript-eslint": "8.41.0"
     },
     "dependencies": {
-        "@cognigy/extension-tools": "0.16.5-rc3",
+        "@cognigy/extension-tools": "0.16.5-rc5",
         "@langchain/textsplitters": "^0.0.3",
         "axios": "^1.11.0",
+        "langchain": "0.3.33",
         "turndown": "^7.1.2"
     }
 }

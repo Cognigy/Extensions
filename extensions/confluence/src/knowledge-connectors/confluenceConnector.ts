@@ -62,8 +62,8 @@ export const confluenceConnector = createKnowledgeConnector({
                 description: `Data from ${pageTitle}`,
                 tags: sourceTags,
                 chunkCount: chunks.length
-
             });
+
             chunks.forEach(async (chunk) => {
                 api.createKnowledgeChunk({
                     knowledgeSourceId: knowledgeSourceId,

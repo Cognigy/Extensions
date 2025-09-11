@@ -1,6 +1,6 @@
-import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
+import { createKnowledgeConnector } from "@cognigy/extension-tools";
 
-export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
+export const chuckNorrisJokesConnector = createKnowledgeConnector({
 	type: "chuckNorrisJokesConnector",
 	label: "Chuck Norris jokes",
 	summary: "This will import Chuck Norris jokes",
@@ -28,40 +28,35 @@ export const chuckNorrisJokesConnector = createKnowledgeDescriptor({
 			label: "Number of jokes per source",
 			type: "number",
 		},
-        {
-            key: "sourceTags",
-            label: "Source Tags",
-            type: "chipInput",
-            defaultValue: ["chuck norris"],
-            description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
-        }
+		{
+			key: "sourceTags",
+			label: "Source Tags",
+			type: "chipInput",
+			defaultValue: ["chuck norris"],
+			description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
+		}
 	] as const,
-	listSources: async ({ config: { name, categories, sourceTags }}) => {
-		return categories.map((category) => (
-			{
+	function: async ({ config: { name, categories, sourceTags, amount }, api }) => {
+		for (const category of categories) {
+			const { knowledgeSourceId } = await api.createKnowledgeSource({
 				name: `${name} - ${category}`,
 				description: `Chuck Norris jokes about ${category}`,
 				tags: sourceTags,
-				data: {
-					category
-				}
-			}
-		));
-	},
-	processSource: async ({ config, source }) => {
-		const result = [];
-		const url = `https://api.chucknorris.io/jokes/random?category=${source.data.category}`;
-		for (let i = 0; i < config.amount; i++) {
-			const joke = await (await fetch(url)).json();
-			if (joke.value) {
-				result.push({
+				chunkCount: amount
+			});
+
+			for (let i = 0; i < amount; i++) {
+				const url = `https://api.chucknorris.io/jokes/random?category=${category}`;
+				const joke = await (await fetch(url)).json();
+
+				await api.createKnowledgeChunk({
+					knowledgeSourceId,
 					text: joke.value,
 					data: {
-						category: source.data.category as string
+						category
 					}
 				});
 			}
 		}
-		return result;
-	}
+	},
 });

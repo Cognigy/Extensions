@@ -21,12 +21,12 @@ The Chuck Norris Jokes Knowledge Connector fetches random Chuck Norris Jokes usi
 
 The following table shows the fields to configure when using this Knowledge Connector.
 
-| Field                      | Description                                                                                                                                                                     |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Source name prefix         | Sets a prefix to be appended to Knowledge Source's name. For example, if you enter `Chuck Norris Jokes`, the Knowledge Source created is named `Chuck Norris Jokes - <number>`. |
-| Categories to fetch        | Sets the categories of jokes to fetch. You can find the available categories at [chucknorris.io](https://api.chucknorris.io/), in the `Categories` section.                     |
-| Number of jokes per source | Sets a number of jokes per category.                                                                                                                                            |
-| Source Tags                | Sets the Source Tags that you want to add to Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.                      |
+| Field                      | Description                                                                                                                                                                                                                                                |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Source name prefix         | Sets a prefix to be appended to Knowledge Source's name. For example, if you enter `Chuck Norris Jokes`, the Knowledge Source created is named `Chuck Norris Jokes - <category>`.                                                                          |
+| Categories to fetch        | Sets the categories of jokes to fetch. You can find the available categories at [chucknorris.io](https://api.chucknorris.io/), in the **Usage** section, or at [https://api.chucknorris.io/jokes/categories](https://api.chucknorris.io/jokes/categories). |
+| Number of jokes per source | Sets a number of jokes per category.                                                                                                                                                                                                                       |
+| Source Tags                | Sets the Source Tags that you want to add to Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.                                                                                                 |
 
 ### Web Page
 
@@ -40,7 +40,7 @@ The following table shows the fields to configure when using this Knowledge Conn
 
 | Field              | Description                                                                                                                                                             |
 |--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Source name prefix | Sets an optional prefix to be appended to the Knowledge Source's name. For example, if you enter `Wiki Page`, the Knowledge Source created is named `Wiki Page - <number>`. |
+| Source name prefix | Sets an optional prefix to be appended to the Knowledge Source's name. For example, if you enter `Wiki Page`, the Knowledge Source created is named `Wiki Page - <cleaned web page URL>`. |
 | Web page URL       | Sets the URL of the publicly available web page from which the content is extracted.                                                                                    |
 | Source Tags        | Sets the Source Tags that you want to add to the  Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.         |
 

@@ -63,8 +63,6 @@ export const getPageChunks = async (
 ): Promise<ChunkContent[]> => {
     const result: ChunkContent[] = [];
     try {
-
-        // Validate and parse Confluence URL
         const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
         const data = await fetchData(apiUrl, auth);
         const xhtml = data.body.storage.value;
@@ -93,7 +91,7 @@ export const getPageChunks = async (
 };
 
 /**
- * Fetches data from a given URL with the specified email and token.
+ * Fetches data from a given URL with the specified username and password.
  */
 export const fetchData = async (url: string, auth: { username: string, password: string }) => {
     try {

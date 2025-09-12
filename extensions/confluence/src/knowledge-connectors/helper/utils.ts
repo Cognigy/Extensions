@@ -7,18 +7,22 @@ import axios from "axios";
 // (H1,H2 -> new chunks; H3+ -> continue chunk)
 const TARGET_HEADING_LEVEL = 2;
 const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
-type ChunkContent = Pick<IKnowledge.CreateKnowledgeChunkParams, 'text' | 'data'>;
+const MAX_DEPTH = 5;
+const MAX_LIMIT = 250;
+
+export type ChunkContent = Pick<IKnowledge.CreateKnowledgeChunkParams, 'text' | 'data'>;
+export type auth = { username: string, password: string };
 
 /**
  * Fetch list of pages using a Confluence Rest API endpoint and
  * returns a map of pageId => pageTitle
  */
-export const getPageIds = async (
+export const getPages = async (
     baseUrl: string,
     url: URL,
     auth: { username: string, password: string },
     descendants: boolean,
-): Promise<Record<string, string>> => {
+): Promise<{ id: string, title: string }[]> => {
 
     // Match 'pages/<id>' or 'folder/<id>' in the URL
     const pageMatch = url.pathname.match(/pages\/(\d+)/);
@@ -28,27 +32,28 @@ export const getPageIds = async (
     if (!pageId && !folderId)
         throw new Error("Invalid Confluence URL: Must contain either a page ID or folder ID");
 
-    const pageIds: Record<string, string> = {};
+    const pages: { id: string, title: string }[] = [];
     if (pageId) {
         const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}`;
         const data = await fetchData(apiUrl, auth);
-        pageIds[pageId] = data.title;
+        pages.push({ id: pageId, title: data.title });
     }
 
     // Get all child pages under the parent page or folder
     if (descendants || folderId) {
+        const param = `?depth=${MAX_DEPTH}&limit=${MAX_LIMIT}`
         const apiUrl = folderId === "" ?
-            `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants?depth=5&limit=250` :
-            `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants?depth=5&limit=250`;
+            `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants${param}` :
+            `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants${param}`;
         const data = await fetchData(apiUrl, auth);
         if (data.results) {
             for (const item of data.results) {
                 if (item.type === "page")
-                    pageIds[item.id] = item.title;
+                    pages.push({ id: item.id, title: item.title });
             }
         }
     }
-    return pageIds;
+    return pages;
 };
 
 /**
@@ -91,7 +96,7 @@ export const getPageChunks = async (
 /**
  * Fetches data from a given URL with the specified username and password.
  */
-export const fetchData = async (url: string, auth: { username: string, password: string }) => {
+export const fetchData = async (url: string, auth: auth) => {
     try {
         const response = await axios({
             method: 'get',

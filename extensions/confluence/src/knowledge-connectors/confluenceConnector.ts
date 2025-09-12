@@ -1,5 +1,5 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
-import { getPageChunks, getPageIds } from "./helper/utils";
+import { getPageChunks, getPages, auth } from "./helper/utils";
 
 export const confluenceConnector = createKnowledgeConnector({
     type: "confluenceConnector",
@@ -41,25 +41,25 @@ export const confluenceConnector = createKnowledgeConnector({
     function: async ({ config, api })  => {
         const { connection, confluenceUrl, descendants, sourceTags } = config;
         const { email, key } = connection as { email: string, key: string };
-        const auth = { username: email, password: key };
+        const auth: auth = { username: email, password: key };
 
         // Parse Confluence URL and prepare baseUrl
         const url = new URL(confluenceUrl as string);
         const baseUrl = `${url.protocol}//${url.host}`;
 
         // Fetch all page ids to parse
-        const pageIds = await getPageIds(baseUrl, url, auth, descendants);
+        const pageIds = await getPages(baseUrl, url, auth, descendants);
 
         // Iterate over each page
-        for (const [pageId, pageTitle] of Object.entries(pageIds)) {
+        for (const page of pageIds) {
 
             // Fetch chunks for each page
-            const chunks = await getPageChunks(baseUrl, auth, pageId, pageTitle);
+            const chunks = await getPageChunks(baseUrl, auth, page.id, page.title);
 
             // Create knowledge source and add chunks to it
             const { knowledgeSourceId } = await api.createKnowledgeSource({
-                name: pageTitle,
-                description: `Data from ${pageTitle}`,
+                name: page.title,
+                description: `Data from ${page.title}`,
                 tags: sourceTags,
                 chunkCount: chunks.length
             });

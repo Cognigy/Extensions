@@ -10,7 +10,7 @@ const MAX_CHUNK_SIZE = 2000; // Define a maximum chunk size in characters
 type ChunkContent = Pick<IKnowledge.CreateKnowledgeChunkParams, 'text' | 'data'>;
 
 /**
- * Fetch data of a given page or folder from a Confluence Rest API endpoint and
+ * Fetch list of pages using a Confluence Rest API endpoint and
  * returns a map of pageId => pageTitle
  */
 export const getPageIds = async (
@@ -52,7 +52,7 @@ export const getPageIds = async (
 };
 
 /**
- * Fetch detail data for given Confluence page ID using Confluence Rest API and
+ * Fetch detail data for given Confluence page using Confluence Rest API and
  * convert the data into chunks
  */
 export const getPageChunks = async (
@@ -70,11 +70,8 @@ export const getPageChunks = async (
 
         // Parse the xhtml data and get headings data containing title, heading hierarchy and content
         const parser = new ConfluenceDataParser(xhtml, sourceName, TARGET_HEADING_LEVEL);
-        const headingsData = parser.parse();
-        headingsData.forEach(async heading => {
-            if (!heading.content)
-                return;
-
+        const headingsData = await parser.parse();
+        for (const heading of headingsData) {
             const chunks = await splitTextIntoChunks(heading.content, MAX_CHUNK_SIZE);
             result.push(...chunks.map(chunk => ({
                 text: `${sourceName}\n${heading.hierarchy}\n${chunk.trim()}`,
@@ -83,7 +80,7 @@ export const getPageChunks = async (
                     url: `${baseUrl}/wiki${webLink}`
                 }
             })));
-        });
+        }
     } catch (error) {
         throw new Error(`Error processing Confluence source, with page Id: ${pageId}: ${error}`);
     }

@@ -55,7 +55,6 @@ export const confluenceConnector = createKnowledgeConnector({
 
             // Fetch chunks for each page
             const chunks = await getPageChunks(baseUrl, auth, pageId, pageTitle);
-            console.log(`---------------------Chunk chunks ${chunks.length}`);
 
             // Create knowledge source and add chunks to it
             const { knowledgeSourceId } = await api.createKnowledgeSource({
@@ -66,8 +65,6 @@ export const confluenceConnector = createKnowledgeConnector({
             });
             let i = 0;
             for (const chunk of chunks) {
-                console.log(`---------------------Chunk data: ${JSON.stringify(chunk)} index: ${i++}`);
-                console.log(chunk.text.length);
                 await api.createKnowledgeChunk({
                     knowledgeSourceId: knowledgeSourceId,
                     ...chunk

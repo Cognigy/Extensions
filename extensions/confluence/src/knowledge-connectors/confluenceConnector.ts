@@ -40,7 +40,7 @@ export const confluenceConnector = createKnowledgeConnector({
     ] as const,
     function: async ({ config, api })  => {
         const { connection, confluenceUrl, descendants, sourceTags } = config;
-        const {email, key} = connection as {email: string, key: string};
+        const { email, key } = connection as { email: string, key: string };
         const auth = { username: email, password: key };
 
         // Parse Confluence URL and prepare baseUrl

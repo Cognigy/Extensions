@@ -15,7 +15,7 @@ export type auth = { username: string, password: string };
 
 /**
  * Fetch list of pages using a Confluence Rest API endpoint and
- * returns a map of pageId => pageTitle
+ * returns a list of page ids and titles.
  */
 export const getPages = async (
     baseUrl: string,

@@ -40,7 +40,7 @@ export const getPages = async (
 
     // Get all child pages under the parent page or folder
     if (descendants || folderId) {
-        const param = `?depth=${MAX_DEPTH}&limit=${MAX_LIMIT}`
+        const param = `?depth=${MAX_DEPTH}&limit=${MAX_LIMIT}`;
         let apiUrl = folderId === "" ?
             `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants${param}` :
             `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants${param}`;
@@ -79,7 +79,7 @@ export const getPageChunks = async (
         const parser = new ConfluenceDataParser(xhtml, sourceName, TARGET_HEADING_LEVEL);
         const headingsData = await parser.parse();
         for (const heading of headingsData) {
-            const title = `${sourceName}\n${heading.hierarchy}`
+            const title = `${sourceName}\n${heading.hierarchy}`;
             const chunks = await splitTextIntoChunks(heading.content, MAX_CHUNK_SIZE - title.length - 1);
             result.push(...chunks.map(chunk => ({
                 text: `${title}\n${chunk.trim()}`,

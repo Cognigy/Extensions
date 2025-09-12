@@ -1,6 +1,6 @@
 import { IKnowledge } from "@cognigy/extension-tools";
 import { ConfluenceDataParser } from "./confluenceParser";
-import { CharacterTextSplitter } from "@langchain/textsplitters";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import axios from "axios";
 
 // Headings less than and equal to this level create new chunks
@@ -72,9 +72,10 @@ export const getPageChunks = async (
         const parser = new ConfluenceDataParser(xhtml, sourceName, TARGET_HEADING_LEVEL);
         const headingsData = await parser.parse();
         for (const heading of headingsData) {
-            const chunks = await splitTextIntoChunks(heading.content, MAX_CHUNK_SIZE);
+            const title = `${sourceName}\n${heading.hierarchy}`
+            const chunks = await splitTextIntoChunks(heading.content, MAX_CHUNK_SIZE - title.length - 1);
             result.push(...chunks.map(chunk => ({
-                text: `${sourceName}\n${heading.hierarchy}\n${chunk.trim()}`,
+                text: `${title}\n${chunk.trim()}`,
                 data: {
                     heading: heading.title,
                     url: `${baseUrl}/wiki${webLink}`
@@ -108,6 +109,6 @@ export const fetchData = async (url: string, auth: { username: string, password:
  * Splits the given text into chunks of a specified maximum size.
  */
 export async function splitTextIntoChunks(text: string, maxChunkSize: number): Promise<string[]> {
-    const textSplitter = new CharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});
+    const textSplitter = new RecursiveCharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});
     return await textSplitter.splitText(text);
 }

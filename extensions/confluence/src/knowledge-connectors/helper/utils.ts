@@ -1,7 +1,6 @@
 import { IKnowledge } from "@cognigy/extension-tools";
 import { ConfluenceDataParser } from "./confluenceParser";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import axios from "axios";
 
 // Headings less than and equal to this level create new chunks
 // (H1,H2 -> new chunks; H3+ -> continue chunk)
@@ -20,7 +19,7 @@ export type auth = { username: string, password: string };
 export const getPages = async (
     baseUrl: string,
     url: URL,
-    auth: { username: string, password: string },
+    auth: auth,
     descendants: boolean,
 ): Promise<{ id: string, title: string }[]> => {
 
@@ -42,16 +41,19 @@ export const getPages = async (
     // Get all child pages under the parent page or folder
     if (descendants || folderId) {
         const param = `?depth=${MAX_DEPTH}&limit=${MAX_LIMIT}`
-        const apiUrl = folderId === "" ?
+        let apiUrl = folderId === "" ?
             `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants${param}` :
             `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants${param}`;
-        const data = await fetchData(apiUrl, auth);
-        if (data.results) {
-            for (const item of data.results) {
-                if (item.type === "page")
-                    pages.push({ id: item.id, title: item.title });
+        do {
+            const data = await fetchData(apiUrl, auth);
+            if (data.results) {
+                pages.push(...data.results
+                    .filter((item: any) => item.type === "page")
+                    .map((item: any) => ({ id: item.id, title: item.title }))
+                );
             }
-        }
+            apiUrl = data._links?.next ? `${baseUrl}${data._links.next}` : "";
+        } while (apiUrl);
     }
     return pages;
 };
@@ -62,7 +64,7 @@ export const getPages = async (
  */
 export const getPageChunks = async (
     baseUrl: string,
-    auth: { username: string, password: string },
+    auth: auth,
     pageId: string,
     sourceName: string
 ): Promise<ChunkContent[]> => {
@@ -97,17 +99,17 @@ export const getPageChunks = async (
  * Fetches data from a given URL with the specified username and password.
  */
 export const fetchData = async (url: string, auth: auth) => {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: url,
-            headers: {'Content-Type': 'application/json'},
-            auth: auth
-        });
-        return response.data;
-    } catch (error) {
-        throw new Error(`Failed to fetch data from ${url}: ${error.message}`);
-    }
+    const authHeader = Buffer.from(`${auth.username}:${auth.password}`).toString('base64');
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${authHeader}`
+        }
+    });
+    if (!response.ok)
+        throw new Error(`Failed to fetch data, status: ${response.status} ${response.statusText}`);
+    return await response.json();
 };
 
 /**

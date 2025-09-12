@@ -32,7 +32,6 @@
     "dependencies": {
         "@cognigy/extension-tools": "0.16.5-rc5",
         "@langchain/textsplitters": "^0.0.3",
-        "axios": "^1.11.0",
         "turndown": "^7.1.2"
     }
 }

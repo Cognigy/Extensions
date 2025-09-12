@@ -1,4 +1,4 @@
-import { fetchWithRetry, logMessage } from "../helper/utils";
+import { fetchWithRetry, logMessage } from "./utils";
 
 interface CrawlJobSettings {
     name: string;

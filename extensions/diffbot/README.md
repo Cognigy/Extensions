@@ -45,6 +45,9 @@ Type of Extract API to call i.e. Product, List etc. If type is not known then ch
 **Query String:**
 Query parameters to be passed to Extract API, e.g. fields=title,text
 
+**Retain Crawler:**
+Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.
+
 #### Crawling Limits
 
 **Crawling Patterns:**

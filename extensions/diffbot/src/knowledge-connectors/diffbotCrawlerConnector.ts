@@ -1,9 +1,9 @@
-import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
+import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
 import { DiffbotCrawler } from "./helper/crawler";
-import { cleanTitle } from "./helper/utils";
+import { processQueryString } from "./helper/utils";
 
-export const diffbotCrawlerConnector = createKnowledgeDescriptor({
+export const diffbotCrawlerConnector = createKnowledgeConnector({
 	type: "diffbotCrawlerConnector",
 	label: "Diffbot Crawler",
 	summary: "This will import web pages contents using Diffbot's Crawler APIs",
@@ -17,6 +17,13 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 				connectionType: "diffbot",
 				required: true
 			}
+		},
+		{
+			key: "retainCrawler",
+			label: "Retain Crawler",
+			type: "toggle",
+			description: "Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.",
+			defaultValue: true
 		},
 		{
 			key: "seeds",
@@ -75,8 +82,7 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 						label: 'Organization',
 						value: 'organization'
 					},
-				],
-				required: true
+				]
 			}
 		},
 		{
@@ -84,7 +90,6 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 			label: "Query String",
 			description: "Query parameters to be passed to Extract API (do not include the leading '?'). Separate multiple parameters with '&', e.g. fields=title,text&timeout=10",
 			type: "text",
-
 		},
 
 		// Crawling Limits
@@ -145,50 +150,35 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 			label: "Obey Robots",
 			type: "toggle",
 			description: "Whether to obey robots.txt rules of the website.",
-			defaultValue: true,
-			params: {
-				required: true
-			}
+			defaultValue: true
 		},
 		{
 			key: "restrictDomain",
 			label: "Restrict Domain",
 			type: "toggle",
 			description: "Limit crawling to seed domains.",
-			defaultValue: true,
-			params: {
-				required: true
-			}
+			defaultValue: true
 		},
 		{
 			key: "restrictSubdomain",
 			label: "Restrict Subdomain",
 			type: "toggle",
 			description: "Limit crawling to seed subdomains.",
-			defaultValue: false,
-			params: {
-				required: true
-			}
+			defaultValue: false
 		},
 		{
 			key: "useProxies",
 			label: "Use Proxies",
 			type: "toggle",
 			description: "Whether to use Diffbot's proxy servers for crawling.",
-			defaultValue: false,
-			params: {
-				required: true
-			}
+			defaultValue: false
 		},
-				{
+		{
 			key: "useCanonical",
 			label: "Canonical Deduplication",
 			description: "Whether to skip pages with a differing canonical URL.",
 			type: "toggle",
-			defaultValue: true,
-			params: {
-				required: true
-			}
+			defaultValue: true
 		},
 
 		// Processing Limits
@@ -275,7 +265,8 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 				"seeds",
 				"apiUrlType",
 				"querystring",
-				"sourceTags"
+				"sourceTags",
+				"retainCrawler"
 			]
 		},
 		{
@@ -327,77 +318,58 @@ export const diffbotCrawlerConnector = createKnowledgeDescriptor({
 		{ type: "section", key: "processingLimits" },
 		{ type: "section", key: "customHeaders" }
 	],
-	listSources: async ({config}) => {
-		const { connection, sourceTags, apiUrlType, querystring, ...crawlerConfig } = config;
+	function: async ({config, api}) => {
+		const { connection, sourceTags, apiUrlType, querystring, retainCrawler, ...crawlerConfig } = config;
 		const { accessToken } = connection as any;
 
 		// Create Diffbot Crawler instance
 		const crawler = new DiffbotCrawler(accessToken);
 		const crawlerName = `crawler-${Date.now()}`;
-
-		// Remove all leading ? or & and all trailing &
-		let apiUrl = `https://api.diffbot.com/v3/${apiUrlType}`;
-		if (querystring) {
-			const cleanedQuerystring = querystring.trim().replace(/^[?&]+|&+$/g, "");
-			apiUrl = `https://api.diffbot.com/v3/${apiUrlType}?${cleanedQuerystring}`;
-		}
+		const qs = processQueryString(querystring)
+		const apiUrl = `https://api.diffbot.com/v3/${apiUrlType}${qs}`;
 
 		// Create and run a crawl job and get results
 		await crawler.createCrawlJob({
-			...crawlerConfig,
-			name: crawlerName,
-			apiUrl: apiUrl,
+			...crawlerConfig, name: crawlerName, apiUrl: apiUrl,
 		});
 		const crawledData = await crawler.monitorJobAndGetResults(crawlerName);
-
-		// Return sources
-		const results = [];
 		for (const data of crawledData) {
 			if (!data.pageUrl)
 				continue;
 
-			const refinedName = cleanTitle(data.title ? data.title : data.pageUrl);
-			results.push({
-				name: refinedName,
+			// Read page's data and create chunks
+			const sourceData = crawledData.find((item: any) => data.pageUrl === item.pageUrl);
+			if (!sourceData)
+				throw new Error(`No data found for URL: ${data.pageUrl}`);
+
+			const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
+			const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
+
+			// Create Knowledge Source
+			const { knowledgeSourceId } = await api.createKnowledgeSource({
+				name: sourceData.title || sourceData.pageUrl.replace(/\?.*$/, ""),
 				description: `Content from web page at ${data.pageUrl}`,
 				tags: sourceTags,
-				data: {
-					"crawlerName": crawlerName,
-					url: data.pageUrl,
-					title: data.title,
-					type: data.type
-				}
+				chunkCount: chunks.length
 			});
-		}
-		return results;
-	},
-	processSource: async ({ config, source }) => {
-		const { accessToken } = config.connection as any;
-		const { url, crawlerName } = source.data as any;
-		const crawler = new DiffbotCrawler(accessToken);
-		const crawledData = await crawler.getJobData(crawlerName);
-		const sourceData = crawledData.find((item: any) => url === item.pageUrl);
 
-		if (!sourceData) {
-			throw new Error(`No data found for URL: ${url}`);
-		}
-
-		const chunkTitle = `title: ${sourceData.title}\n` +
-			`type: ${sourceData.type}\n` +
-			`url: ${sourceData.pageUrl}\n\n`;
-		const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
-
-		// Maps chunks to this array { text, data }
-		const result = chunks.map((chunk: string, index: number) => ({
-			text: chunk,
-			data: {
-				url,
-				title: sourceData.title as string || "",
-				language: sourceData.humanLanguage as string || "",
-				type: sourceData.type as string || "",
-				chunkIndex: index
+			// Create Knowledge Chunks
+			for (const chunk of chunks) {
+				await api.createKnowledgeChunk({
+					knowledgeSourceId,
+					text: chunk,
+					data: {
+						url: data.pageUrl,
+						title: sourceData.title || '',
+						language: sourceData.humanLanguage || '',
+						type: sourceData.type || ''
+					}
+				});
 			}
-		}));
-		return result;
+		}
+
+		// Delete the crawl job if retain crawler is false
+		if (!retainCrawler)
+			await crawler.deleteJob(crawlerName);
 	}
 });

@@ -1,9 +1,8 @@
-import { createKnowledgeDescriptor } from "@cognigy/extension-tools";
+import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
 import { fetchWithRetry } from "./helper/utils";
-import { cleanTitle } from "./helper/utils";
 
-export const diffbotWebpageConnector = createKnowledgeDescriptor({
+export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
 	label: "Diffbot Webpage",
 	summary: "This will import web page contents using Diffbot's Extract APIs.",
@@ -78,8 +77,7 @@ export const diffbotWebpageConnector = createKnowledgeDescriptor({
 						label: 'Organization',
 						value: 'organization'
 					},
-				],
-				required: true
+				]
 			}
 		},
         {
@@ -90,51 +88,41 @@ export const diffbotWebpageConnector = createKnowledgeDescriptor({
 			type: "chipInput"
         }
 	] as const,
-	listSources: async ({config: { urls, sourceTags, apiUrlType }}) => {
-		const sources = [];
+	function: async ({config: { connection, urls, sourceTags, apiUrlType }, api}) => {
+		const { accessToken } = connection as any;
 		for (const url of urls) {
-			const refinedName = await cleanTitle(apiUrlType ? `${apiUrlType} - ${url}` : url);
-			sources.push({
-				name: refinedName,
+			const params = new URLSearchParams({ token: accessToken, url });
+			const diffbotUrl = `https://api.diffbot.com/v3/${apiUrlType}?${params}`;
+			const analyze = await fetchWithRetry(diffbotUrl);
+			if (!analyze || !analyze.objects || analyze.objects.length === 0)
+				throw new Error(`No data returned from Diffbot for URL: ${url}`);
+
+			// Create chunks
+			const sourceData = analyze.objects[0];
+			const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
+			const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
+
+			// Create Knowledge Source
+			const { knowledgeSourceId } = await api.createKnowledgeSource({
+				name: sourceData.title || url.replace(/\?.*$/, ""),
 				description: `Content from web page at ${url}`,
 				tags: sourceTags,
-				data: {
-					url,
-					apiUrlType
-				}
+				chunkCount: chunks.length
 			});
-		}
-		return sources;
-	},
-	processSource: async ({ config, source }) => {
-		let result = [];
-		const { accessToken } = config.connection as any;
-		const { url, apiUrlType } = source.data as any;
-		const params = new URLSearchParams({ token: accessToken, url });
-		const diffbotUrl = `https://api.diffbot.com/v3/${apiUrlType}?${params}`;
-		const analyze = await fetchWithRetry(diffbotUrl);
-		if (!analyze || !analyze.objects || analyze.objects.length === 0)
-			throw new Error(`No data returned from Diffbot for URL: ${url}`);
 
-		// Create chunks
-		const object = analyze.objects[0];
-		const chunkTitle = `title: ${object.title}\n` +
-			`type: ${object.type}\n` +
-			`url: ${analyze.request.pageUrl}\n\n`;
-
-		const chunks = await jsonSplit(object, chunkTitle, ['html']);
-
-		// Maps chunks to this array { text, data }
-		result = chunks.map((chunk: string, index: number) => ({
-			text: chunk,
-			data: {
-				url,
-				title: object.title as string || "",
-				language: object.humanLanguage as string || "",
-				type: object.type as string || "",
-				chunkIndex: index
+			// Create Knowledge Chunks
+			for (const chunk of chunks) {
+				await api.createKnowledgeChunk({
+					knowledgeSourceId,
+					text: chunk,
+					data: {
+						url: url,
+						title: sourceData.title || "",
+						language: sourceData.humanLanguage || "",
+						type: sourceData.type || ""
+					}
+				});
 			}
-		}));
-		return result;
+		}
 	}
 });

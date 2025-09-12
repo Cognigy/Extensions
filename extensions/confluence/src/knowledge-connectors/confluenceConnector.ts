@@ -63,7 +63,7 @@ export const confluenceConnector = createKnowledgeConnector({
                 tags: sourceTags,
                 chunkCount: chunks.length
             });
-            let i = 0;
+
             for (const chunk of chunks) {
                 await api.createKnowledgeChunk({
                     knowledgeSourceId: knowledgeSourceId,

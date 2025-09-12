@@ -109,6 +109,6 @@ export const fetchData = async (url: string, auth: { username: string, password:
  * Splits the given text into chunks of a specified maximum size.
  */
 export async function splitTextIntoChunks(text: string, maxChunkSize: number): Promise<string[]> {
-    const textSplitter = new RecursiveCharacterTextSplitter({chunkSize: maxChunkSize, chunkOverlap: 0});
+    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: maxChunkSize, chunkOverlap: 0 });
     return await textSplitter.splitText(text);
 }

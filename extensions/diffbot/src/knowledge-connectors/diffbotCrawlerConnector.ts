@@ -320,7 +320,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 	],
 	function: async ({config, api}) => {
 		const { connection, sourceTags, apiUrlType, querystring, retainCrawler, ...crawlerConfig } = config;
-		const { accessToken } = connection as any;
+		const { accessToken } = connection as { accessToken: string };
 
 		// Create Diffbot Crawler instance
 		const crawler = new DiffbotCrawler(accessToken);

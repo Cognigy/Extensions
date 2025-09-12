@@ -28,6 +28,5 @@ export const jsonSplit = async (jsonObj: any, chunkTitle: string, filterKeys: st
     const docs = await splitter.createDocuments([text]);
 
     // Add title and metadata to each chunk
-    chunks.push(...docs.map(doc => chunkTitle + doc.pageContent));
-    return chunks;
+    return docs.map(doc => chunkTitle + doc.pageContent);
 };

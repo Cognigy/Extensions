@@ -64,12 +64,12 @@ export const confluenceConnector = createKnowledgeConnector({
                 chunkCount: chunks.length
             });
 
-            chunks.forEach(async (chunk) => {
-                api.createKnowledgeChunk({
+            for (const chunk of chunks) {
+                await api.createKnowledgeChunk({
                     knowledgeSourceId: knowledgeSourceId,
                     ...chunk
                 });
-            });
+            }
         }
     }
 });

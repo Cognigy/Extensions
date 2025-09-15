@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import { fetchData } from "../knowledge-connectors/helper/utils";
 
 export interface ISearchParams extends INodeFunctionBaseParams {
 	config: {
@@ -105,22 +105,14 @@ export const searchtNode = createNodeDescriptor({
 		const { domain, email, key } = connection;
 
 		try {
-			const response = await axios({
-				method: 'get',
-				url: `${domain}/wiki/rest/api/content/search?cql=type=page+and+text~"${query}"+order+by+id+asc&expand=body.storage`,
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				auth: {
-					username: email,
-					password: key
-				}
-			});
-
+			const response = await fetchData(
+				`${domain}/wiki/rest/api/content/search?cql=type=page+and+text~"${query}"+order+by+id+asc&expand=body.storage`,
+				{username: email, password: key}
+			);
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
+				api.addToContext(contextKey, response, "simple");
 			} else {
-				api.addToInput(inputKey, response.data);
+				api.addToInput(inputKey, response);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

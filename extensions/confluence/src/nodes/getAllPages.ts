@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import { fetchData } from "../knowledge-connectors/helper/utils";
 
 export interface IGetAllPagesParams extends INodeFunctionBaseParams {
 	config: {
@@ -116,21 +116,14 @@ export const getAllPagesNode = createNodeDescriptor({
 		const { domain, email, key } = connection;
 
 		try {
-			const response = await axios({
-				method: 'get',
-				url: `${domain}/wiki/rest/api/content?type=page&spacekey=${space}&start=0&limit=99999&expand=body.storage`,
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				auth: {
-					username: email,
-					password: key
-				}
-			});
+			const response = await fetchData(
+				`${domain}/wiki/rest/api/content?type=page&spacekey=${space}&start=0&limit=99999&expand=body.storage`,
+				{username: email, password: key}
+			);
 
 			// Clean up the result
 			const results: IResultPage[] = [];
-			response.data.results.forEach((page: any) => {
+			response.results.forEach((page: any) => {
 				results.push({
 					id: page.id,
 					type: page.type,

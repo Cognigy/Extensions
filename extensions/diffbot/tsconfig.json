@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
 	  "skipLibCheck": true,
     "noImplicitAny": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

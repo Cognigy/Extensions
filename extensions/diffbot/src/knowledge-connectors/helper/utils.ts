@@ -1,5 +1,5 @@
-import * as fetchRetry from 'fetch-retry';
-const fetchRetry_ = (fetchRetry as any)(global.fetch);
+import fetchRetry from 'fetch-retry';
+const fetchRetry_ = fetchRetry(global.fetch);
 
 /**
  * Fetch method with retry configuration

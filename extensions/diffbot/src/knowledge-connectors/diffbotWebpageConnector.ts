@@ -98,30 +98,31 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 				throw new Error(`No data returned from Diffbot for URL: ${url}`);
 
 			// Create chunks
-			const sourceData = analyze.objects[0];
-			const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
-			const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
+			for (const sourceData of analyze.objects) {
+				const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
+				const chunks = await jsonSplit(sourceData, chunkTitle, ['html', 'images']);
 
-			// Create Knowledge Source
-			const { knowledgeSourceId } = await api.createKnowledgeSource({
-				name: sourceData.title || url.replace(/\?.*$/, ""),
-				description: `Content from web page at ${url}`,
-				tags: sourceTags,
-				chunkCount: chunks.length
-			});
-
-			// Create Knowledge Chunks
-			for (const chunk of chunks) {
-				await api.createKnowledgeChunk({
-					knowledgeSourceId,
-					text: chunk,
-					data: {
-						url: url,
-						title: sourceData.title || "",
-						language: sourceData.humanLanguage || "",
-						type: sourceData.type || ""
-					}
+				// Create Knowledge Source
+				const { knowledgeSourceId } = await api.createKnowledgeSource({
+					name: sourceData.title,
+					description: `Content from web page at ${url}`,
+					tags: sourceTags,
+					chunkCount: chunks.length
 				});
+
+				// Create Knowledge Chunks
+				for (const chunk of chunks) {
+					await api.createKnowledgeChunk({
+						knowledgeSourceId,
+						text: chunk,
+						data: {
+							url: url,
+							title: sourceData.title || "",
+							language: sourceData.humanLanguage || "",
+							type: sourceData.type || ""
+						}
+					});
+				}
 			}
 		}
 	}

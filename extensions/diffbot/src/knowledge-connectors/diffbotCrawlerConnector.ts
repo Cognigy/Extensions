@@ -110,7 +110,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			label: "Max to Crawl",
 			description: "Maximum number of pages to crawl.",
 			type: "number",
-			defaultValue: 100000,
+			defaultValue: 100,
 			params: {
 				required: true
 			}
@@ -337,17 +337,12 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			if (!data.pageUrl)
 				continue;
 
-			// Read page's data and create chunks
-			const sourceData = crawledData.find((item: any) => data.pageUrl === item.pageUrl);
-			if (!sourceData)
-				throw new Error(`No data found for URL: ${data.pageUrl}`);
-
-			const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
-			const chunks = await jsonSplit(sourceData, chunkTitle, ['html']);
+			const chunkTitle = `title: ${data.title}\ntype: ${data.type}\n`;
+			const chunks = await jsonSplit(data, chunkTitle, ['html', 'images']);
 
 			// Create Knowledge Source
 			const { knowledgeSourceId } = await api.createKnowledgeSource({
-				name: sourceData.title || sourceData.pageUrl.replace(/\?.*$/, ""),
+				name: data.title,
 				description: `Content from web page at ${data.pageUrl}`,
 				tags: sourceTags,
 				chunkCount: chunks.length
@@ -360,9 +355,9 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 					text: chunk,
 					data: {
 						url: data.pageUrl,
-						title: sourceData.title || '',
-						language: sourceData.humanLanguage || '',
-						type: sourceData.type || ''
+						title: data.title || '',
+						language: data.humanLanguage || '',
+						type: data.type || ''
 					}
 				});
 			}

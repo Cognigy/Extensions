@@ -57,7 +57,7 @@ Only crawl URLs that contain any of these text strings.
 Only crawl URLs matching the regular expression.
 
 **Max to Crawl:**
-Maximum number of pages to crawl. (Default: 100,000)
+Maximum number of pages to crawl. (Default: 100)
 
 **Max to Crawl Per Subdomain:**
 Maximum number of pages to crawl per subdomain. (Default: -1 for unlimited)

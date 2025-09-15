@@ -41,6 +41,9 @@ interface DiffbotResult {
     [key: string]: any; // Allow for additional properties
 }
 
+const SUCCESS_JOB_STATUS_CODES = [1, 2, 3, 5, 9]
+const FAILED_JOB_STATUS_CODES = [6, 8, 10, 11] // If Job is paused, it will be considered failed
+
 class DiffbotCrawler {
     private token: string;
     private crawlUrl: string;
@@ -68,8 +71,8 @@ class DiffbotCrawler {
      */
     async monitorJobAndGetResults(
         jobName: string,
-        checkInterval: number = 10000,
-        maxWaitTime: number = 3600000
+        checkInterval: number = 5000,
+        maxWaitTime: number = 900000
     ): Promise<DiffbotResult[]> {
         logMessage(`Starting crawl job monitoring: ${jobName}`);
         const startTime = Date.now();
@@ -77,12 +80,12 @@ class DiffbotCrawler {
 
         for (let attempts = 0; attempts < maxAttempts; attempts++) {
             const { jobStatus: { status, message } } = (await this.getJobStatus(jobName)).jobs[0];
-            if (status === 9 || status === 3 || status === 2) {
+            if (SUCCESS_JOB_STATUS_CODES.includes(status)) {
                 logMessage(`Job ${jobName} completed successfully!`);
 
                 // Return the job data on success
-                return await this.getJobData(jobName) as DiffbotResult[];
-            } else if (status === 10 || status === 8) {
+                return await this.getJobData(jobName);
+            } else if (FAILED_JOB_STATUS_CODES.includes(status)) {
                 throw new Error(`Job ${jobName} failed: ${message}`);
             }
 
@@ -99,7 +102,7 @@ class DiffbotCrawler {
      * Get status of a crawl job
      */
     async getJobStatus(jobName: string): Promise<any> {
-        const params = new URLSearchParams({token: this.token,  name: jobName});
+        const params = new URLSearchParams({token: this.token, name: jobName});
         const response = await fetchWithRetry(`${this.crawlUrl}?${params}`);
         return response;
     }
@@ -108,9 +111,10 @@ class DiffbotCrawler {
      * Get crawl job data
      */
     async getJobData(jobName: string): Promise<DiffbotResult[]> {
+        const params = new URLSearchParams({token: this.token});
         const status = await this.getJobStatus(jobName);
-        const downloadUrl = status.jobs?.[0].downloadJson;
-        return downloadUrl ? await fetchWithRetry(downloadUrl) as DiffbotResult[] : [];
+        const downloadUrl = status.jobs?.[0].downloadJson
+        return downloadUrl ? await fetchWithRetry(`${downloadUrl}?${params}`) as DiffbotResult[] : [];
     }
 
     /**

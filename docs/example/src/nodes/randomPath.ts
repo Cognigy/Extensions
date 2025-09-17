@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
 
 /**
  * This file contains an example of how you can build nodes whith can
@@ -8,19 +11,15 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
  * which child it wants to execute.
  */
 
-export interface IRandomPathParams extends INodeFunctionBaseParams {
-	config: {};
-}
-
 export const randomPath = createNodeDescriptor({
 	type: "randomPath",
 	defaultLabel: "Pick Random Path",
 
 	dependencies: {
-		children: ["randomPathLeft", "randomPathRight"]
+		children: ["randomPathLeft", "randomPathRight"],
 	},
 
-	function: async ({ cognigy, config, childConfigs }: INodeFunctionBaseParams) => {
+	function: async ({ cognigy, childConfigs }: INodeFunctionBaseParams) => {
 		const { api } = cognigy;
 
 		/* roll the dice */
@@ -28,23 +27,31 @@ export const randomPath = createNodeDescriptor({
 
 		/* execute left path */
 		if (random) {
-			const leftPathChild = childConfigs.find(child => child.type === "randomPathLeft");
+			const leftPathChild = childConfigs.find(
+				(child) => child.type === "randomPathLeft",
+			);
 			if (!leftPathChild) {
-				throw new Error("Unable to find 'leftPathChild'. Seems its not attached.");
+				throw new Error(
+					"Unable to find 'leftPathChild'. Seems its not attached.",
+				);
 			}
 
 			api.setNextNode(leftPathChild.id);
 			return;
 		} else {
-			const rightPathChild = childConfigs.find(child => child.type === "randomPathRight");
+			const rightPathChild = childConfigs.find(
+				(child) => child.type === "randomPathRight",
+			);
 			if (!rightPathChild) {
-				throw new Error("Unable to find 'rightPathChild'. Seems its not attached.");
+				throw new Error(
+					"Unable to find 'rightPathChild'. Seems its not attached.",
+				);
 			}
 
 			api.setNextNode(rightPathChild.id);
 			return;
 		}
-	}
+	},
 });
 
 /* node definition for 'randomPathLeft' + 'randomPathRight' */
@@ -55,9 +62,9 @@ export const randomPathLeft = createNodeDescriptor({
 	parentType: "randomPath",
 	defaultLabel: "Left",
 	appearance: {
-		color: '#2ecc71',
-		textColor: 'black',
-		variant: 'mini'
+		color: "#2ecc71",
+		textColor: "black",
+		variant: "mini",
 	},
 
 	constraints: {
@@ -68,10 +75,10 @@ export const randomPathLeft = createNodeDescriptor({
 		movable: false,
 		placement: {
 			predecessor: {
-				whitelist: []
-			}
-		}
-	}
+				whitelist: [],
+			},
+		},
+	},
 });
 
 export const randomPathRight = createNodeDescriptor({
@@ -82,9 +89,9 @@ export const randomPathRight = createNodeDescriptor({
 	defaultLabel: "Right",
 
 	appearance: {
-		color: '#9b59b6',
-		textColor: 'black',
-		variant: 'mini'
+		color: "#9b59b6",
+		textColor: "black",
+		variant: "mini",
 	},
 
 	constraints: {
@@ -95,8 +102,8 @@ export const randomPathRight = createNodeDescriptor({
 		movable: false,
 		placement: {
 			predecessor: {
-				whitelist: []
-			}
-		}
-	}
+				whitelist: [],
+			},
+		},
+	},
 });

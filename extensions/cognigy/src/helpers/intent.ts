@@ -1,4 +1,3 @@
-
 export interface IIntent {
 	id: string;
 	name: string;

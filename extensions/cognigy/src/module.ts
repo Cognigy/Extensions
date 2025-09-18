@@ -1,17 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { intentDisambiguationNode } from "./nodes/intentDisambiguation";
 import { chuckNorrisJokesConnector } from "./knowledge-connectors/chuckNorrisJokesConnector";
 import { webPageContentConnector } from "./knowledge-connectors/webPageContentConnector";
+import { intentDisambiguationNode } from "./nodes/intentDisambiguation";
 
 export default createExtension({
-	nodes: [
-		intentDisambiguationNode
-	],
+	nodes: [intentDisambiguationNode],
 	options: {
-		label: "Cognigy Customs"
+		label: "Cognigy Customs",
 	},
-	knowledge: [
-		chuckNorrisJokesConnector,
-		webPageContentConnector
-	]
+	knowledge: [chuckNorrisJokesConnector, webPageContentConnector],
 });

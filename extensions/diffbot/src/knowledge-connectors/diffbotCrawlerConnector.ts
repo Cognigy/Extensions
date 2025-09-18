@@ -15,80 +15,84 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			type: "connection",
 			params: {
 				connectionType: "diffbot",
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "retainCrawler",
 			label: "Retain Crawler",
 			type: "toggle",
-			description: "Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.",
-			defaultValue: true
+			description:
+				"Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.",
+			defaultValue: true,
 		},
 		{
 			key: "seeds",
 			label: "Seed URLs",
 			type: "textArray",
-			description: "Crawling will start from these URLs. Enter one URL per line or entry.",
+			description:
+				"Crawling will start from these URLs. Enter one URL per line or entry.",
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
-			key: 'apiUrlType',
-			type: 'select',
-			label: 'API URL Type',
-			defaultValue: 'analyze',
-			description: 'Type of Extract API to call i.e. Product, List etc. If type is not known then choose \'Analyze\', however the quality of the result may degrade if \'Analyze\' type is chosen.',
+			key: "apiUrlType",
+			type: "select",
+			label: "API URL Type",
+			defaultValue: "analyze",
+			description:
+				"Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen.",
 			params: {
 				options: [
 					{
-						label: 'Analyze',
-						value: 'analyze'
+						label: "Analyze",
+						value: "analyze",
 					},
 					{
-						label: 'Product',
-						value: 'product'
+						label: "Product",
+						value: "product",
 					},
 					{
-						label: 'Article',
-						value: 'article'
+						label: "Article",
+						value: "article",
 					},
 					{
-						label: 'Event',
-						value: 'event'
+						label: "Event",
+						value: "event",
 					},
 					{
-						label: 'List',
-						value: 'list'
+						label: "List",
+						value: "list",
 					},
 					{
-						label: 'Video',
-						value: 'video'
+						label: "Video",
+						value: "video",
 					},
 					{
-						label: 'Image',
-						value: 'image'
+						label: "Image",
+						value: "image",
 					},
 					{
-						label: 'Discussion',
-						value: 'discussion'
+						label: "Discussion",
+						value: "discussion",
 					},
 					{
-						label: 'Faq',
-						value: 'faq'
+						label: "Faq",
+						value: "faq",
 					},
 					{
-						label: 'Organization',
-						value: 'organization'
+						label: "Organization",
+						value: "organization",
 					},
-				]
-			}
+				],
+			},
 		},
 		{
 			key: "querystring",
 			label: "Query String",
-			description: "Query parameters to be passed to Extract API (do not include the leading '?'). Separate multiple parameters with '&', e.g. fields=title,text&timeout=10",
+			description:
+				"Query parameters to be passed to Extract API (do not include the leading '?'). Separate multiple parameters with '&', e.g. fields=title,text&timeout=10",
 			type: "text",
 		},
 
@@ -112,8 +116,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			type: "number",
 			defaultValue: 100,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "maxToCrawlPerSubdomain",
@@ -122,63 +126,65 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			type: "number",
 			defaultValue: -1,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "maxHops",
 			label: "Max Hops",
 			type: "number",
-			description: "Maximum number of hops away from a seed URL. Set to -1 for unlimited hops.",
+			description:
+				"Maximum number of hops away from a seed URL. Set to -1 for unlimited hops.",
 			defaultValue: -1,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "crawlDelay",
 			label: "Crawl Delay",
 			type: "number",
-			description: "Number of seconds to wait between requests to the same server.",
+			description:
+				"Number of seconds to wait between requests to the same server.",
 			defaultValue: 0.25,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "obeyRobots",
 			label: "Obey Robots",
 			type: "toggle",
 			description: "Whether to obey robots.txt rules of the website.",
-			defaultValue: true
+			defaultValue: true,
 		},
 		{
 			key: "restrictDomain",
 			label: "Restrict Domain",
 			type: "toggle",
 			description: "Limit crawling to seed domains.",
-			defaultValue: true
+			defaultValue: true,
 		},
 		{
 			key: "restrictSubdomain",
 			label: "Restrict Subdomain",
 			type: "toggle",
 			description: "Limit crawling to seed subdomains.",
-			defaultValue: false
+			defaultValue: false,
 		},
 		{
 			key: "useProxies",
 			label: "Use Proxies",
 			type: "toggle",
 			description: "Whether to use Diffbot's proxy servers for crawling.",
-			defaultValue: false
+			defaultValue: false,
 		},
 		{
 			key: "useCanonical",
 			label: "Canonical Deduplication",
 			description: "Whether to skip pages with a differing canonical URL.",
 			type: "toggle",
-			defaultValue: true
+			defaultValue: true,
 		},
 
 		// Processing Limits
@@ -197,7 +203,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 		{
 			key: "pageProcessPattern",
 			label: "HTML Processing Patterns",
-			description: "Only process pages that contain any of these text strings in the HTML.",
+			description:
+				"Only process pages that contain any of these text strings in the HTML.",
 			type: "textArray",
 		},
 		{
@@ -207,8 +214,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			description: "Maximum number of pages to process.",
 			defaultValue: 100,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "maxToProcessPerSubdomain",
@@ -217,8 +224,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			description: "Maximum number of pages to process per subdomain.",
 			defaultValue: 100,
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 
 		// Custom Headers
@@ -248,13 +255,14 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 		},
 
 		// Knowledge Settings
-        {
-            key: "sourceTags",
-            label: "Source Tags",
-            type: "chipInput",
-			description: "Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
-            defaultValue: ["Web Page"],
-        }
+		{
+			key: "sourceTags",
+			label: "Source Tags",
+			type: "chipInput",
+			description:
+				"Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
+			defaultValue: ["Web Page"],
+		},
 	] as const,
 	sections: [
 		{
@@ -266,8 +274,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 				"apiUrlType",
 				"querystring",
 				"sourceTags",
-				"retainCrawler"
-			]
+				"retainCrawler",
+			],
 		},
 		{
 			key: "crawlingLimits",
@@ -284,8 +292,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 				"restrictDomain",
 				"restrictSubdomain",
 				"useProxies",
-				"useCanonical"
-			]
+				"useCanonical",
+			],
 		},
 		{
 			key: "processingLimits",
@@ -297,55 +305,58 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 				"pageProcessPattern",
 				"maxToProcess",
 				"maxToProcessPerSubdomain",
-			]
+			],
 		},
 		{
 			key: "customHeaders",
 			label: "Custom Headers",
 			defaultCollapsed: true,
-			fields: [
-				"userAgent",
-				"referer",
-				"cookie",
-				"acceptLanguage"
-			]
-		}
+			fields: ["userAgent", "referer", "cookie", "acceptLanguage"],
+		},
 	],
 	form: [
 		{ type: "field", key: "connection" },
 		{ type: "section", key: "BasicSettings" },
 		{ type: "section", key: "crawlingLimits" },
 		{ type: "section", key: "processingLimits" },
-		{ type: "section", key: "customHeaders" }
+		{ type: "section", key: "customHeaders" },
 	],
-	function: async ({config, api}) => {
-		const { connection, sourceTags, apiUrlType, querystring, retainCrawler, ...crawlerConfig } = config;
+	function: async ({ config, api }) => {
+		const {
+			connection,
+			sourceTags,
+			apiUrlType,
+			querystring,
+			retainCrawler,
+			...crawlerConfig
+		} = config;
 		const { accessToken } = connection as { accessToken: string };
 
 		// Create Diffbot Crawler instance
 		const crawler = new DiffbotCrawler(accessToken);
 		const crawlerName = `crawler-${Date.now()}`;
-		const qs = processQueryString(querystring)
+		const qs = processQueryString(querystring);
 		const apiUrl = `https://api.diffbot.com/v3/${apiUrlType}${qs}`;
 
 		// Create and run a crawl job and get results
 		await crawler.createCrawlJob({
-			...crawlerConfig, name: crawlerName, apiUrl: apiUrl,
+			...crawlerConfig,
+			name: crawlerName,
+			apiUrl: apiUrl,
 		});
 		const crawledData = await crawler.monitorJobAndGetResults(crawlerName);
 		for (const data of crawledData) {
-			if (!data.pageUrl)
-				continue;
+			if (!data.pageUrl) continue;
 
 			const chunkTitle = `title: ${data.title}\ntype: ${data.type}\n`;
-			const chunks = await jsonSplit(data, chunkTitle, ['html', 'images']);
+			const chunks = await jsonSplit(data, chunkTitle, ["html", "images"]);
 
 			// Create Knowledge Source
 			const { knowledgeSourceId } = await api.createKnowledgeSource({
 				name: data.title,
 				description: `Content from web page at ${data.pageUrl}`,
 				tags: sourceTags,
-				chunkCount: chunks.length
+				chunkCount: chunks.length,
 			});
 
 			// Create Knowledge Chunks
@@ -355,16 +366,15 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 					text: chunk,
 					data: {
 						url: data.pageUrl,
-						title: data.title || '',
-						language: data.humanLanguage || '',
-						type: data.type || ''
-					}
+						title: data.title || "",
+						language: data.humanLanguage || "",
+						type: data.type || "",
+					},
 				});
 			}
 		}
 
 		// Delete the crawl job if retain crawler is false
-		if (!retainCrawler)
-			await crawler.deleteJob(crawlerName);
-	}
+		if (!retainCrawler) await crawler.deleteJob(crawlerName);
+	},
 });

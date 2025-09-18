@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
 
 /**
  * This file contains a simple node whith no children and no connections.
@@ -26,12 +29,12 @@ export const reverseSay = createNodeDescriptor({
 			key: "text",
 			label: "The text you want to reverse.",
 			type: "cognigyText",
-			defaultValue: "{{input.text}}"
-		}
+			defaultValue: "{{input.text}}",
+		},
 	],
 	preview: {
 		type: "text",
-		key: "text"
+		key: "text",
 	},
 	function: async ({ cognigy, config }: IReverseSayParams) => {
 		const { api } = cognigy;
@@ -40,5 +43,5 @@ export const reverseSay = createNodeDescriptor({
 		const reversedText = text.split("").reverse().join("");
 
 		api.say(reversedText);
-	}
+	},
 });

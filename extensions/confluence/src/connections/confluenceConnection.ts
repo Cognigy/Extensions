@@ -1,4 +1,4 @@
-import { IConnectionSchema } from "@cognigy/extension-tools";
+import type { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const confluenceConnection: IConnectionSchema = {
 	type: "confluence",
@@ -6,6 +6,6 @@ export const confluenceConnection: IConnectionSchema = {
 	fields: [
 		{ fieldName: "domain" },
 		{ fieldName: "email" },
-		{ fieldName: "key" }
-	]
+		{ fieldName: "key" },
+	],
 };

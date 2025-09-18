@@ -1,4 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
 import { fetchData } from "../knowledge-connectors/helper/utils";
 
 export interface ISearchParams extends INodeFunctionBaseParams {
@@ -19,7 +22,7 @@ export const searchtNode = createNodeDescriptor({
 	defaultLabel: "Search",
 	preview: {
 		key: "query",
-		type: "text"
+		type: "text",
 	},
 	fields: [
 		{
@@ -28,8 +31,8 @@ export const searchtNode = createNodeDescriptor({
 			type: "connection",
 			params: {
 				connectionType: "confluence",
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "query",
@@ -37,7 +40,7 @@ export const searchtNode = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true,
-			}
+			},
 		},
 		{
 			key: "storeLocation",
@@ -48,14 +51,14 @@ export const searchtNode = createNodeDescriptor({
 				options: [
 					{
 						label: "Input",
-						value: "input"
+						value: "input",
 					},
 					{
 						label: "Context",
-						value: "context"
-					}
+						value: "context",
+					},
 				],
-				required: true
+				required: true,
 			},
 		},
 		{
@@ -66,7 +69,7 @@ export const searchtNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "input",
-			}
+			},
 		},
 		{
 			key: "contextKey",
@@ -76,7 +79,7 @@ export const searchtNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "context",
-			}
+			},
 		},
 	],
 	sections: [
@@ -84,12 +87,8 @@ export const searchtNode = createNodeDescriptor({
 			key: "storage",
 			label: "Storage Option",
 			defaultCollapsed: true,
-			fields: [
-				"storeLocation",
-				"inputKey",
-				"contextKey",
-			]
-		}
+			fields: ["storeLocation", "inputKey", "contextKey"],
+		},
 	],
 	form: [
 		{ type: "field", key: "connection" },
@@ -97,7 +96,7 @@ export const searchtNode = createNodeDescriptor({
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#0052CC"
+		color: "#0052CC",
 	},
 	function: async ({ cognigy, config }: ISearchParams) => {
 		const { api } = cognigy;
@@ -107,7 +106,7 @@ export const searchtNode = createNodeDescriptor({
 		try {
 			const response = await fetchData(
 				`${domain}/wiki/rest/api/content/search?cql=type=page+and+text~"${query}"+order+by+id+asc&expand=body.storage`,
-				{username: email, password: key}
+				{ username: email, password: key },
 			);
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, response, "simple");
@@ -121,5 +120,5 @@ export const searchtNode = createNodeDescriptor({
 				api.addToInput(inputKey, error.message);
 			}
 		}
-	}
+	},
 });

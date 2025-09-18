@@ -4,10 +4,10 @@ import { diffbotCrawlerConnector } from "./knowledge-connectors/diffbotCrawlerCo
 import { diffbotWebpageConnector } from "./knowledge-connectors/diffbotWebpageConnector";
 
 export default createExtension({
-  connections: [diffbotConnection],
-  nodes: [],
-  knowledge: [diffbotCrawlerConnector, diffbotWebpageConnector],
-  options: {
-    label: "Diffbot Extension",
-  },
+	connections: [diffbotConnection],
+	nodes: [],
+	knowledge: [diffbotCrawlerConnector, diffbotWebpageConnector],
+	options: {
+		label: "Diffbot Extension",
+	},
 });

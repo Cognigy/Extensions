@@ -4,9 +4,9 @@ import { webPageContentConnector } from "./knowledge-connectors/webPageContentCo
 import { intentDisambiguationNode } from "./nodes/intentDisambiguation";
 
 export default createExtension({
-  nodes: [intentDisambiguationNode],
-  options: {
-    label: "Cognigy Customs",
-  },
-  knowledge: [chuckNorrisJokesConnector, webPageContentConnector],
+	nodes: [intentDisambiguationNode],
+	options: {
+		label: "Cognigy Customs",
+	},
+	knowledge: [chuckNorrisJokesConnector, webPageContentConnector],
 });

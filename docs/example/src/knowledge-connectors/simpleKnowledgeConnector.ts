@@ -95,7 +95,7 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 				chunkCount: 1,
 			});
 			try {
-				// example of an error during content retrieval
+				// Example of an error during content retrieval
 				throw new Error(error);
 			} catch (e) {
 				// The newly created Knowledge Source is deleted

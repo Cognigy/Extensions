@@ -87,7 +87,6 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		}
 
 		// example of error handling
-
 		if (error) {
 			const knowledgeSource2 = await api.createKnowledgeSource({
 				name: "Example Knowledge Source that will be deleted",

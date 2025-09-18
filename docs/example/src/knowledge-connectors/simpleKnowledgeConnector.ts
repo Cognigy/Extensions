@@ -67,7 +67,7 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		config: { name, values, option, connection, error },
 		api,
 	}) => {
-		// create an example Knowledge Source and add Knowledge Chunks
+		// Create an example Knowledge Source and add Knowledge Chunks
 		const knowledgeSource = await api.createKnowledgeSource({
 			name,
 			description: "Example knowledge source",

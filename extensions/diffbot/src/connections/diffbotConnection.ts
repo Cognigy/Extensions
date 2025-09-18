@@ -1,9 +1,7 @@
-import { IConnectionSchema } from "@cognigy/extension-tools";
+import type { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const diffbotConnection: IConnectionSchema = {
-	type: "diffbot",
-	label: "Diffbot Connection",
-	fields: [
-		{ fieldName: "accessToken" },
-	]
+  type: "diffbot",
+  label: "Diffbot Connection",
+  fields: [{ fieldName: "accessToken" }],
 };

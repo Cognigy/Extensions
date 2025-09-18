@@ -1,7 +1,7 @@
 {
 	"name": "example",
 	"version": "1.1.0",
-	"description": "An example of how you can write a Cognigy.AI 4.0.0 Extension containing Nodes.",
+	"description": "An example of how you can write a Cognigy.AI 4.0.0 Extension containing Nodes and Knowledge Connectors.",
 	"main": "build/module.js",
 	"scripts": {
 		"transpile": "tsc -p .",

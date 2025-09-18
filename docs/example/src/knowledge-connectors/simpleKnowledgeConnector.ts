@@ -72,7 +72,7 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 			name,
 			description: "Example knowledge source",
 			tags: ["example", option],
-			chunkCount: values.length,
+			chunkCount: values.length, // This is the total chunk count Knowledge Source expected to have
 		});
 		for (const text of values) {
 			await api.createKnowledgeChunk({

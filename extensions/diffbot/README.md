@@ -30,21 +30,15 @@ The Diffbot Crawler automatically creates Knowledge Sources by crawling web page
 The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks that are presented in Cognigy.AI as Knowledge Chunks. Each Knowledge Chunk is prefixed with the page title, content type, and URL for web page.
 
 ### Fields
-
-| Field        | Description                                                                                                                                                                                                                                                                 |
+#### Basic Settings
+| Basic Settings      |Description                                                                                                                                                                                                         |
 |--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Connection   | The Connection module as defined in [Connection](#diffbot-connection).                                                                                                                                                                                                           |
 | Seed URLs    | URLs from which Diffbot starts crawling. Enter one URL per line or entry.                                                                                                                                                                                                   |
-| API URL Type | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
-| Query String | Query parameters to be passed to the Extract API request, for example, `fields=title,text`                                                                                                                                                                                  |
-
-
-**Source Tags:**
-Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag. (Default: ["Web Page"])
-
-**Retain Crawler:**
-Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.
-
+| Extract API Type | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
+| Query String | Query parameters to be passed to the Extract API request, for example, `fields=title,text`                                                                                                                                  |
+| Source Tags | You can use Source tags to filter the search scope when using a Search Extract Output Node. Press ENTER to add a Source tag. The default value is `["Web Page"]` |
+| Retain Crawler | Selects whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard. The default value is `true`.                                |
 #### Crawling Limits
 
 | Crawling Limit                      | Description                                                                                                               |
@@ -80,12 +74,6 @@ Whether to retain the crawler after the crawling operation, the undeleted crawle
 | Cookie          | Custom Cookie header to use when crawling.          |
 | Accept-Language | Custom Accept-Language header to use when crawling. |
 
-#### Knowledge Settings
-
-
-| Setting     | Description                                                                                                                                                      |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Source Tags | You can use Source tags to filter the search scope when using a Search Extract Output Node. Press ENTER to add a Source tag. The default value is `["Web Page"]` |
 
 ## Diffbot Webpage Connector
 
@@ -97,7 +85,7 @@ The Diffbot Webpage Connector automatically creates Knowledge Sources by process
 |-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Connection      | The Connection module as defined in [Connection](#diffbot-connection)                                                                                                                                                                                                       |
 | Web page URL    | Sets the URLs of the web pages to import content from                                                                                                                                                                                                                       |
-| Web page Type** | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
+| Extract API Type** | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
 | Source Tag      | Sets the Source tags you want to add to the Knowledge Sources                                                                                                                                                                                                               |
 
 # Diffbot Connection

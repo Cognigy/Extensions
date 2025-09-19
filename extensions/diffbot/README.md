@@ -23,6 +23,8 @@ See diffbot [Crawler](https://docs.diffbot.com/reference/crawl-introduction) doc
 
 ### Fields
 
+#### Basic Settings
+
 **Connection:**
 Connection field as defined in [Connection](#diffbot-connection)
 
@@ -44,6 +46,9 @@ Type of Extract API to call i.e. Product, List etc. If type is not known then ch
 
 **Query String:**
 Query parameters to be passed to Extract API, e.g. fields=title,text
+
+**Source Tags:**
+Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag. (Default: ["Web Page"])
 
 **Retain Crawler:**
 Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.
@@ -113,11 +118,6 @@ Custom Cookie header to use when crawling.
 
 **Accept-Language:**
 Custom Accept-Language header to use when crawling.
-
-#### Knowledge Settings
-
-**Source Tags:**
-Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag. (Default: ["Web Page"])
 
 ---
 

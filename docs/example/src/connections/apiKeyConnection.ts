@@ -1,4 +1,4 @@
-import { IConnectionSchema } from "@cognigy/extension-tools";
+import type { IConnectionSchema } from "@cognigy/extension-tools";
 
 /**
  * This file defines a 'schema' for a connection of type 'api-key'.
@@ -11,10 +11,12 @@ import { IConnectionSchema } from "@cognigy/extension-tools";
  * - see 'module.ts'
  */
 
+export type ApiKeyConnection = {
+	key: string;
+};
+
 export const apiKeyConnection: IConnectionSchema = {
 	type: "api-key",
 	label: "Holds the api-key for a Cognigy.AI v4 API request.",
-	fields: [
-		{ fieldName: "key" }
-	]
+	fields: [{ fieldName: "key" }],
 };

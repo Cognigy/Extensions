@@ -1,11 +1,14 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { createQuickReplies } from "../helpers/createQuickReplies";
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
 import { createList, createPlainText } from "../helpers/createList";
-import { isBreakOrContinueStatement } from "typescript";
+import { createQuickReplies } from "../helpers/createQuickReplies";
+import type { IIntent } from "../helpers/intent";
 
-export interface intentDisambiguationParams extends INodeFunctionBaseParams {
+export interface IntentDisambiguationParams extends INodeFunctionBaseParams {
 	config: {
-		maxScoreDelta: number,
+		maxScoreDelta: number;
 		disambiguationQuestion: string;
 		replyType: string;
 		punctuation: string;
@@ -14,6 +17,7 @@ export interface intentDisambiguationParams extends INodeFunctionBaseParams {
 		inputKey: string;
 	};
 }
+
 export const intentDisambiguationNode = createNodeDescriptor({
 	type: "intentDisambiguation",
 	defaultLabel: "Intent Disambiguation",
@@ -24,71 +28,72 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			description: "The maximum difference between two intent scores.",
 			type: "number",
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "disambiguationQuestion",
 			label: "Disambiguation Question",
-			description: "The question that is sent to the user to disambiguate the intents.",
+			description:
+				"The question that is sent to the user to disambiguate the intents.",
 			type: "cognigyText",
 			params: {
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "replyType",
 			label: "Reply Type",
-            description: "What type of reply should be used?",
+			description: "What type of reply should be used?",
 			type: "select",
 			params: {
 				options: [
 					{
 						label: "Quick Replies",
-						value: "quickReplies"
+						value: "quickReplies",
 					},
 					{
 						label: "List",
-						value: "list"
+						value: "list",
 					},
 					{
 						label: "Plain Text",
-						value: "plainText"
+						value: "plainText",
 					},
 					{
 						label: "Data Only",
-						value: "dataOnly"
+						value: "dataOnly",
 					},
-				]
+				],
 			},
-			defaultValue: "quickReplies"
+			defaultValue: "quickReplies",
 		},
 		{
 			key: "punctuation",
 			label: "Punctuation",
-            description: "How to end the sentence",
+			description: "How to end the sentence",
 			type: "select",
 			params: {
 				options: [
 					{
 						label: ".",
-						value: "."
+						value: ".",
 					},
 					{
 						label: "?",
-						value: "?"
+						value: "?",
 					},
 					{
 						label: "!",
-						value: "!"
-					}
-				]
+						value: "!",
+					},
+				],
 			},
 			condition: {
 				key: "replyType",
-				value: "plainText"
+				value: "plainText",
 			},
-			defaultValue: "?"
+			defaultValue: "?",
 		},
 		{
 			key: "storeLocation",
@@ -99,14 +104,14 @@ export const intentDisambiguationNode = createNodeDescriptor({
 				options: [
 					{
 						label: "Input",
-						value: "input"
+						value: "input",
 					},
 					{
 						label: "Context",
-						value: "context"
-					}
+						value: "context",
+					},
 				],
-				required: true
+				required: true,
 			},
 		},
 		{
@@ -117,7 +122,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "input",
-			}
+			},
 		},
 		{
 			key: "contextKey",
@@ -127,7 +132,7 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "context",
-			}
+			},
 		},
 	],
 	sections: [
@@ -135,103 +140,117 @@ export const intentDisambiguationNode = createNodeDescriptor({
 			key: "storage",
 			label: "Storage Option",
 			defaultCollapsed: true,
-			fields: [
-				"storeLocation",
-				"inputKey",
-				"contextKey",
-			]
+			fields: ["storeLocation", "inputKey", "contextKey"],
 		},
 	],
 	form: [
 		{ type: "field", key: "maxScoreDelta" },
-		{ type: "field", key: "disambiguationQuestion"},
-		{ type: "field", key: "replyType"},
-		{ type: "field", key: "punctuation"},
-		{ type: "field", key: "butStatement"},
+		{ type: "field", key: "disambiguationQuestion" },
+		{ type: "field", key: "replyType" },
+		{ type: "field", key: "punctuation" },
+		{ type: "field", key: "butStatement" },
 		{ type: "section", key: "storage" },
 	],
 	tokens: [
 		{
 			label: "First Intent",
 			script: "input.nlu.intentMapperResults.finalIntentDisambiguationSentence",
-			type: "input"
-		}
+			type: "input",
+		},
 	],
-	function: async ({ cognigy, config }: intentDisambiguationParams) => {
+	function: async ({ cognigy, config }: IntentDisambiguationParams) => {
 		const { input, api } = cognigy;
-		const { maxScoreDelta, disambiguationQuestion, replyType, punctuation, storeLocation, contextKey, inputKey} = config;
+		const {
+			maxScoreDelta,
+			disambiguationQuestion,
+			replyType,
+			punctuation,
+			storeLocation,
+			contextKey,
+			inputKey,
+		} = config;
 
 		try {
-			let similarIntents = [];
+			const similarIntents: IIntent[] = [];
 			let i = 1;
+
 			// Loop through each intent that was mapped
 			for (i = 1; i < input.nlu.intentMapperResults.scores.length; i++) {
 				// Find the score difference between the main intent and the mapped intent
-				let delta = (input.nlu.intentMapperResults.finalIntentScore - input.nlu.intentMapperResults.scores[i].score);
-				// If the delta is less than the limit, add it to the array for similar intnets
+				const delta =
+					input.nlu.intentMapperResults.finalIntentScore -
+					input.nlu.intentMapperResults.scores[i].score;
+
+				// If the delta is less than the limit, add it to the array for similar intents
 				if (delta < maxScoreDelta) {
-					input.nlu.intentMapperResults.scores[i].delta = delta;
-					similarIntents.push(input.nlu.intentMapperResults.scores[i]);
+					const intent: IIntent = {
+						...input.nlu.intentMapperResults.scores[i],
+						delta,
+					};
+					similarIntents.push(intent);
 				}
 			}
 
 			// Sort the similar intents by delta value in decending order
-			let array = similarIntents.sort((a, b) => {
+			const array = similarIntents.sort((a, b) => {
 				return a.delta - b.delta;
 			});
 
-			let output = {
+			const output = {
 				count: array.length,
-				intents: array
+				intents: array,
 			};
 
 			if (output.count > 0) {
 				switch (replyType) {
 					case "quickReplies":
-						api.say('', {
-							"_cognigy": {
-								"_fallbackText": disambiguationQuestion,
-								"_default": {
-									"_quickReplies": {
-										"type": "quick_replies",
-										"quickReplies": createQuickReplies(input, array),
-										"text": disambiguationQuestion
-									}
-								}
-							}
+						api.say("", {
+							_cognigy: {
+								_fallbackText: disambiguationQuestion,
+								_default: {
+									_quickReplies: {
+										type: "quick_replies",
+										quickReplies: createQuickReplies(input, array),
+										text: disambiguationQuestion,
+									},
+								},
+							},
 						});
 						break;
 					case "list":
-						api.say(disambiguationQuestion, '');
-						api.say('', {
-							"_cognigy": {
-    							"_default": {
-      								"_list": {
-        								"type": "list",
-        								"items": createList(input, array),
-        								"button": { "title": "", "type": "", "payload": "", "condition": "" }
-      								}
-    							}
-  							}
+						api.say(disambiguationQuestion, {});
+						api.say("", {
+							_cognigy: {
+								_default: {
+									_list: {
+										type: "list",
+										items: createList(input, array),
+										button: { title: "", type: "", payload: "", condition: "" },
+									},
+								},
+							},
 						});
 						break;
 					case "plainText":
-						api.say(disambiguationQuestion + createPlainText(input, array) + punctuation, '');
+						api.say(
+							disambiguationQuestion +
+								createPlainText(input, array) +
+								punctuation,
+							{},
+						);
 				}
-				}
-	if (storeLocation === "context") {
-		api.addToContext(contextKey, output, "simple");
-		} else {
-					// @ts-ignore
-			api.addToInput(inputKey, output);
-		}
+			}
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, output, "simple");
+			} else {
+				api.addToInput(inputKey, output);
+			}
 		} catch (error) {
-	if (storeLocation === "context") {
-		api.addToContext(contextKey, error, "simple");
-	} else {
-		// @ts-ignore
-		api.addToInput(inputKey, error);
-	}
-}
-	}
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, error, "simple");
+			} else {
+				api.addToInput(inputKey, error);
+			}
+		}
+	},
 });

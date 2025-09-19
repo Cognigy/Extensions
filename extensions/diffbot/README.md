@@ -39,6 +39,12 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 | Query String | Query parameters to be passed to the Extract API request, for example, `fields=title,text`                                                                                                                                                                                  |
 
 
+**Source Tags:**
+Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag. (Default: ["Web Page"])
+
+**Retain Crawler:**
+Whether to retain the crawler after the crawling operation, the undeleted crawlers can be seen on Diffbot dashboard.
+
 #### Crawling Limits
 
 | Crawling Limit                      | Description                                                                                                               |

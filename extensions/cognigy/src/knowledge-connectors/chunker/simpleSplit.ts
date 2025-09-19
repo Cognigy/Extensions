@@ -23,6 +23,7 @@ const MAX_CHUNK_SIZE = 2000;
 const getEncodingNameForModelName = (
 	modelName: TiktokenModel,
 ): TiktokenEncoding => {
+	// biome-ignore lint/performance/noDynamicNamespaceImportAccess: tiktoken requires dynamic access
 	const encodingName = modelToEncoding[modelName] as TiktokenEncoding;
 	if (!encodingName) return null;
 	return encodingName;

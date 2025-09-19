@@ -38,6 +38,7 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 | API URL Type | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
 | Query String | Query parameters to be passed to the Extract API request, for example, `fields=title,text`                                                                                                                                                                                  |
 
+
 #### Crawling Limits
 
 | Crawling Limit                      | Description                                                                                                               |

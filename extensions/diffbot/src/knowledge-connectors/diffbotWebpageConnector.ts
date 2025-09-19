@@ -26,9 +26,9 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 			},
 		},
 		{
-			key: "apiUrlType",
+			key: "extractApiType",
 			type: "select",
-			label: "API URL Type",
+			label: "Extract API Type",
 			description:
 				"Type of Extract API to call i.e. Product, List, Job etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen.",
 			defaultValue: "analyze",
@@ -91,13 +91,13 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 		},
 	] as const,
 	function: async ({
-		config: { connection, urls, sourceTags, apiUrlType },
+		config: { connection, urls, sourceTags, extractApiType },
 		api,
 	}) => {
 		const { accessToken } = connection as any;
 		for (const url of urls) {
 			const params = new URLSearchParams({ token: accessToken, url });
-			const diffbotUrl = `https://api.diffbot.com/v3/${apiUrlType}?${params}`;
+			const diffbotUrl = `https://api.diffbot.com/v3/${extractApiType}?${params}`;
 			const analyze = await fetchWithRetry(diffbotUrl);
 			if (!analyze || !analyze.objects || analyze.objects.length === 0)
 				throw new Error(`No data returned from Diffbot for URL: ${url}`);

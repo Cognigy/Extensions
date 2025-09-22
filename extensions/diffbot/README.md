@@ -83,12 +83,12 @@ The Diffbot Webpage Connector automatically creates Knowledge Sources by process
 
 ### Fields
 
-| Field           | Description                                                                                                                                                                                                                                                                 |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Connection      | The Connection module as defined in [Connection](#diffbot-connection).                                                                                                                                                                                                      |
-| Web page URL    | Sets the URLs of the web pages to import content from.                                                                                                                                                                                                                      |
+| Field              | Description                                                                                                                                                                                                                                                                 |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Connection         | The Connection module as defined in [Connection](#diffbot-connection).                                                                                                                                                                                                      |
+| Web page URL       | Sets the URLs of the web pages to import content from.                                                                                                                                                                                                                      |
 | Extract API Type** | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
-| Source Tag      | Sets the Source tags you want to add to the Knowledge Sources.                                                                                                                                                                                                              |
+| Source Tag         | Sets the Source tags you want to add to the Knowledge Sources.                                                                                                                                                                                                              |
 
 # Diffbot Connection
 

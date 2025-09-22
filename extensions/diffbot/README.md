@@ -31,7 +31,7 @@ Connection field as defined in [Connection](#diffbot-connection)
 **Seed URLs:**
 Crawling will start from these URLs. Enter one URL per line or entry.
 
-**API URL Type:**
+**Extract API Type:**
 Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen. Available options:
 - Analyze
 - Product
@@ -132,7 +132,7 @@ Connection field as defined in [Connection](#diffbot-connection)
 **Web page URL:**
 URLs of the Web pages to import content from
 
-**Web page Type**
+**Extract API Type**
 Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen. Available options:
 
 **Source Tag:**

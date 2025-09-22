@@ -37,9 +37,9 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			},
 		},
 		{
-			key: "apiUrlType",
+			key: "extractApiType",
 			type: "select",
-			label: "API URL Type",
+			label: "Extract API Type",
 			defaultValue: "analyze",
 			description:
 				"Type of Extract API to call i.e. Product, List etc. If type is not known then choose 'Analyze', however the quality of the result may degrade if 'Analyze' type is chosen.",
@@ -271,7 +271,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			defaultCollapsed: true,
 			fields: [
 				"seeds",
-				"apiUrlType",
+				"extractApiType",
 				"querystring",
 				"sourceTags",
 				"retainCrawler",
@@ -325,7 +325,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 		const {
 			connection,
 			sourceTags,
-			apiUrlType,
+			extractApiType,
 			querystring,
 			retainCrawler,
 			...crawlerConfig
@@ -336,7 +336,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 		const crawler = new DiffbotCrawler(accessToken);
 		const crawlerName = `crawler-${Date.now()}`;
 		const qs = processQueryString(querystring);
-		const apiUrl = `https://api.diffbot.com/v3/${apiUrlType}${qs}`;
+		const apiUrl = `https://api.diffbot.com/v3/${extractApiType}${qs}`;
 
 		// Create and run a crawl job and get results
 		await crawler.createCrawlJob({
@@ -345,6 +345,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			apiUrl: apiUrl,
 		});
 		const crawledData = await crawler.monitorJobAndGetResults(crawlerName);
+
+		// Process crawled data
 		for (const data of crawledData) {
 			if (!data.pageUrl) continue;
 

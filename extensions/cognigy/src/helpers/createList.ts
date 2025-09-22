@@ -8,7 +8,7 @@ interface IList {
 	buttons: any[];
 }
 
-export function createPlainText(input: any, intents: IIntent[]): string {
+export function createPlainText(_input: any, intents: IIntent[]): string {
 	const plainText = [];
 
 	// Add the main intent at the first position of the quick reply array

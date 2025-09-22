@@ -345,6 +345,8 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			apiUrl: apiUrl,
 		});
 		const crawledData = await crawler.monitorJobAndGetResults(crawlerName);
+
+		// Process crawled data
 		for (const data of crawledData) {
 			if (!data.pageUrl) continue;
 

@@ -59,7 +59,7 @@ export class ConfluenceDataParser {
 		this.turndownService.addRule("confluenceTaskList", {
 			filter: ({ nodeName }: { nodeName: string }) =>
 				nodeName === "AC:TASK-LIST",
-			replacement: (content, node) => {
+			replacement: (_content, node) => {
 				const tasks = Array.from(node.querySelectorAll("ac\\:task"));
 				if (tasks && tasks.length > 0) {
 					const taskTexts = Array.from(tasks).map((task: any) => {
@@ -85,7 +85,7 @@ export class ConfluenceDataParser {
 		// then it should be handled in blankReplacement callback i.e handleEmptyNode
 		this.turndownService.addRule("confluenceImage", {
 			filter: ({ nodeName }: { nodeName: string }) => nodeName === "AC:IMAGE",
-			replacement: (content, node) => {
+			replacement: (_content, node) => {
 				const captionMatch = (node as HTMLElement).outerHTML.match(
 					/<ac:caption>(.*?)<\/ac:caption>/,
 				);
@@ -103,7 +103,7 @@ export class ConfluenceDataParser {
 	 * A callback function passed to TurndownService to handle empty nodes during
 	 * the conversion process. Handles specific empty nodes like AC:IMAGE and TIME.
 	 */
-	private handleEmptyNode(content: string, node: Node): string {
+	private handleEmptyNode(_content: string, node: Node): string {
 		// Handle TIME directly in blankReplacement,
 		// Note: Make sure to check the parent node if parent is also empty,
 		// otherwise child node will not be processed
@@ -141,7 +141,7 @@ export class ConfluenceDataParser {
 				hierarchy: "",
 				content: "",
 			};
-			section.content = currentContent.trim() + "\n";
+			section.content = `${currentContent.trim()}\n`;
 			result.push(section);
 			currentContent = "";
 		};
@@ -162,7 +162,7 @@ export class ConfluenceDataParser {
 				// If heading is link, extract text from markdown link format ## [text](url)
 				const linkMatch = line.match(/^(#{1,6})\s*\[([^\]]+)\]/);
 				const processedHeading = linkMatch
-					? linkMatch[1] + " " + linkMatch[2]
+					? `${linkMatch[1]} ${linkMatch[2]}`
 					: line;
 
 				// Add current heading to stack
@@ -174,7 +174,7 @@ export class ConfluenceDataParser {
 					content: "",
 				};
 			} else {
-				currentContent += line + "\n";
+				currentContent += `${line}\n`;
 			}
 		}
 

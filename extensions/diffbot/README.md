@@ -26,7 +26,6 @@ The Diffbot Extension lets you extract structured data from web pages in JSON fo
 The Diffbot Crawler automatically creates Knowledge Sources by crawling web pages from the root page and process their content using the Diffbot crawler. For more information, see the [Diffbot Crawler](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
 
 ### Chunking
-
 The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks that are presented in Cognigy.AI as Knowledge Chunks. Each Knowledge Chunk is prefixed with the page title, content type, and URL for web page.
 
 ### Fields

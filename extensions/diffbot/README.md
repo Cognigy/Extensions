@@ -3,12 +3,15 @@
 
 This Extension provides two basic Diffbot Knowledge Connectors allow integration between Cognigy.AI and Diffbot:
 
-- One that crawls through web pages and creates Knowledge Sources with Knowledge Chunks.
-- Another that accepts web page URL and generates Knowledge Sources directly.
+- The Diffbot Crawler Connector crawls through web pages and creates Knowledge Sources with Knowledge Chunks.
+
+- The Diffbot Webpage Connector accepts web page URL and generates Knowledge Sources directly.
+
 
 ## Table of Contents
 - [Diffbot Extension](#diffbot-extension)
-- [Diffbot Crawler](#diffbot-crawler)
+- [Diffbot Crawler Connector](#diffbot-crawler-connector)
+
 - [Diffbot Webpage Connector](#diffbot-webpage-connector)
 - [Diffbot Connection](#diffbot-connection)
 
@@ -21,9 +24,11 @@ The Diffbot Extension lets you extract structured data from web pages in JSON fo
 - [Diffbot Crawler](#diffbot-crawler)
 - [Diffbot Webpage Connector](#diffbot-webpage-connector)
 
-## Diffbot Crawler
+## Diffbot Crawler Connector
 
-The Diffbot Crawler automatically creates Knowledge Sources by crawling web pages from the root page and process their content using Diffbot services. For more information, see the [Diffbot Crawl API](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also see the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
+
+The Diffbot Crawler Connector automatically creates Knowledge Sources by crawling web pages from the root page and process their content using Diffbot services. For more information, see the [Diffbot Crawl API](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also see the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
+
 
 ### Chunking
 

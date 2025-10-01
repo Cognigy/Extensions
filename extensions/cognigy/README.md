@@ -1,50 +1,15 @@
 
 # Cognigy.AI
 
-This Extension provides Nodes to extend Cognigy.AI core features and Knowledge Connectors to integrate external data sources into Cognigy.AI.
+This Extension provides:
+
+- Nodes to extend Cognigy.AI core features
+- Knowledge Connectors to integrate external data sources into Cognigy.AI. The Knowledge Connectors create Knowledge Sources by using web APIs or extracting content from publicly available web pages.
 
 ## Table of Contents
-- [Cognigy.AI Knowledge Connectors](#knowledge-connectors)
+
 - [Cognigy.AI Nodes](#nodes)
-
----
-
-# Cognigy.AI Extension
-
-This Extension provides Knowledge Connectors that integrate external data sources into Cognigy.AI. The provided Knowledge Connectors create Knowledge Sources by using web APIs or extracting content from publicly available web pages.
-
-## Knowledge Connectors
-
-### Chuck Norris Jokes
-
-The Chuck Norris Jokes Knowledge Connector fetches random Chuck Norris Jokes using a web API and creates a Knowledge Source with Knowledge Chunks containing the fetched jokes.
-
-The following table shows the fields to configure when using this Knowledge Connector.
-
-| Field                      | Description                                                                                                                                                                                                                                                |
-|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Source name prefix         | Sets a prefix to be appended to Knowledge Source's name. For example, if you enter `Chuck Norris Jokes`, the Knowledge Source created is named `Chuck Norris Jokes - <category>`.                                                                          |
-| Categories to fetch        | Sets the categories of jokes to fetch. You can find the available categories at [chucknorris.io](https://api.chucknorris.io/), in the **Usage** section, or at [https://api.chucknorris.io/jokes/categories](https://api.chucknorris.io/jokes/categories). |
-| Number of jokes per source | Sets a number of jokes per category.                                                                                                                                                                                                                       |
-| Source Tags                | Sets the Source Tags that you want to add to Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.                                                                                                 |
-
-### Web Page
-
-The Web Page Knowledge Connector lets you extract content from publicly available static web pages. This Knowledge Connector creates a Knowledge Source and Knowledge Chunks based on the web page content.
-
-#### Chunking
-
-The Knowledge Connector divides the web page content automatically into Knowledge Chunks based on semantic structures. If a semantic structure exceeds the 2000 characters, it's split into smaller Knowledge Chunks based on character count.
-
-The following table shows the fields to configure when using this Knowledge Connector.
-
-| Field              | Description                                                                                                                                                             |
-|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Source name prefix | Sets an optional prefix to be appended to the Knowledge Source's name. For example, if you enter `Wiki Page`, the Knowledge Source created is named `Wiki Page - <cleaned web page URL>`. |
-| Web page URL       | Sets the URL of the publicly available web page from which the content is extracted.                                                                                    |
-| Source Tags        | Sets the Source Tags that you want to add to the  Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.         |
-
-**Note:** The Knowledge Connector uses the following MIT-licensed libraries: [`html-to-text`](https://www.npmjs.com/package/html-to-text), [`langchain`](https://www.npmjs.com/package/langchain), [`jsdom`](https://www.npmjs.com/package/jsdom)
+- [Cognigy.AI Knowledge Connectors](#knowledge-connectors)
 
 ## Nodes
 
@@ -108,3 +73,36 @@ The following is an example of a stored response:
 **Important**
 
 The maximum delta value is between 0 and 1. The smaller the delta value, the more refined the disambiguation results are.
+
+## Knowledge Connectors
+
+### Chuck Norris Jokes
+
+The Chuck Norris Jokes Knowledge Connector fetches random Chuck Norris Jokes using a web API and creates a Knowledge Source with Knowledge Chunks containing the fetched jokes.
+
+The following table shows the fields to configure when using this Knowledge Connector.
+
+| Field                      | Description                                                                                                                                                                                                                                                |
+|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Source name prefix         | Sets a prefix to be appended to Knowledge Source's name. For example, if you enter `Chuck Norris Jokes`, the Knowledge Source created is named `Chuck Norris Jokes - <category>`.                                                                          |
+| Categories to fetch        | Sets the categories of jokes to fetch. You can find the available categories at [chucknorris.io](https://api.chucknorris.io/), in the **Usage** section, or at [https://api.chucknorris.io/jokes/categories](https://api.chucknorris.io/jokes/categories). |
+| Number of jokes per source | Sets a number of jokes per category.                                                                                                                                                                                                                       |
+| Source Tags                | Sets the Source Tags that you want to add to Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.                                                                                                 |
+
+### Web Page
+
+The Web Page Knowledge Connector lets you extract content from publicly available static web pages. This Knowledge Connector creates a Knowledge Source and Knowledge Chunks based on the web page content.
+
+#### Chunking
+
+The Knowledge Connector divides the web page content automatically into Knowledge Chunks based on semantic structures. If a semantic structure exceeds the 2000 characters, it's split into smaller Knowledge Chunks based on character count.
+
+The following table shows the fields to configure when using this Knowledge Connector.
+
+| Field              | Description                                                                                                                                                             |
+|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Source name prefix | Sets an optional prefix to be appended to the Knowledge Source's name. For example, if you enter `Wiki Page`, the Knowledge Source created is named `Wiki Page - <cleaned web page URL>`. |
+| Web page URL       | Sets the URL of the publicly available web page from which the content is extracted.                                                                                    |
+| Source Tags        | Sets the Source Tags that you want to add to the  Knowledge Source. Source Tags can be used to filter the search scope when using a Search Extract Output Node.         |
+
+**Note:** The Knowledge Connector uses the following MIT-licensed libraries: [`html-to-text`](https://www.npmjs.com/package/html-to-text), [`langchain`](https://www.npmjs.com/package/langchain), [`jsdom`](https://www.npmjs.com/package/jsdom)

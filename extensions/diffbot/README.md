@@ -1,25 +1,17 @@
 
 # Diffbot
 
-This Extension provides two basic Diffbot Knowledge Connectors allow integration between Cognigy.AI and Diffbot:
+This Extension provides two basic Diffbot Knowledge Connectors allow integration between Cognigy.AI and Diffbot extract structured data from web pages in JSON format with the following Knowledge Connectors:
 
-- One that crawls through web pages and creates Knowledge Sources with Knowledge Chunks.
-- Another that accepts web page URL and generates Knowledge Sources directly.
+- [Diffbot Crawler](#diffbot-crawler)
+- [Diffbot Webpage Connector](#diffbot-webpage-connector)
 
 ## Table of Contents
+
 - [Diffbot Extension](#diffbot-extension)
 - [Diffbot Crawler](#diffbot-crawler)
 - [Diffbot Webpage Connector](#diffbot-webpage-connector)
 - [Diffbot Connection](#diffbot-connection)
-
----
-
-# Diffbot Extension
-
-The Diffbot Extension lets you extract structured data from web pages in JSON format with the following Knowledge Extensions:
-
-- [Diffbot Crawler](#diffbot-crawler)
-- [Diffbot Webpage Connector](#diffbot-webpage-connector)
 
 ## Diffbot Crawler
 
@@ -33,7 +25,7 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 
 #### Basic Settings
 
-| Basic Settings   | Description                                                                                                                                                                                                                                                                 |
+| Setting          | Description                                                                                                                                                                                                                                                                 |
 |------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Connection       | The Connection module as defined in [Connection](#diffbot-connection).                                                                                                                                                                                                      |
 | Seed URLs        | URLs from which Diffbot starts crawling. Enter one URL per line or entry, for example, `https://www.cognigy.com/careers`.                                                                                                                                                   |
@@ -60,7 +52,7 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 
 #### Processing Limits
 
-| Processing Limits            | Description                                                                            |
+| Processing Limit             | Description                                                                            |
 |------------------------------|----------------------------------------------------------------------------------------|
 | Processing Patterns          | Limits the URLs to process to the value in this field.                                 |
 | URL Processing Regex         | Sets regex to filter matching URL patterns to process.                                 |

@@ -1,10 +1,10 @@
 # Cognigy Extensions
 
-## Knowledge Connectors
-In [Cognigy.AI](https://cognigy.com/product/), [Knowledge Stores](https://docs.cognigy.com/ai/empower/knowledge-ai/knowledge-store/?h=knowled) are used to store information that your AI Agents can access as context through [Knowledge AI](https://docs.cognigy.com/ai/empower/knowledge-ai/overview). Extensions allow you to build JavaScript modules and expose them as [Knowledge Connectors](https://docs.cognigy.com/docs/knowledge-connector) within Cognigy.AI. Knowledge Connectors can integrate with any third-party system and fetch data or files from external knowledge bases such as Confluence, SharePoint, and more. There are no restrictions on which Node.js modules ([NPM](https://www.npmjs.com/)) or functionality you can use.
-
 ## Nodes
 In [Cognigy.AI](https://cognigy.com/product/), you can use [Flows](https://docs.cognigy.com/ai/build/flows/overview/) to build custom AI Agents and you might need to integrate a third-party system to store or retrieve data. Extensions let you build JavaScript modules and expose them as [Nodes](https://docs.cognigy.com/ai/build/node-reference/overview/) within Cognigy.AI. There are no restrictions on node modules ([NPM](https://www.npmjs.com/)) or functionality.
+
+## Knowledge Connectors
+In [Cognigy.AI](https://cognigy.com/product/), [Knowledge Stores](https://docs.cognigy.com/ai/empower/knowledge-ai/knowledge-store/) are used to store information that your AI Agents can access as context through [Knowledge AI](https://docs.cognigy.com/ai/agents/develop/knowledge-ai/overview/). Extensions allow you to build JavaScript modules and expose them as [Knowledge Connectors](https://docs.cognigy.com/ai/for-devlopers/extensions#knowledge-connectors) within Cognigy.AI. Knowledge Connectors can integrate with any third-party system and fetch data or files from external knowledge bases such as Confluence, SharePoint, and more. There are no restrictions on which Node.js modules ([NPM](https://www.npmjs.com/)) or functionality you can use.
 
 ### NPM: @cognigy/extension-tools
 

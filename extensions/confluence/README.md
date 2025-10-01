@@ -1,56 +1,16 @@
-﻿# Atlassian Confluence
+﻿# Atlassian Confluence Extension
 
-Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/confluence)
+Integrates Cognigy.AI with Confluence (https://www.atlassian.com/software/confluence).
 
-Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's, and other guides. By integrating Confluence with Cognigy.AI, you can create Cognigy AI Agents that can search through your Confluence knowledge base and provide users with context-aware responses. The Confluence Extension provides [Knowledge Connectors](#confluence-knowledge-connectors) and [Flow Nodes](#confluence-flow-nodes).
+Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's, and other guides. By integrating Confluence with Cognigy.AI, you can create Cognigy AI Agents that can search through your Confluence knowledge base and provide users with context-aware responses. The Confluence Extension provides [Extension Nodes](#confluence-flow-nodes) and [Knowledge Connectors](#confluence-knowledge-connectors).
 
 ## Table of Contents
+
+- [Confluence Extension Nodes](#confluence-flow-nodes)
 - [Confluence Knowledge Connectors](#confluence-knowledge-connectors)
-- [Confluence Flow Nodes](#confluence-flow-nodes)
 - [Confluence Connection](#confluence-connection)
 
----
-## Confluence Knowledge Connectors
-
-The Confluence Knowledge Connector allows you to connect to Confluence and retrieve data from its pages or folders. This Knowledge Connector adds Knowledge Sources based on the pages retrieved from Confluence. The Extension transforms Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
-
-### Heading-Based Chunking
-
-Content is automatically divided into Knowledge Chunks based on the heading hierarchy in Confluence. The chunking behavior is the following:
-- **H1, H2**: Start new Knowledge Chunks
-- **H3, H4, H5, H6**: Include in the current Knowledge Chunk
-
-If a Knowledge Chunk exceeds the default max length of 2000 characters, it will be further divided into smaller chunks.
-
-### Supported Confluence Content Types
-
-- Plain and formatted text
-- Tables
-- Bulleted and numbered lists
-- Panels (info, warning, error, success)
-- Expandable sections
-- Task lists
-- Alternative text of images
-
-### Fields
-
-**Connection:**
-Connection field as defined in [Connection](#confluence-connection)
-
-**Confluence URL:**
-URL of the Confluence page or folder to be extracted
-
-**Extract Descendants:**
-When enabled, extracts content from the specified page and all its descendant pages. When disabled, extracts only the specified page content. This setting applies only to individual page URLs. For folder URLs, all pages within the folder are always extracted.
-
-**Source Tags:**
-Sets the tags that you want to associate with each Knowledge Source
-
-**Note:** The connector uses the following MIT-licensed libraries: [`turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
-
----
-
-## Confluence Flow Nodes
+## Confluence Extension Nodes
 
 ### Node: Search
 
@@ -106,9 +66,46 @@ This Node returns all pages within a specific Confluence space. In order to get 
 
  **Please Note** : The response object gives back an array of results. If one or more results have been found, the relevant HTML is also returned. This can be used to render the output in the front-end webchat.
 
----
+## Confluence Knowledge Connectors
 
-# Confluence Connection
+The Confluence Knowledge Connector allows you to connect to Confluence and retrieve data from its pages or folders. This Knowledge Connector adds Knowledge Sources based on the pages retrieved from Confluence. The Extension transforms Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
+
+### Heading-Based Chunking
+
+Content is automatically divided into Knowledge Chunks based on the heading hierarchy in Confluence. The chunking behavior is the following:
+- **H1, H2**: Start new Knowledge Chunks
+- **H3, H4, H5, H6**: Include in the current Knowledge Chunk
+
+If a Knowledge Chunk exceeds the default max length of 2000 characters, it will be further divided into smaller chunks.
+
+### Supported Confluence Content Types
+
+- Plain and formatted text
+- Tables
+- Bulleted and numbered lists
+- Panels (info, warning, error, success)
+- Expandable sections
+- Task lists
+- Alternative text of images
+
+### Fields
+
+**Connection:**
+Connection field as defined in [Connection](#confluence-connection)
+
+**Confluence URL:**
+URL of the Confluence page or folder to be extracted
+
+**Extract Descendants:**
+When enabled, extracts content from the specified page and all its descendant pages. When disabled, extracts only the specified page content. This setting applies only to individual page URLs. For folder URLs, all pages within the folder are always extracted.
+
+**Source Tags:**
+Sets the tags that you want to associate with each Knowledge Source
+
+**Note:** The connector uses the following MIT-licensed libraries: [`turndown`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain)
+
+
+## Confluence Connection
 
 This module needs a CognigySecret to be defined and passed to the Extension Node and/or Knowledge Connector. A CognigySecret can be added to any Cognigy Project and allows for the encryption of sensitive data. The secret must have the following keys:
 - **domain:** The base URL of your Confluence application i.e, https://xyz.atlassian.net. This field is not required for the Knowledge Connectors

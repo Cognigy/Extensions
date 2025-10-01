@@ -13,9 +13,9 @@ This Extension provides two basic Diffbot Knowledge Connectors allow integration
 - [Diffbot Webpage Connector](#diffbot-webpage-connector)
 - [Diffbot Connection](#diffbot-connection)
 
-## Diffbot Crawler
+## Diffbot Crawler Connector
 
-The Diffbot Crawler automatically creates Knowledge Sources by crawling web pages from the root page and process their content using Diffbot services. For more information, see the [Diffbot Crawl API](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also see the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
+The Diffbot Crawler Connector automatically creates Knowledge Sources by crawling web pages from the root page and process their content using Diffbot services. For more information, see the [Diffbot Crawl API](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also see the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
 
 ### Chunking
 
@@ -79,7 +79,7 @@ The Diffbot Webpage Connector automatically creates Knowledge Sources by process
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Connection         | The Connection module as defined in [Connection](#diffbot-connection).                                                                                                                                                                                                      |
 | Web page URL       | Sets the URLs of the web pages to import content from.                                                                                                                                                                                                                      |
-| Extract API Type** | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
+| Extract API Type | Type of Extract API endpoint to call. If the type isn't known, choose **Analyze**. However, selecting **Analyze** may reduce the quality of the content extraction. Available options: Analyze, Product, Article, Event, List, Video, Image, Discussion, FAQ, Organization. |
 | Source Tag         | Sets the Source tags you want to add to the Knowledge Sources.                                                                                                                                                                                                              |
 
 # Diffbot Connection

@@ -20,7 +20,7 @@
     "axios": "^0.21.2",
     "juice": "^7.0.0",
     "moment": "^2.29.2",
-    "nodemailer": "^6.4.16",
+    "nodemailer": "^7.0.7",
     "tslint": "^6.1.2"
   },
   "devDependencies": {

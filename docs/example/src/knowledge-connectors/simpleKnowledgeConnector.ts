@@ -1,110 +1,120 @@
+// @ts-nocheck
+
+import { createHash } from "node:crypto";
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
-import type { ApiKeyConnection } from "../connections/apiKeyConnection";
 
 export const simpleKnowledgeConnector = createKnowledgeConnector({
 	type: "simpleKnowledgeConnector",
-	label: "Simple Knowledge Connector",
+	label: "Knowledge Connector with update concept",
 	summary: "This connector will create a Knowledge Source",
 	fields: [
-		{
-			key: "connection",
-			label: "Connections can be used",
-			type: "connection",
-			params: {
-				connectionType: "api-key",
-				required: false,
-			},
-		},
-		{
-			key: "name",
-			label: "Name of the created knowledge source",
-			type: "text",
-			defaultValue: "Example",
-			params: {
-				required: true,
-			},
-		},
-		{
-			key: "values",
-			label: "Example list of values",
-			type: "textArray",
-			description: "Each value will be added as a chunk",
-			params: {
-				required: true,
-			},
-		},
-		{
-			key: "option",
-			type: "select",
-			label: "Example options",
-			defaultValue: "option1",
-			description: "The selected option will be added as a tag",
-			params: {
-				options: [
-					{
-						label: "Option 1",
-						value: "option1",
-					},
-					{
-						label: "Option 2",
-						value: "option2",
-					},
-				],
-			},
-		},
-		{
-			key: "error",
-			label: "Example error",
-			type: "text",
-			description:
-				"Can be used to demonstrate how errors within Knowledge Connectors are handled",
-			params: {
-				required: false,
-			},
-		},
+    {
+      key: "update",
+      label: "If existing sources should be updated. If disabled a new source will be created.",
+      type: "text",
+      defaultValue: "Example",
+      params: {
+        required: true,
+      },
+    },
 	] as const,
 	function: async ({
-		config: { name, values, option, connection, error },
+    // "update" flag must be defined as a field in the extension to be available via config.
+    // Alternatively, we can define an explicit variable, f.e. { config, api, updateExistingSources }
+		config: { update },
 		api,
 	}) => {
-		// Create an example Knowledge Source and add Knowledge Chunks
-		const knowledgeSource = await api.createKnowledgeSource({
-			name,
-			description: "Example knowledge source",
-			tags: ["example", option],
-			chunkCount: values.length, // This is the total chunk count Knowledge Source expected to have
-		});
-		for (const text of values) {
-			await api.createKnowledgeChunk({
-				knowledgeSourceId: knowledgeSource.knowledgeSourceId,
-				text,
-				data: {
-					// Custom data. Can be used during Knowledge extraction
-					type: "example",
-					connectionUsed: (connection as ApiKeyConnection)?.key ? "yes" : "no",
-				},
-			});
-		}
+    /*
+     This code demonstrates a concept of update existing knowledge sources. A use case is
+     updating the Knowledge base on a scheduled basis or when running a Knowledge Connector
+     multiple times with the same configuration
+     */
+    // define some sources
+    const exampleSources = [
+      "Example Source 1",
+      "Example Source 2",
+      "Example Source 3",
+    ]
 
-		// example of error handling
-		if (error) {
-			const knowledgeSource2 = await api.createKnowledgeSource({
-				name: "Example Knowledge Source that will be deleted",
-				description: "Example error handling during content retrieval",
-				tags: ["example"],
-				chunkCount: 1,
-			});
-			try {
-				// Example of an error during content retrieval
-				throw new Error(error);
-			} catch (e) {
-				// The newly created Knowledge Source is deleted
-				await api.deleteKnowledgeSource({
-					knowledgeSourceId: knowledgeSource2.knowledgeSourceId,
-				});
-				// An unhandled exception thrown during extension execution will be logged
-				throw e;
-			}
-		}
+    // connector logic
+    for (const name of exampleSources) {
+      let knowledgeSourceId: string;
+      let existingKnowledgeSource: KnowledgeSource | null;
+      let createChunks = !update;
+
+      // Define some chunks with random data
+      // First chunk will have either 0 or 1 as a random number
+      const values = [
+        `Chunk with random number: ${Math.floor(Math.random() * 2)}`,
+        `Chunk with no random number`,
+      ]
+      // Calculate example content hash. The update timestamp could also be used
+      const exampleContentHashOrTimestamp = createHash('md5')
+        .update(values.join(""))
+        .digest('hex');
+
+      if (update) {
+        // find the source with the same name
+        existingKnowledgeSource = await api.findKnowledgeSourceByName({
+          name
+        });
+
+        if (existingKnowledgeSource) {
+          // set knowledgeSourceId to the existing source
+          knowledgeSourceId = existingKnowledgeSource.knowledgeSourceId;
+
+          // someHashOrUpdateTimeStamp is a new field for explicit usage, can also be part of metadata
+          if (existingKnowledgeSource.someHashOrUpdateTimeStamp !== exampleContentHashOrTimestamp) {
+            // delete chunks of the existing source
+            await api.deleteKnowledgeChunks({
+              knowledgeSourceId,
+            })
+
+            // we must insert chunks if the existing source is outdated
+            createChunks = true;
+          }
+        } else {
+          // create a new source
+          const knowledgeSource = await api.createKnowledgeSource({
+            name,
+            description: "Example knowledge source",
+            tags: ["example", option],
+            chunkCount: values.length,
+            someHashOrUpdateTimeStamp: exampleContentHashOrTimestamp,
+          });
+          knowledgeSourceId = knowledgeSource.knowledgeSourceId;
+
+          // we must create chunks if no source exists
+          createChunks = true;
+        }
+      } else {
+        // create a new source
+        const knowledgeSource = await api.createKnowledgeSource({
+          name,
+          description: "Example knowledge source",
+          tags: ["example", option],
+          chunkCount: values.length,
+          someHashOrUpdateTimeStamp: exampleContentHashOrTimestamp,
+        });
+        knowledgeSourceId = knowledgeSource.knowledgeSourceId;
+      }
+
+      /*
+       Only run chunk creation logic if
+       */
+      if (createChunks) {
+        // run content retrieving/chunking logic for each source
+        for (const text of values) {
+          await api.createKnowledgeChunk({
+            knowledgeSourceId,
+            text,
+            data: {
+              // Custom data. Can be used during Knowledge extraction
+              type: "example",
+            },
+          });
+        }
+      }
+    }
 	},
 });

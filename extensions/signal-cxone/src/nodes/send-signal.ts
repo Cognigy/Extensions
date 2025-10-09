@@ -193,8 +193,8 @@ export const sendSignalToCXone = createNodeDescriptor({
         { type: "field", key: "action" },
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
-        { type: "section", key: "advanced" },
-        { type: "field", key: "connection" }
+        { type: "field", key: "connection" },
+        { type: "section", key: "advanced" }
     ],
     appearance: {
         color: "#ff9933"

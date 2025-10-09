@@ -129,7 +129,7 @@ export const sendSignalToCXone = createNodeDescriptor({
             description: "The Base URL for the CXone environment (Issuer).",
             condition: { key: "environment", value: "other" },
             params: {
-                required: false
+                required: true
             },
             defaultValue: "https://cxone.niceincontact.com"
         },

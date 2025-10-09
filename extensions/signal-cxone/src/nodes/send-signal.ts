@@ -124,9 +124,9 @@ export const sendSignalToCXone = createNodeDescriptor({
         },
         {
             key: "baseUrl",
-            label: "Base URL",
+            label: "Environment Base URL",
             type: "text",
-            description: "The Base URL for the CXone environment (Issuer).",
+            description: "The Base URL (Issuer) for the CXone environment.",
             condition: { key: "environment", value: "other" },
             params: {
                 required: true

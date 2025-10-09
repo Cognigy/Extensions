@@ -11,9 +11,10 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
         businessNumber: string;
         optionalParams: any;
         connection: {
-            username: string;
-            password: string;
-            basicToken: string;
+            accessKeyId: string;
+            accessKeySecret: string;
+            clientId: string;
+            clientSecret: string;
         };
     };
 }
@@ -202,8 +203,6 @@ export const sendSignalToCXone = createNodeDescriptor({
         const { environment, baseUrl, action, businessNumber, contactId, optionalParams, connection } = config;
         const { api, input, context } = cognigy;
 
-        // api.log("info", `sendSignalToCXone: Got input: ${JSON.stringify(input)}`);
-        // api.log("info", `sendSignalToCXone: Got context: ${JSON.stringify(context)}`);
         api.log("info", `sendSignalToCXone: Contact ID: ${contactId}`);
 
         if (!connection) {
@@ -214,29 +213,21 @@ export const sendSignalToCXone = createNodeDescriptor({
                 throw new Error("sendSignalToCXone: Base URL is required when Environment is set to Other");
             }
         }
-
-        // const basicToken = Buffer.from(`${connection.username}:${connection.password}`).toString('base64');
-
-        // api.log("info", `sendSignalToCXone: username: ${connection.username}`);
-        // api.log("info", `sendSignalToCXone: password: ${connection.password}`);
-        // api.log("info", `sendSignalToCXone: concat: ${connection.username}:${connection.password}`);
-        // api.log("info", `sendSignalToCXone: basicToken: ${basicToken}`);
-
         // get token URL based on environment
         // i.e.: "https://cxone.niceincontact.com/auth/token";
         let tokenIssuer = environment;
         if (environment === "other") {
             tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
         }
-
         const tokenUrl = await getCxoneOpenIdUrl(tokenIssuer);
         api.log("info", `sendSignalToCXone: got token URL: ${tokenUrl}`);
 
+        const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
             tokenUrl: tokenUrl,
-            username: connection.username,
-            password: connection.password,
-            basicToken: connection.basicToken
+            accessKeyId: connection.accessKeyId,
+            accessKeySecret: connection.accessKeySecret,
+            basicToken: basicToken
         };
 
         api.log("info", `sendSignalToCXone: got data from Connection.  basicToken: ${cxOneConfig.basicToken}`);
@@ -252,9 +243,7 @@ export const sendSignalToCXone = createNodeDescriptor({
             const isVoice = channel.toLowerCase().includes('voice');
             api.log("info", `sendSignalToCXone: isVoice: ${isVoice}`);
             if (contactId && isVoice) {
-                const tokens = await getToken(cxOneConfig.basicToken, cxOneConfig.username, cxOneConfig.password, cxOneConfig.tokenUrl);
-                api.log("info", `sendSignalToCXone: got access token: ${tokens.access_token}`);
-
+                const tokens = await getToken(cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
                 api.log("info", `sendSignalToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
 
@@ -264,10 +253,9 @@ export const sendSignalToCXone = createNodeDescriptor({
                 const transcript = input.transcript || context.transcript || '';
                 // Send transcript to TMS if available
                 if (transcript) {
-                    api.log("info", `sendSignalToCXone: got transcript: ${JSON.stringify(transcript)}`);
+                    api.log("info", `sendSignalToCXone: got transcript`);
                     try {
                         const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber);
-                        api.log("info", `sendSignalToCXone: about to post to TMS: ${JSON.stringify(tmsPayload)}`);
                         const tmsStatus = await postToTMS(api, apiEndpointUrl, tokens.access_token, tmsPayload);
                         api.log("info", `sendSignalToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`);
                     } catch (tmsError) {

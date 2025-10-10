@@ -128,14 +128,13 @@ export const sendSignalToCXone = createNodeDescriptor({
                 api.log("info", `sendSignalToCXone: got API endpoint URL: ${apiEndpointUrl}`);
                 const signalStatus = await sendSignal(api, apiEndpointUrl, tokens.access_token, contactId, signalParams || []);
                 api.log("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);
+                api.addToContext("CXoneSendSignal", `CXone was Signaled for contactId: ${contactId}, with parameters: ${JSON.stringify(signalParams)}`, 'simple');
             }
 
             // data for CXone chat channel - to end conversation or escalate to agent
             const data = {
                 Intent: "Signal"
             };
-
-            api.addToContext("CXoneSendSignal", `CXone was Signaled for contactId: ${contactId}, with parameters: ${JSON.stringify(signalParams)}`, 'simple');
             api.output("", data);
         } catch (error) {
             api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);

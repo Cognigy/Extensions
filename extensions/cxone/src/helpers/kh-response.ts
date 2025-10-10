@@ -1,6 +1,8 @@
 interface KnowledgeHubResponse {
     answer: string | null;
     links: string[];
+    images: string[];
+    citations: string[];
     contextRefId: string;
 }
 
@@ -16,7 +18,7 @@ export default function formatKnowledgeHubResponse(knowledheHubResponse: any, ap
         try {
             knowledheHubResponse = JSON.parse(knowledheHubResponse);
         } catch (e) {
-            api.log("error", `getKnowledgeHubInfo -> formatKnowledgeHubResponse: Failed to parse faqResponse: ${e}`);
+            api.log("error", `getKnowledgeHubInfo -> formatKnowledgeHubResponse: Failed to parse knowledheHubResponse: ${e}`);
             knowledheHubResponse = null;
         }
     }

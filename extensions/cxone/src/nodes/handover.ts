@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import * as jwt from "jsonwebtoken";
-import transformConversation from '../helpers/get-tms-payload';
+import transformConversation from '../helpers/tms-payload';
 import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, postToTMS } from "../helpers/cxone-utils";
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
@@ -181,19 +181,18 @@ export const handoverToCXone = createNodeDescriptor({
                     }
                 }
                 const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, []);
-                api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${contactId}; action: ${action}; status: ${signalStatus}`);
+                api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
+                api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }
 
             // data for CXone chat channel - to end conversation or escalate to agent
             const data = {
                 Intent: action
             };
-
-            api.addToContext("CXoneHandover", `Signaled CXone: '${action}' for contactId: ${contactId}`, 'simple');
             api.output("", data);
         } catch (error) {
-            api.log("error", `handoverToCXone: Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`);
-            api.addToContext("CXoneHandover", `Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
+            api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
+            api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');
             api.output("Something is not working. Please retry.", { error: error.message });
             throw error;
         }

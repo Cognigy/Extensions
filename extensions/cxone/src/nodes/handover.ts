@@ -146,7 +146,7 @@ export const handoverToCXone = createNodeDescriptor({
         api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
         // get token URL based on environment
         // i.e.: "https://cxone.niceincontact.com/auth/token";
-        const tokenUrl = await getCxoneOpenIdUrl(tokenIssuer);
+        const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
         api.log("info", `handoverToCXone: got token URL: ${tokenUrl}`);
         const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
@@ -162,11 +162,11 @@ export const handoverToCXone = createNodeDescriptor({
             const isVoice = channel.toLowerCase().includes('voice');
             api.log("info", `handoverToCXone: isVoice: ${isVoice}`);
             if (contactId && spawnedContactId && isVoice) {
-                const tokens = await getToken(cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
+                const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
                 api.log("info", `handoverToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
 
-                const apiEndpointUrl = await getCxoneConfigUrl(decodedToken.iss, decodedToken.tenantId);
+                const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
                 api.log("info", `handoverToCXone: got API endpoint URL: ${apiEndpointUrl}`);
 
                 const transcript = input.transcript || context.transcript || '';
@@ -190,12 +190,12 @@ export const handoverToCXone = createNodeDescriptor({
                 Intent: action
             };
 
-            api.addToContext("CXoneSendSignal", `CXone Signaled '${action}' for contactId: ${contactId}`, 'simple');
+            api.addToContext("CXoneHandover", `Signaled CXone: '${action}' for contactId: ${contactId}`, 'simple');
             api.output("", data);
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`);
-            api.addToContext("CXoneSendSignal", `Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output(`Error signaling '${action}': ${error.message}`, { error: error.message });
+            api.addToContext("CXoneHandover", `Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
+            api.output(`CXoneHandover Error to '${action}': ${error.message}`, { error: error.message });
             throw error;
         }
     }

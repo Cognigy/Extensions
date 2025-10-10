@@ -97,7 +97,7 @@ export const sendSignalToCXone = createNodeDescriptor({
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
         const { environment, baseUrl, contactId, signalParams, connection } = config;
-        const { api, input } = cognigy;
+        const { api, input, context } = cognigy;
         let tokenIssuer = environment;
         if (environment === "other") {
             tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
@@ -105,7 +105,7 @@ export const sendSignalToCXone = createNodeDescriptor({
 
         api.log("info", `sendSignalToCXone: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
         // get token URL based on environment
-        const tokenUrl = await getCxoneOpenIdUrl(tokenIssuer);
+        const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
         api.log("info", `sendSignalToCXone: got token URL: ${tokenUrl}`);
         const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
@@ -121,10 +121,10 @@ export const sendSignalToCXone = createNodeDescriptor({
             const isVoice = channel.toLowerCase().includes('voice');
             api.log("info", `sendSignalToCXone: isVoice: ${isVoice}`);
             if (contactId && isVoice) {
-                const tokens = await getToken(cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
+                const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
                 api.log("info", `sendSignalToCXone: decoded id token: ${JSON.stringify(decodedToken)}`);
-                const apiEndpointUrl = await getCxoneConfigUrl(decodedToken.iss, decodedToken.tenantId);
+                const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
                 api.log("info", `sendSignalToCXone: got API endpoint URL: ${apiEndpointUrl}`);
                 const signalStatus = await sendSignal(api, apiEndpointUrl, tokens.access_token, contactId, signalParams || []);
                 api.log("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);

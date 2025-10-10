@@ -196,7 +196,7 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
 
         api.log("info", `getKnowledgeHubInfo: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
         // get token URL based on environment
-        const tokenUrl = await getCxoneOpenIdUrl(tokenIssuer);
+        const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
         api.log("info", `getKnowledgeHubInfo: got token URL: ${tokenUrl}`);
         const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
@@ -214,11 +214,11 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
 
             const channel = input?.channel || '';
             api.log("info", `getKnowledgeHubInfo: Interaction channel: ${channel}`);
-            const tokens = await getToken(cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
+            const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
             const decodedToken: any = jwt.decode(tokens.id_token);
             api.log("info", `getKnowledgeHubInfo: decoded id token: ${JSON.stringify(decodedToken)}`);
 
-            const apiEndpointUrl = await getCxoneConfigUrl(decodedToken.iss, decodedToken.tenantId);
+            const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
             api.log("info", `getKnowledgeHubInfo: got API endpoint URL: ${apiEndpointUrl}`);
 
             // Set contextRefId before call to KH

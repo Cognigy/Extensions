@@ -119,7 +119,7 @@ export const handoverToCXone = createNodeDescriptor({
         { type: "field", key: "connection" }
     ],
     appearance: {
-        color: "#ff9933"
+        color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
         const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection } = config;
@@ -194,7 +194,7 @@ export const handoverToCXone = createNodeDescriptor({
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`);
             api.addToContext("CXoneHandover", `Error signaling '${action}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output(`CXoneHandover Error to '${action}': ${error.message}`, { error: error.message });
+            api.output("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

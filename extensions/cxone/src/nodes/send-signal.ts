@@ -93,7 +93,7 @@ export const sendSignalToCXone = createNodeDescriptor({
         { type: "field", key: "signalParams" }
     ],
     appearance: {
-        color: "#B22222"
+        color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
         const { environment, baseUrl, contactId, signalParams, connection } = config;
@@ -140,7 +140,7 @@ export const sendSignalToCXone = createNodeDescriptor({
         } catch (error) {
             api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);
             api.addToContext("CXoneSendSignal", `Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output(`Error signaling '${JSON.stringify(signalParams)}': ${error.message}`, { error: error.message });
+            api.output("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

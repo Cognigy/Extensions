@@ -174,7 +174,7 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
         { type: "field", key: "storeKey" }
     ],
     appearance: {
-        color: "#0cd10c"
+        color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetKnowledgeHubParams) => {
         const { environment, baseUrl, contactId, bedrockKbId, businessNumber, userUtterance, filters, storeKey, storeLocation, connection } = config;
@@ -241,7 +241,7 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
         } catch (error) {
             api.log("error", `getKnowledgeHubInfo: Error getting information from Knowledge Hub: ${error.message}`);
             api.addToContext("getKnowledgeHubInfo", `Error getting information from Knowledge Hub for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output(`Error Getting Answer From Knowledge Hub: ${error.message}`, { error: error.message });
+            api.output("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

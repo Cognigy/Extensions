@@ -164,8 +164,7 @@ export const handoverToCXone = createNodeDescriptor({
             if (contactId && spawnedContactId && isVoice) {
                 const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
-                api.log("info", `handoverToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
-
+                // api.log("info", `handoverToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
                 const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
                 api.log("info", `handoverToCXone: got API endpoint URL: ${apiEndpointUrl}`);
 

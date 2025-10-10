@@ -17,8 +17,8 @@ export const setNiCEviewContext = createNodeDescriptor({
     function: async ({ cognigy }: INodeFunctionBaseParams) => {
         const { api, input, context } = cognigy;
 
-        api.log("info", `SetNiCEviewContext: Got input: ${JSON.stringify(input)}`);
-        api.log("info", `SetNiCEviewContext: Got context: ${JSON.stringify(context)}`);
+        // api.log("info", `SetNiCEviewContext: Got input: ${JSON.stringify(input)}`);
+        // api.log("info", `SetNiCEviewContext: Got context: ${JSON.stringify(context)}`);
 
         try {
             const channel = input?.channel || '';

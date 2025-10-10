@@ -1,7 +1,7 @@
 {
-  "name": "signal-cxone",
-  "version": "1.0.5",
-  "description": "Send signal to CXone to escalate to an agent or end the conversation",
+  "name": "cxone",
+  "version": "1.0.0",
+  "description": "CXone Extension to interact with NiCE CXone platform",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

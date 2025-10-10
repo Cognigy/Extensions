@@ -2,7 +2,7 @@ import { IConnectionSchema } from "@cognigy/extension-tools";
 
 export const cxOneApiKeyData: IConnectionSchema = {
 	type: "cxoneConnection",
-	label: "CXone Api Connection",
+	label: "CXone Connection",
 	fields: [
 		{ fieldName: "accessKeyId" },
         { fieldName: "accessKeySecret" },

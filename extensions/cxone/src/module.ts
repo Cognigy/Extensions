@@ -9,8 +9,8 @@ export default createExtension({
 	nodes: [
 		handoverToCXone,
 		sendSignalToCXone,
-		setNiCEviewContext,
-		getKnowledgeHubInfo
+		getKnowledgeHubInfo,
+		setNiCEviewContext
 	],
 	connections: [
 		cxOneApiKeyData

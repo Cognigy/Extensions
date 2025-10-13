@@ -23,7 +23,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
 export const handoverToCXone = createNodeDescriptor({
     type: "handoverToCXone",
     defaultLabel: "CXone Handover",
-    summary: "Handover control to CXone",
+    summary: "Handover control to CXone. Send transcript to TMS.",
     preview: {
         key: "action",
         type: "text"

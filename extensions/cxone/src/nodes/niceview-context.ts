@@ -4,10 +4,6 @@ export const setNiCEviewContext = createNodeDescriptor({
     type: "setNiCEviewContext",
     defaultLabel: "NiCEview Context",
     summary: "Set NiCEview demo settings in Cognigy Context for Chat and Voice",
-    preview: {
-        key: "action",
-        type: "text"
-    },
     fields: [],
     sections: [],
     form: [],

@@ -1,55 +1,58 @@
-# CXone Handover
+# CXone Extensions 🚀
 
-This node allows you to send **End** or **Escalate** signals to the **CXone API** to either end a conversation or escalate it to a live agent.  
+This collection of Cognigy nodes integrates with **CXone** and **NiCEview**, enabling conversation escalation, knowledge retrieval, and context management for voice and chat flows.
 
-It handles authentication by retrieving a **CXone bearer token** using your connection credentials, then performing the specified action via the **CXone API**.  
+---
 
-For **voice interactions**, it can also post the conversation transcript to the **Transcript Management System (TMS)** if the **"Get Transcript"** node is placed above this extension in the flow.
+## CXone Handover ✋
 
-## Features
+The **CXone Handover** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
 
-- **Send signals to CXone API** to:
+It handles authentication by retrieving a **CXone bearer token** using your connection credentials, then performs the specified action via the CXone API.
+
+For **voice interactions**, it can also post the conversation transcript to the **Transcript Management System (TMS)** if the **"Get Transcript"** node is placed above this node in the flow.
+
+### 🧩 Features
+
+- **Send signals to CXone API**:
   - Escalate a conversation to a live agent
   - End a conversation
 - **Post voice conversation transcripts** to **TMS**
 - **Studio integration**:
   - **Voice:** OnSignal Studio receives `"Escalate"` or `"End"` signals
   - **Chat:** Studio determines the action based on returned data
-- **Return data** to Studio:  
-
-```json
-{"Intent":"Escalate"} or {"Intent":"End"}
-```
+- **Return data** to Studio: `{"Intent":"Escalate"}` or `{"Intent":"End"}`
 
 ---
 
-# CXone Signal
+## CXone Signal ⚡
 
-This node allows you to send signals to the **CXone API** using parameters of your choice.  
+The **CXone Signal** node allows you to send custom signals to the **CXone API** using parameters of your choice.
 
-The extension handles authentication by obtaining a **CXone bearer token** using your connection credentials, then sends a signal request to the **CXone API** with the specified parameter values.  
+### 🧩 Features
 
-Parameters are automatically named as `p1`, `p2`, `p3`, and so on, based on their order in the configuration.
-
-
----
-
-# Knowledge Hub
-
-This node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input. It supports storing the response in either **context** or **input**, preserves conversational context, and includes relevant links, citations, and images from the Knowledge Hub.
-
-## Features
-
-- **Query CXone Knowledge Hub** with user utterances.
-- **Maintain conversational context** using `contextRefId`.
-- **Store Knowledge Hub responses** in Cognigy context or input.
-- **Return both textual answers and associated links, citations, images** from the Knowledge Hub.
+- Handles authentication by obtaining a **CXone bearer token** via your connection credentials
+- Sends a signal request to the CXone API with the configured parameters
+- Parameters are automatically named `p1`, `p2`, `p3`, etc., according to their order in the configuration
 
 ---
 
-## NiCEview Context
+## Knowledge Hub 📚
 
-This node sets **NiCEview** parameters in Context for all channels.  
-The data is stored in `context.data`.
+The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input.
+
+### 🧩 Features
+
+- Query CXone Knowledge Hub with user utterances
+- Maintain conversational context using `context.contextRefId` property
+- Store Knowledge Hub responses in **context** or **input**
+- Return textual answers along with associated **links, citations, and images**
+
+---
+
+## NiCEview Context 🖥️
+
+The **NiCEview Context** node sets **NiCEview parameters** in Cognigy context for all channels.  
+The data is stored in: `context.data`.
 
 ---

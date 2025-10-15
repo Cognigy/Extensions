@@ -1,5 +1,7 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
 
 /**
  * This file contains a more advanced example as it will also use
@@ -7,7 +9,8 @@ import axios from 'axios';
  * build a flow-node which uses an external packages (node-fetch).
  */
 
-export interface IExecuteCognigyApiRequestParams extends INodeFunctionBaseParams {
+export interface IExecuteCognigyApiRequestParams
+	extends INodeFunctionBaseParams {
 	config: {
 		path: string;
 		connection: {
@@ -26,38 +29,40 @@ export const executeCognigyApiRequest = createNodeDescriptor({
 			label: "The api-key connection which should be used.",
 			type: "connection",
 			params: {
-				connectionType: "api-key" // this needs to match the connections 'type' property
-			}
+				connectionType: "api-key", // this needs to match the connections 'type' property
+			},
 		},
 		{
 			key: "path",
 			label: "The API path to call. Full path required.",
 			type: "cognigyText",
-			defaultValue: "https://swapi.dev/api/people/1"
-		}
+			defaultValue: "https://swapi.dev/api/people/1",
+		},
 	],
 
 	function: async ({ cognigy, config }: IExecuteCognigyApiRequestParams) => {
 		const { api, context } = cognigy;
 		const { path, connection } = config;
 
-		let response, rawResponse: Response;
-
 		try {
-			rawResponse = await axios.get(path);
-			response = rawResponse.body;
+			const res = await fetch(path);
 
 			/* write response into 'context' object */
-			context.apiResponse = response;
+			context.apiResponse = await res.text();
 
 			// confirm
-			api.output("The response of your API call is stored in the Context object");
+			api.output(
+				"The response of your API call is stored in the Context object",
+			);
 
 			/* output the connection that was used in this execution */
-			api.output(`We could've used the following connection, but we didn't: `, connection);
+			api.output(
+				`We could've used the following connection, but we didn't: `,
+				connection,
+			);
 		} catch (err) {
 			// /* communicate the error in the interaction panel */
 			api.output(`Your response failed. Error was: ${err}`);
 		}
-	}
+	},
 });

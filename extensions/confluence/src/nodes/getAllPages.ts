@@ -1,5 +1,8 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
+import {
+	createNodeDescriptor,
+	type INodeFunctionBaseParams,
+} from "@cognigy/extension-tools";
+import { fetchData } from "../knowledge-connectors/helper/utils";
 
 export interface IGetAllPagesParams extends INodeFunctionBaseParams {
 	config: {
@@ -29,7 +32,7 @@ export const getAllPagesNode = createNodeDescriptor({
 	defaultLabel: "Get All Pages",
 	preview: {
 		key: "space",
-		type: "text"
+		type: "text",
 	},
 	fields: [
 		{
@@ -38,8 +41,8 @@ export const getAllPagesNode = createNodeDescriptor({
 			type: "connection",
 			params: {
 				connectionType: "confluence",
-				required: true
-			}
+				required: true,
+			},
 		},
 		{
 			key: "space",
@@ -48,7 +51,7 @@ export const getAllPagesNode = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true,
-			}
+			},
 		},
 		{
 			key: "storeLocation",
@@ -59,14 +62,14 @@ export const getAllPagesNode = createNodeDescriptor({
 				options: [
 					{
 						label: "Input",
-						value: "input"
+						value: "input",
 					},
 					{
 						label: "Context",
-						value: "context"
-					}
+						value: "context",
+					},
 				],
-				required: true
+				required: true,
 			},
 		},
 		{
@@ -77,7 +80,7 @@ export const getAllPagesNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "input",
-			}
+			},
 		},
 		{
 			key: "contextKey",
@@ -87,7 +90,7 @@ export const getAllPagesNode = createNodeDescriptor({
 			condition: {
 				key: "storeLocation",
 				value: "context",
-			}
+			},
 		},
 	],
 	sections: [
@@ -95,12 +98,8 @@ export const getAllPagesNode = createNodeDescriptor({
 			key: "storage",
 			label: "Storage Option",
 			defaultCollapsed: true,
-			fields: [
-				"storeLocation",
-				"inputKey",
-				"contextKey",
-			]
-		}
+			fields: ["storeLocation", "inputKey", "contextKey"],
+		},
 	],
 	form: [
 		{ type: "field", key: "connection" },
@@ -108,7 +107,7 @@ export const getAllPagesNode = createNodeDescriptor({
 		{ type: "section", key: "storage" },
 	],
 	appearance: {
-		color: "#0052CC"
+		color: "#0052CC",
 	},
 	function: async ({ cognigy, config }: IGetAllPagesParams) => {
 		const { api } = cognigy;
@@ -116,44 +115,35 @@ export const getAllPagesNode = createNodeDescriptor({
 		const { domain, email, key } = connection;
 
 		try {
-			const response = await axios({
-				method: 'get',
-				url: `${domain}/wiki/rest/api/content?type=page&&spacekey=${space}start=0&limit=99999&expand=body.storage`,
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				auth: {
-					username: email,
-					password: key
-				}
-			});
+			const response = await fetchData(
+				`${domain}/wiki/rest/api/content?type=page&spacekey=${space}&start=0&limit=99999&expand=body.storage`,
+				{ username: email, password: key },
+			);
 
 			// Clean up the result
-			let results: IResultPage[] = [];
-			response.data.results.forEach((page: any, index: number) => {
+			const results: IResultPage[] = [];
+			response.results.forEach((page: any) => {
 				results.push({
 					id: page.id,
 					type: page.type,
 					status: page.status,
 					title: page.title,
 					webLink: `${domain}/wiki/spaces/${space}/pages/${page.id}`,
-					htmlBody: page.body.storage.value
+					htmlBody: page.body.storage.value,
 				});
 			});
 
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, results, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, results);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, error.message, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
 		}
-	}
+	},
 });

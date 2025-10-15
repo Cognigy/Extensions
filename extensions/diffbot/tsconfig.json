@@ -9,8 +9,10 @@
     "outDir": "build",
     "sourceMap": true,
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "noImplicitAny": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

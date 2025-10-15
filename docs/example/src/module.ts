@@ -1,13 +1,17 @@
 import { createExtension } from "@cognigy/extension-tools";
-
-/* import all nodes */
-import { reverseSay } from "./nodes/reverseSay";
-import { executeCognigyApiRequest } from "./nodes/executeCognigyApiRequest";
-import { randomPath, randomPathLeft, randomPathRight } from "./nodes/randomPath";
-import { fullExample } from "./nodes/fullExample";
-
-/* import all connections */
+/* import Connections */
 import { apiKeyConnection } from "./connections/apiKeyConnection";
+/* import Knowledge Connectors */
+import { simpleKnowledgeConnector } from "./knowledge-connectors/simpleKnowledgeConnector";
+/* import Nodes */
+import { executeCognigyApiRequest } from "./nodes/executeCognigyApiRequest";
+import { fullExample } from "./nodes/fullExample";
+import {
+	randomPath,
+	randomPathLeft,
+	randomPathRight,
+} from "./nodes/randomPath";
+import { reverseSay } from "./nodes/reverseSay";
 
 export default createExtension({
 	nodes: [
@@ -17,10 +21,8 @@ export default createExtension({
 		randomPath,
 		randomPathLeft,
 		randomPathRight,
-		fullExample
+		fullExample,
 	],
-
-	connections: [
-		apiKeyConnection
-	]
+	connections: [apiKeyConnection],
+	knowledge: [simpleKnowledgeConnector],
 });

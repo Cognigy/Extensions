@@ -1,11 +1,14 @@
 
 # Diffbot
 
-This Extension provides two basic Diffbot Knowledge Connectors allow integration between Cognigy.AI and Diffbot:
+> [!WARNING]
+> The DiffBot Extension requires a [DiffBot subscription](https://www.diffbot.com/pricing/). All processing and functionality take place on the DiffBot platform, and NiCE Cognigy doesn't host or manage the data. Make sure your DiffBot subscription is active to use this Extension.
+
+This Extension provides two basic Diffbot Knowledge Connectors to allow integration between Cognigy.AI and Diffbot:
 
 - The Diffbot Crawler Connector crawls through web pages and creates Knowledge Sources with Knowledge Chunks.
 
-- The Diffbot Webpage Connector accepts web page URL and generates Knowledge Sources directly.
+- The Diffbot Webpage Connector accepts a web page URL and generates Knowledge Sources directly.
 
 
 ## Table of Contents
@@ -32,7 +35,7 @@ The Diffbot Crawler Connector automatically creates Knowledge Sources by crawlin
 
 ### Chunking
 
-The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks that are presented in Cognigy.AI as Knowledge Chunks. Each Knowledge Chunk is prefixed with the page title, content type, and URL for web page.
+The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks that are presented in Cognigy.AI as Knowledge Chunks. Each Knowledge Chunk is prefixed with the page title, content type, and the web page URL.
 
 ### Fields
 
@@ -56,7 +59,7 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 | Max to Crawl               | Sets the maximum number of pages to crawl. The default value is `100000`.                                                 |
 | Max to Crawl Per Subdomain | Sets the maximum number of pages to crawl per subdomain. The default limit is `-1`, which corresponds to unlimited pages. |
 | Max Hops                   | Sets the maximum number of hops away from the seed URL. The default value is `-1`, which corresponds to unlimited hops.   |
-| Crawl Delay                | Sets the time in seconds to wait between requests to the same server. The default valie is `0.25`.                        |
+| Crawl Delay                | Sets the time in seconds to wait between requests to the same server. The default value is `0.25`.                        |
 | Obey Robots                | Selects whether to obey `robots.txt` rules of the website. The default value is `true`.                                   |
 | Restrict Domain            | Limits crawling to seed domains, for example, `https://www.cognigy.com`. The default value is `true`.                     |
 | Restrict Subdomain         | Limits crawling to seed subdomains. The default value is `false`.                                                         |
@@ -97,10 +100,11 @@ The Diffbot Webpage Connector automatically creates Knowledge Sources by process
 
 # Diffbot Connection
 
-This module requires a CognigySecret to be defined and passed to the Knowledge Connector. You can add a CognigySecret to any Cognigy Project to allow for the encryption of sensitive data. The secret must have the following keys:
+This module requires a CognigySecret to be defined and passed to the Knowledge Connector. You can add a CognigySecret to any Cognigy Project to encrypt sensitive data. The secret must have the following keys:
 
 - **accessToken:** Access token to access the Diffbot API
 
 ---
 
 **Note:** This Knowledge Connector uses the following MIT-licensed libraries: [`json-to-plain-text`](https://www.npmjs.com/package/turndown), [`langchain`](https://www.npmjs.com/package/langchain), [`flattie`](https://www.npmjs.com/package/flattie), [`fetch-retry`](https://www.npmjs.com/package/fetch-retry)
+

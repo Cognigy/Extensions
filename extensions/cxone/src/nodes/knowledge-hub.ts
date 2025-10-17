@@ -46,7 +46,7 @@ const getKnowledgeHubAnswer = async (api: any, apiEndpointUrl: string, token: st
 
 export const getKnowledgeHubInfo = createNodeDescriptor({
     type: "getKnowledgeHubInfo",
-    defaultLabel: "Knowledge Hub",
+    defaultLabel: "Query Knowledge Hub",
     summary: "Retrieve information from the Knowledge Hub",
     preview: {
         key: "storeKey",

@@ -11,6 +11,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
         contactId: string;
         spawnedContactId: string;
         businessNumber: string;
+        optionalParams: any;
         connection: {
             accessKeyId: string;
             accessKeySecret: string;
@@ -22,8 +23,8 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
 
 export const handoverToCXone = createNodeDescriptor({
     type: "handoverToCXone",
-    defaultLabel: "CXone Handover",
-    summary: "Handover control to CXone. Send transcript to TMS.",
+    defaultLabel: "Complete Interaction",
+    summary: "Return control to CXone. Send transcript to TMS.",
     preview: {
         key: "action",
         type: "text"
@@ -106,9 +107,28 @@ export const handoverToCXone = createNodeDescriptor({
             params: {
                 required: true
             }
+        },
+        {
+            key: "optionalParams",
+            label: "Optional Parameters",
+            type: "json",
+            defaultValue: "[]",
+            description: "Optional additional parameters to include in the signal. Provide them as an array of strings.",
+            params: {
+                required: false
+            }
         }
     ],
-    sections: [],
+    sections: [
+        {
+            key: "advanced",
+            label: "Advanced",
+            defaultCollapsed: true,
+            fields: [
+                "optionalParams"
+            ],
+        }
+    ],
     form: [
         { type: "field", key: "environment" },
         { type: "field", key: "baseUrl" },
@@ -116,13 +136,14 @@ export const handoverToCXone = createNodeDescriptor({
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
         { type: "field", key: "spawnedContactId" },
-        { type: "field", key: "connection" }
+        { type: "field", key: "connection" },
+        { type: "section", key: "advanced" }
     ],
     appearance: {
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection } = config;
+        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParams } = config;
         const { api, input, context } = cognigy;
 
         if (!connection) {
@@ -180,7 +201,7 @@ export const handoverToCXone = createNodeDescriptor({
                         api.log("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
                     }
                 }
-                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, []);
+                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, optionalParams || []);
                 api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
                 api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }

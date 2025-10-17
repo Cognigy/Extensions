@@ -1,7 +1,7 @@
 {
-  "name": "cxone",
+  "name": "niceview",
   "version": "1.0.1",
-  "description": "CXone Extension to interact with NiCE CXone platform",
+  "description": "NiCEview extension for applying NiCEview demo settings in your Cognigy flows",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -10,16 +10,9 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "CXone",
-    "Transfer to Agent",
-    "Escalate to Agent",
-    "End Conversation",
-    "Cmplete Interaction",
-    "Signal CXone",
-    "Signal Interaction",
-    "CXone Knowledge Hub",
-    "Knowledge Hub",
-    "Query Knowledge Hub"
+    "NiCEview",
+    "NiCEview Context",
+    "NiCEview Settings"
   ],
   "author": "NiCE Alexei",
   "license": "NiCE",

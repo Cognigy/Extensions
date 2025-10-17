@@ -1,12 +1,12 @@
 # CXone Extensions 🚀
 
-This collection of Cognigy nodes integrates with **CXone** and **NiCEview**, enabling conversation escalation, knowledge retrieval, and context management for voice and chat flows.
+This collection of Cognigy nodes integrates with **CXone**, enabling conversation escalation, knowledge retrieval, and context management for voice and chat in your Cognigy flows.
 
 ---
 
-## CXone Handover ✋
+## Complete Interaction ✋
 
-The **CXone Handover** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
+The **Complete Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
 
 It handles authentication by retrieving a **CXone bearer token** using your connection credentials, then performs the specified action via the CXone API.
 
@@ -14,10 +14,10 @@ For **voice interactions**, it can also post the conversation transcript to the 
 
 ### 🧩 Features
 
+- **Post voice conversation transcripts** to **TMS**
 - **Send signals to CXone API**:
   - Escalate a conversation to a live agent
   - End a conversation
-- **Post voice conversation transcripts** to **TMS**
 - **Studio integration**:
   - **Voice:** OnSignal Studio receives `"Escalate"` or `"End"` signals
   - **Chat:** Studio determines the action based on returned data
@@ -25,9 +25,9 @@ For **voice interactions**, it can also post the conversation transcript to the 
 
 ---
 
-## CXone Signal ⚡
+## Signal Interaction ⚡
 
-The **CXone Signal** node allows you to send custom signals to the **CXone API** using parameters of your choice.
+The **Signal Interaction** node allows you to send custom signals to the **CXone API** using parameters of your choice.
 
 ### 🧩 Features
 
@@ -37,9 +37,9 @@ The **CXone Signal** node allows you to send custom signals to the **CXone API**
 
 ---
 
-## Knowledge Hub 📚
+## Query Knowledge Hub 📚
 
-The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input.
+The **Query Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input.
 
 ### 🧩 Features
 
@@ -47,12 +47,5 @@ The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in re
 - Maintain conversational context using `context.contextRefId` property
 - Store Knowledge Hub responses in **context** or **input**
 - Return textual answers along with associated **links, citations, and images**
-
----
-
-## NiCEview Context 🖥️
-
-The **NiCEview Context** node sets **NiCEview parameters** in Cognigy context for all channels.  
-The data is stored in: `context.data`.
 
 ---

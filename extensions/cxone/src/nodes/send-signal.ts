@@ -19,7 +19,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
 
 export const sendSignalToCXone = createNodeDescriptor({
     type: "sendCxoneSignal",
-    defaultLabel: "CXone Signal",
+    defaultLabel: "Signal Interaction",
     summary: "Signals CXone",
     preview: {
         key: "action",

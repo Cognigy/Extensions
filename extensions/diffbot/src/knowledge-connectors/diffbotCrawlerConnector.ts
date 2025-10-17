@@ -6,7 +6,8 @@ import { processQueryString } from "./helper/utils";
 export const diffbotCrawlerConnector = createKnowledgeConnector({
 	type: "diffbotCrawlerConnector",
 	label: "Diffbot Crawler",
-	summary: "This will import web pages contents using Diffbot's Crawler APIs",
+	summary:
+		'Extract content from websites using the Diffbot Crawler API to create Knowledge Chunks. A Diffbot "Plus" or "Enterprise" subscription is required.',
 	fields: [
 		// Basic Settings
 		{

@@ -1,6 +1,6 @@
 {
     "name": "confluence",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "description": "Integrates with the Atlassian's Confluence.",
     "main": "build/module.js",
     "scripts": {
@@ -29,7 +29,7 @@
         "typescript": "5.9.2"
     },
     "dependencies": {
-        "@cognigy/extension-tools": "0.16.5-rc5",
+        "@cognigy/extension-tools": "^0.16.6",
         "@langchain/textsplitters": "^0.0.3",
         "turndown": "^7.1.2"
     }

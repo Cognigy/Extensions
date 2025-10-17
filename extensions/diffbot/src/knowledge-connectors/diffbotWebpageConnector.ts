@@ -5,7 +5,8 @@ import { fetchWithRetry } from "./helper/utils";
 export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
 	label: "Diffbot Webpage",
-	summary: "This will import web page contents using Diffbot's Extract APIs.",
+	summary:
+		"Extract content from a web page or multiple web pages using the Diffbot Extract API to create Knowledge Chunks. A Diffbot subscription is required.",
 	fields: [
 		{
 			key: "connection",

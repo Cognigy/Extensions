@@ -1,7 +1,7 @@
 {
   "name": "diffbot",
-  "version": "1.0.0",
-  "description": "DiffBot Extensions",
+  "version": "1.0.1",
+  "description": "Integrates with the Diffbot API",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -18,7 +18,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "0.16.5-rc5",
+    "@cognigy/extension-tools": "^0.16.6",
     "fetch-retry": "6.0.0",
     "flattie": "1.1.1",
     "json-to-plain-text": "1.2.0",

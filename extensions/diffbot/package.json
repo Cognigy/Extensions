@@ -1,7 +1,7 @@
 {
   "name": "diffbot",
   "version": "1.0.0",
-  "description": "DiffBot Extensions",
+  "description": "Integrates with the Diffbot API",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

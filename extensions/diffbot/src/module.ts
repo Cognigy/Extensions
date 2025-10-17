@@ -8,6 +8,6 @@ export default createExtension({
 	nodes: [],
 	knowledge: [diffbotCrawlerConnector, diffbotWebpageConnector],
 	options: {
-		label: "Diffbot Extension",
+		label: "Diffbot",
 	},
 });

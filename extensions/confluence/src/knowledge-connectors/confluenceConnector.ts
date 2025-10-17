@@ -4,7 +4,7 @@ import { type auth, getPageChunks, getPages } from "./helper/utils";
 export const confluenceConnector = createKnowledgeConnector({
 	type: "confluenceConnector",
 	label: "Confluence",
-	summary: "Extract text from Confluence pages and creates Knowledge Chunks",
+	summary: "Creates Knowledge Sources based on extracted information from Confluence.",
 	fields: [
 		{
 			key: "connection",

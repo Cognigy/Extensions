@@ -4,8 +4,8 @@ Enable phone bots with VIER Cognitive Voice Gateway (CVG) and integration in var
 
 This extension needs
 
--   an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
--   a link between the project in CVG and the endpoint in Cognigy to be set up in CVG.
+- an account at VIER Cognitive Voice Gateway (in case you need an account please contact support@vier.ai)
+- a link between the project in CVG and the endpoint in Cognigy to be set up in CVG.
 
 See https://cognitivevoice.io/docs/conversational-ai/conversational-ai-cognigy.html for further information.
 
@@ -126,12 +126,12 @@ Please note that [CVG sends events to Cognigy](https://cognitivevoice.io/docs/co
 
 Note the following requirements and limitations:
 
--   The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
--   The audio file must be a valid wav file (waveform audio file format).
--   The file format must be one of the following:
--   Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
--   A-law with a sample rate of 8000 Hz
--   µ-law with a sample rate of 8000 Hz
+- The audio file must be hosted at an Internet-accessible HTTP(S) endpoint. In case of HTTPS the server hosting the audio file must present a valid, trusted SSL certificate. Self-signed certificates cannot be used.
+- The audio file must be a valid wav file (waveform audio file format).
+- The file format must be one of the following:
+- Linear PCM with signed 16 bits per sample, with a sample rate of 8000 Hz or 16000 Hz
+- A-law with a sample rate of 8000 Hz
+- µ-law with a sample rate of 8000 Hz
 
 The audio file is subject to caching, which means repeated use of the same URL _might_ not lead to repeated requests to the audio file. These standard caching headers will be respected/sent: `Cache-Control`, `Expires`, `Last-Modified` and `ETag`. Note that caching is not guaranteed to happen and the systems delivering the audio files should be prepared to handle the load for each individual play operation being made.
 

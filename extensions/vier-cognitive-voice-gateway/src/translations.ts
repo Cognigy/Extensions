@@ -454,6 +454,12 @@ export default {
             'default': "Destination",
             'deDE': "Ziel",
         },
+        inputEnableAssistDescription: {
+            'default': "Whether the dialog will be able to use the assist functionality.",
+        },
+        inputEnableAssistLabel: {
+            'default': "Enable Assist",
+        },
         inputEndFlowDescription: {
             'default': "To stop the flow after executing this node, activate this setting.",
             'deDE': "Um den Flow nach der Ausführung dieses Knotens zu stoppen, aktivieren Sie diese Einstellung.",

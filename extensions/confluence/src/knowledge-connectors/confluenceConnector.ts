@@ -5,7 +5,7 @@ export const confluenceConnector = createKnowledgeConnector({
 	type: "confluenceConnector",
 	label: "Confluence",
 	summary:
-		"Creates Knowledge Sources based on extracted information from Confluence.",
+		"Creates Knowledge Sources based on information extracted from Confluence.",
 	fields: [
 		{
 			key: "connection",

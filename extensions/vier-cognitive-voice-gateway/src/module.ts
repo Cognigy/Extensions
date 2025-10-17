@@ -1,7 +1,6 @@
 import { createExtension } from "@cognigy/extension-tools/build"
 import { terminateCallNode } from "./nodes/terminateCall"
 import { forwardCallNode } from "./nodes/forwardCall"
-import { bridgeCallNode } from "./nodes/bridgeCall"
 import { playNode } from "./nodes/play"
 import { stopPlayNode } from "./nodes/stopPlay"
 import { recordingStartNode } from "./nodes/recordingStart"
@@ -40,7 +39,6 @@ export default createExtension({
         stopPlayNode,
         sendDataNode,
         forwardCallNode,
-        bridgeCallNode,
         referCallNode,
         terminateCallNode,
         speakNode,

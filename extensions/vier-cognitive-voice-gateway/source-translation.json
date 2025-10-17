@@ -33,14 +33,6 @@
         "sectionAdditionalDataLabel": "Data",
         "sectionAdditionalSettingsLabel": "Additional Settings"
     },
-    "bridge": {
-        "nodeLabel": "Bridge Call",
-        "nodeSummary": "Bridge the call to a different destination for agent assistance",
-        "inputHeadNumberLabel": "Head Number",
-        "inputHeadNumberDescription": "The phone number prefix to bridge to",
-        "inputExtensionLengthLabel": "Extension Length",
-        "inputExtensionLengthDescription": "The range of extensions to choose a number from"
-    },
     "refer": {
         "nodeLabel": "Refer Call",
         "nodeSummary": "Transfer the call to a different destination using SIP REFER"

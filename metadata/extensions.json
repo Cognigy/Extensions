@@ -319,8 +319,8 @@
     {
       "name": "confluence",
       "label": "Confluence",
-      "version": "5.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/confluence500/confluence.tar.gz",
+      "version": "5.0.1",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/confluence501/confluence.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/confluence",
       "description": "Integrates with the Atlassian's Confluence.",
       "longDescription": "Confluence is a popular collaboration tool that allows teams to work together by writing knowledge articles, how-to's and other guides. By using Confluence in conjunction with Cognigy.AI, it is possible to create intelligent bots that can search through your Confluence knowledge base and give detailed instructions.",
@@ -344,7 +344,7 @@
         {
           "type": "confluenceConnector",
           "label": "Confluence",
-          "summary": "Extract text from Confluence pages and creates Knowledge Chunks"
+          "summary": "Creates Knowledge Sources based on information extracted from Confluence."
         }
       ]
     },
@@ -394,11 +394,11 @@
     },
     {
       "name": "diffbot",
-      "label": "Diffbot Extension",
-      "version": "1.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/diffbot100/diffbot.tar.gz",
+      "label": "Diffbot",
+      "version": "1.0.1",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/diffbot101/diffbot.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/diffbot",
-      "description": "Allows crawling of Web Pages using the Diffbot API",
+      "description": "Integrates with the Diffbot API",
       "longDescription": "Diffbot provides a powerful API for crawling and importing the content of websites into your Knowledge Base.",
       "tags": ["knowledge", "articles", "webcrawling"],
       "icon": "data:image/png;base64,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",
@@ -407,12 +407,12 @@
         {
           "type": "diffbotCrawlerConnector",
           "label": "Diffbot Crawler",
-          "summary": "This will import web pages contents using Diffbot's Crawler APIs"
+          "summary": "Extract content from websites using the Diffbot Crawler API to create Knowledge Chunks. A Diffbot \"Plus\" or \"Enterprise\" subscription is required."
         },
         {
           "type": "diffbotWebpageConnector",
           "label": "Diffbot Webpage",
-          "summary": "This will import web page contents using Diffbot's Extract APIs."
+          "summary": "Extract content from a web page or multiple web pages using the Diffbot Extract API to create Knowledge Chunks. A Diffbot subscription is required."
         }
       ]
     },

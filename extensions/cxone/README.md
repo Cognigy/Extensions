@@ -1,12 +1,12 @@
 # CXone Extensions 🚀
 
-This collection of Cognigy nodes integrates with **CXone**, enabling conversation escalation, knowledge retrieval, and context management for voice and chat in your Cognigy flows.
+This collection of Cognigy nodes integrates with **CXone**, enabling transcript posting, live agent transfers, and knowledge retrieval for voice and chat in your Cognigy flows.
 
 ---
 
-## Complete Interaction ✋
+## Exit Interaction ✋
 
-The **Complete Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
+The **Exit Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
 
 It handles authentication by retrieving a **CXone bearer token** using your connection credentials, then performs the specified action via the CXone API.
 
@@ -37,9 +37,9 @@ The **Signal Interaction** node allows you to send custom signals to the **CXone
 
 ---
 
-## Query Knowledge Hub 📚
+## Knowledge Hub 📚
 
-The **Query Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input.
+The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in real-time and retrieve answers based on user input.
 
 ### 🧩 Features
 

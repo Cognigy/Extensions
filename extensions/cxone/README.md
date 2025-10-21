@@ -22,6 +22,8 @@ For **voice interactions**, it can also post the conversation transcript to the 
   - **Voice:** OnSignal Studio receives `"Escalate"` or `"End"` signals
   - **Chat:** Studio determines the action based on returned data
 - **Return data** to Studio: `{"Intent":"Escalate"}` or `{"Intent":"End"}`
+  - The returned data can be accessed in Studio at: `customPayloadFromBot.scriptPayloads`
+  - **Optional Parameters:** If optional parameters are specified, they will be included in the returned data as pipe-separated values, for example: `{"Intent":"Escalate", "Params":"p1|p2|p3"}`
 
 ---
 
@@ -32,8 +34,11 @@ The **Signal Interaction** node allows you to send custom signals to the **CXone
 ### 🧩 Features
 
 - Handles authentication by obtaining a **CXone bearer token** via your connection credentials
-- Sends a signal request to the CXone API with the configured parameters
+- Sends a signal request to the **CXone API** with the configured parameters
 - Parameters are automatically named `p1`, `p2`, `p3`, etc., according to their order in the configuration
+
+- **Return data** to Studio: `{"Intent":"Signal", "Params":"p1|p2|p3"}`
+  - The returned data can be accessed in Studio at: `customPayloadFromBot.scriptPayloads`
 
 ---
 

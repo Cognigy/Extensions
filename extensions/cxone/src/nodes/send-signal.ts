@@ -20,7 +20,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
 export const sendSignalToCXone = createNodeDescriptor({
     type: "sendCxoneSignal",
     defaultLabel: "Signal Interaction",
-    summary: "Signals CXone",
+    summary: "Signal CXone with arbitrary parameters",
     preview: {
         key: "action",
         type: "text"
@@ -132,9 +132,12 @@ export const sendSignalToCXone = createNodeDescriptor({
             }
 
             // data for CXone chat channel - to end conversation or escalate to agent
-            const data = {
+            const data: { Intent: string; Params?: string } = {
                 Intent: "Signal"
             };
+            if (Array.isArray(signalParams) && signalParams.length) {
+                data.Params = signalParams.join('|');
+            }
             api.output("", data);
         } catch (error) {
             api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);

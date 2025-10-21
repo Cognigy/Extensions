@@ -207,9 +207,12 @@ export const handoverToCXone = createNodeDescriptor({
             }
 
             // data for CXone chat channel - to end conversation or escalate to agent
-            const data = {
+            const data: { Intent: string; Params?: string } = {
                 Intent: action
             };
+            if (Array.isArray(optionalParams) && optionalParams.length) {
+                data.Params = optionalParams.join('|');
+            }
             api.output("", data);
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);

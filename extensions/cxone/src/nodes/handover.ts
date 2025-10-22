@@ -70,7 +70,7 @@ export const handoverToCXone = createNodeDescriptor({
         },
         {
             key: "action",
-            label: "Handover Action",
+            label: "Exit Action",
             type: "select",
             description: "Choose the action to perform. It will be passed to CXone.",
             params: {

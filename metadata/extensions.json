@@ -344,7 +344,8 @@
         {
           "type": "confluenceConnector",
           "label": "Confluence",
-          "summary": "Creates Knowledge Sources based on information extracted from Confluence."
+          "summary": "Creates Knowledge Sources based on information extracted from Confluence.",
+          "tags": ["knowledge"]
         }
       ]
     },
@@ -407,12 +408,14 @@
         {
           "type": "diffbotCrawlerConnector",
           "label": "Diffbot Crawler",
-          "summary": "Extract content from websites using the Diffbot Crawler API to create Knowledge Chunks. A Diffbot \"Plus\" or \"Enterprise\" subscription is required."
+          "summary": "Extract content from websites using the Diffbot Crawler API to create Knowledge Chunks. A Diffbot \"Plus\" or \"Enterprise\" subscription is required.",
+          "tags": ["knowledge", "crawler"]
         },
         {
           "type": "diffbotWebpageConnector",
           "label": "Diffbot Webpage",
-          "summary": "Extract content from a web page or multiple web pages using the Diffbot Extract API to create Knowledge Chunks. A Diffbot subscription is required."
+          "summary": "Extract content from a web page or multiple web pages using the Diffbot Extract API to create Knowledge Chunks. A Diffbot subscription is required.",
+          "tags": ["knowledge", "scraper"]
         }
       ]
     },

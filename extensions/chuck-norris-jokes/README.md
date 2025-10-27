@@ -1,7 +1,7 @@
 
 # Chuck Norris Jokes
 
-This Extension provides Knowledge Connector to integrate external data sources into Cognigy.AI by using publically available APIs i.e Chuck Norris Jokes API
+This extension provides a Knowledge Connector to integrate external data sources into Cognigy.AI by using publicly available APIs, e.g., the Chuck Norris Jokes API.
 
 ### Chuck Norris Jokes Knowledge Connectors
 

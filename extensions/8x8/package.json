@@ -12,7 +12,7 @@
 		"test:dev": "jest --watchAll --coverage"
 	},
 	"keywords": [
-    "8x8 Contact Center", "CRM", "Statistics", "Schedule"
+    "8x8 Contact Center", "CRM", "Statistics", "Schedule", "Handback to bot"
   ],
 	"repository": "https://github.com/8x8/vcc-cognigy-extension",
 	"author": "8x8",

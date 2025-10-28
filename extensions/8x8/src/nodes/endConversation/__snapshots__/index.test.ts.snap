@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`end conversation > getEndConversationNode should create the node for end conversation 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "End Conversation",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 Connection",
+        "params": {
+          "connectionType": "eightbyeightsimple",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "defaultValue": {
+          "removed": true,
+        },
+        "description": "Configuration JSON for patch conversation",
+        "key": "participantChatGatewayPatchRequest",
+        "label": "8x8 JSON properties",
+        "type": "json",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "endConversationResult",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "endConversationResult",
+        "key": "contextKey",
+        "label": "Context Key to store Result",
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "participantChatGatewayPatchRequest",
+        "type": "field",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "removed",
+          "displayMessage",
+        ],
+        "key": "participantChatGatewayPatchRequest",
+        "label": "Participant Chat Gateway Patch Request",
+      },
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "Removes user participant from the conversation and terminates the interaction",
+    "tags": [],
+    "tokens": [],
+    "type": "endConversation",
+  },
+]
+`;

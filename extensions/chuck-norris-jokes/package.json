@@ -17,7 +17,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "0.16.5-rc5",
+    "@cognigy/extension-tools": "0.16.6",
     "@dqbd/tiktoken": "1.0.7",
     "@types/html-to-text": "9.0.4",
     "html-to-text": "9.0.5",

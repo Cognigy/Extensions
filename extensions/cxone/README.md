@@ -54,3 +54,26 @@ The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in re
 - Return textual answers along with associated **links, citations, and images**
 
 ---
+
+## CXone API Caller 🌐
+
+The **CXone API Caller** node allows you to call **any API dynamically** using your CXone connection. You can configure the HTTP method, endpoint, headers, and request body, while the node automatically handles **CXone authentication**.
+
+### 🧩 Features
+
+- Handles authentication by obtaining a **CXone bearer token** via your connection credentials  
+- Allows you to call any API endpoint dynamically using the configured **environment** and **API suffix**  
+- Supports all HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`  
+  - **GET requests**: parameters should be included in the query string (body is ignored)  
+  - **POST/PUT/PATCH/DELETE**: optional JSON body is supported  
+- Allows specifying **additional HTTP headers** (merged with the `Authorization: Bearer <token>` and `Content-Type application/json` headers automatically)  
+
+### ⚙️ Usage Example
+
+1. Select a **CXone connection** and an **environment**  
+2. Specify the **API suffix** (path or query string) to append to the environment's base URL  
+3. Choose the **HTTP method**  
+4. Optionally provide **additional headers** and/or a **JSON body**  
+5. Execute the node and access the results via **context** or **input**  
+
+---

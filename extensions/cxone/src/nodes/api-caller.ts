@@ -25,6 +25,10 @@ export const cxoneApiCaller = createNodeDescriptor({
     type: "cxoneApiCaller",
     defaultLabel: "CXone API Caller",
     summary: "Call any CXone API dynamically with configurable method, headers, and body",
+    preview: {
+        key: "method",
+        type: "text"
+    },
     fields: [
         {
             key: "connection",

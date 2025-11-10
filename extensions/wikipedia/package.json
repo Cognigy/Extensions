@@ -23,6 +23,6 @@
 	},
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.13.0",
-		"axios": "^0.21.2"
+		"axios": "^1.13.2"
 	}
 }

@@ -91,8 +91,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                     if (xNiceview.userToken && xNiceview.demoName) {
                         try {
                             api.log("info", "setNiCEviewContextInit: SIP Headers data missing. Retreiving from settings from NiCEview...");
-                            const niceViewData = await getNiCEviewData(api, xNiceview.userToken.trim(), xNiceview.demoName.trim());                            
-
+                            const niceViewData = await getNiCEviewData(api, xNiceview.userToken.trim(), xNiceview.demoName.trim(), false);
                             let ivaParams = {};
                             try {
                                 ivaParams = JSON.parse(niceViewData.customIvaJson);

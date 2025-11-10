@@ -1,9 +1,9 @@
-export const getNiCEviewData = async (api: any, userToken: string, settingName: string) => {
+export const getNiCEviewData = async (api: any, userToken: string, settingName: string, useLastSaved: boolean) => {
     try {
         const SERVICE_URL = 'https://lxtkt6ckz5izmhi5kx3ryn7a7a0ddfpy.lambda-url.us-west-2.on.aws';
-        const procName = 'getSettingReadOnly';
+        const procName = useLastSaved ? 'getCurrentSettingByToken' : 'getSettingReadOnly';
         const url = `${SERVICE_URL}?proc=${procName}`;
-        const params = [userToken.trim(), settingName.trim()];
+        const params = useLastSaved ? [userToken.trim()] : [userToken.trim(), settingName.trim()];
         const requestBody = { params };
         const response = await fetch(url, {
             method: 'POST',

@@ -1,6 +1,6 @@
 {
   "name": "niceview",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NiCEview extension for applying NiCEview demo settings in your Cognigy flows",
   "main": "build/module.js",
   "scripts": {

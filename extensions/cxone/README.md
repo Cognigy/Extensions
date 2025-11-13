@@ -19,11 +19,12 @@ For **voice interactions**, it can also post the conversation transcript to the 
   - Escalate a conversation to a live agent
   - End a conversation
 - **Studio integration**:
-  - **Voice:** OnSignal Studio receives `"Escalate"` or `"End"` signals
+  - **Voice:** OnSignal Studio Action receives `"Escalate"` or `"End"` signals as the P1 parameter
+    - **Optional Parameters:** If optional parameters are specified, they will be included in the signal as P2, P3, and subsequent parameters
   - **Chat:** Studio determines the action based on returned data
-- **Return data** to Studio: `{"Intent":"Escalate"}` or `{"Intent":"End"}`
-  - The returned data can be accessed in Studio at: `customPayloadFromBot.scriptPayloads`
-  - **Optional Parameters:** If optional parameters are specified, they will be included in the returned data as pipe-separated values, for example: `{"Intent":"Escalate", "Params":"p1|p2|p3"}`
+    - **Return data** to Studio: `{"Intent":"Escalate"}` or `{"Intent":"End"}`
+    - The returned data can be accessed in Studio at: `customPayloadFromBot.scriptPayloads`
+    - **Optional Parameters:** If optional parameters are specified, they will be included in the returned data as pipe-separated values, for example: `{"Intent":"Escalate", "Params":"p1|p2|p3"}`
 
 ---
 

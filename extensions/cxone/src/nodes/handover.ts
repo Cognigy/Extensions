@@ -11,6 +11,9 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
         contactId: string;
         spawnedContactId: string;
         businessNumber: string;
+        optionalParamsMode: string;
+        optionalParamsObject: any;
+        optionalParamsArray: any;
         optionalParams: any;
         connection: {
             accessKeyId: string;
@@ -70,9 +73,9 @@ export const handoverToCXone = createNodeDescriptor({
         },
         {
             key: "action",
-            label: "Exit Action",
+            label: "Exit Action (sent as P1)",
             type: "select",
-            description: "Choose the action to perform. It will be passed to CXone.",
+            description: "Select the action to perform. It will be sent to CXone as the first (P1) parameter.",
             params: {
                 options: [
                     { label: "Escalate to Agent", value: "Escalate" },
@@ -109,13 +112,56 @@ export const handoverToCXone = createNodeDescriptor({
             }
         },
         {
-            key: "optionalParams",
-            label: "Optional Parameters",
+            key: "optionalParamsMode",
+            label: "Optional Parameters Mode",
+            type: "select",
+            description: "Choose how to send optional parameters to CXone.",
+            defaultValue: "stringArray",
+            params: {
+                options: [
+                    { label: "Array of JSON Objects (as P2)", value: "singleObject" },
+                    { label: "Array of Strings (as P2, P3, etc.)", value: "stringArray" }
+                ],
+                required: true
+            }
+        },
+        {
+            key: "optionalParamsObject",
+            label: "Optional Parameters: Array of JSON Objects",
             type: "json",
+            description: "Provide an array of JSON objects to be sent as a single P2 parameter to CXone.",
+            condition: {
+                key: "optionalParamsMode",
+                value: "singleObject"
+            },
             defaultValue: "[]",
-            description: "Optional additional parameters to include in the signal. Provide them as an array of strings.",
             params: {
                 required: false
+            }
+        },
+        {
+            key: "optionalParamsArray",
+            label: "Optional Parameters: Array of Strings",
+            type: "json",
+            description: "Provide an array of strings to be sent as multiple parameters (P2, P3, P4, etc.) to CXone.",
+            condition: {
+                key: "optionalParamsMode",
+                value: "stringArray"
+            },
+            defaultValue: "[\"\", \"\"]",
+            params: {
+                required: false
+            }
+        },
+        {
+            key: "optionalParams",
+            label: "Legacy Optional Parameters",
+            type: "json",
+            defaultValue: "[]",
+            description: "Legacy value (hidden).",
+            condition: {
+                key: "__never__",
+                value: "true"
             }
         }
     ],
@@ -125,7 +171,9 @@ export const handoverToCXone = createNodeDescriptor({
             label: "Advanced",
             defaultCollapsed: true,
             fields: [
-                "optionalParams"
+                "optionalParamsMode",
+                "optionalParamsObject",
+                "optionalParamsArray"
             ],
         }
     ],
@@ -143,7 +191,7 @@ export const handoverToCXone = createNodeDescriptor({
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParams } = config;
+        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsMode, optionalParamsObject, optionalParamsArray, optionalParams } = config;
         const { api, input, context } = cognigy;
 
         if (!connection) {
@@ -182,6 +230,24 @@ export const handoverToCXone = createNodeDescriptor({
             api.log("info", `handoverToCXone: Interaction channel: ${channel}`);
             const isVoice = channel.toLowerCase().includes('voice');
             api.log("info", `handoverToCXone: isVoice: ${isVoice}`);
+
+            // prepare optional parameters
+            const mode = optionalParamsMode || "singleObject";
+            let finalParams = [];
+
+            if (mode === "stringArray" && Array.isArray(optionalParamsArray)) {
+                finalParams = optionalParamsArray;
+            } else if (mode === "singleObject" && optionalParamsObject) {
+                finalParams = [JSON.stringify(optionalParamsObject)];
+            } else if (optionalParams) {
+                // fallback for legacy nodes
+                if (Array.isArray(optionalParams)) {
+                    finalParams = optionalParams;
+                }
+            } else if (typeof optionalParams === "object") {
+                finalParams = [JSON.stringify(optionalParams)];
+            }
+            api.log("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
             if (contactId && spawnedContactId && isVoice) {
                 const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
@@ -201,7 +267,7 @@ export const handoverToCXone = createNodeDescriptor({
                         api.log("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
                     }
                 }
-                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, optionalParams || []);
+                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams || []);
                 api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
                 api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }
@@ -210,8 +276,8 @@ export const handoverToCXone = createNodeDescriptor({
             const data: { Intent: string; Params?: string } = {
                 Intent: action
             };
-            if (Array.isArray(optionalParams) && optionalParams.length) {
-                data.Params = optionalParams.join('|');
+            if (Array.isArray(finalParams) && finalParams.length) {
+                data.Params = finalParams.join('|');
             }
             api.output("", data);
         } catch (error) {

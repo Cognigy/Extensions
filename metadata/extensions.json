@@ -1856,8 +1856,8 @@
     {
       "name": "8x8",
       "label": "8x8",
-      "version": "5.0.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8510/8x8.tar.gz",
+      "version": "5.2.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8520/8x8.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/8x8",
       "description": "Integrates with 8x8",
       "longDescription": "Integrates with 8x8",
@@ -1904,6 +1904,18 @@
           "type": "sendSMS",
           "defaultLabel": "Send SMS",
           "description": "This node enables you to send outbound SMS messages",
+          "tags": []
+        },
+        {
+          "type": "scheduleHandbackToBotFlow",
+          "defaultLabel": "Schedule Handback to Bot Flow",
+          "description": "Schedules a post-agent handback to transition the conversation to a bot flow",
+          "tags": []
+        },
+        {
+          "type": "endConversation",
+          "defaultLabel": "End Conversation",
+          "description": "Removes user participant from the conversation and terminates the interaction",
           "tags": []
         }
       ]

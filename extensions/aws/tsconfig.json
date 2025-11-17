@@ -9,6 +9,7 @@
 		"outDir": "build",
 		"sourceMap": true,
 		"moduleResolution": "node",
-		"watch": false
+		"skipLibCheck": true,
+		"esModuleInterop": true
 	}
 }

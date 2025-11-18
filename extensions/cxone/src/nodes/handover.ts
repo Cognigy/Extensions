@@ -333,7 +333,7 @@ export const handoverToCXone = createNodeDescriptor({
                  ndata._cognigy._niceCXOne.json.data.Params = finalParams.join('|');
                 // data.Params = finalParams.join('|');
             }
-            api.output("", ndata);
+            api.output(null, ndata);
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
             api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');

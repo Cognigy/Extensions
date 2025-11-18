@@ -138,7 +138,7 @@ export const sendSignalToCXone = createNodeDescriptor({
             if (Array.isArray(signalParams) && signalParams.length) {
                 data.Params = signalParams.join('|');
             }
-            api.output("", data);
+            api.output(null, data);
         } catch (error) {
             api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);
             api.addToContext("CXoneSendSignal", `Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`, 'simple');

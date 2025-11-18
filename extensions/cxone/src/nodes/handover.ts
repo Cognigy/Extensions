@@ -11,6 +11,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
         contactId: string;
         spawnedContactId: string;
         businessNumber: string;
+        transferIntent: string;
         optionalParamsMode: string;
         optionalParamsObject: any;
         optionalParamsArray: any;
@@ -112,6 +113,12 @@ export const handoverToCXone = createNodeDescriptor({
             }
         },
         {
+            key: "transferIntent",
+            label: "Exit Reason or Intent",
+            type: "cognigyText",
+            description: "Reason or Intent for Exiting Interaction."
+        },
+        {
             key: "optionalParamsMode",
             label: "Optional Parameters Mode",
             type: "select",
@@ -184,6 +191,7 @@ export const handoverToCXone = createNodeDescriptor({
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
         { type: "field", key: "spawnedContactId" },
+        { type: "field", key: "transferIntent"},
         { type: "field", key: "connection" },
         { type: "section", key: "advanced" }
     ],
@@ -191,7 +199,7 @@ export const handoverToCXone = createNodeDescriptor({
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsMode, optionalParamsObject, optionalParamsArray, optionalParams } = config;
+        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsMode, optionalParamsObject, optionalParamsArray, transferIntent, optionalParams } = config;
         const { api, input, context } = cognigy;
 
         if (!connection) {
@@ -272,14 +280,60 @@ export const handoverToCXone = createNodeDescriptor({
                 api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }
 
-            // data for CXone chat channel - to end conversation or escalate to agent
-            const data: { Intent: string; Params?: string } = {
-                Intent: action
+            const tIntent = transferIntent.trim() ? transferIntent.trim() : "Intent Not Specified";
+            const ndata: {
+                _cognigy: {
+                    _niceCXOne: {
+                        json: {
+                            text: string
+                            uiComponent: object
+                            data: any
+                            action: string
+                        }
+                    }
+                }
+            } = {
+                _cognigy: {
+                    _niceCXOne: {
+                        json: {
+                            text: tIntent,
+                            uiComponent: {
+                                /*
+                                intentInfo: {
+                                    intent: tIntent
+                                }
+                                */
+                            },
+                            data: {
+                                // contentType: "ExchangeResultOverride",
+                                /*
+                                content: {
+                                    // vahExchangeResultBranch: "ReturnControlToScript",
+                                    intent: tIntent
+                                },
+                                */
+                                Intent: action
+                            },
+                            action: action === "End" ? "END_CONVERSATION" : "AGENT_TRANSFER"
+                        }
+                    }
+                }
             };
+            /*
+            const data: { contentType: string; content: any; Intent: string; Params?: string } = {
+                "contentType": "ExchangeResultOverride",
+                "content": {
+                        "vahExchangeResultBranch": "ReturnControlToScript",
+                        "intent": tIntent
+                },
+                "Intent": action
+            };
+            */
             if (Array.isArray(finalParams) && finalParams.length) {
-                data.Params = finalParams.join('|');
+                 ndata._cognigy._niceCXOne.json.data.Params = finalParams.join('|');
+                // data.Params = finalParams.join('|');
             }
-            api.output("", data);
+            api.output("", ndata);
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
             api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');

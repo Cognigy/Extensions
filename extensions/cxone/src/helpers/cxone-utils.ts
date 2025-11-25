@@ -112,11 +112,21 @@ export const getCxoneConfigUrl = async (api: any, context: any, issuer: string, 
 
 // Function to handover action to CXone
 export const sendSignalHandover = async (api: any, apiEndpointUrl: string, token: string, contactId: string, action: string, otherParms: any[] = []) => {
-    let url = `${apiEndpointUrl}/inContactAPI/services/v30.0/interactions/${encodeURIComponent(contactId)}/signal?p1=${encodeURIComponent(action)}`;
-    otherParms.forEach((val, index) => url += `&p${index + 2}=${encodeURIComponent(val)}`);
-    api.log("info", `CXone -> sendSignalHandover: About to signal to URL: ${url}`);
-    const headers = { Authorization: `Bearer ${token}` };
-    const response = await fetch(url, { method: "POST", headers });
+    const url = `${apiEndpointUrl}/inContactAPI/services/v30.0/interactions/${encodeURIComponent(contactId)}/signal?p1=${encodeURIComponent(action)}`;
+    // Prepare POST body: p2, p3, etc., raw strings
+    const bodyObj = {};
+    otherParms.forEach((val, index) => {
+        bodyObj[`p${index + 2}`] = val;
+    });
+    api.log("info", `CXone -> sendSignalHandover: Posting to URL: ${url} with body: ${JSON.stringify(bodyObj)}`);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bodyObj)
+    });
     if (!response.ok) {
         throw new Error(`CXone -> sendSignalHandover: Error sending signal: ${response.status}: ${response.statusText}`);
     }

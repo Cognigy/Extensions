@@ -4,27 +4,58 @@ This collection of Cognigy nodes integrates with **CXone**, enabling transcrip
 
 ---
 
-## Exit Interaction ✋
+# Exit Interaction ✋
 
-The **Exit Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API**, either to end a conversation or escalate it to a live agent.
+The **Exit Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API** in the Voice channel (either to end a conversation or escalate it to a live agent), or to send a structured data message to Studio in the CXone Guide Chat channel via TextBotExchange.
 
-It handles authentication by retrieving a **CXone bearer token** using your connection credentials, then performs the specified action via the CXone API.
+For **voice interactions**, it also posts the conversation transcript to the **Transcript Management System (TMS)** if the **"Get Transcript"** node is placed above this node in the flow.
 
-For **voice interactions**, it can also post the conversation transcript to the **Transcript Management System (TMS)** if the **"Get Transcript"** node is placed above this node in the flow.
+The node **waits for 5 seconds before returning control** to the Cognigy flow to avoid unwanted messages or interference during the handover process.
 
 ### 🧩 Features
 
-- **Post voice conversation transcripts** to **TMS**
-- **Send signals to CXone API**:
+- **Send signals to CXone API in Voice channel**:
   - Escalate a conversation to a live agent
   - End a conversation
-- **Studio integration**:
-  - **Voice:** OnSignal Studio Action receives `"Escalate"` or `"End"` signals as the P1 parameter
-    - **Optional Parameters:** If optional parameters are specified, they will be included in the signal as P2, P3, and subsequent parameters
-  - **Chat:** Studio determines the action based on returned data
-    - **Return data** to Studio: `{"Intent":"Escalate"}` or `{"Intent":"End"}`
-    - The returned data can be accessed in Studio at: `customPayloadFromBot.scriptPayloads`
-    - **Optional Parameters:** If optional parameters are specified, they will be included in the returned data as pipe-separated values, for example: `{"Intent":"Escalate", "Params":"p1|p2|p3"}`
+- **Post conversation transcripts in Voice channel** to **TMS** (if a transcript is available)
+- **Return `Intent` (`Escalate` or `End`) in CXone Guide Chat channel** to Studio at: `customPayloadFromBot.scriptPayloads[1].Intent`
+- **Trigger `ReturnControlToScript` in TextBotExchange** in CXone Guide Chat channel
+- **Handle optional parameters**:
+  - Optional parameters can be provided as an array of JSON objects:
+    - In **voice interactions**, these are sent as P2 in the signal
+    - In **NiCE Guide Chat**, these are returned to Studio at: `customPayloadFromBot.scriptPayloads[1].Params` as a serialized JSON string
+
+### 📡 Channel Behavior
+
+- **Voice**
+  - Signal is sent to CXone Studio
+  - **Exit Action** becomes P1
+  - **Optional parameters** become P2
+  - Transcript is optionally sent to TMS
+  - No output is returned from the node
+- **NiCE Guide Chat**
+  - Returns a structured object to Studio in the following format (representing NiCE channel):
+
+    ```json
+    {
+      "_cognigy": {
+        "_niceCXOne": {
+          "json": {
+            "text": "",
+            "uiComponent": {},
+            "data": {
+              "Intent": "Escalate",
+              "Params": "[{\"key\":\"value\"}]" // optional, only if provided
+            },
+            "action": "AGENT_TRANSFER" // "END_CONVERSATION" if Exit Action is "End"
+          }
+        }
+      }
+    }
+    ```
+
+- **Webchat / Testchat**
+  - Does not signal or return any data
 
 ---
 

@@ -28,7 +28,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
 export const handoverToCXone = createNodeDescriptor({
     type: "handoverToCXone",
     defaultLabel: "Exit Interaction",
-    summary: "Return control to CXone. Send transcript to TMS.",
+    summary: "Escalate to Agent or End Conversation by returning control to CXone. Send transcript to TMS.",
     preview: {
         key: "action",
         type: "text"
@@ -113,77 +113,17 @@ export const handoverToCXone = createNodeDescriptor({
             }
         },
         {
-            key: "transferIntent",
-            label: "Exit Reason or Intent",
-            type: "cognigyText",
-            description: "Reason or Intent for Exiting Interaction."
-        },
-        {
-            key: "optionalParamsMode",
-            label: "Optional Parameters Mode",
-            type: "select",
-            description: "Choose how to send optional parameters to CXone.",
-            defaultValue: "stringArray",
-            params: {
-                options: [
-                    { label: "Array of JSON Objects (as P2)", value: "singleObject" },
-                    { label: "Array of Strings (as P2, P3, etc.)", value: "stringArray" }
-                ],
-                required: true
-            }
-        },
-        {
             key: "optionalParamsObject",
-            label: "Optional Parameters: Array of JSON Objects",
+            label: "Parameters (sent as P2): Array of JSON Objects",
             type: "json",
-            description: "Provide an array of JSON objects to be sent as a single P2 parameter to CXone.",
-            condition: {
-                key: "optionalParamsMode",
-                value: "singleObject"
-            },
+            description: "Provide an array of JSON objects to be sent to CXone as the second (P2) parameter.",
             defaultValue: "[]",
             params: {
                 required: false
             }
-        },
-        {
-            key: "optionalParamsArray",
-            label: "Optional Parameters: Array of Strings",
-            type: "json",
-            description: "Provide an array of strings to be sent as multiple parameters (P2, P3, P4, etc.) to CXone.",
-            condition: {
-                key: "optionalParamsMode",
-                value: "stringArray"
-            },
-            defaultValue: "[\"\", \"\"]",
-            params: {
-                required: false
-            }
-        },
-        {
-            key: "optionalParams",
-            label: "Legacy Optional Parameters",
-            type: "json",
-            defaultValue: "[]",
-            description: "Legacy value (hidden).",
-            condition: {
-                key: "__never__",
-                value: "true"
-            }
         }
     ],
-    sections: [
-        {
-            key: "advanced",
-            label: "Advanced",
-            defaultCollapsed: true,
-            fields: [
-                "optionalParamsMode",
-                "optionalParamsObject",
-                "optionalParamsArray"
-            ],
-        }
-    ],
+    sections: [],
     form: [
         { type: "field", key: "environment" },
         { type: "field", key: "baseUrl" },
@@ -191,15 +131,14 @@ export const handoverToCXone = createNodeDescriptor({
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
         { type: "field", key: "spawnedContactId" },
-        { type: "field", key: "transferIntent"},
         { type: "field", key: "connection" },
-        { type: "section", key: "advanced" }
+        { type: "field", key: "optionalParamsObject" }
     ],
     appearance: {
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsMode, optionalParamsObject, optionalParamsArray, transferIntent, optionalParams } = config;
+        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
         const { api, input, context } = cognigy;
 
         if (!connection) {
@@ -221,18 +160,6 @@ export const handoverToCXone = createNodeDescriptor({
         }
 
         api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
-        // get token URL based on environment
-        // i.e.: "https://cxone.niceincontact.com/auth/token";
-        const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
-        api.log("info", `handoverToCXone: got token URL: ${tokenUrl}`);
-        const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
-        const cxOneConfig = {
-            tokenUrl: tokenUrl,
-            accessKeyId: connection.accessKeyId,
-            accessKeySecret: connection.accessKeySecret,
-            basicToken: basicToken
-        };
-
         try {
             const channel = input?.channel || '';
             api.log("info", `handoverToCXone: Interaction channel: ${channel}`);
@@ -240,23 +167,26 @@ export const handoverToCXone = createNodeDescriptor({
             api.log("info", `handoverToCXone: isVoice: ${isVoice}`);
 
             // prepare optional parameters
-            const mode = optionalParamsMode || "singleObject";
             let finalParams = [];
 
-            if (mode === "stringArray" && Array.isArray(optionalParamsArray)) {
-                finalParams = optionalParamsArray;
-            } else if (mode === "singleObject" && optionalParamsObject) {
+            if (Array.isArray(optionalParamsObject) && optionalParamsObject.length > 0) {
                 finalParams = [JSON.stringify(optionalParamsObject)];
-            } else if (optionalParams) {
-                // fallback for legacy nodes
-                if (Array.isArray(optionalParams)) {
-                    finalParams = optionalParams;
-                }
-            } else if (typeof optionalParams === "object") {
-                finalParams = [JSON.stringify(optionalParams)];
             }
             api.log("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
-            if (contactId && spawnedContactId && isVoice) {
+
+            if (contactId && spawnedContactId && isVoice && contactId !== "100000000000" && spawnedContactId !== "100000000000") {
+                // get token URL based on environment
+                // i.e.: "https://cxone.niceincontact.com/auth/token";
+                const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
+                api.log("info", `handoverToCXone: got token URL: ${tokenUrl}`);
+                const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
+                const cxOneConfig = {
+                    tokenUrl: tokenUrl,
+                    accessKeyId: connection.accessKeyId,
+                    accessKeySecret: connection.accessKeySecret,
+                    basicToken: basicToken
+                };
+
                 const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
                 // api.log("info", `handoverToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
@@ -275,65 +205,74 @@ export const handoverToCXone = createNodeDescriptor({
                         api.log("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
                     }
                 }
-                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams || []);
+                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams);
                 api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
                 api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }
 
-            const tIntent = transferIntent.trim() ? transferIntent.trim() : "Intent Not Specified";
-            const ndata: {
-                _cognigy: {
-                    _niceCXOne: {
-                        json: {
-                            text: string
-                            uiComponent: object
-                            data: any
-                            action: string
+            // Output the handover action to NiCE channel for CXone Guide Chat
+            if (!isVoice && contactId && contactId !== "100000000000") {
+                const ndata: {
+                    _cognigy: {
+                        _niceCXOne: {
+                            json: {
+                                text: string
+                                uiComponent: object
+                                data: any
+                                action: string
+                            }
                         }
                     }
-                }
-            } = {
-                _cognigy: {
-                    _niceCXOne: {
-                        json: {
-                            text: tIntent,
-                            uiComponent: {
-                                /*
-                                intentInfo: {
-                                    intent: tIntent
-                                }
-                                */
-                            },
-                            data: {
-                                // contentType: "ExchangeResultOverride",
-                                /*
-                                content: {
-                                    // vahExchangeResultBranch: "ReturnControlToScript",
-                                    intent: tIntent
+                } = {
+                    _cognigy: {
+                        _niceCXOne: {
+                            json: {
+                                text: "",
+                                uiComponent: {
+                                    /*
+                                    intentInfo: {
+                                        intent: tIntent
+                                    }
+                                    */
                                 },
-                                */
-                                Intent: action
-                            },
-                            action: action === "End" ? "END_CONVERSATION" : "AGENT_TRANSFER"
+                                data: {
+                                    // contentType: "ExchangeResultOverride",
+                                    /*
+                                    content: {
+                                        // vahExchangeResultBranch: "ReturnControlToScript",
+                                        intent: tIntent
+                                    },
+                                    */
+                                    Intent: action
+                                },
+                                action: action === "End" ? "END_CONVERSATION" : "AGENT_TRANSFER"
+                            }
                         }
                     }
+                };
+                /*
+                const data: { contentType: string; content: any; Intent: string; Params?: string } = {
+                    "contentType": "ExchangeResultOverride",
+                    "content": {
+                            "vahExchangeResultBranch": "ReturnControlToScript",
+                            "intent": tIntent
+                    },
+                    "Intent": action
+                };
+                */
+                if (Array.isArray(finalParams) && finalParams.length) {
+                    ndata._cognigy._niceCXOne.json.data.Params = finalParams.join('|');
+                    // data.Params = finalParams.join('|');
                 }
-            };
-            /*
-            const data: { contentType: string; content: any; Intent: string; Params?: string } = {
-                "contentType": "ExchangeResultOverride",
-                "content": {
-                        "vahExchangeResultBranch": "ReturnControlToScript",
-                        "intent": tIntent
-                },
-                "Intent": action
-            };
-            */
-            if (Array.isArray(finalParams) && finalParams.length) {
-                 ndata._cognigy._niceCXOne.json.data.Params = finalParams.join('|');
-                // data.Params = finalParams.join('|');
+                api.output("", ndata);
+                api.log("info", `handoverToCXone: Done. Output data was sent to CXone Guide Chat channel: ${JSON.stringify(ndata)}`);
+            } else {
+                // api.output("", {});
+                api.log("info", `handoverToCXone: Done. No output data sent to Voice / Cognigy Webchat / Cognigy Testchat channel.`);
             }
-            api.output(null, ndata);
+            // wait 5 seconds - to not get unwanted messages from Cognigy during handover
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            return;
         } catch (error) {
             api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
             api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');

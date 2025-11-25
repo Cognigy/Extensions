@@ -4,6 +4,43 @@ This collection of Cognigy nodes integrates with **CXone**, enabling transcrip
 
 ---
 
+## Context Init 🛠️
+
+The **Context Init** node initializes **CXone Studio settings** in Cognigy **context** for both **Voice** and **Chat** interactions. It parses SIP headers (in Voice channel) or input data (in Chat channel) and stores the data in the Cognigy context.  
+
+If required CXone data is missing, the node populates `context.data` with **default values** and **fallback values** (provided via node configuration) to ensure downstream nodes can safely access CXone-related information.
+
+### 🧩 Features
+
+- **Voice channel**:
+  - Reads CXone headers from the SIP payload:
+    - `X-CXone` → standard CXone data  
+    - `X-CXone-Custom` → custom IVA JSON (`ivaParams`)  
+    - `X-CXone-Extended` → extended CXone data  
+    - `X-InContact-MasterId` → main contact ID  
+    - `X-InContact-ContactId` → spawned contact ID  
+  - Parses JSON data safely and merges it into a single **context object**  
+  - Adds `flowChannel: "VOICE"` flag to indicate voice interactions  
+  - Stores all parsed data in Cognigy context under `data`  
+
+- **Chat channel**:
+  - Reads CXone parameters from `input.data`  
+  - Parses `ivaParams` if present and stores it in Cognigy context  
+  - Adds all parsed data in Cognigy context under `data`
+
+- **Fallback and defaults**:
+  - If input data or headers are missing, the node populates `context.data` with defaults:
+    - `contactId`, `invocationId`, `spawnedContactId` set to placeholder values  
+    - Optional fields (`customerName`, `flowId`, `ivaParams`, `ocpSessionId`) populated from **fallback values** provided in node configuration  
+
+### ⚙️ Usage
+
+1. Place **Context Init** at the beginning of your flow.  
+2. The node automatically populates `context.data` with CXone-related parameters, either from Voice headers, Chat input, or fallback defaults.  
+3. Downstream nodes (like **Exit Interaction** or **Knowledge Hub**) can use `context.data` for CXone API calls or conditional logic.
+
+---
+
 # Exit Interaction ✋
 
 The **Exit Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API** in the Voice channel (either to end a conversation or escalate it to a live agent), or to send a structured data message to Studio in the CXone Guide Chat channel via TextBotExchange.

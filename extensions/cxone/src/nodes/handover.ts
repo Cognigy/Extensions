@@ -74,9 +74,9 @@ export const handoverToCXone = createNodeDescriptor({
         },
         {
             key: "action",
-            label: "Exit Action (sent as P1)",
+            label: "Exit Action",
             type: "select",
-            description: "Select the action to perform. It will be sent to CXone as the first (P1) parameter.",
+            description: "Select the action to perform.",
             params: {
                 options: [
                     { label: "Escalate to Agent", value: "Escalate" },
@@ -114,9 +114,9 @@ export const handoverToCXone = createNodeDescriptor({
         },
         {
             key: "optionalParamsObject",
-            label: "Parameters (sent as P2): Array of JSON Objects",
+            label: "Parameters (optional): Array of JSON Objects",
             type: "json",
-            description: "Provide an array of JSON objects to be sent to CXone as the second (P2) parameter.",
+            description: "Provide an array of JSON objects to be sent to CXone.",
             defaultValue: "[]",
             params: {
                 required: false

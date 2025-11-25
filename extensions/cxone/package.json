@@ -1,6 +1,6 @@
 {
   "name": "cxone",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "CXone Extension to interact with NiCE CXone platform",
   "main": "build/module.js",
   "scripts": {

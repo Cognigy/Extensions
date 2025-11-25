@@ -3,7 +3,6 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 
 export interface IgetAdaptiveCardParams extends INodeFunctionBaseParams {
 	config: {
-        channel: string;
         voiceMessage: string;
         cardCode: string;
     };
@@ -18,16 +17,6 @@ export const adaptiveCard = createNodeDescriptor({
         type: "text"
     },
     fields: [
-        {
-            "key": "channel",
-            "label": "Interaction Channel",
-            "type": "cognigyText",
-            "description": "Interaction Channel",
-            "params": {
-                "required": true
-            },
-            "defaultValue": "{{context.data.flowChannel}}"
-        },
         {
             "key": "voiceMessage",
             "label": "Voice Channel Announcement",
@@ -57,7 +46,6 @@ export const adaptiveCard = createNodeDescriptor({
     ],
     sections: [],
     form: [
-        { type: "field", key: "channel" },
         { type: "field", key: "voiceMessage" },
         { type: "field", key: "cardCode" }
     ],
@@ -65,9 +53,8 @@ export const adaptiveCard = createNodeDescriptor({
         color: "#3694fd"
     },
     function: async ({ cognigy, config }: IgetAdaptiveCardParams) => {
-        const { channel, voiceMessage, cardCode } = config;
+        const { voiceMessage, cardCode } = config;
         const { api, input, context } = cognigy;
-        api.log("info", `adaptiveCard: Initizalized.`);
 
         interface IAdaptiveCard {
             $schema?: string;
@@ -78,8 +65,22 @@ export const adaptiveCard = createNodeDescriptor({
         }
 
         try {
-            const lChannel = channel.toLowerCase().trim();
-            api.log("info", `adaptiveCard: Channel detected: ${lChannel}.`);
+            const oChannel = input?.channel || '';
+            api.log("info", `adaptiveCard: Interaction channel: ${oChannel}`);
+
+            const lc = oChannel.toLowerCase().trim();
+
+            // Voice check
+            const isVoice = lc.includes("voice");
+            // Cognigy channel check
+            const isCognigy =
+                lc.includes("adminconsole") ||
+                lc.includes("webchat") ||
+                lc.includes("test");
+            // Otherwise it is Guide Chat
+            const isGuideChat = !isVoice && !isCognigy;
+            api.log("info", `adaptiveCard: isVoice: ${isVoice}, isCognigy: ${isCognigy}, isGuideChat: ${isGuideChat}`);
+
             let outBody: string;
             let cardObj: IAdaptiveCard;
             if (typeof cardCode === "string") {
@@ -90,9 +91,9 @@ export const adaptiveCard = createNodeDescriptor({
 
             let outData = {};
             outBody = null;
-            if (lChannel.includes("voice")) {
+            if (isVoice) {
                outBody = voiceMessage;
-            } else if (lChannel.includes("test") || lChannel.includes("web")) { // Cognigy Webchat
+            } else if (isCognigy) { // Cognigy Webchat
                 outData = {
                     "type": "adaptiveCard",
                     "_cognigy": {

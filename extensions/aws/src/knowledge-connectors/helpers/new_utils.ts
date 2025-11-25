@@ -16,6 +16,8 @@ export type S3Connection = {
     region: string;
 };
 
+const MAX_CHUNKS_PER_FILE = 500; // Limit chunks per file to avoid timeout issues
+
 // Download file from S3 and extract chunks
 export const getS3FileChunks = async (
     connection: S3Connection,
@@ -63,6 +65,7 @@ export const getS3FileChunks = async (
         const chunks: ChunkContent[] = extractedText
             .split('\n\n')
             .filter(chunk => chunk.trim().length > 0)
+            .slice(0, MAX_CHUNKS_PER_FILE) // Limit to prevent backend processing issues
             .map((chunk, index) => ({
                 text: chunk.trim(),
                 data: {

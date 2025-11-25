@@ -81,15 +81,22 @@ export const s3Connector = createKnowledgeConnector({
         console.log(`Created knowledge source for ${s3Object.Key} with ID: ${knowledgeSourceId}`);
 
         // Add all chunks to the knowledge source
+        console.log(`Adding ${chunks.length} chunks to ${s3Object.Key}...`);
+        let chunkIndex = 0;
         for (const chunk of chunks) {
           await api.createKnowledgeChunk({
-            knowledgeSourceId,
+            knowledgeSourceId: knowledgeSourceId,
             text: chunk.text,
             data: chunk.data,
           });
+          chunkIndex++;
+          // Log progress every 100 chunks
+          if (chunkIndex % 100 === 0) {
+            console.log(`Progress: ${chunkIndex}/${chunks.length} chunks added to ${s3Object.Key}`);
+          }
         }
 
-        console.log(`Added ${chunks.length} chunks to ${s3Object.Key}`);
+        console.log(`✅ Successfully added all ${chunks.length} chunks to ${s3Object.Key}`);
 
       } catch (error) {
         console.error(`Error processing ${s3Object.Key}:`, error);

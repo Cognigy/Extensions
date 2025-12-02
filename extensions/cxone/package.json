@@ -1,0 +1,37 @@
+{
+  "name": "cxone",
+  "version": "1.0.9",
+  "description": "CXone Extension to interact with NiCE CXone platform",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "node zip.js",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "CXone",
+    "Transfer to Agent",
+    "Escalate to Agent",
+    "End Conversation",
+    "Cmplete Interaction",
+    "Signal CXone",
+    "Signal Interaction",
+    "CXone Knowledge Hub",
+    "Knowledge Hub",
+    "Query Knowledge Hub",
+    "CXone API",
+    "NiCE API"
+  ],
+  "author": "NiCE Alexei",
+  "license": "NiCE",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "jsonwebtoken": "^9.0.2"    
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "typescript": "^5.9.2",
+    "tslint": "^6.1.3"
+  }
+}

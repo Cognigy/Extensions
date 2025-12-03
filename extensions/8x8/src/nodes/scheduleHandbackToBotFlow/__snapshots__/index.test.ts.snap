@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`schedule handback to bot > getScheduleHandbackToBotFlowNode should create the node for handback to bot 1`] = `
+[
+  {
+    "_id": undefined,
+    "appearance": {
+      "color": "#ff0050",
+      "showIcon": true,
+      "textColor": "black",
+      "variant": "regular",
+    },
+    "behavior": {
+      "entrypoint": false,
+      "stopping": false,
+    },
+    "constraints": {
+      "collapsable": false,
+      "creatable": true,
+      "deletable": true,
+      "editable": true,
+      "movable": true,
+      "placement": {
+        "children": {
+          "whitelist": [],
+        },
+        "predecessor": {},
+        "successor": {},
+      },
+    },
+    "defaultLabel": "Schedule Handback to Bot Flow",
+    "dependencies": {
+      "children": [],
+    },
+    "fields": [
+      {
+        "key": "connection",
+        "label": "8x8 Connection",
+        "params": {
+          "connectionType": "eightbyeightsimple",
+          "required": true,
+        },
+        "type": "connection",
+      },
+      {
+        "description": "Select the webhook ID to handback to",
+        "key": "id",
+        "label": "Webhook ID",
+        "optionsResolver": {
+          "dependencies": [
+            "connection",
+          ],
+          "resolverFunction": [Function],
+        },
+        "params": {
+          "placeholder": "Select webhook ID",
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "defaultValue": "webhook",
+        "description": "Type of assignment",
+        "key": "type",
+        "label": "Assignment Type",
+        "params": {
+          "options": [
+            {
+              "label": "Webhook",
+              "value": "webhook",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "defaultValue": {
+          "maxTotalMinutes": "300",
+          "notifyChannelWebhookIfExists": "false",
+          "userTimeoutInMinutes": "150",
+        },
+        "description": "Optional configuration JSON for the assignment",
+        "key": "configuration",
+        "label": "Configuration",
+        "params": {
+          "required": false,
+        },
+        "type": "json",
+      },
+      {
+        "defaultValue": "input",
+        "key": "storeLocation",
+        "label": "Where to store the result",
+        "params": {
+          "options": [
+            {
+              "label": "Input",
+              "value": "input",
+            },
+            {
+              "label": "Context",
+              "value": "context",
+            },
+          ],
+          "required": true,
+        },
+        "type": "select",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "input",
+        },
+        "defaultValue": "handbackResult",
+        "key": "inputKey",
+        "label": "Input Key to store Result",
+        "type": "cognigyText",
+      },
+      {
+        "condition": {
+          "key": "storeLocation",
+          "value": "context",
+        },
+        "defaultValue": "handbackResult",
+        "key": "contextKey",
+        "label": "Context Key to store Result",
+        "type": "cognigyText",
+      },
+    ],
+    "form": [
+      {
+        "key": "connection",
+        "type": "field",
+      },
+      {
+        "key": "id",
+        "type": "field",
+      },
+      {
+        "key": "assignment",
+        "type": "section",
+      },
+      {
+        "key": "storage",
+        "type": "section",
+      },
+    ],
+    "function": [Function],
+    "parentType": null,
+    "preview": undefined,
+    "sections": [
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "type",
+          "configuration",
+        ],
+        "key": "assignment",
+        "label": "Assignment Configuration",
+      },
+      {
+        "defaultCollapsed": true,
+        "fields": [
+          "storeLocation",
+          "inputKey",
+          "contextKey",
+        ],
+        "key": "storage",
+        "label": "Storage Option",
+      },
+    ],
+    "summary": "Schedules a post-agent handback to transition the conversation to a bot flow",
+    "tags": [],
+    "tokens": [],
+    "type": "scheduleHandbackToBotFlow",
+  },
+]
+`;

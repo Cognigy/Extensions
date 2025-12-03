@@ -146,3 +146,13 @@ The **CXone API Caller** node allows you to call **any API dynamically** using y
 5. Execute the node and access the results via **context** or **input**  
 
 ---
+
+## Testing ✅
+
+This extension uses **Jest** for unit tests.
+
+- **Run all tests**: `npm test`
+- The suite covers:
+  - Node descriptors in `src/nodes` (e.g. `handover.ts`, `send-signal.ts`) including success and error paths
+  - Helpers in `src/helpers` (all HTTP helpers and `tms-payload.ts`) to verify request formats and error handling
+- Jest is configured with coverage thresholds targeting near-100% coverage for helper modules.

@@ -27,14 +27,13 @@ describe("handoverToCXone node", () => {
   let setTimeoutSpy: jest.SpyInstance;
 
   const baseConfig = {
-    environment: "https://cxone.niceincontact.com",
-    baseUrl: "",
     action: "End",
     businessNumber: "BU-1",
     contactId: "12345",
     spawnedContactId: "67890",
     optionalParamsObject: [{ foo: "bar" }],
     connection: {
+      environmentUrl: "https://cxone.niceincontact.com",
       accessKeyId: "ak",
       accessKeySecret: "as",
       clientId: "cid",
@@ -78,7 +77,7 @@ describe("handoverToCXone node", () => {
     expect(helpers.getCxoneOpenIdUrl).toHaveBeenCalledWith(
       cognigy.api,
       cognigy.context,
-      baseConfig.environment
+      baseConfig.connection.environmentUrl
     );
     expect(helpers.getToken).toHaveBeenCalled();
     expect(helpers.getCxoneConfigUrl).toHaveBeenCalled();
@@ -119,15 +118,15 @@ describe("handoverToCXone node", () => {
     ).rejects.toThrow("handoverToCXone: CXone API Connection not found");
   });
 
-  it("throws when environment is other and baseUrl missing", async () => {
+  it("throws when environmentUrl is missing", async () => {
     const cognigy = createMockCognigy();
     await expect(
       handoverToCXone.function({
         cognigy,
-        config: { ...baseConfig, environment: "other", baseUrl: "" } as any
+        config: { ...baseConfig, connection: { ...baseConfig.connection, environmentUrl: "" } } as any
       } as any)
     ).rejects.toThrow(
-      "handoverToCXone: Base URL is required when Environment is set to Other"
+      "handoverToCXone: Environment URL is required in connection configuration"
     );
   });
 

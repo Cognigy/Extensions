@@ -4,11 +4,10 @@ import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignal } from "../h
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     config: {
-        environment: string;
-        baseUrl?: string;
         contactId: string;
         signalParams: any;
         connection: {
+            environmentUrl: string;
             accessKeyId: string;
             accessKeySecret: string;
             clientId: string;
@@ -37,34 +36,6 @@ export const sendSignalToCXone = createNodeDescriptor({
             }
         },
         {
-            key: "environment",
-            label: "Environment",
-            type: "select",
-            description: "The CXone environment.",
-            defaultValue: "https://cxone.niceincontact.com",
-            params: {
-                options: [
-                    { label: "Global Production", value: "https://cxone.niceincontact.com" },
-                    { label: "FedRAMP Moderate", value: "https://cxone-gov.niceincontact.com" },
-                    { label: "Australian Sovereign", value: "https://nicecxone-sov1.au" },
-                    { label: "EU Sovereign", value: "https://nicecxone-sov1.eu" },
-                    { label: "Other", value: "other" }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "baseUrl",
-            label: "Environment Base URL",
-            type: "text",
-            description: "The Base URL (Issuer) for the CXone environment.",
-            condition: { key: "environment", value: "other" },
-            params: {
-                required: true
-            },
-            defaultValue: "https://cxone.niceincontact.com"
-        },
-        {
             key: "contactId",
             label: "Contact ID",
             type: "cognigyText",
@@ -86,8 +57,6 @@ export const sendSignalToCXone = createNodeDescriptor({
     ],
     sections: [],
     form: [
-        { type: "field", key: "environment" },
-        { type: "field", key: "baseUrl" },
         { type: "field", key: "contactId" },
         { type: "field", key: "connection" },
         { type: "field", key: "signalParams" }
@@ -96,14 +65,16 @@ export const sendSignalToCXone = createNodeDescriptor({
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, contactId, signalParams, connection } = config;
+        const { contactId, signalParams, connection } = config;
         const { api, input, context } = cognigy;
-        let tokenIssuer = environment;
-        if (environment === "other") {
-            tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
+
+        if (!connection.environmentUrl || connection.environmentUrl.trim() === "") {
+            throw new Error("sendSignalToCXone: Environment URL is required in connection configuration");
         }
 
-        api.log("info", `sendSignalToCXone: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
+        const tokenIssuer = connection.environmentUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
+
+        api.log("info", `sendSignalToCXone: Contact ID: ${contactId}; Environment URL: ${tokenIssuer}`);
         // get token URL based on environment
         const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
         api.log("info", `sendSignalToCXone: got token URL: ${tokenUrl}`);

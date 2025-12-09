@@ -18,11 +18,10 @@ const helpers = require("../../helpers/cxone-utils");
 
 describe("sendSignalToCXone node", () => {
   const baseConfig = {
-    environment: "https://cxone.niceincontact.com",
-    baseUrl: "",
     contactId: "12345",
     signalParams: ["one", "two"],
     connection: {
+      environmentUrl: "https://cxone.niceincontact.com",
       accessKeyId: "ak",
       accessKeySecret: "as",
       clientId: "cid",
@@ -47,7 +46,7 @@ describe("sendSignalToCXone node", () => {
     expect(helpers.getCxoneOpenIdUrl).toHaveBeenCalledWith(
       cognigy.api,
       cognigy.context,
-      baseConfig.environment
+      baseConfig.connection.environmentUrl
     );
     expect(helpers.getToken).toHaveBeenCalled();
     expect(helpers.getCxoneConfigUrl).toHaveBeenCalled();
@@ -73,14 +72,14 @@ describe("sendSignalToCXone node", () => {
     );
   });
 
-  it("uses trimmed baseUrl when environment is other", async () => {
+  it("uses trimmed environmentUrl", async () => {
     const cognigy = createMockCognigy({
       input: { channel: "voice" }
     });
 
     await sendSignalToCXone.function({
       cognigy,
-      config: { ...baseConfig, environment: "other", baseUrl: "https://issuer///" } as any
+      config: { ...baseConfig, connection: { ...baseConfig.connection, environmentUrl: "https://issuer///" } } as any
     } as any);
 
     expect(helpers.getCxoneOpenIdUrl).toHaveBeenCalledWith(

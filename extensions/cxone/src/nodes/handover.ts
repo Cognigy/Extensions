@@ -5,8 +5,6 @@ import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, pos
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     config: {
-        environment: string;
-        baseUrl?: string;
         action: string;
         contactId: string;
         spawnedContactId: string;
@@ -17,6 +15,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
         optionalParamsArray: any;
         optionalParams: any;
         connection: {
+            environmentUrl: string;
             accessKeyId: string;
             accessKeySecret: string;
             clientId: string;
@@ -43,34 +42,6 @@ export const handoverToCXone = createNodeDescriptor({
                 connectionType: "cxoneConnection",
                 required: true
             }
-        },
-        {
-            key: "environment",
-            label: "Environment",
-            type: "select",
-            description: "The CXone environment.",
-            defaultValue: "https://cxone.niceincontact.com",
-            params: {
-                options: [
-                    { label: "Global Production", value: "https://cxone.niceincontact.com" },
-                    { label: "FedRAMP Moderate", value: "https://cxone-gov.niceincontact.com" },
-                    { label: "Australian Sovereign", value: "https://nicecxone-sov1.au" },
-                    { label: "EU Sovereign", value: "https://nicecxone-sov1.eu" },
-                    { label: "Other", value: "other" }
-                ],
-                required: true
-            }
-        },
-        {
-            key: "baseUrl",
-            label: "Environment Base URL",
-            type: "text",
-            description: "The Base URL (Issuer) for the CXone environment.",
-            condition: { key: "environment", value: "other" },
-            params: {
-                required: true
-            },
-            defaultValue: "https://cxone.niceincontact.com"
         },
         {
             key: "action",
@@ -125,8 +96,6 @@ export const handoverToCXone = createNodeDescriptor({
     ],
     sections: [],
     form: [
-        { type: "field", key: "environment" },
-        { type: "field", key: "baseUrl" },
         { type: "field", key: "action" },
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
@@ -138,28 +107,23 @@ export const handoverToCXone = createNodeDescriptor({
         color: "#3694FD"
     },
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
+        const { action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
         const { api, input, context } = cognigy;
 
         if (!connection) {
             throw new Error("handoverToCXone: CXone API Connection not found");
         }
-        if (environment === "other") {
-            if (!baseUrl || baseUrl.trim() === "") {
-                throw new Error("handoverToCXone: Base URL is required when Environment is set to Other");
-            }
+        if (!connection.environmentUrl || connection.environmentUrl.trim() === "") {
+            throw new Error("handoverToCXone: Environment URL is required in connection configuration");
         }
         if (!action) {
             api.output("handoverToCXone Error: Missing Action parameter", { error: "Missing Action parameter" });
             throw new Error("handoverToCXone: Missing Action parameter");
         }
 
-        let tokenIssuer = environment;
-        if (environment === "other") {
-            tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
-        }
+        const tokenIssuer = connection.environmentUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
 
-        api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
+        api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment URL: ${tokenIssuer}`);
         try {
             const channel = input?.channel || '';
             api.log("info", `handoverToCXone: Interaction channel: ${channel}`);

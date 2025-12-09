@@ -1,6 +1,6 @@
 {
   "name": "cxone",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "CXone Extension to interact with NiCE CXone platform",
   "main": "build/module.js",
   "scripts": {
@@ -19,9 +19,6 @@
     "Cmplete Interaction",
     "Signal CXone",
     "Signal Interaction",
-    "CXone Knowledge Hub",
-    "Knowledge Hub",
-    "Query Knowledge Hub",
     "CXone API",
     "NiCE API"
   ],

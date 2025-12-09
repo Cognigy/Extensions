@@ -16,13 +16,13 @@
     "Transfer to Agent",
     "Escalate to Agent",
     "End Conversation",
-    "Cmplete Interaction",
+    "Complete Interaction",
     "Signal CXone",
     "Signal Interaction",
     "CXone API",
     "NiCE API"
   ],
-  "author": "NiCE Alexei",
+  "author": "NiCE",
   "license": "NiCE",
   "dependencies": {
     "@cognigy/extension-tools": "^0.14.0",

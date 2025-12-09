@@ -1,5 +1,6 @@
+import { ConversationItem, HandoverAction } from "../types";
+
 type Participant = "Bot" | "Patron";
-type Action = "End" | "Escalate";
 
 interface Transcript {
   participantId: Participant;
@@ -26,17 +27,7 @@ interface CognigyPayload {
   selfServiceSessionDetails: SelfServiceSessionDetails;
 }
 
-interface ConversationItem {
-  role: "user" | "assistant";
-  type: "input" | "output";
-  payload: {
-    text?: string | null;
-    data?: any;
-  };
-  timestamp: number;
-}
-
-export default function transformConversation(conversation: ConversationItem[], action: Action, contactId: string, businessNumber: string): CognigyPayload {
+export default function transformConversation(conversation: ConversationItem[], action: HandoverAction, contactId: string, businessNumber: string): CognigyPayload {
   const transcripts: Transcript[] = conversation
     .filter(item => item.type === "output" || (item.type === "input" && item.payload.text))
     .map(item => {

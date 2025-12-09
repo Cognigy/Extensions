@@ -3,137 +3,121 @@
 import { sendSignalToCXone } from "../send-signal";
 import { createMockCognigy } from "../../test-utils/mockCognigyApi";
 
-jest.mock("../../helpers/cxone-utils", () => ({
-  getToken: jest.fn().mockResolvedValue({ access_token: "tok", id_token: "idTok" }),
-  getCxoneOpenIdUrl: jest.fn().mockResolvedValue("https://issuer/auth/token"),
-  getCxoneConfigUrl: jest.fn().mockResolvedValue("https://api"),
-  sendSignal: jest.fn().mockResolvedValue(204)
-}));
+jest.mock("../../api/cxone-api-client");
 
-jest.mock("jsonwebtoken", () => ({
-  decode: jest.fn().mockReturnValue({ iss: "https://issuer", tenantId: "tenant1" })
-}));
-
-const helpers = require("../../helpers/cxone-utils");
+import { CXoneApiClient } from "../../api/cxone-api-client";
 
 describe("sendSignalToCXone node", () => {
-  const baseConfig = {
-    contactId: "12345",
-    signalParams: ["one", "two"],
-    connection: {
-      environmentUrl: "https://cxone.niceincontact.com",
-      accessKeyId: "ak",
-      accessKeySecret: "as",
-      clientId: "cid",
-      clientSecret: "cs"
-    }
-  };
+    let mockApiClient: jest.Mocked<CXoneApiClient>;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+    const baseConfig = {
+        contactId: "12345",
+        signalParams: ["one", "two"],
+        connection: {
+            environmentUrl: "https://cxone.niceincontact.com",
+            accessKeyId: "ak",
+            accessKeySecret: "as",
+            clientId: "cid",
+            clientSecret: "cs"
+        }
+    };
 
-  it("signals CXone for voice channel", async () => {
-    const cognigy = createMockCognigy({
-      input: { channel: "voice" }
+    beforeEach(() => {
+        // Mock the API client
+        mockApiClient = {
+            sendSignal: jest.fn().mockResolvedValue(204)
+        } as any;
+
+        (CXoneApiClient as jest.MockedClass<typeof CXoneApiClient>).mockImplementation(() => mockApiClient);
+
+        jest.clearAllMocks();
     });
 
-    await sendSignalToCXone.function({
-      cognigy,
-      config: baseConfig as any
-    } as any);
+    it("signals CXone for voice channel", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
 
-    expect(helpers.getCxoneOpenIdUrl).toHaveBeenCalledWith(
-      cognigy.api,
-      cognigy.context,
-      baseConfig.connection.environmentUrl
-    );
-    expect(helpers.getToken).toHaveBeenCalled();
-    expect(helpers.getCxoneConfigUrl).toHaveBeenCalled();
-    expect(helpers.sendSignal).toHaveBeenCalledWith(
-      cognigy.api,
-      "https://api",
-      "tok",
-      baseConfig.contactId,
-      baseConfig.signalParams
-    );
-    expect(cognigy.api.addToContext).toHaveBeenCalledWith(
-      "CXoneSendSignal",
-      expect.stringContaining("CXone was Signaled"),
-      "simple"
-    );
-    // Output for chat channel is always emitted
-    expect(cognigy.api.output).toHaveBeenCalledWith(
-      null,
-      expect.objectContaining({
-        Intent: "Signal",
-        Params: "one|two"
-      })
-    );
-  });
+        await sendSignalToCXone.function({
+            cognigy,
+            config: baseConfig as any
+        } as any);
 
-  it("uses trimmed environmentUrl", async () => {
-    const cognigy = createMockCognigy({
-      input: { channel: "voice" }
+        expect(mockApiClient.sendSignal).toHaveBeenCalledWith(
+            baseConfig.contactId,
+            baseConfig.signalParams
+        );
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneSendSignal",
+            expect.stringContaining("CXone was Signaled"),
+            "simple"
+        );
+        // Output for chat channel is always emitted
+        expect(cognigy.api.output).toHaveBeenCalledWith(
+            null,
+            expect.objectContaining({
+                Intent: "Signal",
+                Params: "one|two"
+            })
+        );
     });
 
-    await sendSignalToCXone.function({
-      cognigy,
-      config: { ...baseConfig, connection: { ...baseConfig.connection, environmentUrl: "https://issuer///" } } as any
-    } as any);
+    it("uses trimmed environmentUrl", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
 
-    expect(helpers.getCxoneOpenIdUrl).toHaveBeenCalledWith(
-      cognigy.api,
-      cognigy.context,
-      "https://issuer"
-    );
-  });
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, connection: { ...baseConfig.connection, environmentUrl: "https://issuer///" } } as any
+        } as any);
 
-  it("does not call sendSignal when contactId missing", async () => {
-    const cognigy = createMockCognigy({
-      input: { channel: "voice" }
+        expect(mockApiClient.sendSignal).toHaveBeenCalled();
     });
 
-    await sendSignalToCXone.function({
-      cognigy,
-      config: { ...baseConfig, contactId: "" } as any
-    } as any);
+    it("does not call sendSignal when contactId missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
 
-    expect(helpers.sendSignal).not.toHaveBeenCalled();
-    expect(cognigy.api.output).toHaveBeenCalledWith(
-      null,
-      expect.objectContaining({ Intent: "Signal" })
-    );
-  });
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "" } as any
+        } as any);
 
-  it("handles errors from helpers and surfaces context and output", async () => {
-    (helpers.sendSignal as jest.Mock).mockRejectedValueOnce(new Error("send error"));
-
-    const cognigy = createMockCognigy({
-      input: { channel: "voice" }
+        expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
+        expect(cognigy.api.output).toHaveBeenCalledWith(
+            null,
+            expect.objectContaining({ Intent: "Signal" })
+        );
     });
 
-    await expect(
-      sendSignalToCXone.function({
-        cognigy,
-        config: baseConfig as any
-      } as any)
-    ).rejects.toThrow("send error");
+    it("handles errors from helpers and surfaces context and output", async () => {
+        (mockApiClient.sendSignal as jest.Mock).mockRejectedValueOnce(new Error("send error"));
 
-    expect(cognigy.api.log).toHaveBeenCalledWith(
-      "error",
-      expect.stringContaining("sendSignalToCXone: Error signaling")
-    );
-    expect(cognigy.api.addToContext).toHaveBeenCalledWith(
-      "CXoneSendSignal",
-      expect.stringContaining("Error signaling"),
-      "simple"
-    );
-    expect(cognigy.api.output).toHaveBeenCalledWith(
-      "Something is not working. Please retry.",
-      expect.objectContaining({ error: expect.any(String) })
-    );
-  });
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await expect(
+            sendSignalToCXone.function({
+                cognigy,
+                config: baseConfig as any
+            } as any)
+        ).rejects.toThrow("send error");
+
+        expect(cognigy.api.log).toHaveBeenCalledWith(
+            "error",
+            expect.stringContaining("sendSignalToCXone: Error signaling")
+        );
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneSendSignal",
+            expect.stringContaining("Error signaling"),
+            "simple"
+        );
+        expect(cognigy.api.output).toHaveBeenCalledWith(
+            "Something is not working. Please retry.",
+            expect.objectContaining({ error: expect.any(String) })
+        );
+    });
 });
-
-

@@ -1,28 +1,10 @@
-import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import * as jwt from "jsonwebtoken";
-import transformConversation from '../helpers/tms-payload';
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, postToTMS } from "../helpers/cxone-utils";
-
-export interface IgetSendSignalParams extends INodeFunctionBaseParams {
-    config: {
-        action: string;
-        contactId: string;
-        spawnedContactId: string;
-        businessNumber: string;
-        transferIntent: string;
-        optionalParamsMode: string;
-        optionalParamsObject: any;
-        optionalParamsArray: any;
-        optionalParams: any;
-        connection: {
-            environmentUrl: string;
-            accessKeyId: string;
-            accessKeySecret: string;
-            clientId: string;
-            clientSecret: string;
-        };
-    };
-}
+import { createNodeDescriptor } from "@cognigy/extension-tools";
+import transformConversation from "../helpers/tms-payload";
+import { HandoverNodeParams, HandoverAction } from "../types";
+import { CXoneApiClient } from "../api/cxone-api-client";
+import { isVoiceChannel } from "../helpers/channel-utils";
+import { SENTINEL_CONTACT_ID, HANDOVER_DELAY_MS, validateConnection, normalizeEnvironmentUrl } from "../config";
+import { createErrorMessage } from "../helpers/errors";
 
 export const handoverToCXone = createNodeDescriptor({
     type: "handoverToCXone",
@@ -106,107 +88,89 @@ export const handoverToCXone = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: IgetSendSignalParams) => {
+    function: async ({ cognigy, config }: HandoverNodeParams) => {
         const { action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
         const { api, input, context } = cognigy;
 
-        if (!connection) {
-            throw new Error("handoverToCXone: CXone API Connection not found");
-        }
-        if (!connection.environmentUrl || connection.environmentUrl.trim() === "") {
-            throw new Error("handoverToCXone: Environment URL is required in connection configuration");
-        }
-        if (!action) {
-            api.output("handoverToCXone Error: Missing Action parameter", { error: "Missing Action parameter" });
-            throw new Error("handoverToCXone: Missing Action parameter");
+        // Validate connection
+        const connectionValidation = validateConnection(connection);
+        if (!connectionValidation.valid) {
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", connectionValidation.error || "Invalid connection"));
         }
 
-        const tokenIssuer = connection.environmentUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
+        // Validate action
+        if (!action || (action !== "End" && action !== "Escalate")) {
+            api.output("handoverToCXone Error: Missing or invalid Action parameter", { error: "Missing or invalid Action parameter" });
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", "Missing or invalid Action parameter"));
+        }
+
+        const tokenIssuer = normalizeEnvironmentUrl(connection.environmentUrl);
 
         api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment URL: ${tokenIssuer}`);
+
         try {
-            const channel = input?.channel || '';
+            const channel = input?.channel || "";
             api.log("info", `handoverToCXone: Interaction channel: ${channel}`);
-            const isVoice = channel.toLowerCase().includes('voice');
+            const isVoice = isVoiceChannel(input);
             api.log("info", `handoverToCXone: isVoice: ${isVoice}`);
 
-            // prepare optional parameters
-            let finalParams = [];
-
+            // Prepare optional parameters
+            let finalParams: string[] = [];
             if (Array.isArray(optionalParamsObject) && optionalParamsObject.length > 0) {
                 finalParams = [JSON.stringify(optionalParamsObject)];
             }
             api.log("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
 
-            if (contactId && spawnedContactId && isVoice && contactId !== "100000000000" && spawnedContactId !== "100000000000") {
-                // get token URL based on environment
-                // i.e.: "https://cxone.niceincontact.com/auth/token";
-                const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
-                api.log("info", `handoverToCXone: got token URL: ${tokenUrl}`);
-                const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
-                const cxOneConfig = {
-                    tokenUrl: tokenUrl,
-                    accessKeyId: connection.accessKeyId,
-                    accessKeySecret: connection.accessKeySecret,
-                    basicToken: basicToken
-                };
+            // Handle voice channel handover
+            if (contactId && spawnedContactId && isVoice && contactId !== SENTINEL_CONTACT_ID && spawnedContactId !== SENTINEL_CONTACT_ID) {
+                const apiClient = new CXoneApiClient(api, context, connection);
 
-                const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
-                const decodedToken: any = jwt.decode(tokens.id_token);
-                // api.log("info", `handoverToCXone: decoded id token:  ${JSON.stringify(decodedToken)}`);
-                const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
-                api.log("info", `handoverToCXone: got API endpoint URL: ${apiEndpointUrl}`);
-
-                const transcript = input.transcript || context.transcript || '';
                 // Send transcript to TMS if available
-                if (transcript) {
+                const transcript = input.transcript || context.transcript || "";
+                if (transcript && Array.isArray(transcript) && transcript.length > 0) {
                     api.log("info", `handoverToCXone: got transcript`);
                     try {
-                        const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber);
-                        const tmsStatus = await postToTMS(api, apiEndpointUrl, tokens.access_token, tmsPayload);
-                        api.log("info", `handoverToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}; payload: ${JSON.stringify(tmsPayload)}`);
-                    } catch (tmsError) {
+                        const tmsPayload = transformConversation(transcript, action as HandoverAction, contactId, businessNumber);
+                        const tmsStatus = await apiClient.postTranscript(tmsPayload);
+                        api.log("info", `handoverToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`);
+                    } catch (tmsError: any) {
                         api.log("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
                     }
                 }
-                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams);
+
+                // Send handover signal
+                const signalStatus = await apiClient.sendSignalHandover(
+                    spawnedContactId || contactId,
+                    action as HandoverAction,
+                    finalParams
+                );
                 api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
-                api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
+                api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, "simple");
             }
 
             // Output the handover action to NiCE channel for CXone Guide Chat
-            if (!isVoice && contactId && contactId !== "100000000000") {
+            if (!isVoice && contactId && contactId !== SENTINEL_CONTACT_ID) {
                 const ndata: {
                     _cognigy: {
                         _niceCXOne: {
                             json: {
-                                text: string
-                                uiComponent: object
-                                data: any
-                                action: string
-                            }
-                        }
-                    }
+                                text: string;
+                                uiComponent: Record<string, unknown>;
+                                data: {
+                                    Intent: string;
+                                    Params?: string;
+                                };
+                                action: string;
+                            };
+                        };
+                    };
                 } = {
                     _cognigy: {
                         _niceCXOne: {
                             json: {
                                 text: "",
-                                uiComponent: {
-                                    /*
-                                    intentInfo: {
-                                        intent: tIntent
-                                    }
-                                    */
-                                },
+                                uiComponent: {},
                                 data: {
-                                    // contentType: "ExchangeResultOverride",
-                                    /*
-                                    content: {
-                                        // vahExchangeResultBranch: "ReturnControlToScript",
-                                        intent: tIntent
-                                    },
-                                    */
                                     Intent: action
                                 },
                                 action: action === "End" ? "END_CONVERSATION" : "AGENT_TRANSFER"
@@ -214,33 +178,24 @@ export const handoverToCXone = createNodeDescriptor({
                         }
                     }
                 };
-                /*
-                const data: { contentType: string; content: any; Intent: string; Params?: string } = {
-                    "contentType": "ExchangeResultOverride",
-                    "content": {
-                            "vahExchangeResultBranch": "ReturnControlToScript",
-                            "intent": tIntent
-                    },
-                    "Intent": action
-                };
-                */
+
                 if (Array.isArray(finalParams) && finalParams.length) {
-                    ndata._cognigy._niceCXOne.json.data.Params = finalParams.join('|');
-                    // data.Params = finalParams.join('|');
+                    ndata._cognigy._niceCXOne.json.data.Params = finalParams.join("|");
                 }
                 api.output("", ndata);
                 api.log("info", `handoverToCXone: Done. Output data was sent to CXone Guide Chat channel: ${JSON.stringify(ndata)}`);
             } else {
-                // api.output("", {});
                 api.log("info", `handoverToCXone: Done. No output data sent to Voice / Cognigy Webchat / Cognigy Testchat channel.`);
             }
-            // wait 5 seconds - to not get unwanted messages from Cognigy during handover
-            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            // Wait before returning control to avoid unwanted messages during handover
+            await new Promise(resolve => setTimeout(resolve, HANDOVER_DELAY_MS));
             return;
-        } catch (error) {
-            api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
-            api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');
-            api.output("Something is not working. Please retry.", { error: error.message });
+        } catch (error: any) {
+            const errorMessage = error.message || "Unknown error";
+            api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${errorMessage}`);
+            api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${errorMessage}`, "simple");
+            api.output("Something is not working. Please retry.", { error: errorMessage });
             throw error;
         }
     }

@@ -131,6 +131,7 @@ export const handoverToCXone = createNodeDescriptor({
                     api.log("info", `handoverToCXone: got transcript`);
                     try {
                         const tmsPayload = transformConversation(transcript, action as HandoverAction, contactId, businessNumber);
+                        api.log("info", `handoverToCXone: transformed transcript to TMS payload: ${JSON.stringify(tmsPayload)}`);
                         const tmsStatus = await apiClient.postTranscript(tmsPayload);
                         api.log("info", `handoverToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`);
                     } catch (tmsError: any) {

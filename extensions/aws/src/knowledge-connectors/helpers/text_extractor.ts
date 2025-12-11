@@ -74,11 +74,10 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 	// load and extract document
 	const docs = await documentLoader.load();
 
-	if (type !== "txt") {
-		docs.forEach((doc) => {
-			doc.pageContent = removeUnnecessaryChars(doc?.pageContent);
-		});
-	}
+	// Clean up text for all file types
+	docs.forEach((doc) => {
+		doc.pageContent = removeUnnecessaryChars(doc?.pageContent);
+	});
 
 	// split document into paragraphs according to specified or default splitter
 	const splitDocuments = (

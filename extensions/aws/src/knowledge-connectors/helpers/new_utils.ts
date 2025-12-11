@@ -60,12 +60,12 @@ export const getS3FileChunks = async (
 
         console.log(`Extracted ${extractedText.length} characters from ${fileKey}`);
 
-        // The lsExtractor returns pre-chunked text separated by \n\n
-        // Split into individual chunks
+        // The lsExtractor returns text that's already been chunked and joined with \n\n
+        // Split by \n\n to get the individual chunks back
         const chunks: ChunkContent[] = extractedText
             .split('\n\n')
             .filter(chunk => chunk.trim().length > 0)
-            .slice(0, MAX_CHUNKS_PER_FILE) // Limit to prevent backend processing issues
+            .slice(0, MAX_CHUNKS_PER_FILE)
             .map((chunk, index) => ({
                 text: chunk.trim(),
                 data: {

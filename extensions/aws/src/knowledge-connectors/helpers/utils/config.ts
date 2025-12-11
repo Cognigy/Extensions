@@ -1,11 +1,7 @@
-const MAX_CHUNK_SIZE = 2000;
-
-const LANGCHAIN_DEFAULT_CHUNK_SIZE_IN_CHARS = 2000;
-
-export const getMaxChunkSize = (): number => {
-  return MAX_CHUNK_SIZE;
+export const getMaxChunkSize = (defaultLimit: number = 2000): number => {
+  return parseInt(process.env.MAX_CHUNK_SIZE, 10) || defaultLimit;
 };
 
-export const langchainDefaultChunkSizeInChars = (): number => {
-  return LANGCHAIN_DEFAULT_CHUNK_SIZE_IN_CHARS;
+export const langchainDefaultChunkSizeInChars = (defaultLimit: number = 2000): number => {
+  return parseInt(process.env.LANGCHAIN_DEFAULT_CHUNK_SIZE_IN_CHARS, 10) || defaultLimit;
 };

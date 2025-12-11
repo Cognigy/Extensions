@@ -53,8 +53,16 @@ export const s3Connector = createKnowledgeConnector({
 
     console.log(`Found ${s3Objects.length} files in S3 bucket: ${bucketName}`);
 
-    // Process each S3 object
-    for (const s3Object of s3Objects) {
+    // Filter for supported file types
+    const supportedExtensions = ['txt', 'pdf', 'docx', 'csv', 'json', 'jsonl', 'md', 'pptx'];
+    const filteredObject = s3Objects.filter(obj => {
+      const keyLower = obj.Key.toLowerCase();
+      return supportedExtensions.some(ext => keyLower.endsWith(`.${ext}`));
+    });
+
+    console.log(`Filtered to ${filteredObject.length} supported files (skipped ${s3Objects.length - filteredObject.length} other files)`);
+
+    for (const s3Object of filteredObject) {
       console.log(`Processing file: ${s3Object.Key}`);
 
       try {

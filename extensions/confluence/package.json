@@ -31,6 +31,6 @@
     "dependencies": {
         "@cognigy/extension-tools": "^0.16.6",
         "@langchain/textsplitters": "^0.0.3",
-        "turndown": "^7.1.2"
+        "turndown": "^7.2.2"
     }
 }

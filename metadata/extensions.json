@@ -1474,7 +1474,7 @@
     {
       "name": "vier-voice",
       "label": "VIER Voice",
-      "version": "4.7.0",
+      "version": "4.7.1",
       "description": "Enable phone bots with VIER Cognitive Voice Gateway",
       "longDescription": "Enable phone bots with VIER Cognitive Voice Gateway.",
       "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/vier-voice471/vier-voice.tar.gz",

@@ -30,7 +30,7 @@
     },
     "dependencies": {
         "@cognigy/extension-tools": "^0.16.6",
-        "@langchain/textsplitters": "^0.0.3",
+        "@langchain/textsplitters": "^0.1.0",
         "turndown": "7.2.2"
     }
 }

@@ -28,6 +28,6 @@
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.14.0",
 		"axios": "^0.26.1",
-		"qs": "^6.11.1"
+		"qs": "^6.14.1"
 	}
 }

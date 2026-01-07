@@ -1,6 +1,6 @@
 {
   "name": "chuck-norris-jokes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chuck Norris Jokes Extensions",
   "main": "build/module.js",
   "scripts": {

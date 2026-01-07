@@ -1,6 +1,6 @@
 {
   "name": "diffbot",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Integrates with the Diffbot API",
   "main": "build/module.js",
   "scripts": {

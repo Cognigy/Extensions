@@ -95,7 +95,7 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 };
 
 /**
- * Custom PPTXLoader class to handle pptx files. Impelementation adapted
+ * Custom PPTXLoader class to handle pptx files. Implementation adapted
  * from langchain's PPTXLoader, but it uses newer version of officeparser package
  * to handle pptx entirely in memory, instead of writing to a temp file in the
  * current directory.

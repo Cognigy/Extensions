@@ -1,7 +1,4 @@
 import { S3Client, ListObjectsV2Command, S3 } from "@aws-sdk/client-s3";
-import { get } from "http";
-
-
 interface S3Object {
     Key: string;
     Size: number;

@@ -72,7 +72,7 @@ const getChunkSizeInChars = () => {
 	return chunkSize;
 };
 
-	const getRecursiveCharacterTextSplitter = () => {
+const getRecursiveCharacterTextSplitter = () => {
 	const chunkSize = getChunkSizeInChars();
 
 	// Add ". " to the list of separators to ensure sentences are kept whole when possible

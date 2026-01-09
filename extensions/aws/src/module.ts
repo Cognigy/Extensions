@@ -10,10 +10,10 @@ import { s3Connector } from "./knowledge-connectors/s3Connector";
 
 export default createExtension({
 	nodes: [
-		// sayPollyNode,
-		// lambdaInvokeNode,
-		// s3GetObjectNode,
-		// s3PutObjectNode
+		sayPollyNode,
+		lambdaInvokeNode,
+		s3GetObjectNode,
+		s3PutObjectNode
 	],
 
 	connections: [

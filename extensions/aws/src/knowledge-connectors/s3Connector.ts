@@ -51,7 +51,6 @@ export const s3Connector = createKnowledgeConnector({
     // Get all S3 objects in the bucket
     const s3Objects = await getS3Object(s3Connection, bucketName);
 
-    console.log(`Found ${s3Objects.length} files in S3 bucket: ${bucketName}`);
 
     // Filter for supported file types
     const supportedExtensions = ['txt', 'pdf', 'docx', 'csv', 'json', 'jsonl', 'md', 'pptx'];
@@ -60,10 +59,8 @@ export const s3Connector = createKnowledgeConnector({
       return supportedExtensions.some(ext => keyLower.endsWith(`.${ext}`));
     });
 
-    console.log(`Filtered to ${filteredObject.length} supported files (skipped ${s3Objects.length - filteredObject.length} other files)`);
 
     for (const s3Object of filteredObject) {
-      console.log(`Processing file: ${s3Object.Key}`);
 
       try {
         // Get chunks for this file
@@ -74,7 +71,6 @@ export const s3Connector = createKnowledgeConnector({
         );
 
         if (chunks.length === 0) {
-          console.log(`No chunks generated for ${s3Object.Key}, skipping...`);
           continue;
         }
 
@@ -86,10 +82,8 @@ export const s3Connector = createKnowledgeConnector({
           chunkCount: chunks.length,
         });
 
-        console.log(`Created knowledge source for ${s3Object.Key} with ID: ${knowledgeSourceId}`);
 
         // Add all chunks to the knowledge source
-        console.log(`Adding ${chunks.length} chunks to ${s3Object.Key}...`);
         let chunkIndex = 0;
         for (const chunk of chunks) {
           await api.createKnowledgeChunk({
@@ -100,19 +94,15 @@ export const s3Connector = createKnowledgeConnector({
           chunkIndex++;
           // Log progress every 100 chunks
           if (chunkIndex % 100 === 0) {
-            console.log(`Progress: ${chunkIndex}/${chunks.length} chunks added to ${s3Object.Key}`);
           }
         }
 
-        console.log(`✅ Successfully added all ${chunks.length} chunks to ${s3Object.Key}`);
 
       } catch (error) {
-        console.error(`Error processing ${s3Object.Key}:`, error);
         // Continue with next file even if this one fails
         continue;
       }
     }
 
-    console.log(`✅ Completed processing ${s3Objects.length} files from S3 bucket`);
   },
 });

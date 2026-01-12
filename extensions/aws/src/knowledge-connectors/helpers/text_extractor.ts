@@ -6,9 +6,6 @@ import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json'
 import { Document } from '@langchain/core/documents';
 
 import { splitDocs } from './text_chunker';
-import { removeUnnecessaryChars } from './utils/removeUnnecessaryChars';
-import { logger } from "./utils/logger";
-import { convertToUtf8} from "./utils/convertToUtf8";
 import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
 import { parseOfficeAsync } from 'officeparser';
 const DefaultSplitters = {
@@ -22,11 +19,35 @@ const DefaultSplitters = {
 	"md": "MarkdownSplitter"
 };
 
+export const logger = {
+    log: (level: string, context: any, message: string) => {
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}] [${level.toUpperCase()}] ${message}`);
+        if (context && Object.keys(context).length > 0) {
+            console.log('Context:', JSON.stringify(context, null, 2));
+        }
+    }
+};
+
+export const removeUnnecessaryChars = (text: string): string => {
+    if (!text) return "";
+
+    return text
+        // Remove multiple spaces but preserve newlines
+        .replace(/[ \t]+/g, ' ')
+        // Remove multiple newlines (keep max 2)
+        .replace(/\n\s*\n\s*\n/g, '\n\n')
+        // Remove zero-width characters
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        // Trim whitespace
+        .trim();
+};
+
 export const lsExtractor = async (type: string, inputFile: string): Promise<string> => {
 	let documentLoader;
 	switch (type) {
 		case "txt":
-			documentLoader = new TextLoader(await convertToUtf8(inputFile));
+			documentLoader = new TextLoader(inputFile);
 			break;
 
 		case "pdf":
@@ -43,23 +64,23 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 		case "csv":
 			// possible config: columnName
 			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/csv#usage-extracting-a-single-column
-			documentLoader = new CSVLoader(await convertToUtf8(inputFile));
+			documentLoader = new CSVLoader(inputFile);
 			break;
 
 		case "json":
 			// possible config: pointer
 			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/json#using-json-pointer-example
-			documentLoader = new JSONLoader(await convertToUtf8(inputFile));
+			documentLoader = new JSONLoader(inputFile);
 			break;
 
 		case "jsonl":
 			// possible config: pointer
 			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/jsonlines
-			documentLoader = new JSONLinesLoader(await convertToUtf8(inputFile), "");
+			documentLoader = new JSONLinesLoader(inputFile, "");
 			break;
 
 		case 'md':
-			documentLoader = new TextLoader(await convertToUtf8(inputFile));
+			documentLoader = new TextLoader(inputFile);
 			break;
 
 		case 'pptx':
@@ -68,7 +89,7 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 			break;
 
 		default:
-			documentLoader = new TextLoader(await convertToUtf8(inputFile));
+			documentLoader = new TextLoader(inputFile);
 	}
 
 	// load and extract document

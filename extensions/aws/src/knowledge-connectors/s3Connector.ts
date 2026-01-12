@@ -1,6 +1,6 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { getS3Object } from "./helpers/list_files";
-import { getS3FileChunks, S3Connection } from "./helpers/new_utils";
+import { getS3FileChunks, S3Connection } from "./helpers/chunk_extractor";
 
 export const s3Connector = createKnowledgeConnector({
   type: "s3connector",

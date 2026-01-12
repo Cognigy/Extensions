@@ -3,10 +3,10 @@ import * as splitters from "@langchain/textsplitters";
 import { getMaxChunkSize, langchainDefaultChunkSizeInChars } from "./utils/config";
 
 
-export async function splitDocs(document: any): Promise<any[]> {
+export async function splitDocs(documents: any): Promise<any[]> {
 	let splitter;
 	splitter = getRecursiveCharacterTextSplitter();
-	const splitParagraphs = await splitter.splitDocuments(document);
+	const splitParagraphs = await splitter.splitDocuments(documents);
 	return splitParagraphs;
 }
 

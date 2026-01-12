@@ -47,16 +47,13 @@ export const getS3FileChunks = async (
     const tempFilePath = path.join(tempDir, tempFileName);
 
     fs.writeFileSync(tempFilePath, bodyContents);
-    console.log(`Saved to temp file: ${tempFilePath}`);
 
     try {
         // Extract text using lsExtractor
         const fileExtension = path.extname(fileKey).slice(1); // Remove the dot
-        console.log(`Extracting text from ${fileExtension} file...`);
 
         const extractedText = await lsExtractor(fileExtension, tempFilePath);
 
-        console.log(`Extracted ${extractedText.length} characters from ${fileKey}`);
 
         // The lsExtractor returns text that's already been chunked and joined with \n\n
         // Split by \n\n to get the individual chunks back
@@ -73,14 +70,12 @@ export const getS3FileChunks = async (
                 },
             }));
 
-        console.log(`Created ${chunks.length} chunks from ${fileKey}`);
         return chunks;
 
     } finally {
         // Clean up temp file
         if (fs.existsSync(tempFilePath)) {
             fs.unlinkSync(tempFilePath);
-            console.log(`Cleaned up temp file: ${tempFilePath}`);
         }
     }
 };

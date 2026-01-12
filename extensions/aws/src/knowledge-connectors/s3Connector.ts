@@ -84,20 +84,13 @@ export const s3Connector = createKnowledgeConnector({
 
 
         // Add all chunks to the knowledge source
-        let chunkIndex = 0;
         for (const chunk of chunks) {
           await api.createKnowledgeChunk({
             knowledgeSourceId: knowledgeSourceId,
             text: chunk.text,
             data: chunk.data,
           });
-          chunkIndex++;
-          // Log progress every 100 chunks
-          if (chunkIndex % 100 === 0) {
-          }
         }
-
-
       } catch (error) {
         // Continue with next file even if this one fails
         continue;

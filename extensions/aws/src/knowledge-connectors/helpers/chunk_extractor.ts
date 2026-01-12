@@ -32,8 +32,6 @@ export const getS3FileChunks = async (
         },
     });
 
-    console.log(`Downloading file: ${fileKey} from bucket: ${bucketName}`);
-
     // Download file from S3
     const command = new GetObjectCommand({
         Bucket: bucketName,

@@ -102,9 +102,7 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 
 	// split document into paragraphs according to specified or default splitter
 	const splitDocuments = (
-		await splitDocs(
-			docs,
-			DefaultSplitters[type] || "RecursiveCharacterTextSplitter")
+		await splitDocs(docs)
 	).map((doc) => doc.pageContent);
 
 	// join the paragraphs into the format we want

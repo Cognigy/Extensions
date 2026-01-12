@@ -26,7 +26,6 @@ export async function getS3Object(
 
 try {
 
-    console.log("Listing objects in bucket:", bucketName);
 
     const command = new ListObjectsV2Command({
         Bucket: bucketName,
@@ -37,7 +36,6 @@ try {
     const response = await s3Client.send(command);
 
     if (!response.Contents) {
-        console.log("No objects found in the bucket.");
         return [];
     }
 
@@ -49,10 +47,8 @@ try {
         LastModified: obj.LastModified!
     })); // Filter out empty files and folders
 
-    console.log(`Found ${s3Objects.length} objects in bucket ${bucketName}.`);
       // Log first few files for debugging
         s3Objects.slice(0, 3).forEach((obj, index) => {
-            console.log(`${index + 1}. ${obj.Key} (${obj.Size} bytes)`);
         });
 
     return s3Objects;

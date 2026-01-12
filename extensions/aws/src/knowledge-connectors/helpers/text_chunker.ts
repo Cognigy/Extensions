@@ -29,10 +29,3 @@ const getRecursiveCharacterTextSplitter = () => {
 	});
 	return splitter;
 };
-export const splitTextUsingRecursiveCharacterTextSplitter = (text: string) => {
-	const splitter = getRecursiveCharacterTextSplitter();
-
-	// Override separators to use default ones, to ensure chunk size limits are respected
-	// splitter.separators = ["\n\n", "\n", " ", ""];
-	return splitter.splitText(text);
-};

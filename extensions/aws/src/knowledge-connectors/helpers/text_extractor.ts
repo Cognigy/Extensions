@@ -8,16 +8,6 @@ import { Document } from '@langchain/core/documents';
 import { splitDocs } from './text_chunker';
 import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
 import { parseOfficeAsync } from 'officeparser';
-const DefaultSplitters = {
-	"text": "RecursiveCharacterTextSplitter",
-	"pdf": "RecursiveCharacterTextSplitter",
-	"docx": "RecursiveCharacterTextSplitter",
-	"csv": "RecursiveCharacterTextSplitter",
-	"json": "RecursiveCharacterTextSplitter",
-	"jsonl": "RecursiveCharacterTextSplitter",
-	"pptx": "RecursiveCharacterTextSplitter",
-	"md": "MarkdownSplitter"
-};
 
 export const logger = {
     log: (level: string, context: any, message: string) => {

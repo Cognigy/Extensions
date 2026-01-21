@@ -1,7 +1,23 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import Hubspot from 'hubspot';
+import { Client } from '@hubspot/api-client';
 
 const EXTENSION_TIMEOUT = 10000;
+
+// Define common company properties interface
+interface ICompanyProperties {
+	name?: string;
+	domain?: string;
+	industry?: string;
+	description?: string;
+	phone?: string;
+	address?: string;
+	city?: string;
+	state?: string;
+	zip?: string;
+	country?: string;
+	website?: string;
+	[key: string]: any; // Allow custom properties
+}
 
 export interface ICreateCompanyParams extends INodeFunctionBaseParams {
 	config: {
@@ -33,14 +49,13 @@ export const createCompanyNode = createNodeDescriptor({
 			label: "Create Company Data",
 			type: "json",
 			defaultValue: `{
-	"properties": [
-		{
-			"name": "name",
-			"value": "Company X"
-		}
-	]
-}
-			`
+    "properties": [
+        {
+            "name": "name",
+            "value": "Company X"
+        }
+    ]
+}`
 		},
 		{
 			key: "storeLocation",
@@ -102,8 +117,7 @@ export const createCompanyNode = createNodeDescriptor({
 	appearance: {
 		color: "#fa7820"
 	},
-
-	function: async ({ cognigy, config }: ICreateCompanyParams) => {
+	function: (async ({ cognigy, config }: ICreateCompanyParams) => {
 		const { api } = cognigy;
 		const {
 			storeLocation,
@@ -123,26 +137,24 @@ export const createCompanyNode = createNodeDescriptor({
 			]);
 
 			if (storeLocation === "context") api.addToContext(contextKey, result, "simple");
-			// @ts-ignore
 			else api.addToInput(inputKey, result);
 
-		} catch (err) {
+		} catch (err: unknown) {
 			const resultObject = {
 				result: null,
-				error: err.message
+				error: err instanceof Error ? err.message : String(err)
 			};
 			if (storeLocation === "context") {
 				api.addToContext(contextKey, resultObject, "simple");
 			} else {
-				// @ts-ignore
 				api.addToInput(inputKey, resultObject);
 			}
 		}
-	}
+	}) as any
 });
 
 /**
- * Creates a contact in Hubspot
+ * Creates a company in Hubspot
  * @param data The create company data
  * @param accessToken The accessToken to use
  */
@@ -150,18 +162,25 @@ async function createCompany(data: any, accessToken: string): Promise<any> {
 	if (!data) return Promise.reject("No company create data defined.");
 
 	try {
-		const hubspot = new Hubspot({ accessToken });
-		// @ts-ignore
-		if (hubspot.qs && typeof hubspot.qs === 'object') hubspot.qs.propertyMode = 'value_only';
+		const client = new Client({ accessToken });
 
-		try {
-			const response = await hubspot.companies.create(data);
-
-			return response;
-		} catch (err) {
-			throw new Error(err.message);
+		// Convert the properties array to the format expected by the new API
+		const properties: Record<string, any> = {};
+		if (data.properties && Array.isArray(data.properties)) {
+			data.properties.forEach((prop: { name: string; value: any }) => {
+				if (prop.name && prop.value !== undefined) {
+					properties[prop.name] = prop.value;
+				}
+			});
 		}
-	} catch (err) {
-		throw new Error(err.message);
+
+		const response = await client.crm.companies.basicApi.create({
+			properties: properties,
+			associations: []
+		});
+
+		return response;
+	} catch (err: unknown) {
+		throw new Error(err instanceof Error ? err.message : String(err));
 	}
 }

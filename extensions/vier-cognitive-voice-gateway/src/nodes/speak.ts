@@ -22,8 +22,7 @@ import {
 } from "../common/synthesizers"
 
 interface ISpeakNodeInputs
-    extends BargeInInputsWithToggleToUseDefault,
-        SynthesizersInputsWithToggleToUseDefault {
+    extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
     text: string
     timeout?: number
     // additionalText: Array<string>,

@@ -14,8 +14,7 @@ import {
 import { convertDurationFromSecondsToMillis } from "../helpers/util"
 
 export interface PromptInputs
-    extends BargeInInputsWithToggleToUseDefault,
-        SynthesizersInputsWithToggleToUseDefault {
+    extends BargeInInputsWithToggleToUseDefault, SynthesizersInputsWithToggleToUseDefault {
     text: string
     timeout: number
     language?: string

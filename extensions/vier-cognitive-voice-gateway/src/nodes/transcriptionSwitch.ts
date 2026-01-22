@@ -45,6 +45,7 @@ function generateTranscriberSelect(
             required: false,
             options: [
                 { value: "", label: "Profile Token" },
+                { value: "NOOP", label: "STT Disabled" },
                 { value: "MICROSOFT", label: "Microsoft" },
                 { value: "GOOGLE", label: "Google" },
                 { value: "IBM", label: "IBM" },

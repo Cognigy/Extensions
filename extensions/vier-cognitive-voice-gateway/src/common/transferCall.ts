@@ -50,7 +50,7 @@ const ringTimeoutField: INodeField = {
     params: {
         placeholder: "Value in Seconds, e.g. 60 for 1 minute",
         min: 10,
-        max: 120,
+        max: 1200,
     },
 }
 

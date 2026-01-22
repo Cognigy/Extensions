@@ -564,7 +564,6 @@ export const decryptNode = createNodeDescriptor({
 			// Prepare key and iv with correct lengths
 			const keyBuffer = Buffer.from(key);
 			const ivBuffer = Buffer.from(iv, 'utf8');
-			
 			const decipher = crypto.createDecipheriv(algorithm, keyBuffer, ivBuffer);
 			let decrypted = decipher.update(text, 'hex', 'utf8');
 			decrypted += decipher.final('utf8');
@@ -584,7 +583,6 @@ export const decryptNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, error.message);
 			}
-
 		}
 	}
 });

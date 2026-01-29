@@ -99,23 +99,6 @@ export const sharepointConnector = createKnowledgeConnector({
                     const fileExtension = path.extname(file.name).slice(1).toLowerCase();
 
                     // Get chunks for this file
-                    /**
-                     * Retrieves and processes chunks of content from a SharePoint file.
-                     * 
-                     * @param accessToken - The OAuth access token for authenticating with SharePoint API
-                     * @param driveId - The unique identifier of the SharePoint drive containing the file
-                     * @param file.id - The unique identifier of the file to retrieve chunks from
-                     * @param file.name - The name of the file being processed
-                     * @param fileExtension - The file extension used to determine the appropriate parsing method
-                     * @returns A promise that resolves to an array of file chunks
-                     * 
-                     * @remarks
-                     * This function is typically obtained from a SharePoint utility module or service layer
-                     * that handles file processing and chunking operations. You would need to import it from
-                     * your SharePoint utilities, e.g.:
-                     * `import { getSharePointFileChunks } from './utils/sharepoint-utils';`
-                     * or from a dedicated service file in your project structure.
-                     */
                     const chunks = await getSharePointFileChunks(
                         accessToken,
                         driveId,

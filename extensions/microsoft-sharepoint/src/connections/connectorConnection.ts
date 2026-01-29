@@ -6,7 +6,7 @@ export const connectorConnection: IConnectionSchema = {
     fields: [
         { fieldName: "tenantId" },
         { fieldName: "clientId" },
-        { fieldName: "clientSecret"},
+        { fieldName: "clientSecret" },
 
     ]
 };

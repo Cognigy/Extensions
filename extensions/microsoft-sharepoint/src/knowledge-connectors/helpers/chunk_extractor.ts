@@ -11,19 +11,6 @@ export type ChunkContent = Pick<
     "text" | "data"
 >;
 
-async function getAccessToken(tenantId: string, clientId: string, clientSecret: string): Promise<string> {
-    const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
-
-    const params = new URLSearchParams();
-    params.append('client_id', clientId);
-    params.append('client_secret', clientSecret);
-    params.append('scope', 'https://graph.microsoft.com/.default');
-    params.append('grant_type', 'client_credentials');
-
-    const response = await axios.post(tokenUrl, params);
-    return response.data.access_token;
-}
-
 const MAX_CHUNKS_PER_FILE = 500;
 const SUPPORTED_FILE_TYPES = ['pdf', 'docx', 'txt', 'csv', 'json', 'jsonl', 'md', 'pptx'];
 

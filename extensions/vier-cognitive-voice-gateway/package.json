@@ -6,7 +6,7 @@
     "author": "VIER GmbH",
     "license": "MIT",
     "dependencies": {
-        "@cognigy/extension-tools": "^0.16.6"
+        "@cognigy/extension-tools": "0.15.1"
     },
     "scripts": {
         "rm": "rm -f vier_voice.tar.gz",

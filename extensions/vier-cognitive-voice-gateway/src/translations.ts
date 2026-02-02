@@ -81,32 +81,6 @@ export default {
             'deDE': "Voreinstellungen überschreiben",
         },
     },
-    bridge: {
-        inputExtensionLengthDescription: {
-            'default': "Select the size of the extension range from which VIER Cognitive Voice Gateway should select a phone number from.",
-            'deDE': "Wählen Sie die Größe des Durchwahlen-Bereiches, aus dem VIER Cognitive Voice Gateway eine Rufnummer wählen soll.",
-        },
-        inputExtensionLengthLabel: {
-            'default': "Extension Length",
-            'deDE': "Durchwahl-Länge",
-        },
-        inputHeadNumberDescription: {
-            'default': "Enter the prefix of the phone number the call should be forwarded to.",
-            'deDE': "Geben Sie die Vorwahl der Rufnummer ein, an die der Anruf weitergeleitet werden soll.",
-        },
-        inputHeadNumberLabel: {
-            'default': "Phone Number Prefix",
-            'deDE': "Rufnummernvorwahl",
-        },
-        nodeLabel: {
-            'default': "Forward Call to a Contact Center",
-            'deDE': "Anruf an ein Contact Center weiterleiten",
-        },
-        nodeSummary: {
-            'default': "Forward the call to a contact center for agent assistance",
-            'deDE': "Anruf an ein Contact Center zur Unterstützung durch eine:n Agent:in weiterleiten",
-        },
-    },
     changeDefaults: {
         nodeLabel: {
             'default': "Configure presets for nodes",
@@ -453,6 +427,12 @@ export default {
         inputDestinationLabel: {
             'default': "Destination",
             'deDE': "Ziel",
+        },
+        inputEnableAssistDescription: {
+            'default': "Whether the dialog will be able to use the assist functionality.",
+        },
+        inputEnableAssistLabel: {
+            'default': "Enable Assist",
         },
         inputEndFlowDescription: {
             'default': "To stop the flow after executing this node, activate this setting.",

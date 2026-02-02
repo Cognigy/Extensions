@@ -19,6 +19,7 @@ import { generalSection, generalSectionFormElement } from "../common/shared"
 
 interface IForwardCallInputs extends TransferCallInputs {
     destinationNumber: string
+    enableAssist: boolean
 }
 
 export interface IForwardCallParams extends INodeFunctionBaseParams {
@@ -26,6 +27,7 @@ export interface IForwardCallParams extends INodeFunctionBaseParams {
 }
 
 const destinationFieldKey: keyof IForwardCallInputs = "destinationNumber"
+const enableAssistFieldKey: keyof IForwardCallInputs = "enableAssist"
 
 export const forwardCallNode = createNodeDescriptor({
     type: "forward",
@@ -47,6 +49,13 @@ export const forwardCallNode = createNodeDescriptor({
             },
         },
         ...transferCallFields,
+        {
+            type: "toggle",
+            key: enableAssistFieldKey,
+            label: t.shared.inputEnableAssistLabel,
+            description: t.shared.inputEnableAssistDescription,
+            defaultValue: false,
+        },
     ],
 
     preview: {
@@ -54,7 +63,10 @@ export const forwardCallNode = createNodeDescriptor({
         type: "text",
     },
 
-    sections: [generalSection([destinationFieldKey]), ...transferCallSections],
+    sections: [
+        generalSection([destinationFieldKey, enableAssistFieldKey]),
+        ...transferCallSections,
+    ],
     form: [generalSectionFormElement, ...transferCallForm],
 
     function: async ({ cognigy, config }: IForwardCallParams) => {
@@ -71,6 +83,7 @@ export const forwardCallNode = createNodeDescriptor({
             data: normalizeData(api, config.data),
             whispering: convertWhisperText(config.whisperingText),
             experimentalEnableRingingTone: config.experimentalEnableRingingTone,
+            enableAssist: config.enableAssist,
         }
 
         return delay(100, () => {

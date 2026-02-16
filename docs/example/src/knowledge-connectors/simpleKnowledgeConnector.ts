@@ -75,13 +75,6 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 			.join("");
 		const contentHash = crypto.hash("sha256", content, "hex");
 		const newSources = [];
-		console.log({
-			name,
-			description: "Example knowledge source",
-			tags: [tags],
-			chunkCount: values.length, // This is the total chunk count Knowledge Source expected to have
-			contentHashOrTimestamp: contentHash, // Used to identify if the content has changed during an upsert operation
-		});
 		const knowledgeSource = await api.upsertKnowledgeSource({
 			name,
 			description: "Example knowledge source",
@@ -131,7 +124,8 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		}
 
 		// Iterate existing sources and delete the ones that no longer
-		// exists in external knowledge base
+		// exists in external knowledge base. externalIdentifier defaults to
+		// source name if not explictly set in upsertKnowledgeSource
 		for (const source of sources) {
 			if (!newSources.includes(source.externalIdentifier)) {
 				await api.deleteKnowledgeSource({

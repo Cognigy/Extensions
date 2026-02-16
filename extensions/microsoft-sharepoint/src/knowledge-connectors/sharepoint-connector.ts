@@ -3,6 +3,7 @@ import { getSharePointFileChunks } from "./helpers/chunk_extractor";
 import { getSharePointFiles } from "./helpers/list_files";
 import axios from "axios";
 import * as path from 'path';
+import * as crypto from "crypto";
 
 
 export const sharepointConnector = createKnowledgeConnector({
@@ -42,8 +43,14 @@ export const sharepointConnector = createKnowledgeConnector({
         }
     ] as const,
 
-    function: async ({ config, api }) => {
+    function: async ({ config, api, sources }) => {
         const { connection, hostname, sitePath, sourceTags } = config;
+
+        // Hash all chunk contents
+        function createContentHash(chunks: { text: string }[]): string {
+            const content = chunks.map((c) => c.text).join("");
+            return crypto.createHash("sha256").update(content).digest("hex");
+        }
 
         // Extract SharePoint credentials from connection
         const { tenantId, clientId, clientSecret } = connection as {
@@ -86,6 +93,8 @@ export const sharepointConnector = createKnowledgeConnector({
             }
         );
 
+        const newSources: string[] = [];
+
         // Process all drives/libraries in the site
         for (const drive of drivesResponse.data.value) {
             const driveId = drive.id;
@@ -107,30 +116,55 @@ export const sharepointConnector = createKnowledgeConnector({
                         fileExtension
                     );
 
-                    if (chunks.length === 0) {
-                        continue;
-                    }
+                    if (chunks.length === 0) continue;
 
-                    // Create knowledge source
-                    const { knowledgeSourceId } = await api.createKnowledgeSource({
+                    // Compute content hash to support safe upserts
+                    const contentHash = createContentHash(chunks);
+
+                    // Upsert knowledge source so we can skip re-ingestion if unchanged
+                    const knowledgeSource = await api.upsertKnowledgeSource({
                         name: file.name,
                         description: `Data from ${file.name} in SharePoint library ${drive.name}`,
                         tags: sourceTags as string[],
                         chunkCount: chunks.length,
+                        contentHashOrTimestamp: contentHash,
+                        externalIdentifier: file.name,
                     });
 
-                    // Add all chunks to the knowledge source
-                    for (const chunk of chunks) {
-                        await api.createKnowledgeChunk({
-                            knowledgeSourceId: knowledgeSourceId,
-                            text: chunk.text,
-                            data: chunk.data,
-                        });
+                    if (knowledgeSource) {
+                        // Create all chunks (the runtime may optimise if content unchanged)
+                        for (const chunk of chunks) {
+                            await api.createKnowledgeChunk({
+                                knowledgeSourceId: knowledgeSource.knowledgeSourceId,
+                                text: chunk.text,
+                                data: chunk.data,
+                            });
+                        }
                     }
+
+                    // Track processed external identifiers for cleanup
+                    newSources.push(file.name);
                 } catch (error) {
                     // Continue with next file even if this one fails
                     console.error(`Failed to process file ${file.name}:`, error);
                     continue;
+                }
+            }
+        }
+
+        // Remove any previously existing knowledge sources that were not in this run
+        if (Array.isArray(sources)) {
+            for (const source of sources) {
+                const externalId = (source as any).externalIdentifier;
+                if (!newSources.includes(externalId)) {
+                    try {
+                        console.log("Deleting source:", source.knowledgeSourceId);
+                        await api.deleteKnowledgeSource({
+                            knowledgeSourceId: source.knowledgeSourceId,
+                        });
+                    } catch (err) {
+                        console.error(`Failed to delete source ${source.knowledgeSourceId}:`, err);
+                    }
                 }
             }
         }

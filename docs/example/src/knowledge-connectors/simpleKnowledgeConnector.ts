@@ -69,11 +69,7 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		api,
 		sources,
 	}) => {
-		const content = values
-			.map((text) => ({ text }))
-			.map((c) => c.text)
-			.join("");
-		const contentHash = crypto.hash("sha256", content, "hex");
+		const contentHash = crypto.hash("sha256", values.join(""), "hex");
 		const newSources = [];
 		const knowledgeSource = await api.upsertKnowledgeSource({
 			name,

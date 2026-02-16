@@ -1,3 +1,4 @@
+import * as crypto from "node:crypto";
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import type { ApiKeyConnection } from "../connections/apiKeyConnection";
 
@@ -26,7 +27,7 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		},
 		{
 			key: "values",
-			label: "Example list of values",
+			label: "Example list of chunk values",
 			type: "textArray",
 			description: "Each value will be added as a chunk",
 			params: {
@@ -34,9 +35,9 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 			},
 		},
 		{
-			key: "option",
+			key: "tags",
 			type: "select",
-			label: "Example options",
+			label: "Example tags",
 			defaultValue: "option1",
 			description: "The selected option will be added as a tag",
 			params: {
@@ -64,46 +65,78 @@ export const simpleKnowledgeConnector = createKnowledgeConnector({
 		},
 	] as const,
 	function: async ({
-		config: { name, values, option, connection, error },
+		config: { connection, name, tags, values, error },
 		api,
+		sources,
 	}) => {
-		// Create an example Knowledge Source and add Knowledge Chunks
-		const knowledgeSource = await api.createKnowledgeSource({
+		const content = values
+			.map((text) => ({ text }))
+			.map((c) => c.text)
+			.join("");
+		const contentHash = crypto.hash("sha256", content, "hex");
+		const newSources = [];
+		console.log({
 			name,
 			description: "Example knowledge source",
-			tags: ["example", option],
+			tags: [tags],
 			chunkCount: values.length, // This is the total chunk count Knowledge Source expected to have
+			contentHashOrTimestamp: contentHash, // Used to identify if the content has changed during an upsert operation
 		});
-		for (const text of values) {
-			await api.createKnowledgeChunk({
-				knowledgeSourceId: knowledgeSource.knowledgeSourceId,
-				text,
-				data: {
-					// Custom data. Can be used during Knowledge extraction
-					type: "example",
-					connectionUsed: (connection as ApiKeyConnection)?.key ? "yes" : "no",
-				},
-			});
+		const knowledgeSource = await api.upsertKnowledgeSource({
+			name,
+			description: "Example knowledge source",
+			tags: [tags],
+			chunkCount: values.length, // This is the total chunk count Knowledge Source expected to have
+			contentHashOrTimestamp: contentHash, // Used to identify if the content has changed during an upsert operation
+		});
+		newSources.push(name);
+
+		if (knowledgeSource) {
+			for (const text of values) {
+				await api.createKnowledgeChunk({
+					knowledgeSourceId: knowledgeSource.knowledgeSourceId,
+					text,
+					data: {
+						type: "example",
+						connectionUsed: (connection as ApiKeyConnection)?.key
+							? "yes"
+							: "no",
+					},
+				});
+			}
 		}
 
 		// example of error handling
 		if (error) {
-			const knowledgeSource2 = await api.createKnowledgeSource({
+			const knowledgeSource2 = await api.upsertKnowledgeSource({
 				name: "Example Knowledge Source that will be deleted",
 				description: "Example error handling during content retrieval",
-				tags: ["example"],
+				tags: [tags],
 				chunkCount: 1,
+				contentHashOrTimestamp: Date.now().toString(),
 			});
-			try {
-				// Example of an error during content retrieval
-				throw new Error(error);
-			} catch (e) {
-				// The newly created Knowledge Source is deleted
+			if (knowledgeSource2) {
+				try {
+					// Example of an error during content retrieval
+					throw new Error(error);
+				} catch (e) {
+					// The newly created Knowledge Source is deleted
+					await api.deleteKnowledgeSource({
+						knowledgeSourceId: knowledgeSource2.knowledgeSourceId,
+					});
+					// An unhandled exception thrown during extension execution will be logged
+					throw e;
+				}
+			}
+		}
+
+		// Iterate existing sources and delete the ones that no longer
+		// exists in external knowledge base
+		for (const source of sources) {
+			if (!newSources.includes(source.externalIdentifier)) {
 				await api.deleteKnowledgeSource({
-					knowledgeSourceId: knowledgeSource2.knowledgeSourceId,
+					knowledgeSourceId: source.knowledgeSourceId,
 				});
-				// An unhandled exception thrown during extension execution will be logged
-				throw e;
 			}
 		}
 	},

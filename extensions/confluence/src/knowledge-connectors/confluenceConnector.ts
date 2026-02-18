@@ -64,9 +64,6 @@ export const confluenceConnector = createKnowledgeConnector({
 			// Fetch chunks for each page
 			const chunks = await getPageChunks(baseUrl, auth, page.id, page.title);
 
-			// Calculate content hash from chunks
-			const contentHash = calculateContentHash(chunks);
-
 			// Create or update knowledge source
 			const result = await api.upsertKnowledgeSource({
 				name: page.title,
@@ -74,7 +71,7 @@ export const confluenceConnector = createKnowledgeConnector({
 				tags: sourceTags,
 				chunkCount: chunks.length,
 				externalIdentifier: page.id,
-				contentHashOrTimestamp: contentHash,
+				contentHashOrTimestamp: calculateContentHash(chunks),
 			});
 			updatedSources.add(page.id);
 

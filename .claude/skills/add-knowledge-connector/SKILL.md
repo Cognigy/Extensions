@@ -325,7 +325,55 @@ export default createExtension({
 });
 ```
 
-### Step 7: Update Package Dependencies
+### Step 7: Create Helper Utilities
+
+**File:** `src/knowledge-connectors/helper/utils.ts`
+
+Create reusable helper functions, especially for content hash calculation:
+
+```typescript
+import { createHash } from "node:crypto";
+import type { IKnowledge } from "@cognigy/extension-tools";
+
+export type ChunkContent = Pick<
+	IKnowledge.CreateKnowledgeChunkParams,
+	"text" | "data"
+>;
+
+/**
+ * Calculates a SHA-256 hash from an array of chunks.
+ * Used for content-based change detection in upsertKnowledgeSource.
+ */
+export const calculateContentHash = (chunks: ChunkContent[]): string => {
+	const hash = createHash("sha256");
+	for (const chunk of chunks) {
+		hash.update(chunk.text);
+	}
+	return hash.digest("hex");
+};
+
+/**
+ * Example: Fetch and process data from external system
+ */
+export const fetchDataFromSource = async (url: string, authToken: string) => {
+	const response = await fetch(url, {
+		headers: { Authorization: `Bearer ${authToken}` },
+	});
+	
+	if (!response.ok) {
+		throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+	}
+	
+	return await response.json();
+};
+```
+
+**Key Points:**
+- Use `node:crypto` for SHA-256 hashing (built-in, no dependencies)
+- Hash all chunk text content for accurate change detection
+- Keep utility functions pure and testable
+
+### Step 8: Update Package Dependencies
 
 **File:** `package.json`
 
@@ -334,7 +382,7 @@ Add any required dependencies:
 ```json
 {
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.17.0-rc5",  // Latest version with upsertKnowledgeSource
+		"@cognigy/extension-tools": "^0.17.0-rc4",  // Latest version with upsertKnowledgeSource
 		"@langchain/textsplitters": "^0.0.3",       // For text chunking
 		"axios": "^1.6.0",                           // For HTTP requests (optional)
 		"jsdom": "^24.0.0"                           // For HTML parsing (optional)
@@ -347,12 +395,12 @@ Add any required dependencies:
 ```
 
 **Version Notes:**
-- Use `@cognigy/extension-tools` version ^0.17.0-rc5 or later for full Knowledge Connector support
+- Use `@cognigy/extension-tools` version ^0.17.0-rc4 or later for full Knowledge Connector support
 - v0.17.0+ includes `upsertKnowledgeSource` for incremental updates and `sources` parameter
 - Check [NPM](https://www.npmjs.com/package/@cognigy/extension-tools) for the latest version
 - Older versions (< 0.16.0) may not support all Knowledge Connector features
 
-### Step 8: Create README Documentation
+### Step 9: Create README Documentation
 
 **File:** `README.md`
 
@@ -604,47 +652,83 @@ try {
 }
 ```
 
-### 4. Incremental Updates (v0.17.0+)
+### 4. Incremental Updates with Syncing support (v0.17.0+)
 
-Use the `sources` parameter and `upsertKnowledgeSource` for efficient updates:
+Use `upsertKnowledgeSource` with content hashing and automatic cleanup for full sync behavior:
 
 ```typescript
-function: async ({ config, sources, api }) => {
-	// Check existing sources from previous runs
-	const existingSource = sources.find(s => s.externalIdentifier === config.resourceId);
+import { createHash } from "node:crypto";
+import type { IKnowledge } from "@cognigy/extension-tools";
+
+// Helper function to calculate content hash from chunks
+function calculateContentHash(chunks: Array<{ text: string }>): string {
+	const hash = createHash("sha256");
+	for (const chunk of chunks) {
+		hash.update(chunk.text);
+	}
+	return hash.digest("hex");
+}
+
+function: async ({ config, sources: currentSources, api }) => {
+	const items = await fetchItemsFromExternalSystem(config);
+	const updatedSources = new Set<string>();
 	
-	// Get current content hash/timestamp
-	const currentHash = await getContentHash(config.url);
-	
-	// Skip if unchanged
-	if (existingSource?.contentHashOrTimestamp === currentHash) {
-		console.log("Content unchanged, skipping");
-		return;
+	// Process each item
+	for (const item of items) {
+		const chunks = await processItemIntoChunks(item);
+		const contentHash = calculateContentHash(chunks);
+		
+		// Create or update source
+		const result = await api.upsertKnowledgeSource({
+			name: item.title,
+			description: item.description,
+			chunkCount: chunks.length,
+			contentHashOrTimestamp: contentHash,
+			externalIdentifier: item.id,
+		});
+		
+		// Track this item as processed
+		updatedSources.add(item.id);
+		
+		if (result === null) {
+			// Source already up-to-date, skip chunk creation
+			continue;
+		}
+		
+		// Add chunks to new or updated source
+		for (const chunk of chunks) {
+			await api.createKnowledgeChunk({
+				knowledgeSourceId: result.knowledgeSourceId,
+				...chunk,
+			});
+		}
 	}
 	
-	// Create or update source
-	const result = await api.upsertKnowledgeSource({
-		name: `Source ${config.resourceId}`,
-		chunkCount: chunks.length,
-		contentHashOrTimestamp: currentHash,
-		externalIdentifier: config.resourceId,
-	});
-	
-	if (result === null) {
-		// Already up-to-date
-		return;
+	// Clean up sources that are no longer in the external system
+	for (const source of currentSources) {
+		if (updatedSources.has(source.externalIdentifier)) {
+			continue;
+		}
+		
+		await api.deleteKnowledgeSource({
+			knowledgeSourceId: source.knowledgeSourceId,
+		});
 	}
-	
-	// Add chunks to new/updated source
-	// ...
 }
 ```
 
+**Key Patterns:**
+- **Content hash**: Calculate SHA-256 from chunk text content for accurate change detection
+- **Track updates**: Use `Set<string>` to track processed external identifiers
+- **Always track**: Add to `updatedSources` before checking if upsert returned null
+- **Cleanup**: Delete sources whose `externalIdentifier` is not in `updatedSources`
+- **Efficiency**: Skip chunk creation when `upsertKnowledgeSource` returns null
+
 **Benefits:**
-- Avoid unnecessary re-indexing
-- Reduce API calls and processing time
-- Track changes with `contentHashOrTimestamp`
-- Clean up old sources automatically
+- Accurate change detection via content hashing
+- Automatic removal of deleted/removed items from source system
+- Minimal re-indexing (only changed content is updated)
+- Full synchronization between external system and Knowledge AI
 
 ## Testing Your Connector
 
@@ -858,17 +942,28 @@ export const apiConnector = createKnowledgeConnector({
 });
 ```
 
-### Example 3: Incremental Updates with upsertKnowledgeSource (v0.17.0+)
+### Example 3: Sample connector with full syncing support (v0.17.0+)
+
+Based on Confluence connector implementation - demonstrates production-grade patterns:
 
 ```typescript
+import { createHash } from "node:crypto";
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import type { IKnowledge } from "@cognigy/extension-tools";
-import crypto from "crypto";
 
-export const incrementalConnector = createKnowledgeConnector({
-	type: "incrementalConnector",
-	label: "Incremental Connector",
-	summary: "Only re-indexes content when it changes",
+// Helper function - can be exported from utils file
+function calculateContentHash(chunks: Array<{ text: string }>): string {
+	const hash = createHash("sha256");
+	for (const chunk of chunks) {
+		hash.update(chunk.text);
+	}
+	return hash.digest("hex");
+}
+
+export const productionConnector = createKnowledgeConnector({
+	type: "productionConnector",
+	label: "Production Connector",
+	summary: "Full sync with content hashing and automatic cleanup",
 	fields: [
 		{
 			key: "connection",
@@ -877,10 +972,10 @@ export const incrementalConnector = createKnowledgeConnector({
 			params: { connectionType: "api", required: true },
 		},
 		{
-			key: "resourceId",
-			label: "Resource ID",
+			key: "baseUrl",
+			label: "Base URL",
 			type: "text",
-			description: "ID of the resource to index",
+			description: "Base URL of the content source",
 			params: { required: true },
 		},
 		{
@@ -890,97 +985,110 @@ export const incrementalConnector = createKnowledgeConnector({
 			defaultValue: ["incremental"],
 		},
 	] as const,
-	function: async ({ config: { connection, resourceId, sourceTags }, sources, api }) => {
+	function: async ({ config, sources: currentSources, api }) => {
+		const { connection, baseUrl, sourceTags } = config;
 		const { apiKey } = connection as { apiKey: string };
 		
-		// 1. Fetch resource metadata to check if it changed
-		const metadataResponse = await fetch(
-			`https://api.example.com/resources/${resourceId}/metadata`,
-			{ headers: { "Authorization": `Bearer ${apiKey}` } }
-		);
-		const metadata = await metadataResponse.json();
-		const lastModified = new Date(metadata.lastModified).toISOString();
+		// 1. Fetch all items from external system
+		const items = await fetchAllItems(baseUrl, apiKey);
+		const updatedSources = new Set<string>();
 		
-		// 2. Check if source already exists and is up-to-date
-		const sourceName = `Resource ${resourceId}`;
-		const existingSource = sources.find(
-			s => s.name === sourceName || s.externalIdentifier === resourceId
-		);
-		
-		if (existingSource?.contentHashOrTimestamp === lastModified) {
-			// Content unchanged since last run - skip re-indexing
-			console.log(`Resource ${resourceId} is up-to-date, skipping`);
-			return;
+		// 2. Process each item
+		for (const item of items) {
+			// Fetch and process chunks
+			const chunks = await fetchAndProcessChunks(baseUrl, apiKey, item.id);
+			
+			// Calculate content hash
+			const contentHash = calculateContentHash(chunks);
+			
+			// Create or update knowledge source
+			const result = await api.upsertKnowledgeSource({
+				name: item.title,
+				description: `Data from ${item.title}`,
+				tags: sourceTags,
+				chunkCount: chunks.length,
+				externalIdentifier: item.id,
+				contentHashOrTimestamp: contentHash,
+			});
+			
+			// Track this item as processed
+			updatedSources.add(item.id);
+			
+			if (result === null) {
+				// Source already up-to-date
+				continue;
+			}
+			
+			// Add chunks to new or updated source
+			for (const chunk of chunks) {
+				await api.createKnowledgeChunk({
+					knowledgeSourceId: result.knowledgeSourceId,
+					...chunk,
+				});
+			}
 		}
 		
-		// 3. Fetch full content (only if needed)
-		const contentResponse = await fetch(
-			`https://api.example.com/resources/${resourceId}`,
-			{ headers: { "Authorization": `Bearer ${apiKey}` } }
-		);
-		const content = await contentResponse.json();
-		
-		// 4. Process content into chunks
-		const chunks = processContentIntoChunks(content);
-		
-		if (chunks.length === 0) {
-			throw new Error(`No content found for resource ${resourceId}`);
-		}
-		
-		// 5. Use upsertKnowledgeSource to create or update
-		const result = await api.upsertKnowledgeSource({
-			name: sourceName,
-			description: content.title || `Resource ${resourceId}`,
-			tags: sourceTags,
-			chunkCount: chunks.length,
-			contentHashOrTimestamp: lastModified,
-			externalIdentifier: resourceId,
-		});
-		
-		if (result === null) {
-			// Source exists and timestamp matches - should not happen due to check above
-			console.log(`Resource ${resourceId} already indexed`);
-			return;
-		}
-		
-		// 6. Add chunks to new or updated source
-		for (const chunk of chunks) {
-			await api.createKnowledgeChunk({
-				knowledgeSourceId: result.knowledgeSourceId,
-				text: chunk.text,
-				data: {
-					resourceId,
-					lastModified,
-					...chunk.metadata,
-				},
+		// 3. Clean up sources that no longer exist in external system
+		for (const source of currentSources) {
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
+			}
+			
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
 			});
 		}
-		
-		console.log(`Successfully indexed resource ${resourceId} with ${chunks.length} chunks`);
 	},
 });
 
-function processContentIntoChunks(content: any) {
-	// Implementation depends on content structure
+async function fetchAllItems(baseUrl: string, apiKey: string) {
+	// Fetch all items with pagination
+	const response = await fetch(`${baseUrl}/api/items`, {
+		headers: { Authorization: `Bearer ${apiKey}` },
+	});
+	return await response.json();
+}
+
+async function fetchAndProcessChunks(baseUrl: string, apiKey: string, itemId: string) {
+	// Fetch item content and split into chunks
+	const response = await fetch(`${baseUrl}/api/items/${itemId}`, {
+		headers: { Authorization: `Bearer ${apiKey}` },
+	});
+	const content = await response.json();
+	
+	// Process into chunks (use text splitter, parse HTML, etc.)
 	return [
 		{
-			text: content.body || "",
-			metadata: { section: "main" },
+			text: content.body,
+			data: { url: content.url, author: content.author },
 		},
 	];
 }
 ```
+
+**Production Patterns:**
+- ✅ **Parameter naming**: `sources: currentSources` for clarity
+- ✅ **Content hashing**: SHA-256 hash from all chunk text
+- ✅ **Tracking**: `Set<string>` for processed external identifiers
+- ✅ **Always track**: Add to set before checking upsert result
+- ✅ **Cleanup**: Delete sources not in updated set
+- ✅ **Efficiency**: Skip chunk creation when content unchanged
+
+**Real-World Example:**
+See [Confluence Connector](../../../extensions/confluence/src/knowledge-connectors/confluenceConnector.ts) for complete production implementation.
 
 ## Checklist
 
 - [ ] Create connection schema in `src/connections/{source}Connection.ts`
 - [ ] Create connector in `src/knowledge-connectors/{connector}Connector.ts`
 - [ ] Define configuration fields (connection, URL/identifiers, options, tags)
-- [ ] Implement connector function (fetch, process, chunk, create sources)
-- [ ] Create helper functions if needed (utils, parser, chunker)
+- [ ] Implement connector function (fetch, process, chunk, upsert with cleanup)
+- [ ] Create helper functions if needed (utils, parser, chunker, content hash calculator)
+- [ ] Implement content hash calculation using Node.js crypto (SHA-256)
+- [ ] Track processed sources with `Set` and cleanup superseded sources
 - [ ] Add error handling and cleanup
 - [ ] Register connector in `src/module.ts`
-- [ ] Update `package.json` with dependencies
+- [ ] Update `package.json` with dependencies (v0.17.0-rc4+)
 - [ ] Write README documentation with examples
 
 ## Additional Resources

@@ -5,7 +5,7 @@
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz diffbot-$npm_package_version.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz diffbot.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "format": "biome check --write",
     "lint": "biome check"

@@ -5,11 +5,10 @@
     "main": "build/module.js",
     "scripts": {
         "transpile": "tsc -p .",
-        "zip": "tar cfz confluence-$npm_package_version.tar.gz build/* package.json package-lock.json README.md icon.png",
+        "zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
         "build": "npm run transpile && npm run lint && npm run zip",
         "format": "biome check --write",
-        "lint": "biome check",
-        "test": "tsx --test src/**/*.test.ts"
+        "lint": "biome check"
     },
     "keywords": [
         "Knowledge",
@@ -27,7 +26,6 @@
         "@biomejs/biome": "2.2.4",
         "@types/node": "^24.2.0",
         "@types/turndown": "^5.0.1",
-        "tsx": "4.21.0",
         "typescript": "5.9.2"
     },
     "dependencies": {

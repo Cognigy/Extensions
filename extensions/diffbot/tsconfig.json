@@ -17,8 +17,7 @@
   "exclude": [
     "node_modules",
     "build",
-    "./vscode",
-    "**/*.test.ts"
+    "./vscode"
   ],
   "include": [
     "src/**/*"

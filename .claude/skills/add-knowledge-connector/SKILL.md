@@ -16,7 +16,7 @@ Knowledge Connectors integrate external knowledge sources with Cognigy.AI's Know
 - Integrates with Knowledge Stores in Cognigy.AI
 
 **Package Information:**
-- Package: `@cognigy/extension-tools` (latest: v0.17.0-rc5)
+- Package: `@cognigy/extension-tools` (latest: v0.17.0-rc4)
 - Source: [Azure DevOps - Cognigy.AI](https://cognigy.visualstudio.com/Cognigy.AI/_git/cognigy?path=/packages/extension-tools&version=GBtask/123351-kai-connectors-docs)
 - NPM: [@cognigy/extension-tools](https://www.npmjs.com/package/@cognigy/extension-tools)
 
@@ -506,6 +506,27 @@ const result = await api.upsertKnowledgeSource({
 
 // Return type: { knowledgeSourceId: string } | null
 // null = source exists and contentHashOrTimestamp matches (no update needed)
+```
+
+**Important: Always Handle Null Return Value**
+
+When `upsertKnowledgeSource` returns `null`, it means the source is already up-to-date and **no chunks should be created**. Always check for `null` before calling `createKnowledgeChunk`:
+
+```typescript
+const result = await api.upsertKnowledgeSource({ /* ... */ });
+
+if (result === null) {
+    // Source unchanged - skip chunk creation
+    continue;
+}
+
+// Only create chunks for new or updated sources
+for (const chunk of chunks) {
+    await api.createKnowledgeChunk({
+        knowledgeSourceId: result.knowledgeSourceId,  // Use result.knowledgeSourceId
+        text: chunk.text,
+    });
+}
 ```
 
 **Use Case for upsertKnowledgeSource:**
@@ -1083,6 +1104,7 @@ See [Confluence Connector](../../../extensions/confluence/src/knowledge-connecto
 - [ ] Create connector in `src/knowledge-connectors/{connector}Connector.ts`
 - [ ] Define configuration fields (connection, URL/identifiers, options, tags)
 - [ ] Implement connector function (fetch, process, chunk, upsert with cleanup)
+- [ ] Handle null result from `upsertKnowledgeSource` (skip chunk creation when null)
 - [ ] Create helper functions if needed (utils, parser, chunker, content hash calculator)
 - [ ] Implement content hash calculation using Node.js crypto (SHA-256)
 - [ ] Track processed sources with `Set` and cleanup superseded sources

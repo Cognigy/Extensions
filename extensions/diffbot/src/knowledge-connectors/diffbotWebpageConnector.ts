@@ -1,6 +1,6 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
-import { fetchWithRetry } from "./helper/utils";
+import { calculateContentHash, fetchWithRetry } from "./helper/utils";
 
 export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
@@ -94,8 +94,11 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 	function: async ({
 		config: { connection, urls, sourceTags, extractApiType },
 		api,
+		sources: currentSources,
 	}) => {
 		const { accessToken } = connection as any;
+		const updatedSources = new Set<string>();
+
 		for (const url of urls) {
 			const params = new URLSearchParams({ token: accessToken, url });
 			const diffbotUrl = `https://api.diffbot.com/v3/${extractApiType}?${params}`;
@@ -111,18 +114,26 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 					"images",
 				]);
 
-				// Create Knowledge Source
-				const { knowledgeSourceId } = await api.createKnowledgeSource({
+				// Upsert Knowledge Source with URL as external identifier
+				const result = await api.upsertKnowledgeSource({
 					name: sourceData.title,
 					description: `Content from web page at ${url}`,
 					tags: sourceTags,
 					chunkCount: chunks.length,
+					externalIdentifier: url,
+					contentHashOrTimestamp: calculateContentHash(chunks),
 				});
+				updatedSources.add(url);
 
-				// Create Knowledge Chunks
+				if (result === null) {
+					// Source already up-to-date (content hash unchanged)
+					continue;
+				}
+
+				// Create Knowledge Chunks for new or updated source
 				for (const chunk of chunks) {
 					await api.createKnowledgeChunk({
-						knowledgeSourceId,
+						knowledgeSourceId: result.knowledgeSourceId,
 						text: chunk,
 						data: {
 							url: url,
@@ -132,6 +143,15 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 						},
 					});
 				}
+			}
+		}
+
+		// Clean up sources that are no longer in the URL list
+		for (const source of currentSources) {
+			if (!updatedSources.has(source.externalIdentifier)) {
+				await api.deleteKnowledgeSource({
+					knowledgeSourceId: source.knowledgeSourceId,
+				});
 			}
 		}
 	},

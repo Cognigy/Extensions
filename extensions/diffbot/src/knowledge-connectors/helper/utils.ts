@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fetchRetry from "fetch-retry";
 
 const fetchRetry_ = fetchRetry(global.fetch);
@@ -47,4 +48,12 @@ export const processQueryString = (querystring: string): string => {
 		.toString()
 		.replace("=&", "&");
 	return normalized ? `?${normalized}` : "";
+};
+
+/**
+ * Calculate a SHA-256 hash from an array of chunk contents.
+ * Used to determine if source content has changed since last sync.
+ */
+export const calculateContentHash = (chunks: string[]): string => {
+	return createHash("sha256").update(chunks.join("")).digest("hex");
 };

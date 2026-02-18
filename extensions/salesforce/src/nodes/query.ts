@@ -180,11 +180,15 @@ export const queryNode = createNodeDescriptor({
             }
 
         } catch (error) {
+            const errorMessage = error instanceof Error
+                ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                : JSON.stringify(error);
+            api.log("error", `salesforceQuery execution failed: ${errorMessage}`);
             if (storeLocation === "context") {
-                api.addToContext(contextKey, error.message, "simple");
+                api.addToContext(contextKey, errorMessage, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, error.message);
+                api.addToInput(inputKey, errorMessage);
             }
         }
     }

@@ -2,7 +2,7 @@
 
 Integrates Cognigy.AI with Salesforce (https://www.salesforce.com)
 
-This Extension is based on jsforce (https://jsforce.github.io/)
+This Extension communicates with the Salesforce REST API using axios.
 
 > **WARNING** This is Extension is a replacement for the deprecated "Salesforce CRM" Extension. As this new Extension uses both, Basic and OAuth2 authentication, the old Connections cannot be used anymore. Updating to this new "Salesforce" Extension results in migrating from the old one. If you still want to upload and use the depcrecated "Salesforce CRM" Extension, please find the latest release here: https://github.com/Cognigy/Extensions/releases/tag/salesforce-crm423
 

@@ -101,9 +101,8 @@ export const searchContactNode = createNodeDescriptor({
 
                     } catch (error) {
                         const errorMessage = error instanceof Error
-                            ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                            ? error.message
                             : JSON.stringify(error);
-                        console.log("error", `searchContact contactField optionsResolver failed: ${errorMessage}`);
                         throw new Error(`Error retrieving Contact fields: ${errorMessage}`);
                     }
                 },
@@ -232,7 +231,7 @@ export const searchContactNode = createNodeDescriptor({
 
         } catch (error) {
             const errorMessage = error instanceof Error
-                ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                ? error.message
                 : JSON.stringify(error);
             api.log("error", `searchContact execution failed: ${errorMessage}`);
 

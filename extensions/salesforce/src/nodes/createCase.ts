@@ -105,9 +105,8 @@ export const createCaseNode = createNodeDescriptor({
                         }));
                     } catch (error) {
                         const errorMessage = error instanceof Error
-                            ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                            ? error.message
                             : JSON.stringify(error);
-                        console.log("error", `createCase Status optionsResolver failed: ${errorMessage}`);
                         throw new Error(errorMessage);
                     }
                 }
@@ -164,9 +163,8 @@ export const createCaseNode = createNodeDescriptor({
 
                     } catch (error) {
                         const errorMessage = error instanceof Error
-                            ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                            ? error.message
                             : JSON.stringify(error);
-                        console.log("error", `createCase Origin optionsResolver failed: ${errorMessage}`);
                         throw new Error(errorMessage);
                     }
                 },
@@ -327,7 +325,7 @@ export const createCaseNode = createNodeDescriptor({
 
         } catch (error) {
             const errorMessage = error instanceof Error
-                ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                ? error.message
                 : JSON.stringify(error);
             api.log("error", `createCase execution failed: ${errorMessage}`);
 

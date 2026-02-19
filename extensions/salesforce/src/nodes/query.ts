@@ -181,7 +181,7 @@ export const queryNode = createNodeDescriptor({
 
         } catch (error) {
             const errorMessage = error instanceof Error
-                ? `${error.message}${error.stack ? ` | ${error.stack}` : ""}`
+                ? error.message
                 : JSON.stringify(error);
             api.log("error", `salesforceQuery execution failed: ${errorMessage}`);
             if (storeLocation === "context") {

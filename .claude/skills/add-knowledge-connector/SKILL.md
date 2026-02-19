@@ -356,9 +356,9 @@ export type ChunkContent = Pick<
  * Used for content-based change detection in upsertKnowledgeSource. */
 export const calculateContentHash = (chunks: ChunkContent[]): string => {
 	const hash = createHash("sha256");
-	for (const chunk of chunks) {
-		hash.update(chunk.text);
-	}
+	chunks.forEach((c) => {
+		hash.update(c.text);
+	});
 	return hash.digest("hex");
 };
 ```
@@ -376,7 +376,9 @@ import { createHash } from "node:crypto";
  */
 export const calculateContentHash = (content: string[]): string => {
 	const hash = createHash("sha256");
-	content.forEach(text => hash.update(text));
+	content.forEach((c) => {
+		hash.update(c);
+	});
 	return hash.digest("hex");
 };
 ```

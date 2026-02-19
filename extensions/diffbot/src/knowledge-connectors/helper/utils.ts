@@ -55,6 +55,8 @@ export const processQueryString = (querystring: string): string => {
  */
 export const calculateContentHash = (content: string[]): string => {
 	const hash = createHash("sha256");
-	content.forEach(c => hash.update(c));
+	content.forEach((c) => {
+		hash.update(c);
+	});
 	return hash.digest("hex");
 };

@@ -1,7 +1,7 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
 import { calculateContentHash, fetchWithRetry } from "./helper/utils";
-import { DiffbotV3AnalyzeResponse } from "./types";
+import type { DiffbotV3AnalyzeResponse } from "./types";
 
 export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
@@ -103,7 +103,8 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 		for (const url of urls) {
 			const params = new URLSearchParams({ token: accessToken, url });
 			const diffbotUrl = `https://api.diffbot.com/v3/${extractApiType}?${params}`;
-			const analyze = await fetchWithRetry<DiffbotV3AnalyzeResponse>(diffbotUrl);
+			const analyze =
+				await fetchWithRetry<DiffbotV3AnalyzeResponse>(diffbotUrl);
 			if (!analyze || !analyze.objects || analyze.objects.length === 0)
 				throw new Error(`No data returned from Diffbot for URL: ${url}`);
 

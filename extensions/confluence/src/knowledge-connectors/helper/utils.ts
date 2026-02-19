@@ -118,7 +118,9 @@ export const getPageChunks = async (
  */
 export const calculateContentHash = (chunks: ChunkContent[]): string => {
 	const hash = createHash("sha256");
-	chunks.forEach(c => hash.update(c.text));
+	chunks.forEach((c) => {
+		hash.update(c.text);
+	});
 	return hash.digest("hex");
 };
 

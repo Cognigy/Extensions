@@ -386,13 +386,15 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			}
 		}
 
-		// Clean up sources that are no longer in the crawled data
+		// Clean up superseded sources
 		for (const source of currentSources) {
-			if (!updatedSources.has(source.externalIdentifier)) {
-				await api.deleteKnowledgeSource({
-					knowledgeSourceId: source.knowledgeSourceId,
-				});
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
 			}
+
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
+			});
 		}
 
 		// Delete the crawl job if retain crawler is false

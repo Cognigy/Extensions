@@ -1,6 +1,7 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
 import { calculateContentHash, fetchWithRetry } from "./helper/utils";
+import { DiffbotV3AnalyzeResponse } from "./types";
 
 export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
@@ -102,12 +103,14 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 		for (const url of urls) {
 			const params = new URLSearchParams({ token: accessToken, url });
 			const diffbotUrl = `https://api.diffbot.com/v3/${extractApiType}?${params}`;
-			const analyze = await fetchWithRetry(diffbotUrl);
+			const analyze = await fetchWithRetry<DiffbotV3AnalyzeResponse>(diffbotUrl);
 			if (!analyze || !analyze.objects || analyze.objects.length === 0)
 				throw new Error(`No data returned from Diffbot for URL: ${url}`);
 
 			// Create chunks
-			for (const sourceData of analyze.objects) {
+			for (let i = 0; i < analyze.objects.length; i++) {
+				const sourceData = analyze.objects[i];
+				const externalIdentifier = `${i}.${sourceData.diffbotUri}@${url}`;
 				const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
 				const chunks = await jsonSplit(sourceData, chunkTitle, [
 					"html",
@@ -120,10 +123,10 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 					description: `Content from web page at ${url}`,
 					tags: sourceTags,
 					chunkCount: chunks.length,
-					externalIdentifier: url,
+					externalIdentifier,
 					contentHashOrTimestamp: calculateContentHash(chunks),
 				});
-				updatedSources.add(url);
+				updatedSources.add(externalIdentifier);
 
 				if (result === null) {
 					// Source already up-to-date (content hash unchanged)
@@ -146,13 +149,15 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 			}
 		}
 
-		// Clean up sources that are no longer in the URL list
+		// Clean up superseded sources
 		for (const source of currentSources) {
-			if (!updatedSources.has(source.externalIdentifier)) {
-				await api.deleteKnowledgeSource({
-					knowledgeSourceId: source.knowledgeSourceId,
-				});
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
 			}
+
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
+			});
 		}
 	},
 });

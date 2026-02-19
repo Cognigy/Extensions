@@ -183,11 +183,19 @@ function: async ({ config: { connection, url, tags }, sources, api }) => {
 	// Config fields are directly available
 	// ... implementation
 }
+
+// Option 3: Rename sources parameter for clarity (recommended for sync implementations)
+function: async ({ config, sources: currentSources, api }) => {
+	// Makes it clear these are existing sources from previous runs
+	// ... implementation
+}
+
 ```
 
 **Available Parameters:**
 - `config`: Object containing all field values (typed based on your fields with `as const`)
 - `sources`: Array of `KnowledgeSource` objects created in previous runs by this connector (useful for incremental updates)
+  - Commonly renamed to `currentSources` for clarity in sync implementations
 - `api`: Knowledge Connector API object with methods:
   - `createKnowledgeSource(params)`: Create a new knowledge source
   - `upsertKnowledgeSource(params)`: Create or update a knowledge source (v0.17.0+)
@@ -331,10 +339,13 @@ export default createExtension({
 
 Create reusable helper functions, especially for content hash calculation:
 
+**Option 1: Chunk objects (when chunks have metadata)**
+
 ```typescript
 import { createHash } from "node:crypto";
 import type { IKnowledge } from "@cognigy/extension-tools";
 
+// Define ChunkContent type for chunks with text and optional data
 export type ChunkContent = Pick<
 	IKnowledge.CreateKnowledgeChunkParams,
 	"text" | "data"
@@ -342,8 +353,7 @@ export type ChunkContent = Pick<
 
 /**
  * Calculates a SHA-256 hash from an array of chunks.
- * Used for content-based change detection in upsertKnowledgeSource.
- */
+ * Used for content-based change detection in upsertKnowledgeSource. */
 export const calculateContentHash = (chunks: ChunkContent[]): string => {
 	const hash = createHash("sha256");
 	for (const chunk of chunks) {
@@ -351,9 +361,31 @@ export const calculateContentHash = (chunks: ChunkContent[]): string => {
 	}
 	return hash.digest("hex");
 };
+```
+
+**Option 2: Simplified string array**
+
+```typescript
+import { createHash } from "node:crypto";
 
 /**
- * Example: Fetch and process data from external system
+ * Calculates a SHA-256 hash from an array of strings.
+ * Simpler version for when chunks are just text without structured data.
+ * 
+ * Example: Diffbot connector (simple text chunks)
+ */
+export const calculateContentHash = (content: string[]): string => {
+	const hash = createHash("sha256");
+	content.forEach(text => hash.update(text));
+	return hash.digest("hex");
+};
+```
+
+**Additional Helper Examples:**
+
+```typescript
+/**
+ * Fetch and process data from external system
  */
 export const fetchDataFromSource = async (url: string, authToken: string) => {
 	const response = await fetch(url, {
@@ -370,6 +402,8 @@ export const fetchDataFromSource = async (url: string, authToken: string) => {
 
 **Key Points:**
 - Use `node:crypto` for SHA-256 hashing (built-in, no dependencies)
+- Choose hash function signature based on your chunk structure
+- Prefer avoiding intermediate array creation when hashing large content for smaller memory footprint
 - Hash all chunk text content for accurate change detection
 - Keep utility functions pure and testable
 
@@ -682,6 +716,7 @@ import { createHash } from "node:crypto";
 import type { IKnowledge } from "@cognigy/extension-tools";
 
 // Helper function to calculate content hash from chunks
+// Can use either full chunk objects or simplified string array
 function calculateContentHash(chunks: Array<{ text: string }>): string {
 	const hash = createHash("sha256");
 	for (const chunk of chunks) {
@@ -689,6 +724,13 @@ function calculateContentHash(chunks: Array<{ text: string }>): string {
 	}
 	return hash.digest("hex");
 }
+
+// Or simplified version if chunks are just strings:
+// function calculateContentHash(chunks: string[]): string {
+//   const hash = createHash("sha256");
+//   chunks.forEach(text => hash.update(text));
+//   return hash.digest("hex");
+// }
 
 function: async ({ config, sources: currentSources, api }) => {
 	const items = await fetchItemsFromExternalSystem(config);
@@ -1087,16 +1129,22 @@ async function fetchAndProcessChunks(baseUrl: string, apiKey: string, itemId: st
 }
 ```
 
-**Production Patterns:**
-- ✅ **Parameter naming**: `sources: currentSources` for clarity
+**Production Patterns from Real Implementations:**
+- ✅ **Parameter naming**: `sources: currentSources` for clarity (all production connectors)
 - ✅ **Content hashing**: SHA-256 hash from all chunk text
 - ✅ **Tracking**: `Set<string>` for processed external identifiers
 - ✅ **Always track**: Add to set before checking upsert result
 - ✅ **Cleanup**: Delete sources not in updated set
 - ✅ **Efficiency**: Skip chunk creation when content unchanged
+- ✅ **External IDs**: Use stable, unique identifiers from source system
+  - Confluence: Uses page ID
+  - Diffbot: Uses composite ID format `${index}.${diffbotUri}@${url}`
 
-**Real-World Example:**
-See [Confluence Connector](../../../extensions/confluence/src/knowledge-connectors/confluenceConnector.ts) for complete production implementation.
+**Existing Connectors:**
+- [Confluence Connector](../../../extensions/confluence/src/knowledge-connectors/confluenceConnector.ts) - Full sync with ChunkContent[] hashing
+- [Diffbot Webpage Connector](../../../extensions/diffbot/src/knowledge-connectors/diffbotWebpageConnector.ts) - Full sync with string[] hashing
+- [Diffbot Crawler Connector](../../../extensions/diffbot/src/knowledge-connectors/diffbotCrawlerConnector.ts) - Multiple sources per crawl
+- [Chuck Norris Connector](../../../extensions/chuck-norris-jokes/src/knowledge-connectors/chuckNorrisJokesConnector.ts) - Simple connector implementation for demonstration purposes
 
 ## Checklist
 

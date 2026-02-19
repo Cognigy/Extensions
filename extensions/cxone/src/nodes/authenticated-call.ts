@@ -1,6 +1,9 @@
 import { createNodeDescriptor } from "@cognigy/extension-tools";
 import { AuthenticatedCallNodeParams } from "../types";
 import { generateRequestId, ErrorCreators, createErrorResponse, createSuccessResponse } from "../helpers/errors";
+import * as http from "http";
+import * as https from "https";
+import { URL } from "url";
 
 export const cxoneAuthenticatedCall = createNodeDescriptor({
     type: "cxoneAuthenticatedCall",
@@ -65,7 +68,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
             },
             condition: {
                 key: "method",
-                value: "GET",
+                value: "DELETE",
                 negate: true
             }
         },
@@ -313,7 +316,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
 
         // Helper function to determine payload data based on payload type
         const getPayloadData = () => {
-            if (method === "GET" || method === "DELETE") {
+            if (method === "DELETE") {
                 return undefined;
             }
 
@@ -337,7 +340,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
 
         // Helper function to prepare request body and content type
         const prepareRequestBody = (currentPayloadType: string | undefined, payloadData: any) => {
-            if (!payloadData || method === "GET" || method === "DELETE") {
+            if (!payloadData || method === "DELETE") {
                 return { body: undefined, contentType: "application/json" };
             }
 
@@ -475,76 +478,110 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
             return Math.floor(exponentialDelay + jitter);
         };
 
+        // Define custom response interface for Node.js http
+        interface HttpResponse {
+            statusCode: number;
+            headers: http.IncomingHttpHeaders;
+            data: any;
+        }
+
         // Helper function to determine if error should be retried
-        const isRetryableError = (error: any, response?: Response): boolean => {
-            // Network errors (fetch failures)
+        const isRetryableError = (error: any, response?: HttpResponse): boolean => {
+            // Network errors (axios failures)
             if (error && !response) {
                 return true;
             }
 
             // HTTP status codes that should be retried
-            if (response && response.status) {
-                return response.status >= 500 || response.status === 429;
+            if (response && response.statusCode) {
+                return response.statusCode >= 500 || response.statusCode === 429;
             }
 
             return false;
         };
 
-        // Helper function to create custom agent for insecure SSL if needed
-        const createRequestAgent = (allowInsecure: boolean) => {
-            if (!allowInsecure) {
-                return undefined;
+        // Helper function to parse response body with graceful JSON handling
+        const parseResponseBody = (body: string, contentType?: string): any => {
+            if (!body) {
+                return body;
             }
 
+            // Try to parse as JSON first, fallback to text
             try {
-                // Try to create HTTPS agent for Node.js environment
-                const https = require('https');
-                return new https.Agent({
-                    rejectUnauthorized: false
-                });
+                return JSON.parse(body);
             } catch (error) {
-                // If https module is not available (browser environment), return undefined
-                api.log("warn", "HTTPS agent not available - allowInsecureSSL setting ignored in browser environment");
-                return undefined;
+                // If JSON parsing fails, return as text
+                return body;
             }
         };
 
-        // Helper function to make HTTP request with timeout
-        const makeHttpRequest = async (requestUrl: string, requestOptions: RequestInit, timeoutMs: number): Promise<Response> => {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        // Helper function to make HTTP request with timeout using Node.js http/https
+        const makeHttpRequest = async (requestUrl: string, requestOptions: any, timeoutMs: number): Promise<HttpResponse> => {
+            return new Promise((resolve, reject) => {
+                const parsedUrl = new URL(requestUrl);
+                const isHttps = parsedUrl.protocol === 'https:';
+                const httpModule = isHttps ? https : http;
 
-            try {
-                const finalRequestOptions: RequestInit = {
-                    ...requestOptions,
-                    signal: controller.signal
+                const options: http.RequestOptions = {
+                    hostname: parsedUrl.hostname,
+                    port: parsedUrl.port || (isHttps ? 443 : 80),
+                    path: parsedUrl.pathname + parsedUrl.search,
+                    method: requestOptions.method,
+                    headers: requestOptions.headers,
+                    timeout: timeoutMs
                 };
 
-                // Add custom agent for insecure SSL if enabled
-                if (allowInsecureSSL) {
-                    const agent = createRequestAgent(true);
-                    if (agent) {
-                        // For Node.js environments, add the agent
-                        (finalRequestOptions as any).agent = agent;
-                        debugLog("Insecure SSL agent configured", {
-                            allowInsecureSSL: true,
-                            rejectUnauthorized: false
-                        });
-                    }
+                // Add SSL configuration if HTTPS
+                if (isHttps && allowInsecureSSL) {
+                    (options as https.RequestOptions).rejectUnauthorized = false;
+                    debugLog("Insecure SSL configured", {
+                        allowInsecureSSL: true,
+                        rejectUnauthorized: false
+                    });
                 }
 
-                const response = await fetch(requestUrl, finalRequestOptions);
-                clearTimeout(timeoutId);
-                return response;
-            } catch (error) {
-                clearTimeout(timeoutId);
-                if (error.name === 'AbortError') {
+                const req = httpModule.request(options, (res) => {
+                    let body = '';
+
+                    // Collect response data
+                    res.on('data', (chunk) => {
+                        body += chunk;
+                    });
+
+                    res.on('end', () => {
+                        const contentType = res.headers['content-type'];
+                        const parsedBody = parseResponseBody(body, contentType);
+
+                        const response: HttpResponse = {
+                            statusCode: res.statusCode || 0,
+                            headers: res.headers,
+                            data: parsedBody
+                        };
+
+                        resolve(response);
+                    });
+                });
+
+                // Handle request errors
+                req.on('error', (error) => {
+                    reject(error);
+                });
+
+                // Handle timeout
+                req.on('timeout', () => {
+                    req.destroy();
                     const timeoutError = new Error(`Request timeout after ${timeoutMs}ms`);
                     timeoutError.name = 'TimeoutError';
-                    throw timeoutError;
+                    reject(timeoutError);
+                });
+
+                // Write request body if present
+                if (requestOptions.data) {
+                    req.write(requestOptions.data);
                 }
-                throw error;
-            }
+
+                req.end();
+            });
         };
 
         // Generate unique request ID for tracking
@@ -651,15 +688,15 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                 "Authorization": `Bearer ${cxoneToken}`
             };
 
-            // Prepare request options
-            const requestOptions: RequestInit = {
-                method,
+            // Prepare HTTP request options
+            const requestOptions: any = {
+                method: method.toUpperCase(),
                 headers: requestHeaders
             };
 
-            // Add body for methods that support it (not GET or DELETE)
-            if (requestBody && method !== "GET" && method !== "DELETE") {
-                requestOptions.body = requestBody;
+            // Add body for methods that support it (not DELETE)
+            if (requestBody && method !== "DELETE") {
+                requestOptions.data = requestBody;
             }
 
             debugLog("Request prepared", {
@@ -672,7 +709,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
             // Execute HTTP request with retry logic and budget guard
             const startTime = Date.now();
             let lastError: Error | undefined;
-            let lastResponse: Response | undefined;
+            let lastResponse: HttpResponse | undefined;
             let actualAttempts = 0;
             const maxAttempts = enableRetry ? Math.min(retryAttempts + 1, 6) : 1;
 
@@ -731,10 +768,9 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
 
                     debugLog(`Request completed`, {
                         attempt,
-                        status: response.status,
-                        statusText: response.statusText,
+                        statusCode: response.statusCode,
                         durationMs: requestDuration,
-                        responseHeaders: Object.fromEntries(response.headers.entries())
+                        responseHeaders: response.headers
                     });
 
                     // First check if this is a retryable response and we can still retry
@@ -743,25 +779,18 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                         lastResponse = response;
                         debugLog(`Retryable HTTP error received`, {
                             attempt,
-                            status: response.status,
-                            statusText: response.statusText,
+                            statusCode: response.statusCode,
                             willRetry: true,
                             isRetryable: true
                         });
-                        api.log("warn", `Request ${requestId}: Attempt ${attempt} received retryable status ${response.status}, will retry`);
+                        api.log("warn", `Request ${requestId}: Attempt ${attempt} received retryable status ${response.statusCode}, will retry`);
 
                         // Continue to next retry attempt
                         continue;
                     } else {
-                        // Either not retryable, or final attempt - parse and return response
-                        let responseBody;
-                        const responseContentType = response.headers.get("content-type");
-
-                        if (responseContentType && responseContentType.includes("application/json")) {
-                            responseBody = await response.json();
-                        } else {
-                            responseBody = await response.text();
-                        }
+                        // Either not retryable, or final attempt - response body is already parsed
+                        const responseBody = response.data;
+                        const responseContentType = response.headers['content-type'];
 
                         debugLog("Response body parsed", {
                             contentType: responseContentType,
@@ -771,18 +800,19 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                         });
 
                         // Handle non-2xx responses based on failOnNon2xx setting
-                        if (!response.ok && failOnNon2xx) {
+                        const isOk = response.statusCode >= 200 && response.statusCode < 300;
+                        if (!isOk && failOnNon2xx) {
                             // Treat non-2xx as error when failOnNon2xx is true
                             const httpError = ErrorCreators.httpError(
-                                response.status,
-                                response.statusText || `HTTP ${response.status}`,
+                                response.statusCode,
+                                http.STATUS_CODES[response.statusCode] || `HTTP ${response.statusCode}`,
                                 responseBody,
                                 requestId
                             );
 
                             debugLog("Non-2xx treated as error", {
-                                status: response.status,
-                                statusText: response.statusText,
+                                statusCode: response.statusCode,
+                                statusMessage: http.STATUS_CODES[response.statusCode],
                                 failOnNon2xx,
                                 isRetryable: isRetryableError(undefined, response),
                                 attempt,
@@ -794,24 +824,20 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                                 storeData(responseTarget, responseKey, httpError);
                             }
 
-                            api.log("error", `Request ${requestId}: Non-2xx response treated as error - Status: ${response.status} (attempt ${attempt}/${maxAttempts})`);
-                            api.output(`HTTP ${response.status} Error`, httpError);
+                            api.log("error", `Request ${requestId}: Non-2xx response treated as error - Status: ${response.statusCode} (attempt ${attempt}/${maxAttempts})`);
+                            api.output(`HTTP ${response.statusCode} Error`, httpError);
                             return;
                         }
 
                         // Prepare result object (legacy format for backward compatibility or when failOnNon2xx is false)
                         const result: any = {
-                            status: response.status,
+                            status: response.statusCode,
                             body: responseBody
                         };
 
                         // Add headers to result if enabled
                         if (storeResponseHeaders) {
-                            const responseHeaders: Record<string, string> = {};
-                            response.headers.forEach((value, key) => {
-                                responseHeaders[key] = value;
-                            });
-                            result.headers = responseHeaders;
+                            result.headers = response.headers;
                         }
 
                         // Add retry information if retries were attempted
@@ -824,7 +850,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
 
                         // For successful responses or when failOnNon2xx is false, use success format
                         let finalResult;
-                        if (response.ok) {
+                        if (isOk) {
                             // 2xx responses are always successful
                             finalResult = createSuccessResponse(result);
                         } else {
@@ -835,8 +861,8 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                         const totalDuration = Date.now() - startTime;
 
                         debugLog("Request completed successfully", {
-                            status: response.status,
-                            ok: response.ok,
+                            statusCode: response.statusCode,
+                            ok: isOk,
                             attempt,
                             maxAttempts,
                             totalDurationMs: totalDuration,
@@ -846,7 +872,7 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                             responseKey
                         });
 
-                        api.log("info", `Request ${requestId}: Completed with status ${response.status} (attempt ${attempt}/${maxAttempts})`);
+                        api.log("info", `Request ${requestId}: Completed with status ${response.statusCode} (attempt ${attempt}/${maxAttempts})`);
 
                         // Store complete response object in configured target/key
                         if (responseTarget && responseKey) {
@@ -856,9 +882,9 @@ export const cxoneAuthenticatedCall = createNodeDescriptor({
                         }
 
                         // Output the result
-                        const outputMessage = response.ok
+                        const outputMessage = isOk
                             ? "Request completed successfully"
-                            : `Request completed with status ${response.status} (treated as success)`;
+                            : `Request completed with status ${response.statusCode} (treated as success)`;
                         api.output(outputMessage, finalResult);
                         return;
                     }

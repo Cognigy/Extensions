@@ -40,10 +40,12 @@ Makes authenticated HTTP requests to any API using CXone bearer tokens.
 - **Store Response Headers** (`storeResponseHeaders`): When enabled, response headers are stored together with the body in the configured target.
 
 #### Payload
-- **Payload Type** (`payloadType`): Selects how to send the request body for non-GET/DELETE methods:
+- **Payload Type** (`payloadType`): Selects how to send the request body for non-DELETE methods (including GET with body for complex queries):
   - `json`: uses **Request Body (JSON)**.
   - `text`: uses **Request Body (Text)**.
   - `form`: uses **Request Body (Form Data)**.
+
+  **Note**: While GET requests with body data are non-standard HTTP practice, some APIs require complex query parameters that are better suited to request bodies.
 - **Request Body (JSON)** (`bodyJson`): JSON object body (e.g. `{"foo": "bar"}`).
 - **Request Body (Text)** (`bodyText`): Raw text body.
 - **Request Body (Form Data)** (`bodyForm`): JSON object treated as key/value pairs for form data.

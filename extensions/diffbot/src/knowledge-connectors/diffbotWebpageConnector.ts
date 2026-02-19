@@ -118,7 +118,7 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 					"images",
 				]);
 
-				// Upsert Knowledge Source with URL as external identifier
+				// Upsert Knowledge Source with composite external identifier
 				const result = await api.upsertKnowledgeSource({
 					name: sourceData.title,
 					description: `Content from web page at ${url}`,

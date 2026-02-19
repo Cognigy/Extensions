@@ -141,7 +141,10 @@ export const entityRequestNode = createNodeDescriptor({
                         }));
 
                     } catch (error) {
-                        throw new Error(error);
+                        const errorMessage = error instanceof Error
+                            ? error.message
+                            : JSON.stringify(error);
+                        throw new Error(errorMessage);
                     }
                 },
             },
@@ -326,15 +329,19 @@ export const entityRequestNode = createNodeDescriptor({
             }
 
         } catch (error) {
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error);
+            api.log("error", `entityRequest execution failed: ${errorMessage}`);
 
             const onErrorChild = childConfigs.find(child => child.type === "onErrorEntityRequest");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, error.message, "simple");
+                api.addToContext(contextKey, errorMessage, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, error.message);
+                api.addToInput(inputKey, errorMessage);
             }
         }
     }

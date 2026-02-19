@@ -154,15 +154,19 @@ export const getCaseNode = createNodeDescriptor({
             }
 
         } catch (error) {
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error);
+            api.log("error", `getCase execution failed: ${errorMessage}`);
 
             const onErrorChild = childConfigs.find(child => child.type === "onErrorGetCase");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, error.message, "simple");
+                api.addToContext(contextKey, errorMessage, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, error.message);
+                api.addToInput(inputKey, errorMessage);
             }
         }
     }

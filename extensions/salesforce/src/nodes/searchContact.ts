@@ -100,7 +100,10 @@ export const searchContactNode = createNodeDescriptor({
                         }));
 
                     } catch (error) {
-                        throw new Error(`Error retrieving Contact fields: ${error.message}`);
+                        const errorMessage = error instanceof Error
+                            ? error.message
+                            : JSON.stringify(error);
+                        throw new Error(`Error retrieving Contact fields: ${errorMessage}`);
                     }
                 },
             }
@@ -227,15 +230,19 @@ export const searchContactNode = createNodeDescriptor({
             }
 
         } catch (error) {
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error);
+            api.log("error", `searchContact execution failed: ${errorMessage}`);
 
             const onErrorChild = childConfigs.find(child => child.type === "onErrorGetCase");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, error.message, "simple");
+                api.addToContext(contextKey, errorMessage, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, error.message);
+                api.addToInput(inputKey, errorMessage);
             }
         }
     }

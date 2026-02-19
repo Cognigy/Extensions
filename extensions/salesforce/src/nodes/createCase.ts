@@ -104,7 +104,10 @@ export const createCaseNode = createNodeDescriptor({
                             value: status.Id,
                         }));
                     } catch (error) {
-                        throw new Error(error);
+                        const errorMessage = error instanceof Error
+                            ? error.message
+                            : JSON.stringify(error);
+                        throw new Error(errorMessage);
                     }
                 }
             }
@@ -159,7 +162,10 @@ export const createCaseNode = createNodeDescriptor({
                             }));
 
                     } catch (error) {
-                        throw new Error(error);
+                        const errorMessage = error instanceof Error
+                            ? error.message
+                            : JSON.stringify(error);
+                        throw new Error(errorMessage);
                     }
                 },
             }
@@ -305,7 +311,7 @@ export const createCaseNode = createNodeDescriptor({
                 ...additionalCaseDetails
             });
 
-            const queryRecord = await salesforceConnection.query<SalesforceCase>(`SELECT Id, CaseNumber from Case Where Id = '${record?.id}'`);
+            const queryRecord = await salesforceConnection.query(`SELECT Id, CaseNumber from Case Where Id = '${record?.id}'`);
 
             const onSuccessChild = childConfigs.find(child => child.type === "onSuccessCreateCase");
             api.setNextNode(onSuccessChild.id);
@@ -318,15 +324,19 @@ export const createCaseNode = createNodeDescriptor({
             }
 
         } catch (error) {
+            const errorMessage = error instanceof Error
+                ? error.message
+                : JSON.stringify(error);
+            api.log("error", `createCase execution failed: ${errorMessage}`);
 
             const onErrorChild = childConfigs.find(child => child.type === "onErrorCreateCase");
             api.setNextNode(onErrorChild.id);
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, error.message, "simple");
+                api.addToContext(contextKey, errorMessage, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, error.message);
+                api.addToInput(inputKey, errorMessage);
             }
         }
     }

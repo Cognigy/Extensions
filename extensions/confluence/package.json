@@ -1,6 +1,6 @@
 {
     "name": "confluence",
-    "version": "5.1.0-rc.0",
+    "version": "5.1.0-rc.1",
     "description": "Integrates with the Atlassian's Confluence.",
     "main": "build/module.js",
     "scripts": {

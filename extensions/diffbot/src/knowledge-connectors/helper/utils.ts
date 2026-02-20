@@ -1,8 +1,6 @@
 import { createHash } from "node:crypto";
 import fetchRetry from "fetch-retry";
 
-const fetchRetry_ = fetchRetry(global.fetch);
-
 /**
  * Fetch method with retry configuration
  */
@@ -10,7 +8,7 @@ export async function fetchWithRetry<T = any>(
 	url: string,
 	options: RequestInit = {},
 ): Promise<T> {
-	const response = await fetchRetry_(url, {
+	const response = await fetchRetry(global.fetch)(url, {
 		...options,
 		retries: 3,
 		retryDelay: 1000,

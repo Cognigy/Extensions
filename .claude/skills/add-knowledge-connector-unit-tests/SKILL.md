@@ -16,7 +16,8 @@ This skill describes how to introduce unit tests for a Knowledge Connector exten
 - No third-party test frameworks (no Jest, Vitest, or Mocha)
 
 **Reference Implementation:**
-- [Confluence Connector Tests](../../../extensions/confluence/src/knowledge-connectors/knowledgeConnector.test.ts) - Complete test suite
+- [Confluence Connector Tests](../../../extensions/confluence/src/knowledge-connectors/confluenceConnector.test.ts) - Complete test suite
+- [Diffbot Connector Tests](../../../extensions/diffbot/src/knowledge-connectors/diffbotWebpageConnector.test.ts) - Complete test suite
 
 **Related Skills:**
 - [Adding a Knowledge Connector](../add-knowledge-connector/SKILL.md) - How to create the connector being tested
@@ -106,14 +107,14 @@ Test files are colocated with the connector code:
 extensions/{extension-name}/
 ├── src/
 │   └── knowledge-connectors/
-│       ├── myKnowledgeConnector.ts          # Connector implementation
-│       ├── myKnowledgeConnector.test.ts     # Test file
+│       ├── {connector}Connector.ts           # Connector implementation
+│       ├── {connector}Connector.test.ts      # Test file (same name as connector)
 │       ├── types.ts                         # Vendor API response types
 │       └── helper/
 │           └── utils.ts                     # Utilities under test
 ```
 
-**Convention:** Create one test file per knowledge connector in an extension.
+**Convention:** The test file has the same name as the connector file with a `.test.ts` suffix. Create one test file per knowledge connector in an extension.
 
 ### Standard Imports
 
@@ -349,7 +350,7 @@ export interface VendorGetItemResponse {
 	_links: { webUrl: string };
 }
 
-// In knowledgeConnector.test.ts:
+// In {connector}Connector.test.ts:
 import type { VendorGetItemResponse } from "./types";
 
 const mockGetItemResponse = (
@@ -887,7 +888,7 @@ The coverage report printed by `--experimental-test-coverage` should not list an
 | **Assertions** | `node:assert` |
 | **Mocking** | `mock` from `node:test` |
 | **TypeScript loader** | `tsx` (`--import=tsx`) |
-| **Test file location** | `src/knowledge-connectors/knowledgeConnector.test.ts` |
+| **Test file location** | `src/knowledge-connectors/{connector}Connector.test.ts` |
 | **Build exclusion** | `tsconfig.production.json` excludes `**/*.test.ts` |
 | **Coverage exclusion** | `--test-coverage-exclude='**/*.test.ts'` |
 | **Test in build** | Tests run first: `npm run test && npm run transpile && ...` |

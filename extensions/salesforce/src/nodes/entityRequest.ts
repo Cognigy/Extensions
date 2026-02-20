@@ -91,7 +91,7 @@ export const entityRequestNode = createNodeDescriptor({
         },
         {
             key: "entityType",
-            type: "select",
+            type: "cognigyText",
             label: {
                 deDE: "Entitätentyp",
                 default: "Entity Type"
@@ -99,54 +99,6 @@ export const entityRequestNode = createNodeDescriptor({
             defaultValue: "Contact",
             params: {
                 required: true
-            },
-            optionsResolver: {
-                dependencies: ["oauthConnection"],
-                resolverFunction: async ({ api, config }) => {
-                    try {
-                        const { consumerKey, consumerSecret, instanceUrl }: IEntityRequestParams["config"]["oauthConnection"] = config.oauthConnection;
-
-                        // Step 1: Authenticate with Salesforce using OAuth2
-                        const data = `grant_type=client_credentials&client_id=${encodeURIComponent(consumerKey)}&client_secret=${encodeURIComponent(consumerSecret)}`;
-
-                        const authResponse = await api.httpRequest({
-                            method: "POST",
-                            url: `${instanceUrl}/services/oauth2/token`,
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded",
-                            },
-                            // @ts-ignore
-                            data: data,
-                        });
-
-                        const accessToken = authResponse?.data?.access_token;
-
-                        const query = `SELECT QualifiedApiName, Label FROM EntityDefinition ORDER BY QualifiedApiName`;
-                        const url = `${instanceUrl}/services/data/v56.0/query?q=${encodeURIComponent(query)}`;
-
-                        const response = await api.httpRequest({
-                            method: "GET",
-                            url: url,
-                            headers: {
-                                Authorization: `Bearer ${accessToken}`,
-                            },
-                        });
-
-                        const records = response?.data?.records || [];
-
-                        // Filter and map results for the desired fields
-                        return records.map((entity: ISalesforceEntity) => ({
-                            label: entity.Label,
-                            value: entity.QualifiedApiName,
-                        }));
-
-                    } catch (error) {
-                        const errorMessage = error instanceof Error
-                            ? error.message
-                            : JSON.stringify(error);
-                        throw new Error(errorMessage);
-                    }
-                },
             },
         },
         {

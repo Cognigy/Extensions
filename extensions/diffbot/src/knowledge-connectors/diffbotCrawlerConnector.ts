@@ -1,7 +1,7 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
 import { DiffbotCrawler } from "./helper/crawler";
-import { processQueryString } from "./helper/utils";
+import { calculateContentHash, processQueryString } from "./helper/utils";
 
 export const diffbotCrawlerConnector = createKnowledgeConnector({
 	type: "diffbotCrawlerConnector",
@@ -322,7 +322,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 		{ type: "section", key: "processingLimits" },
 		{ type: "section", key: "customHeaders" },
 	],
-	function: async ({ config, api }) => {
+	function: async ({ config, api, sources: currentSources }) => {
 		const {
 			connection,
 			sourceTags,
@@ -332,6 +332,7 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			...crawlerConfig
 		} = config;
 		const { accessToken } = connection as { accessToken: string };
+		const updatedSources = new Set<string>();
 
 		// Create Diffbot Crawler instance
 		const crawler = new DiffbotCrawler(accessToken);
@@ -354,18 +355,26 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 			const chunkTitle = `title: ${data.title}\ntype: ${data.type}\n`;
 			const chunks = await jsonSplit(data, chunkTitle, ["html", "images"]);
 
-			// Create Knowledge Source
-			const { knowledgeSourceId } = await api.createKnowledgeSource({
+			// Upsert Knowledge Source with pageUrl as external identifier
+			const result = await api.upsertKnowledgeSource({
 				name: data.title,
 				description: `Content from web page at ${data.pageUrl}`,
 				tags: sourceTags,
 				chunkCount: chunks.length,
+				externalIdentifier: data.pageUrl,
+				contentHashOrTimestamp: calculateContentHash(chunks),
 			});
+			updatedSources.add(data.pageUrl);
 
-			// Create Knowledge Chunks
+			if (result === null) {
+				// Source already up-to-date (content hash unchanged)
+				continue;
+			}
+
+			// Create Knowledge Chunks for new or updated source
 			for (const chunk of chunks) {
 				await api.createKnowledgeChunk({
-					knowledgeSourceId,
+					knowledgeSourceId: result.knowledgeSourceId,
 					text: chunk,
 					data: {
 						url: data.pageUrl,
@@ -375,6 +384,17 @@ export const diffbotCrawlerConnector = createKnowledgeConnector({
 					},
 				});
 			}
+		}
+
+		// Clean up superseded sources
+		for (const source of currentSources) {
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
+			}
+
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
+			});
 		}
 
 		// Delete the crawl job if retain crawler is false

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { IKnowledge } from "@cognigy/extension-tools";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { ConfluenceDataParser } from "./confluenceParser";
@@ -110,6 +111,17 @@ export const getPageChunks = async (
 		);
 	}
 	return result;
+};
+
+/**
+ * Calculates a SHA-256 hash from an array of chunks.
+ */
+export const calculateContentHash = (chunks: ChunkContent[]): string => {
+	const hash = createHash("sha256");
+	chunks.forEach((c) => {
+		hash.update(c.text);
+	});
+	return hash.digest("hex");
 };
 
 /**

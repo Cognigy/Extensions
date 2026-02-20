@@ -1,6 +1,7 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { jsonSplit } from "./helper/chunker";
-import { fetchWithRetry } from "./helper/utils";
+import { calculateContentHash, fetchWithRetry } from "./helper/utils";
+import type { DiffbotV3AnalyzeResponse } from "./types";
 
 export const diffbotWebpageConnector = createKnowledgeConnector({
 	type: "diffbotWebpageConnector",
@@ -94,35 +95,49 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 	function: async ({
 		config: { connection, urls, sourceTags, extractApiType },
 		api,
+		sources: currentSources,
 	}) => {
 		const { accessToken } = connection as any;
+		const updatedSources = new Set<string>();
+
 		for (const url of urls) {
 			const params = new URLSearchParams({ token: accessToken, url });
 			const diffbotUrl = `https://api.diffbot.com/v3/${extractApiType}?${params}`;
-			const analyze = await fetchWithRetry(diffbotUrl);
+			const analyze =
+				await fetchWithRetry<DiffbotV3AnalyzeResponse>(diffbotUrl);
 			if (!analyze || !analyze.objects || analyze.objects.length === 0)
 				throw new Error(`No data returned from Diffbot for URL: ${url}`);
 
 			// Create chunks
-			for (const sourceData of analyze.objects) {
+			for (let i = 0; i < analyze.objects.length; i++) {
+				const sourceData = analyze.objects[i];
+				const externalIdentifier = `${i}.${sourceData.diffbotUri}@${url}`;
 				const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
 				const chunks = await jsonSplit(sourceData, chunkTitle, [
 					"html",
 					"images",
 				]);
 
-				// Create Knowledge Source
-				const { knowledgeSourceId } = await api.createKnowledgeSource({
+				// Upsert Knowledge Source with composite external identifier
+				const result = await api.upsertKnowledgeSource({
 					name: sourceData.title,
 					description: `Content from web page at ${url}`,
 					tags: sourceTags,
 					chunkCount: chunks.length,
+					externalIdentifier,
+					contentHashOrTimestamp: calculateContentHash(chunks),
 				});
+				updatedSources.add(externalIdentifier);
 
-				// Create Knowledge Chunks
+				if (result === null) {
+					// Source already up-to-date (content hash unchanged)
+					continue;
+				}
+
+				// Create Knowledge Chunks for new or updated source
 				for (const chunk of chunks) {
 					await api.createKnowledgeChunk({
-						knowledgeSourceId,
+						knowledgeSourceId: result.knowledgeSourceId,
 						text: chunk,
 						data: {
 							url: url,
@@ -133,6 +148,17 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 					});
 				}
 			}
+		}
+
+		// Clean up superseded sources
+		for (const source of currentSources) {
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
+			}
+
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
+			});
 		}
 	},
 });

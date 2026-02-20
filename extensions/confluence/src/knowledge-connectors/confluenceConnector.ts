@@ -1,5 +1,10 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
-import { type auth, getPageChunks, getPages } from "./helper/utils";
+import {
+	type auth,
+	calculateContentHash,
+	getPageChunks,
+	getPages,
+} from "./helper/utils";
 
 export const confluenceConnector = createKnowledgeConnector({
 	type: "confluenceConnector",
@@ -41,7 +46,7 @@ export const confluenceConnector = createKnowledgeConnector({
 				"Source tags can be used to filter the search scope from the Flow. Press ENTER to add a Source Tag.",
 		},
 	] as const,
-	function: async ({ config, api }) => {
+	function: async ({ config, api, sources: currentSources }) => {
 		const { connection, confluenceUrl, descendants, sourceTags } = config;
 		const { email, key } = connection as { email: string; key: string };
 		const auth: auth = { username: email, password: key };
@@ -52,26 +57,47 @@ export const confluenceConnector = createKnowledgeConnector({
 
 		// Fetch all page ids to parse
 		const pageIds = await getPages(baseUrl, url, auth, descendants);
+		const updatedSources = new Set<string>();
 
 		// Iterate over each page
 		for (const page of pageIds) {
 			// Fetch chunks for each page
 			const chunks = await getPageChunks(baseUrl, auth, page.id, page.title);
 
-			// Create knowledge source and add chunks to it
-			const { knowledgeSourceId } = await api.createKnowledgeSource({
+			// Create or update knowledge source
+			const result = await api.upsertKnowledgeSource({
 				name: page.title,
 				description: `Data from ${page.title}`,
 				tags: sourceTags,
 				chunkCount: chunks.length,
+				externalIdentifier: page.id,
+				contentHashOrTimestamp: calculateContentHash(chunks),
 			});
+			updatedSources.add(page.id);
 
+			if (result === null) {
+				// Source already up-to-date
+				continue;
+			}
+
+			// Add chunks to new or updated source
 			for (const chunk of chunks) {
 				await api.createKnowledgeChunk({
-					knowledgeSourceId: knowledgeSourceId,
+					knowledgeSourceId: result.knowledgeSourceId,
 					...chunk,
 				});
 			}
+		}
+
+		// Clean up superseded sources
+		for (const source of currentSources) {
+			if (updatedSources.has(source.externalIdentifier)) {
+				continue;
+			}
+
+			await api.deleteKnowledgeSource({
+				knowledgeSourceId: source.knowledgeSourceId,
+			});
 		}
 	},
 });

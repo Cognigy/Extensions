@@ -4,11 +4,12 @@
     "description": "Integrates with the Atlassian's Confluence.",
     "main": "build/module.js",
     "scripts": {
-        "transpile": "tsc -p .",
+        "transpile": "tsc -p tsconfig.production.json",
         "zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
-        "build": "npm run transpile && npm run lint && npm run zip",
+        "build": "npm run test && npm run transpile && npm run lint && npm run zip",
         "format": "biome check --write",
-        "lint": "biome check"
+        "lint": "biome check",
+        "test": "node --test --import=tsx --experimental-test-coverage --test-coverage-exclude='**/*.test.ts'"
     },
     "keywords": [
         "Knowledge",
@@ -26,6 +27,7 @@
         "@biomejs/biome": "2.2.4",
         "@types/node": "^24.2.0",
         "@types/turndown": "^5.0.1",
+        "tsx": "4.21.0",
         "typescript": "5.9.2"
     },
     "dependencies": {

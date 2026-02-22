@@ -1,0 +1,26 @@
+{
+  "name": "taktile",
+  "version": "4.0.0",
+  "main": "build/module.js",
+  "description": "Integrates with Taktile's Decision Flow API",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "tsc -p .",
+    "zip": "tar cfz taktile.tar.gz build/* package.json package-lock.json icon.png",
+    "build": "npm run transpile && npm run zip"
+  },
+  "keywords": [
+    "Taktile",
+    "Decision Flow",
+    "Back Office"
+  ],
+  "author": "Cognigy GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.16.4",
+    "axios": "^1.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

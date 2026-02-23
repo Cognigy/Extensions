@@ -54,7 +54,7 @@ export const s3Connector = createKnowledgeConnector({
       region,
     };
 
-    const newsourceIds: string[] = [];
+    const discoveredSourceKeys = new Set<string>();
     // Get all S3 objects in the bucket
     const s3Objects = await getS3Object(s3Connection, bucketName);
 
@@ -64,6 +64,10 @@ export const s3Connector = createKnowledgeConnector({
       const keyLower = obj.Key.toLowerCase();
       return supportedExtensions.some(ext => keyLower.endsWith(`.${ext}`));
     });
+
+    for (const s3Object of filteredObject) {
+      discoveredSourceKeys.add(s3Object.Key.trim());
+    }
 
     for (const s3Object of filteredObject) {
       try {
@@ -99,7 +103,6 @@ export const s3Connector = createKnowledgeConnector({
               data: chunk.data,
             });
           }
-          newsourceIds.push(knowledgeSourceId);
         }
       } catch (error) {
         // Continue with next file even if this one fails
@@ -108,20 +111,48 @@ export const s3Connector = createKnowledgeConnector({
     }
 
             // Remove any previously existing knowledge sources that were not in this run
-        if (Array.isArray(sources)) {
-            for (const source of sources) {
-                const externalId = (source as any).externalIdentifier;
-                if (!newsourceIds.includes(externalId)) {
-                    try {
-                        console.log("Deleting source:", source.knowledgeSourceId);
-                        await api.deleteKnowledgeSource({
-                            knowledgeSourceId: source.knowledgeSourceId,
-                        });
-                    } catch (err) {
-                        console.error(`Failed to delete source ${source.knowledgeSourceId}:`, err);
-                    }
-                }
-            }
+    if (Array.isArray(sources)) {
+      let deletedCount = 0;
+      let retainedCount = 0;
+      let skippedMissingKeyCount = 0;
+
+      console.log("S3 sync reconciliation started", {
+        bucketName,
+        discoveredSourceKeyCount: discoveredSourceKeys.size,
+        previousSourceCount: sources.length,
+      });
+
+      for (const source of sources) {
+        const sourceKey = (
+          ((source as any).externalIdentifier as string | undefined) ??
+          ((source as any).name as string | undefined)
+        )?.trim();
+
+        if (!sourceKey) {
+          skippedMissingKeyCount++;
+          continue;
         }
+
+        if (!discoveredSourceKeys.has(sourceKey)) {
+          try {
+            console.log("Deleting source:", source.knowledgeSourceId);
+            await api.deleteKnowledgeSource({
+              knowledgeSourceId: source.knowledgeSourceId,
+            });
+            deletedCount++;
+          } catch (err) {
+            console.error(`Failed to delete source ${source.knowledgeSourceId}:`, err);
+          }
+        } else {
+          retainedCount++;
+        }
+      }
+
+      console.log("S3 sync reconciliation finished", {
+        retainedCount,
+        deletedCount,
+        skippedMissingKeyCount,
+      });
+    }
   },
 });

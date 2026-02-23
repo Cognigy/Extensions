@@ -1,6 +1,11 @@
 import { createHash } from "node:crypto";
 import type { IKnowledge } from "@cognigy/extension-tools";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import type {
+	ConfluenceGetPageBodyFormatStorageResponse,
+	ConfluenceGetPageDescendantsResponse,
+	ConfluenceGetPageResponse,
+} from "../types";
 import { ConfluenceDataParser } from "./confluenceParser";
 
 // Headings less than and equal to this level create new chunks
@@ -39,7 +44,7 @@ export const getPages = async (
 	const pages: { id: string; title: string }[] = [];
 	if (pageId) {
 		const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}`;
-		const data = await fetchData(apiUrl, auth);
+		const data = await fetchData<ConfluenceGetPageResponse>(apiUrl, auth);
 		pages.push({ id: pageId, title: data.title });
 	}
 
@@ -51,7 +56,10 @@ export const getPages = async (
 				? `${baseUrl}/wiki/api/v2/pages/${pageId}/descendants${param}`
 				: `${baseUrl}/wiki/api/v2/folders/${folderId}/descendants${param}`;
 		do {
-			const data = await fetchData(apiUrl, auth);
+			const data = await fetchData<ConfluenceGetPageDescendantsResponse>(
+				apiUrl,
+				auth,
+			);
 			if (data.results) {
 				pages.push(
 					...data.results
@@ -78,7 +86,10 @@ export const getPageChunks = async (
 	const result: ChunkContent[] = [];
 	try {
 		const apiUrl = `${baseUrl}/wiki/api/v2/pages/${pageId}?body-format=storage`;
-		const data = await fetchData(apiUrl, auth);
+		const data = await fetchData<ConfluenceGetPageBodyFormatStorageResponse>(
+			apiUrl,
+			auth,
+		);
 		const xhtml = data.body.storage.value;
 		const webLink = data._links.webui;
 
@@ -127,7 +138,10 @@ export const calculateContentHash = (chunks: ChunkContent[]): string => {
 /**
  * Fetches data from a given URL with the specified username and password.
  */
-export const fetchData = async (url: string, auth: auth) => {
+export const fetchData = async <T = any>(
+	url: string,
+	auth: auth,
+): Promise<T> => {
 	const authHeader = Buffer.from(`${auth.username}:${auth.password}`).toString(
 		"base64",
 	);

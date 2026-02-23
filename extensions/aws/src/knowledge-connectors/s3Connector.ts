@@ -35,7 +35,7 @@ export const s3Connector = createKnowledgeConnector({
   function: async ({ config, api, sources }) => {
     const { connection, bucketName, sourceTags } = config;
 
-    // Hash all chunks 
+    // Hash all chunks
     function createContentHash(chunks: { text: string }[]): string {
       const content = chunks.map((c) => c.text).join("");
       return crypto.createHash("sha256").update(content).digest("hex");
@@ -53,7 +53,7 @@ export const s3Connector = createKnowledgeConnector({
       secretAccessKey,
       region,
     };
-    
+
     const newsourceIds: string[] = [];
     // Get all S3 objects in the bucket
     const s3Objects = await getS3Object(s3Connection, bucketName);

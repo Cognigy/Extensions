@@ -16,6 +16,10 @@
     "Conversational AI",
     "knowledge extensions"
   ],
+  "engines": {
+      "node": ">=22.22.0",
+      "npm": ">=11.9.0"
+  },
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {

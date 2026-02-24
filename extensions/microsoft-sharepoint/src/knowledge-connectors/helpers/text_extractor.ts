@@ -10,19 +10,8 @@ import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
 import * as fs from 'fs';
 import { parseOfficeAsync } from 'officeparser';
 
-export const logger = {
-    log: (level: string, context: any, message: string) => {
-        const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] [${level.toUpperCase()}] ${message}`);
-        if (context && Object.keys(context).length > 0) {
-            console.log('Context:', JSON.stringify(context, null, 2));
-        }
-    }
-};
-
 export const removeUnnecessaryChars = (text: string): string => {
     if (!text) return "";
-
     return text
         // Remove multiple spaces but preserve newlines
         .replace(/[ \t]+/g, ' ')
@@ -42,31 +31,22 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 			break;
 
 		case "pdf":
-			// possible config: { splitPage: true }
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/pdf
 			documentLoader = new PDFLoader(inputFile, { splitPages: false });
 			break;
 
 		case "docx":
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/docx
 			documentLoader = new DocxLoader(inputFile);
 			break;
 
 		case "csv":
-			// possible config: columnName
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/csv#usage-extracting-a-single-column
 			documentLoader = new CSVLoader(inputFile);
 			break;
 
 		case "json":
-			// possible config: pointer
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/json#using-json-pointer-example
 			documentLoader = new JSONLoader(inputFile);
 			break;
 
 		case "jsonl":
-			// possible config: pointer
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/jsonlines
 			documentLoader = new JSONLinesLoader(inputFile, "");
 			break;
 
@@ -75,7 +55,6 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 			break;
 
 		case 'pptx':
-			// https://js.langchain.com/docs/integrations/document_loaders/file_loaders/pptx/
 			documentLoader = new PPTXLoader(inputFile);
 			break;
 
@@ -103,13 +82,11 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 							metadata: {},
 						}),
 					];
-					logger.log('info', null, 'PDF extracted via pdf-parse fallback');
 				} else {
 					throw err;
 				}
 			} catch (fallbackErr: any) {
 				const message = `PDF extraction failed: ${err?.message || err}. Fallback error: ${fallbackErr?.message || fallbackErr}`;
-				logger.log('error', { inputFile, type }, message);
 				throw new Error(message);
 			}
 		} else {
@@ -129,9 +106,6 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 
 	// join the paragraphs into the format we want
 	const textParagraphs = splitDocuments.join('\n\n');
-
-	logger.log("info", null, "Successfully used langchain to extract content");
-
 	return textParagraphs;
 };
 

@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import axios from 'axios';
+import { logMessage } from "./utils/logger";
 
 export type ChunkContent = Pick<
     IKnowledge.CreateKnowledgeChunkParams,
@@ -24,7 +25,10 @@ export const getSharePointFileChunks = async (
 ): Promise<ChunkContent[]> => {
     // Skip unsupported file types
     if (!SUPPORTED_FILE_TYPES.includes(fileExtension)) {
-        console.log(`⏭️  Skipping unsupported file type: ${fileName}`);
+        logMessage(`Skipping unsupported file type: ${fileName}`,
+            "sharepoint-connector",
+            "info"
+        );
         return [];
     }
 

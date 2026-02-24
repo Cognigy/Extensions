@@ -62,15 +62,9 @@ export async function getSharePointFiles(
                 webUrl: item.webUrl
             }));
 
-        // Log first few files for debugging
-        sharePointFiles.slice(0, 3).forEach((file, index) => {
-            console.log(`File ${index + 1}: ${file.name} (${file.size} bytes)`);
-        });
-
         return sharePointFiles;
 
     } catch (error) {
-        console.error("Error listing files from SharePoint:", error);
         throw error;
     }
 }

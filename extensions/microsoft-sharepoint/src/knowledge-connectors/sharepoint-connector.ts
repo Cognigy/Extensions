@@ -4,7 +4,7 @@ import { getSharePointFiles } from "./helpers/list_files";
 import axios from "axios";
 import * as path from 'path';
 import * as crypto from "crypto";
-
+import { logMessage } from "./helpers/utils/logger";
 
 export const sharepointConnector = createKnowledgeConnector({
     type: "sharepointConnector",
@@ -146,8 +146,10 @@ export const sharepointConnector = createKnowledgeConnector({
                     newSources.push(file.name);
                 } catch (error) {
                     // Continue with next file even if this one fails
-                    console.error(`Failed to process file ${file.name}:`, error);
-                    continue;
+                    logMessage(`Failed to process file ${file.name}: ${error.message}`,
+                        "sharepoint-connector",
+                        "error"
+                    );
                 }
             }
         }
@@ -158,12 +160,14 @@ export const sharepointConnector = createKnowledgeConnector({
                 const externalId = (source as any).externalIdentifier;
                 if (!newSources.includes(externalId)) {
                     try {
-                        console.log("Deleting source:", source.knowledgeSourceId);
                         await api.deleteKnowledgeSource({
                             knowledgeSourceId: source.knowledgeSourceId,
                         });
                     } catch (err) {
-                        console.error(`Failed to delete source ${source.knowledgeSourceId}:`, err);
+                        logMessage(`Failed to delete old knowledge source with external ID ${externalId}: ${err.message}`,
+                            "sharepoint-connector",
+                            "error"
+                        );
                     }
                 }
             }

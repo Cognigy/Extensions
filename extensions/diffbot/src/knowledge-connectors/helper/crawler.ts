@@ -1,50 +1,15 @@
+import type {
+	CrawlJobSettings,
+	DiffbotCreateCrawlResponse,
+	DiffbotJobStatusResponse,
+	DiffbotResult,
+} from "../types";
 import { fetchWithRetry, logMessage } from "./utils";
-
-interface CrawlJobSettings {
-	name: string;
-	seeds: string[];
-	apiUrl: string;
-
-	// Crawling Settings
-	urlCrawlPattern?: string[];
-	urlCrawlRegEx?: string;
-	maxToCrawl?: number;
-	maxToCrawlPerSubdomain?: number;
-	maxHops?: number;
-	crawlDelay?: number;
-	obeyRobots?: boolean;
-	restrictDomain?: boolean;
-	restrictSubdomain?: boolean;
-	useProxies?: boolean;
-	useCanonical?: boolean;
-
-	// Processing Settings
-	urlProcessPattern?: string[];
-	urlProcessRegEx?: string;
-	pageProcessPattern?: string[];
-	maxToProcess?: number;
-	maxToProcessPerSubdomain?: number;
-
-	// Custom Headers
-	userAgent?: string;
-	referer?: string;
-	cookie?: string;
-	acceptLanguage?: string;
-}
-
-interface DiffbotResult {
-	title?: string;
-	type?: string;
-	pageUrl?: string;
-	html?: string;
-	humanLanguage?: string;
-	[key: string]: any; // Allow for additional properties
-}
 
 const SUCCESS_JOB_STATUS_CODES = [1, 2, 3, 5, 9];
 const FAILED_JOB_STATUS_CODES = [6, 8, 10, 11]; // If Job is paused, it will be considered failed
 
-class DiffbotCrawler {
+export class DiffbotCrawler {
 	private token: string;
 	private crawlUrl: string;
 
@@ -56,14 +21,20 @@ class DiffbotCrawler {
 	/**
 	 * Create a new crawl job
 	 */
-	async createCrawlJob(settings: CrawlJobSettings): Promise<void> {
+	async createCrawlJob(
+		settings: CrawlJobSettings,
+	): Promise<DiffbotCreateCrawlResponse> {
 		const payload = await this.getPayload(settings);
 		const params = new URLSearchParams({ token: this.token });
-		await fetchWithRetry(`${this.crawlUrl}?${params}`, {
-			method: "POST",
-			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			body: payload.toString(),
-		});
+		const response = await fetchWithRetry<DiffbotCreateCrawlResponse>(
+			`${this.crawlUrl}?${params}`,
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: payload.toString(),
+			},
+		);
+		return response;
 	}
 
 	/**
@@ -105,9 +76,11 @@ class DiffbotCrawler {
 	/**
 	 * Get status of a crawl job
 	 */
-	async getJobStatus(jobName: string): Promise<any> {
+	async getJobStatus(jobName: string): Promise<DiffbotJobStatusResponse> {
 		const params = new URLSearchParams({ token: this.token, name: jobName });
-		const response = await fetchWithRetry(`${this.crawlUrl}?${params}`);
+		const response = await fetchWithRetry<DiffbotJobStatusResponse>(
+			`${this.crawlUrl}?${params}`,
+		);
 		return response;
 	}
 
@@ -117,22 +90,25 @@ class DiffbotCrawler {
 	async getJobData(jobName: string): Promise<DiffbotResult[]> {
 		const params = new URLSearchParams({ token: this.token });
 		const status = await this.getJobStatus(jobName);
-		const downloadUrl = status.jobs?.[0].downloadJson;
+		const downloadUrl = status.jobs?.[0]?.downloadJson;
 		return downloadUrl
-			? ((await fetchWithRetry(`${downloadUrl}?${params}`)) as DiffbotResult[])
+			? await fetchWithRetry<DiffbotResult[]>(`${downloadUrl}?${params}`)
 			: [];
 	}
 
 	/**
 	 * Delete crawl job
 	 */
-	async deleteJob(jobName: string): Promise<void> {
+	async deleteJob(jobName: string): Promise<DiffbotJobStatusResponse> {
 		const params = new URLSearchParams({
 			token: this.token,
 			name: jobName,
 			delete: "1",
 		});
-		await fetchWithRetry(`${this.crawlUrl}?${params}`);
+		const response = await fetchWithRetry<DiffbotJobStatusResponse>(
+			`${this.crawlUrl}?${params}`,
+		);
+		return response;
 	}
 
 	/**
@@ -182,5 +158,3 @@ class DiffbotCrawler {
 		return params;
 	}
 }
-
-export { DiffbotCrawler, type CrawlJobSettings };

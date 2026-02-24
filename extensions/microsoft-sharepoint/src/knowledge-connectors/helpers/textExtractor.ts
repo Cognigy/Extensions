@@ -5,7 +5,7 @@ import { CSVLoader } from '@langchain/community/document_loaders/fs/csv';
 import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json';
 import { Document } from '@langchain/core/documents';
 
-import { splitDocs } from './text_chunker';
+import { splitDocs } from './textChunker';
 import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
 import * as fs from 'fs';
 import { parseOfficeAsync } from 'officeparser';

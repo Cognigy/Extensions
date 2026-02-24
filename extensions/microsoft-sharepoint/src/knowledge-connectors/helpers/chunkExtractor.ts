@@ -1,6 +1,6 @@
 import type { IKnowledge } from "@cognigy/extension-tools";
-import { lsExtractor } from "./text_extractor";
-import { splitDocs } from "./text_chunker";
+import { lsExtractor } from "./textExtractor";
+import { splitDocs } from "./textChunker";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

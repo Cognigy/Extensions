@@ -1,6 +1,6 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
-import { getSharePointFileChunks } from "./helpers/chunk_extractor";
-import { getSharePointFiles } from "./helpers/list_files";
+import { getSharePointFileChunks } from "./helpers/chunkExtractor";
+import { getSharePointFiles } from "./helpers/listFiles";
 import axios from "axios";
 import * as path from 'path';
 import * as crypto from "crypto";

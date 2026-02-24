@@ -5,7 +5,7 @@ import { cloudConnection } from "./connections/cloudConnection";
 import { getSharepointListItemsNode } from "./nodes/getSharepointListItems";
 import { basicConnection } from "./connections/basicConnection";
 import { connectorConnection } from "./connections/connectorConnection";
-import { sharepointConnector } from "./knowledge-connectors/sharepoint-connector";
+import { sharepointConnector } from "./knowledge-connectors/sharepointConnector";
 export default createExtension({
 	nodes: [
 		getSharepointSiteInfoNode,

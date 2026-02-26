@@ -17,7 +17,8 @@ This Cognigy extension provides workflow completion tracking capabilities for yo
 A terminal node that marks workflow completion status and captures session metrics.
 
 ### Features
-- Simple dropdown to mark workflow as "Completed" or "Failed"
+- Simple dropdown to mark workflow as "Success" or "Failure"
+- Optional JSON data field for custom output data
 - Captures session metrics (when available)
 - Designed as a terminal node for end-of-flow placement
 - Outputs structured data for analytics and reporting
@@ -27,8 +28,14 @@ A terminal node that marks workflow completion status and captures session metri
 
 #### Status Selection
 - **Completion Status** (`status`): Dropdown selection between:
-  - `Completed` (default): Marks the workflow as successfully completed
-  - `Failed`: Marks the workflow as failed or incomplete
+  - `Success` (default): Marks the workflow as successfully completed
+  - `Failure`: Marks the workflow as failed or incomplete
+
+#### Additional Data (Optional)
+- **Additional Data** (`data`): Optional JSON field to include custom data in the output
+  - Accepts valid JSON input
+  - Only included in output when valid data is provided
+  - Invalid JSON will be logged as a warning and ignored
 
 ### Output
 
@@ -36,7 +43,7 @@ The node outputs data in the following structure:
 
 ```json
 {
-  "status": "Completed", // or "Failed"
+  "status": "Complete", // or "Failed" (internal values)
   "metrics": {
     // Session metrics when available:
     // - sessionId: Unique session identifier
@@ -45,6 +52,11 @@ The node outputs data in the following structure:
     // - responseCount: Number of bot responses
     // - stepCount: Number of flow steps executed
     // Empty object {} if metrics are not accessible
+  },
+  "data": {
+    // Optional: Custom JSON data when provided
+    // Only present if valid JSON data was specified
+    // Can contain any valid JSON structure
   }
 }
 ```
@@ -52,13 +64,32 @@ The node outputs data in the following structure:
 ### Example Usage
 
 1. Place the **Workflow Completion** node at the end of your successful flow path
-2. Select "Completed" from the dropdown
-3. The node will execute `say("")` (empty message) and output completion data
+2. Select "Success" from the dropdown
+3. Optionally add custom JSON data in the "Additional Data" field
+4. The node will execute `say("")` (empty message) and output completion data
 
 For error handling paths:
 1. Place another **Workflow Completion** node at the end of error flows
-2. Select "Failed" from the dropdown
-3. Use the output data for failure tracking and analytics
+2. Select "Failure" from the dropdown
+3. Optionally include error details in the "Additional Data" field as JSON
+4. Use the output data for failure tracking and analytics
+
+#### Additional Data Examples
+```json
+// Success scenario with user details
+{
+  "userId": "12345",
+  "completionTime": 1640995200000,
+  "path": "checkout_flow"
+}
+
+// Failure scenario with error details
+{
+  "errorCode": "PAYMENT_FAILED",
+  "errorMessage": "Credit card declined",
+  "retryAttempts": 3
+}
+```
 
 ### Use Cases
 

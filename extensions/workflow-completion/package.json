@@ -1,6 +1,6 @@
 {
   "name": "workflow-completion",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Cognigy Extension for workflow completion tracking with status and session metrics",
   "main": "build/module.js",
   "scripts": {

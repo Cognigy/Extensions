@@ -3,6 +3,7 @@ import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extensio
 export interface IWorkflowCompletionParams extends INodeFunctionBaseParams {
 	config: {
 		status: "Complete" | "Failed";
+		data?: string;
 	};
 }
 
@@ -22,16 +23,22 @@ export const workflowCompletionNode = createNodeDescriptor({
 			params: {
 				options: [
 					{
-						label: "Complete",
+						label: "Success",
 						value: "Complete"
 					},
 					{
-						label: "Failed",
+						label: "Failure",
 						value: "Failed"
 					}
 				]
 			},
 			defaultValue: "Complete"
+		},
+		{
+			key: "data",
+			label: "Additional Data",
+			description: "Optional JSON data to include in the output",
+			type: "json"
 		}
 	],
 
@@ -41,13 +48,15 @@ export const workflowCompletionNode = createNodeDescriptor({
 			label: "Output",
 			defaultCollapsed: true,
 			fields: [
-				"status"
+				"status",
+				"data"
 			]
 		}
 	],
 
 	form: [
-		{ type: "field", key: "status" }
+		{ type: "field", key: "status" },
+		{ type: "field", key: "data" }
 	],
 
 	appearance: {
@@ -64,10 +73,22 @@ export const workflowCompletionNode = createNodeDescriptor({
 			const metrics = gatherSessionMetrics(input, context);
 
 			// Prepare output data
-			const outputData = {
+			const outputData: any = {
 				status: config.status,
 				metrics
 			};
+
+			// Add optional data field if provided
+			if (config.data) {
+				try {
+					const parsedData = typeof config.data === 'string'
+						? JSON.parse(config.data)
+						: config.data;
+					outputData.data = parsedData;
+				} catch (error) {
+					api.log("warning", `Invalid JSON in data field: ${error.message}`);
+				}
+			}
 
 			// Execute say with empty string as requested
 			api.say("", outputData);

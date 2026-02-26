@@ -1,7 +1,7 @@
 {
   "name": "diffbot",
   "version": "2.0.0",
-  "description": "Integrates with the Diffbot API",
+  "description": "Integrates with the Diffbot API (Only compatible with Cognigy version v.2025.5.0 and above).",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p tsconfig.production.json",

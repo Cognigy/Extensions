@@ -1,7 +1,7 @@
 {
     "name": "confluence",
     "version": "6.0.0",
-    "description": "Integrates with the Atlassian's Confluence.",
+    "description": "Integrates with the Atlassian's Confluence (Only compatible with Cognigy version v.2025.5.0 and above).",
     "main": "build/module.js",
     "scripts": {
         "transpile": "tsc -p tsconfig.production.json",

@@ -111,7 +111,7 @@ export const diffbotWebpageConnector = createKnowledgeConnector({
 			// Create chunks
 			for (let i = 0; i < analyze.objects.length; i++) {
 				const sourceData = analyze.objects[i];
-				const externalIdentifier = `${i}.${sourceData.diffbotUri}@${url}`;
+				const externalIdentifier = url;
 				const chunkTitle = `title: ${sourceData.title}\ntype: ${sourceData.type}\n`;
 				const chunks = await jsonSplit(sourceData, chunkTitle, [
 					"html",

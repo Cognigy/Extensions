@@ -100,7 +100,7 @@ describe("diffbotWebpageConnector", () => {
 				description: `Content from web page at ${url}`,
 				tags: [],
 				chunkCount: 1,
-				externalIdentifier: `0.article|3|abc123@${url}`,
+				externalIdentifier: url,
 			},
 		);
 		assert.ok(
@@ -170,7 +170,7 @@ describe("diffbotWebpageConnector", () => {
 				name: "First Article",
 				description: `Content from web page at ${url}`,
 				tags: ["web"],
-				externalIdentifier: `0.article|3|first@${url}`,
+				externalIdentifier: url,
 			},
 		);
 		assert.partialDeepStrictEqual(
@@ -179,7 +179,7 @@ describe("diffbotWebpageConnector", () => {
 				name: "Second Article",
 				description: `Content from web page at ${url}`,
 				tags: ["web"],
-				externalIdentifier: `1.article|3|second@${url}`,
+				externalIdentifier: url,
 			},
 		);
 
@@ -233,7 +233,7 @@ describe("diffbotWebpageConnector", () => {
 					name: "Test Article",
 					description: `Content from web page at ${url}`,
 					chunkCount: 1,
-					externalIdentifier: `0.article|3|abc123@${url}`,
+					externalIdentifier: url,
 					tags: [],
 					contentHashOrTimestamp: "previous-hash",
 				},
@@ -248,7 +248,7 @@ describe("diffbotWebpageConnector", () => {
 				description: `Content from web page at ${url}`,
 				tags: [],
 				chunkCount: 1,
-				externalIdentifier: `0.article|3|abc123@${url}`,
+				externalIdentifier: url,
 			},
 		);
 
@@ -278,7 +278,7 @@ describe("diffbotWebpageConnector", () => {
 					name: "Old Article",
 					description: "Content from web page at https://example.com/old",
 					chunkCount: 1,
-					externalIdentifier: "0.article|3|old@https://example.com/old",
+					externalIdentifier: "https://example.com/old",
 					tags: [],
 					contentHashOrTimestamp: "old-hash",
 				},
@@ -317,7 +317,7 @@ describe("diffbotWebpageConnector", () => {
 					name: "Test Article",
 					description: `Content from web page at ${url}`,
 					chunkCount: 1,
-					externalIdentifier: `0.article|3|abc123@${url}`,
+					externalIdentifier: url,
 					tags: [],
 					contentHashOrTimestamp: "hash",
 				},

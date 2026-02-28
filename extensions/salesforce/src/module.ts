@@ -1,5 +1,6 @@
 import { createExtension } from "@cognigy/extension-tools";
 import { oauth } from "./connections/oauth";
+import { salesforceKnowledgeConnector } from "./knowledge-connectors/salesforceKnowledgeConnector";
 import { onEmptyQueryResults, onFoundQueryResults, queryNode } from "./nodes/query";
 import { createCaseNode, onErrorCreateCase, onSuccessCreateCase } from "./nodes/createCase";
 import { getCaseNode, onErrorGetCase, onSuccessGetCase } from "./nodes/getCase";
@@ -32,6 +33,10 @@ export default createExtension({
 
 	connections: [
 		oauth
+	],
+
+	knowledge: [
+		salesforceKnowledgeConnector
 	],
 
 	options: {

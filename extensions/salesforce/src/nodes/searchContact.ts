@@ -200,7 +200,8 @@ export const searchContactNode = createNodeDescriptor({
     dependencies: {
         children: [
             "onFoundContact",
-            "onNotFoundContact"
+            "onNotFoundContact",
+            "onErrorContact"
         ]
     },
     function: async ({ cognigy, config, childConfigs }: ISearchContactParams) => {
@@ -208,35 +209,50 @@ export const searchContactNode = createNodeDescriptor({
         const { contactField, contactFieldValue, oauthConnection, storeLocation, contextKey, inputKey } = config;
 
         try {
-
             const salesforceConnection = await authenticate(oauthConnection);
 
-            const soql: string = `SELECT FIELDS(All) FROM Contact WHERE ${contactField} LIKE '${contactFieldValue}' LIMIT 200`;
-            const record = await salesforceConnection.query(soql, { autoFetch: true, maxFetch: 1 });
+            // Step 1: Find the contact ID using the specified field
+            // Note: LIMIT 1 is used here because only one record is ever stored (records[0]).
+            // sobject.retrieve() is used in Step 2 to return all standard and custom fields
+            // without requiring the "View All Data" permission that FIELDS(All) demands.
+            const soql: string = `SELECT Id FROM Contact WHERE ${contactField} = '${contactFieldValue}' ORDER BY CreatedDate DESC LIMIT 1`;
+            const result = await salesforceConnection.query(soql);
 
-            if (record.records.length === 0) {
-                const onEmptyQueryResultsChild = childConfigs.find(child => child.type === "onNotFoundContact");
-                api.setNextNode(onEmptyQueryResultsChild.id);
+            if (result.records.length === 0) {
+                const onNotFoundChild = childConfigs.find(child => child.type === "onNotFoundContact");
+                api.setNextNode(onNotFoundChild.id);
             } else {
-                const onFoundQueryResultsChild = childConfigs.find(child => child.type === "onFoundContact");
-                api.setNextNode(onFoundQueryResultsChild.id);
-            }
+                // Step 2: Retrieve the full contact record by ID — returns all standard and custom fields
+                const contactId = result.records[0].Id;
+                const fullContact = await salesforceConnection.sobject("Contact").retrieve(contactId);
 
-            if (storeLocation === "context") {
-                api.addToContext(contextKey, record?.records[0], "simple");
-            } else {
-                // @ts-ignore
-                api.addToInput(inputKey, record?.records[0]);
+                const onFoundChild = childConfigs.find(child => child.type === "onFoundContact");
+                api.setNextNode(onFoundChild.id);
+
+                if (storeLocation === "context") {
+                    api.addToContext(contextKey, fullContact, "simple");
+                } else {
+                    // @ts-ignore
+                    api.addToInput(inputKey, fullContact);
+                }
             }
 
         } catch (error) {
-            const errorMessage = error instanceof Error
-                ? error.message
-                : JSON.stringify(error);
+            let errorMessage: string;
+            if (error instanceof Error) {
+                const axiosResponseData = (error as any)?.response?.data;
+                errorMessage = axiosResponseData
+                    ? `${error.message} — ${JSON.stringify(axiosResponseData)}`
+                    : error.message;
+            } else {
+                errorMessage = JSON.stringify(error);
+            }
             api.log("error", `searchContact execution failed: ${errorMessage}`);
 
-            const onErrorChild = childConfigs.find(child => child.type === "onErrorGetCase");
-            api.setNextNode(onErrorChild.id);
+            const onErrorChild = childConfigs.find(child => child.type === "onErrorContact");
+            if (onErrorChild) {
+                api.setNextNode(onErrorChild.id);
+            }
 
             if (storeLocation === "context") {
                 api.addToContext(contextKey, errorMessage, "simple");
@@ -275,6 +291,29 @@ export const onNotFoundContact = createNodeDescriptor({
     type: "onNotFoundContact",
     parentType: "searchContact",
     defaultLabel: "On Not Found",
+    constraints: {
+        editable: false,
+        deletable: false,
+        creatable: false,
+        movable: false,
+        placement: {
+            predecessor: {
+                whitelist: []
+            }
+        }
+    },
+    appearance: {
+        color: "#cf142b",
+        textColor: "white",
+        variant: "mini",
+        showIcon: false
+    }
+});
+
+export const onErrorContact = createNodeDescriptor({
+    type: "onErrorContact",
+    parentType: "searchContact",
+    defaultLabel: "On Error",
     constraints: {
         editable: false,
         deletable: false,

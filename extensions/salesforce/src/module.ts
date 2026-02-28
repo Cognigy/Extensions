@@ -4,7 +4,7 @@ import { onEmptyQueryResults, onFoundQueryResults, queryNode } from "./nodes/que
 import { createCaseNode, onErrorCreateCase, onSuccessCreateCase } from "./nodes/createCase";
 import { getCaseNode, onErrorGetCase, onSuccessGetCase } from "./nodes/getCase";
 import { entityRequestNode, onErrorEntityRequest, onSuccessEntityRequest } from "./nodes/entityRequest";
-import { onFoundContact, onNotFoundContact, searchContactNode } from "./nodes/searchContact";
+import { onErrorContact, onFoundContact, onNotFoundContact, searchContactNode } from "./nodes/searchContact";
 
 export default createExtension({
 	nodes: [
@@ -19,6 +19,7 @@ export default createExtension({
 		searchContactNode,
 		onFoundContact,
 		onNotFoundContact,
+		onErrorContact,
 
 		queryNode,
 		onFoundQueryResults,

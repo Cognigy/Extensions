@@ -1,7 +1,8 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
-import { getS3Object } from "./helpers/list_files";
-import { getS3FileChunks, S3Connection } from "./helpers/chunk_extractor";
+import { getS3Object } from "./helpers/listFiles";
+import { getS3FileChunks, S3Connection } from "./helpers/chunkExtractor";
 import * as crypto from "crypto";
+
 export const s3Connector = createKnowledgeConnector({
   type: "s3connector",
   label: "S3 Connector",
@@ -55,6 +56,7 @@ export const s3Connector = createKnowledgeConnector({
     };
 
     const discoveredSourceKeys = new Set<string>();
+
     // Get all S3 objects in the bucket
     const s3Objects = await getS3Object(s3Connection, bucketName);
 
@@ -110,7 +112,7 @@ export const s3Connector = createKnowledgeConnector({
       }
     }
 
-            // Remove any previously existing knowledge sources that were not in this run
+    // Remove any previously existing knowledge sources that were not in this run
     if (Array.isArray(sources)) {
       let deletedCount = 0;
       let retainedCount = 0;

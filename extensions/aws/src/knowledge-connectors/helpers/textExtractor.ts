@@ -1,23 +1,17 @@
-import { TextLoader } from 'langchain/document_loaders/fs/text';
+import { TextLoader } from '@langchain/classic/document_loaders/fs/text';
 import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 import { DocxLoader } from '@langchain/community/document_loaders/fs/docx';
 import { CSVLoader } from '@langchain/community/document_loaders/fs/csv';
-import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json';
-import { Document } from '@langchain/core/documents';
+import { JSONLoader, JSONLinesLoader } from '@langchain/classic/document_loaders/fs/json';
+import { BufferLoader } from '@langchain/classic/document_loaders/fs/buffer';
 
-import { splitDocs } from './text_chunker';
-import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
 import { parseOfficeAsync } from 'officeparser';
+import { splitDocs } from './textChunker';
 
-export const logger = {
-    log: (level: string, context: any, message: string) => {
-        const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] [${level.toUpperCase()}] ${message}`);
-        if (context && Object.keys(context).length > 0) {
-            console.log('Context:', JSON.stringify(context, null, 2));
-        }
-    }
-};
+interface Document {
+    pageContent: string;
+    metadata: Record<string, any>;
+}
 
 export const removeUnnecessaryChars = (text: string): string => {
     if (!text) return "";
@@ -41,31 +35,22 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 			break;
 
 		case "pdf":
-			// possible config: { splitPage: true }
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/pdf
 			documentLoader = new PDFLoader(inputFile, { splitPages: false });
 			break;
 
 		case "docx":
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/docx
 			documentLoader = new DocxLoader(inputFile);
 			break;
 
 		case "csv":
-			// possible config: columnName
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/csv#usage-extracting-a-single-column
 			documentLoader = new CSVLoader(inputFile);
 			break;
 
 		case "json":
-			// possible config: pointer
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/json#using-json-pointer-example
 			documentLoader = new JSONLoader(inputFile);
 			break;
 
 		case "jsonl":
-			// possible config: pointer
-			// https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/jsonlines
 			documentLoader = new JSONLinesLoader(inputFile, "");
 			break;
 
@@ -74,7 +59,6 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 			break;
 
 		case 'pptx':
-			// https://js.langchain.com/docs/integrations/document_loaders/file_loaders/pptx/
 			documentLoader = new PPTXLoader(inputFile);
 			break;
 
@@ -97,9 +81,6 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 
 	// join the paragraphs into the format we want
 	const textParagraphs = splitDocuments.join('\n\n');
-
-	logger.log("info", null, "Successfully used langchain to extract content");
-
 	return textParagraphs;
 };
 
@@ -121,10 +102,10 @@ class PPTXLoader extends BufferLoader {
 		if (!pptx)
 			return [];
 		return [
-			new Document({
+			{
 				pageContent: pptx,
 				metadata,
-			}),
+			},
 		];
 	}
 }

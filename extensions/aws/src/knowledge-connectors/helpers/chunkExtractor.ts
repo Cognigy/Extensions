@@ -1,6 +1,6 @@
 import type { IKnowledge } from "@cognigy/extension-tools";
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { lsExtractor } from "./text_extractor";
+import { lsExtractor } from "./textExtractor";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

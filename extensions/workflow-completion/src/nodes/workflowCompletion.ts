@@ -9,15 +9,15 @@ export interface IWorkflowCompletionParams extends INodeFunctionBaseParams {
 
 export const workflowCompletionNode = createNodeDescriptor({
 	type: "workflowCompletion",
-	defaultLabel: "Workflow Completion",
-	summary: "Mark workflow completion with status and metrics",
+	defaultLabel: "Send Status to Copilot",
+	summary: "This node sends the status (success or failure) of the session to CXone Copilot.",
 
 	tags: ["workflow", "completion", "terminal"],
 
 	fields: [
 		{
 			key: "status",
-			label: "Completion Status",
+			label: "Status",
 			description: "Select whether the workflow completed successfully or failed",
 			type: "select",
 			params: {
@@ -59,11 +59,6 @@ export const workflowCompletionNode = createNodeDescriptor({
 		{ type: "field", key: "data" }
 	],
 
-	appearance: {
-		color: "#4CAF50", // Green for completion
-		textColor: "white",
-		variant: "mini"
-	},
 
 	function: async ({ cognigy, config }: IWorkflowCompletionParams) => {
 		const { api, input, context } = cognigy;

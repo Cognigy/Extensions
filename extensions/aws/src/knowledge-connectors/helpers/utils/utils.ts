@@ -3,11 +3,12 @@
  */
 export const logMessage = (
 	message: string,
-	traceId: string = "extension-s3",
+	level: string = "info",
+	traceId: string = "extension-s3"
 ): void => {
 	console.info(
 		JSON.stringify({
-			level: "info",
+			level: level,
 			time: new Date().toISOString(),
 			message: message,
 			meta: {},

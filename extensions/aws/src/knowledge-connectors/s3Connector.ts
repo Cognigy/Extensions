@@ -2,6 +2,7 @@ import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { getS3Object } from "./helpers/listFiles";
 import { getS3FileChunks, S3Connection } from "./helpers/chunkExtractor";
 import * as crypto from "crypto";
+import { logMessage } from "./helpers/utils/utils";
 
 export const s3Connector = createKnowledgeConnector({
   type: "s3connector",
@@ -118,11 +119,11 @@ export const s3Connector = createKnowledgeConnector({
       let retainedCount = 0;
       let skippedMissingKeyCount = 0;
 
-      console.log("S3 sync reconciliation started", {
+      logMessage("S3 sync reconciliation started", JSON.stringify({
         bucketName,
         discoveredSourceKeyCount: discoveredSourceKeys.size,
         previousSourceCount: sources.length,
-      });
+      }));
 
       for (const source of sources) {
         const sourceKey = (
@@ -137,24 +138,27 @@ export const s3Connector = createKnowledgeConnector({
 
         if (!discoveredSourceKeys.has(sourceKey)) {
           try {
-            console.log("Deleting source:", source.knowledgeSourceId);
             await api.deleteKnowledgeSource({
               knowledgeSourceId: source.knowledgeSourceId,
             });
             deletedCount++;
           } catch (err) {
-            console.error(`Failed to delete source ${source.knowledgeSourceId}:`, err);
+            logMessage(
+              `Failed to delete source ${source.knowledgeSourceId}`,
+              JSON.stringify(err),
+              "error"
+            );
           }
         } else {
           retainedCount++;
         }
       }
 
-      console.log("S3 sync reconciliation finished", {
+      logMessage("S3 sync reconciliation finished", JSON.stringify({
         retainedCount,
         deletedCount,
         skippedMissingKeyCount,
-      });
+      }));
     }
   },
 });

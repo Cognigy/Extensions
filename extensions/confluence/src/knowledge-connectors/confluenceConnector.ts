@@ -91,10 +91,12 @@ export const confluenceConnector = createKnowledgeConnector({
 
 		// Clean up superseded sources
 		for (const source of currentSources) {
-			if (updatedSources.has(source.externalIdentifier)) {
+			if (
+				updatedSources.has(source.externalIdentifier) ||
+				!source.externalIdentifier
+			) {
 				continue;
 			}
-
 			await api.deleteKnowledgeSource({
 				knowledgeSourceId: source.knowledgeSourceId,
 			});

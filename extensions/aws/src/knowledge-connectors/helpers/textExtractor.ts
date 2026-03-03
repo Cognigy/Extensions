@@ -3,14 +3,36 @@ import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf';
 import { DocxLoader } from '@langchain/community/document_loaders/fs/docx';
 import { CSVLoader } from '@langchain/community/document_loaders/fs/csv';
 import { JSONLoader, JSONLinesLoader } from '@langchain/classic/document_loaders/fs/json';
-import { BufferLoader } from '@langchain/classic/document_loaders/fs/buffer';
+import { Document } from '@langchain/core/documents';
 
-import { parseOfficeAsync } from 'officeparser';
 import { splitDocs } from './textChunker';
+import { BufferLoader } from '@langchain/classic/document_loaders/fs/buffer';
+import { parseOfficeAsync } from 'officeparser';
 
-interface Document {
-    pageContent: string;
-    metadata: Record<string, any>;
+/**
+ * Custom PPTXLoader class to handle pptx files. Implementation adapted
+ * from langchain's PPTXLoader, but it uses newer version of officeparser package
+ * to handle pptx entirely in memory, instead of writing to a temp file in the
+ * current directory.
+ */
+class PPTXLoader extends BufferLoader {
+	constructor(filePathOrBlob: string | Blob) {
+		super(filePathOrBlob);
+	}
+
+	async parse(raw: Buffer, metadata: Record<string, any>): Promise<Document[]> {
+		const pptx = await parseOfficeAsync(raw, {
+			outputErrorToConsole: true,
+		});
+		if (!pptx)
+			return [];
+		return [
+			new Document({
+				pageContent: pptx,
+				metadata,
+			}),
+		];
+	}
 }
 
 export const removeUnnecessaryChars = (text: string): string => {
@@ -27,7 +49,7 @@ export const removeUnnecessaryChars = (text: string): string => {
         .trim();
 };
 
-export const lsExtractor = async (type: string, inputFile: string): Promise<string> => {
+export const lsExtractor = async (type: string, inputFile: string): Promise<string[]> => {
 	let documentLoader;
 	switch (type) {
 		case "txt":
@@ -80,32 +102,5 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 	).map((doc) => doc.pageContent);
 
 	// join the paragraphs into the format we want
-	const textParagraphs = splitDocuments.join('\n\n');
-	return textParagraphs;
-};
-
-/**
- * Custom PPTXLoader class to handle pptx files. Implementation adapted
- * from langchain's PPTXLoader, but it uses newer version of officeparser package
- * to handle pptx entirely in memory, instead of writing to a temp file in the
- * current directory.
- */
-class PPTXLoader extends BufferLoader {
-	constructor(filePathOrBlob: string | Blob) {
-		super(filePathOrBlob);
-	}
-
-	async parse(raw: Buffer, metadata: Record<string, any>): Promise<Document[]> {
-		const pptx = await parseOfficeAsync(raw, {
-			outputErrorToConsole: true,
-		});
-		if (!pptx)
-			return [];
-		return [
-			{
-				pageContent: pptx,
-				metadata,
-			},
-		];
-	}
+	return splitDocuments;
 }

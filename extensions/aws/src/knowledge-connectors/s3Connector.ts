@@ -88,7 +88,7 @@ export const s3Connector = createKnowledgeConnector({
         const contentHash = createContentHash(chunks);
 
         // Create knowledge source
-        const { knowledgeSourceId } = await api.upsertKnowledgeSource({
+        const source = await api.upsertKnowledgeSource({
           name: s3Object.Key,
           description: `Data from ${s3Object.Key} in S3 bucket ${bucketName}`,
           tags: sourceTags as string[],
@@ -97,19 +97,18 @@ export const s3Connector = createKnowledgeConnector({
           externalIdentifier: s3Object.Key,
         });
 
-        if (knowledgeSourceId) {
+        if (source.knowledgeSourceId) {
           // Add all chunks to the knowledge source
           for (const chunk of chunks) {
             await api.createKnowledgeChunk({
-              knowledgeSourceId: knowledgeSourceId,
+              knowledgeSourceId: source.knowledgeSourceId,
               text: chunk.text,
               data: chunk.data,
             });
           }
         }
       } catch (error) {
-        // Continue with next file even if this one fails
-        continue;
+        logMessage(`Failed to process file ${s3Object.Key}`, JSON.stringify(error), "error");
       }
     }
 

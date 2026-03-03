@@ -1,12 +1,12 @@
 import { createExtension } from "@cognigy/extension-tools";
-import { workflowCompletionNode } from "./nodes/workflowCompletion";
+import { sendCopilotStatusNode } from "./nodes/sendCopilotStatus";
 
 export default createExtension({
 	nodes: [
-		workflowCompletionNode
+		sendCopilotStatusNode
 	],
 	connections: [],
 	options: {
-		label: "Workflow Completion"
+		label: "CXone Copilot Status"
 	}
 });

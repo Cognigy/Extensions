@@ -1,7 +1,7 @@
 {
   "name": "workflow-completion",
-  "version": "0.0.4",
-  "description": "Cognigy Extension for workflow completion tracking with status and session metrics",
+  "version": "0.0.6",
+  "description": "Cognigy Extension to send workflow completion status to CXone Copilot",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

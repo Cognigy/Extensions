@@ -14,6 +14,8 @@ Confluence is a popular collaboration tool that allows teams to work together by
 
 The Confluence Knowledge Connector allows you to connect to Confluence and retrieve data from its pages or folders. This Knowledge Connector adds Knowledge Sources based on the pages retrieved from Confluence. The Extension transforms Confluence's HTML output into structured Markdown. This conversion process supports custom transformation rules and plugins, enabling precise handling of Confluence-specific elements such as macros, panels, and structured content blocks.
 
+Starting with version 6.0.0, the Knowledge Connector also supports syncing. It uses `upsertKnowledgeSource` to determine whether a source needs to be re-ingested, skipping sources that are already up to date. Any stale sources previously created by this connector that no longer exist are automatically deleted.
+
 ### Heading-Based Chunking
 
 Content is automatically divided into Knowledge Chunks based on the heading hierarchy in Confluence. The chunking behavior is the following:

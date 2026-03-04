@@ -23,7 +23,7 @@
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.17.0-rc4",
+    "@cognigy/extension-tools": "^0.17.0",
     "fetch-retry": "6.0.0",
     "flattie": "1.1.1",
     "json-to-plain-text": "1.2.0",

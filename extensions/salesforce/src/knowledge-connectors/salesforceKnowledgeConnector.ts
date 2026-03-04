@@ -1,5 +1,9 @@
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { authenticate } from "../authenticate";
+import {
+    deleteKnowledgeSourceById,
+    listKnowledgeSources,
+} from "./cognigyManagementApi";
 
 interface IOAuthConnection {
     consumerKey: string;
@@ -21,7 +25,7 @@ function stripHtml(html: string): string {
         .replace(/<\/tr>/gi, "\n")
         .replace(/<\/td>/gi, " | ")
         .replace(/<\/th>/gi, " | ")
-        .replace(/<li[^>]*>/gi, "• ")
+        .replace(/<li[^>]*>/gi, "- ")
         .replace(/<[^>]+>/g, "")
         .replace(/&amp;/g, "&")
         .replace(/&lt;/g, "<")
@@ -41,14 +45,19 @@ function stripHtml(html: string): string {
  */
 function sanitizeText(text: string): string {
     if (!text) return "";
-    // Remove null bytes and ASCII control characters except \t (9), \n (10), \r (13)
-    return text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "").trim();
+    // Remove control characters, then strip any remaining non-ASCII (>127) to avoid
+    // vector store rejection of unusual Unicode characters from HTML stripping.
+    return text
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+        .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, "")
+        .replace(/[ \t]{2,}/g, " ")
+        .trim();
 }
 
 /**
  * Split long text into chunks at natural boundaries (paragraphs → sentences → words).
  */
-function chunkContent(text: string, maxSize: number = 800): string[] {
+function chunkContent(text: string, maxSize: number = 2000): string[] {
     if (!text || text.length === 0) return [];
     if (text.length <= maxSize) return [text];
 
@@ -73,6 +82,21 @@ function chunkContent(text: string, maxSize: number = 800): string[] {
     }
 
     return chunks.filter(c => c.length > 0);
+}
+
+/**
+ * Sanitize a string for use as a Cognigy knowledge source name.
+ * Cognigy enforces a resource-name format: replaces/removes characters
+ * outside of letters, numbers, spaces, hyphens, and square brackets.
+ */
+function sanitizeSourceName(name: string): string {
+    return name
+        .replace(/\u2013|\u2014/g, "-")   // en dash, em dash → hyphen
+        .replace(/&/g, "and")              // & → and
+        .replace(/[/?!:()#*+<>=^~%@\\]/g, " ")  // special chars → space
+        .replace(/[ \t]{2,}/g, " ")        // collapse multiple spaces
+        .replace(/-{2,}/g, "-")            // collapse multiple hyphens
+        .trim();
 }
 
 /**
@@ -173,6 +197,47 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             type: "chipInput",
             defaultValue: ["supervisor"],
             description: "Tags applied to supervisor-only knowledge sources. Supervisor Copilot should filter by both this tag and the agent tag to see full article content including manager sections. Press ENTER to add a tag."
+        },
+        {
+            key: "syncMode",
+            label: "Sync Mode",
+            type: "select",
+            defaultValue: "full",
+            description: "Full: import all published articles. Incremental: only import articles modified since Last Sync Date.",
+            params: {
+                options: [
+                    { label: "Full", value: "full" },
+                    { label: "Incremental (filter by Last Sync Date)", value: "incremental" }
+                ]
+            }
+        },
+        {
+            key: "lastSyncDate",
+            label: "Last Sync Date",
+            type: "text",
+            description: "ISO 8601 date used as a filter in Incremental mode, e.g. 2026-01-01T00:00:00Z. Only articles modified after this date will be imported.",
+            params: { required: false }
+        },
+        {
+            key: "cognigyApiUrl",
+            label: "Cognigy API URL",
+            type: "text",
+            description: "Base URL of your Cognigy.AI instance, e.g. https://app.cognigy.ai — required for stale article removal.",
+            params: { required: false }
+        },
+        {
+            key: "cognigyApiKey",
+            label: "Cognigy API Key",
+            type: "text",
+            description: "API key from Profile → API Keys in Cognigy.AI — required for stale article removal.",
+            params: { required: false }
+        },
+        {
+            key: "knowledgeStoreId",
+            label: "Knowledge Store ID",
+            type: "text",
+            description: "The ID of the target knowledge store (visible in the store URL in Cognigy.AI) — required for stale article removal.",
+            params: { required: false }
         }
     ] as const,
     sections: [
@@ -181,6 +246,12 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             label: "Supervisor / Manager Access",
             defaultCollapsed: true,
             fields: ["supervisorFields", "supervisorTags"]
+        },
+        {
+            key: "syncSettings",
+            label: "Sync Settings",
+            defaultCollapsed: true,
+            fields: ["syncMode", "lastSyncDate", "cognigyApiUrl", "cognigyApiKey", "knowledgeStoreId"]
         }
     ],
     form: [
@@ -189,7 +260,8 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
         { type: "field", key: "language" },
         { type: "field", key: "agentFields" },
         { type: "field", key: "agentTags" },
-        { type: "section", key: "supervisorAccess" }
+        { type: "section", key: "supervisorAccess" },
+        { type: "section", key: "syncSettings" }
     ],
     function: async ({ config, api }) => {
         const {
@@ -199,7 +271,12 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             agentFields,
             agentTags,
             supervisorFields,
-            supervisorTags
+            supervisorTags,
+            syncMode,
+            lastSyncDate,
+            cognigyApiUrl,
+            cognigyApiKey,
+            knowledgeStoreId
         } = config;
 
         const salesforceConnection = await authenticate(oauthConnection as IOAuthConnection);
@@ -210,6 +287,11 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             ...(supervisorFields as string[])
         ])];
 
+        // Incremental date filter
+        const dateFilter = (syncMode as string) === "incremental" && (lastSyncDate as string)?.trim()
+            ? `AND LastModifiedDate > ${(lastSyncDate as string).trim()}`
+            : "";
+
         const soql = [
             `SELECT Id, KnowledgeArticleId, ArticleNumber, Title, Summary, UrlName,`,
             `Language, LastPublishedDate, ${allContentFields.join(", ")}`,
@@ -217,11 +299,17 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             `WHERE PublishStatus = 'Online'`,
             `AND Language = '${language}'`,
             `AND IsLatestVersion = true`,
+            dateFilter,
             `ORDER BY Title ASC`
-        ].join(" ");
+        ].filter(Boolean).join(" ");
+
+        if (dateFilter) {
+            console.log(`[Salesforce KC] Incremental mode: fetching articles modified after ${(lastSyncDate as string).trim()}`);
+        }
 
         const result = await salesforceConnection.query(soql, { autoFetch: true });
         const articles = result.records;
+        console.log(`[Salesforce KC] ${articles.length} article(s) to process`);
 
         for (const article of articles) {
             const title = article.Title || `Article ${article.ArticleNumber}`;
@@ -243,7 +331,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             if (agentChunks.length > 0) {
                 console.log(`[Salesforce KC] Agent: "${title}" (${articleMeta.articleNumber}) — ${agentChunks.length} chunk(s)`);
                 const { knowledgeSourceId: agentSourceId } = await api.createKnowledgeSource({
-                    name: `[${articleMeta.articleNumber}] ${title}`,
+                    name: sanitizeSourceName(`[${articleMeta.articleNumber}] ${title}`),
                     tags: agentTags as string[],
                     chunkCount: agentChunks.length
                 });
@@ -253,7 +341,11 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                     await api.createKnowledgeChunk({
                         knowledgeSourceId: agentSourceId,
                         text: agentChunks[i],
-                        data: { ...articleMeta, role: "agent" }
+                        data: {
+                            articleNumber: articleMeta.articleNumber,
+                            role: "agent",
+                            url: `${salesforceConnection.instanceUrl}/lightning/articles/${articleMeta.knowledgeArticleId}`
+                        }
                     });
                 }
             }
@@ -272,7 +364,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                 if (supervisorChunks.length > 0) {
                     console.log(`[Salesforce KC] Supervisor: "${title}" (${articleMeta.articleNumber}) — ${supervisorChunks.length} chunk(s)`);
                     const { knowledgeSourceId: supervisorSourceId } = await api.createKnowledgeSource({
-                        name: `[${articleMeta.articleNumber}] ${title} — Manager`,
+                        name: sanitizeSourceName(`[${articleMeta.articleNumber}] ${title} - Manager`),
                         tags: supervisorTags as string[],
                         chunkCount: supervisorChunks.length
                     });
@@ -282,10 +374,83 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                         await api.createKnowledgeChunk({
                             knowledgeSourceId: supervisorSourceId,
                             text: supervisorChunks[i],
-                            data: { ...articleMeta, role: "supervisor" }
+                            data: {
+                                articleNumber: articleMeta.articleNumber,
+                                role: "supervisor",
+                                url: `${salesforceConnection.instanceUrl}/lightning/articles/${articleMeta.knowledgeArticleId}`
+                            }
                         });
                     }
                 }
+            }
+        }
+
+        // --- Stale article removal ---
+        // Requires Management API credentials; only meaningful when running a full sync.
+        const removalEnabled =
+            (cognigyApiUrl as string)?.trim() &&
+            (cognigyApiKey as string)?.trim() &&
+            (knowledgeStoreId as string)?.trim();
+
+        if (removalEnabled) {
+            console.log("[Salesforce KC] Checking for stale sources to remove…");
+            try {
+                const existingSources = await listKnowledgeSources(
+                    (cognigyApiUrl as string).trim(),
+                    (cognigyApiKey as string).trim(),
+                    (knowledgeStoreId as string).trim(),
+                );
+
+                // Filter to sources that were created by this KC (have [ArticleNumber] prefix)
+                const sfSources = existingSources.filter(s => /^\[([^\]]+)\]/.test(s.name));
+                if (sfSources.length === 0) {
+                    console.log("[Salesforce KC] No Salesforce-pattern sources found in store — skipping stale check");
+                } else {
+                    // Extract unique article numbers from source names
+                    const articleNumbers = [
+                        ...new Set(
+                            sfSources
+                                .map(s => {
+                                    const m = s.name.match(/^\[([^\]]+)\]/);
+                                    return m ? m[1] : null;
+                                })
+                                .filter(Boolean) as string[]
+                        )
+                    ];
+
+                    console.log(`[Salesforce KC] Verifying ${articleNumbers.length} unique article number(s) in Salesforce…`);
+
+                    // Batch query Salesforce to find still-active articles
+                    const inClause = articleNumbers.map(n => `'${n}'`).join(", ");
+                    const checkSoql = `SELECT ArticleNumber FROM ${knowledgeApiName} WHERE ArticleNumber IN (${inClause}) AND PublishStatus = 'Online' AND IsLatestVersion = true`;
+                    const checkResult = await salesforceConnection.query(checkSoql, { autoFetch: true });
+                    const activeNumbers = new Set(
+                        checkResult.records.map((r: any) => String(r.ArticleNumber))
+                    );
+
+                    // Delete sources whose article numbers are no longer active
+                    for (const src of sfSources) {
+                        const m = src.name.match(/^\[([^\]]+)\]/);
+                        const articleNumber = m ? m[1] : null;
+                        if (articleNumber && !activeNumbers.has(articleNumber)) {
+                            console.log(`[Salesforce KC] Removing stale source "${src.name}" (article ${articleNumber} no longer active)`);
+                            try {
+                                await deleteKnowledgeSourceById(
+                                    (cognigyApiUrl as string).trim(),
+                                    (cognigyApiKey as string).trim(),
+                                    (knowledgeStoreId as string).trim(),
+                                    src._id,
+                                );
+                            } catch (err) {
+                                const msg = err instanceof Error ? err.message : String(err);
+                                console.warn(`[Salesforce KC] Could not remove stale source ${src._id}: ${msg}`);
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                const msg = err instanceof Error ? err.message : String(err);
+                console.warn(`[Salesforce KC] Stale removal skipped due to error: ${msg}`);
             }
         }
     }

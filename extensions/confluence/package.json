@@ -1,14 +1,15 @@
 {
     "name": "confluence",
-    "version": "5.0.2",
-    "description": "Integrates with the Atlassian's Confluence.",
+    "version": "6.0.0",
+    "description": "Integrates with the Atlassian's Confluence (Only compatible with Cognigy version v.2026.5.0 and above).",
     "main": "build/module.js",
     "scripts": {
-        "transpile": "tsc -p .",
+        "transpile": "tsc -p tsconfig.production.json",
         "zip": "tar cfz confluence.tar.gz build/* package.json package-lock.json README.md icon.png",
-        "build": "npm run transpile && npm run lint && npm run zip",
+        "build": "npm run test && npm run transpile && npm run lint && npm run zip",
         "format": "biome check --write",
-        "lint": "biome check"
+        "lint": "biome check",
+        "test": "node --test --import=tsx --experimental-test-coverage --test-coverage-exclude='**/*.test.ts'"
     },
     "keywords": [
         "Knowledge",
@@ -16,6 +17,10 @@
         "confluence-kai",
         "extensions"
     ],
+    "engines": {
+        "node": ">=22.22.0",
+        "npm": ">=11.9.0"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/Cognigy/Extensions"
@@ -26,10 +31,11 @@
         "@biomejs/biome": "2.2.4",
         "@types/node": "^24.2.0",
         "@types/turndown": "^5.0.1",
+        "tsx": "4.21.0",
         "typescript": "5.9.2"
     },
     "dependencies": {
-        "@cognigy/extension-tools": "^0.16.6",
+        "@cognigy/extension-tools": "^0.17.0",
         "@langchain/textsplitters": "0.1.0",
         "turndown": "7.2.2"
     }

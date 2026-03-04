@@ -1,15 +1,14 @@
+import { createHash } from "node:crypto";
 import fetchRetry from "fetch-retry";
-
-const fetchRetry_ = fetchRetry(global.fetch);
 
 /**
  * Fetch method with retry configuration
  */
-export async function fetchWithRetry(
+export async function fetchWithRetry<T = any>(
 	url: string,
 	options: RequestInit = {},
-): Promise<any> {
-	const response = await fetchRetry_(url, {
+): Promise<T> {
+	const response = await fetchRetry(global.fetch)(url, {
 		...options,
 		retries: 3,
 		retryDelay: 1000,
@@ -47,4 +46,15 @@ export const processQueryString = (querystring: string): string => {
 		.toString()
 		.replace("=&", "&");
 	return normalized ? `?${normalized}` : "";
+};
+
+/**
+ * Calculate a SHA-256 hash from an array of strings.
+ */
+export const calculateContentHash = (content: string[]): string => {
+	const hash = createHash("sha256");
+	content.forEach((c) => {
+		hash.update(c);
+	});
+	return hash.digest("hex");
 };

@@ -16,7 +16,7 @@ Knowledge Connectors integrate external knowledge sources with Cognigy.AI's Know
 - Integrates with Knowledge Stores in Cognigy.AI
 
 **Package Information:**
-- Package: `@cognigy/extension-tools` (latest: v0.17.0-rc4)
+- Package: `@cognigy/extension-tools` (latest: v0.17.0)
 - Source: [Azure DevOps - Cognigy.AI](https://cognigy.visualstudio.com/Cognigy.AI/_git/cognigy?path=/packages/extension-tools&version=GBtask/123351-kai-connectors-docs)
 - NPM: [@cognigy/extension-tools](https://www.npmjs.com/package/@cognigy/extension-tools)
 
@@ -212,10 +212,10 @@ function: async ({ config, sources, api }) => {
 
 	// 1. Authenticate with external system using connection credentials
 	const authToken = await authenticate(connection);
-	
+
 	// 2. Fetch content (e.g., from a URL or API)
 	const chunks = await fetchData(connection)
-	
+
 	// 3. Create one Knowledge Source
 	const knowledgeSource = await api.createKnowledgeSource({
 		name: "Example Source",
@@ -223,7 +223,7 @@ function: async ({ config, sources, api }) => {
 		tags: sourceTags,
 		chunkCount: chunks.length,
 	});
-	
+
 	// 4. Add chunks
 	for (const chunk of chunks) {
 		await api.createKnowledgeChunk({
@@ -249,12 +249,12 @@ Implement proper error handling and cleanup.
 function: async ({ config: { connection, url, sourceTags }, sources, api }) => {
 	// Type assertion for connection (with proper typing)
 	const { apiKey } = connection as { apiKey: string };
-	
+
 	// Validate inputs
 	if (!url) {
 		throw new Error("URL is required");
 	}
-	
+
 	// Create Knowledge Source
 	const knowledgeSource = await api.createKnowledgeSource({
 		name: "Example Source",
@@ -262,27 +262,27 @@ function: async ({ config: { connection, url, sourceTags }, sources, api }) => {
 		tags: sourceTags,
 		chunkCount: 1, // Will update if needed
 	});
-	
+
 	try {
 		// Fetch content
 		const response = await fetch(url, {
 			headers: { "Authorization": `Bearer ${apiKey}` }
 		});
-		
+
 		if (!response.ok) {
 			throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 		}
-		
+
 		const content = await response.text();
-		
+
 		// Validate content
 		if (!content || content.length === 0) {
 			throw new Error("No content retrieved from URL");
 		}
-		
+
 		// Process and create chunks
 		const chunks = processContent(content);
-		
+
 		for (const chunk of chunks) {
 			await api.createKnowledgeChunk({
 				knowledgeSourceId: knowledgeSource.knowledgeSourceId,
@@ -295,7 +295,7 @@ function: async ({ config: { connection, url, sourceTags }, sources, api }) => {
 		await api.deleteKnowledgeSource({
 			knowledgeSourceId: knowledgeSource.knowledgeSourceId,
 		});
-		
+
 		// Re-throw with context
 		throw new Error(
 			`Failed to fetch content from ${url}: ${error instanceof Error ? error.message : String(error)}`
@@ -371,7 +371,7 @@ import { createHash } from "node:crypto";
 /**
  * Calculates a SHA-256 hash from an array of strings.
  * Simpler version for when chunks are just text without structured data.
- * 
+ *
  * Example: Diffbot connector (simple text chunks)
  */
 export const calculateContentHash = (content: string[]): string => {
@@ -393,11 +393,11 @@ export const fetchDataFromSource = async (url: string, authToken: string) => {
 	const response = await fetch(url, {
 		headers: { Authorization: `Bearer ${authToken}` },
 	});
-	
+
 	if (!response.ok) {
 		throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 	}
-	
+
 	return await response.json();
 };
 ```
@@ -418,7 +418,7 @@ Add any required dependencies:
 ```json
 {
 	"dependencies": {
-		"@cognigy/extension-tools": "^0.17.0-rc4",  // Latest version with upsertKnowledgeSource
+		"@cognigy/extension-tools": "^0.17.0",  // Latest version with upsertKnowledgeSource
 		"@langchain/textsplitters": "^0.0.3",       // For text chunking
 		"axios": "^1.6.0",                           // For HTTP requests (optional)
 		"jsdom": "^24.0.0"                           // For HTML parsing (optional)
@@ -431,7 +431,7 @@ Add any required dependencies:
 ```
 
 **Version Notes:**
-- Use `@cognigy/extension-tools` version ^0.17.0-rc4 or later for full Knowledge Connector support
+- Use `@cognigy/extension-tools` version ^0.17.0 or later for full Knowledge Connector support
 - v0.17.0+ includes `upsertKnowledgeSource` for incremental updates and `sources` parameter
 - Check [NPM](https://www.npmjs.com/package/@cognigy/extension-tools) for the latest version
 - Older versions (< 0.16.0) may not support all Knowledge Connector features
@@ -576,24 +576,24 @@ function: async ({ config, sources, api }) => {
 	// Check if source already exists and is up-to-date
 	const latestHash = await getContentHash(config.url);
 	const existingSource = sources.find(s => s.name === "My Source");
-	
+
 	if (existingSource?.contentHashOrTimestamp === latestHash) {
 		// Content unchanged, skip re-indexing
 		return;
 	}
-	
+
 	// Create or update source
 	const result = await api.upsertKnowledgeSource({
 		name: "My Source",
 		contentHashOrTimestamp: latestHash,
 		chunkCount: chunks.length,
 	});
-	
+
 	if (result === null) {
 		// Source exists and is up-to-date
 		return;
 	}
-	
+
 	// Add chunks to new/updated source
 	for (const chunk of chunks) {
 		await api.createKnowledgeChunk({
@@ -737,12 +737,12 @@ function calculateContentHash(chunks: Array<{ text: string }>): string {
 function: async ({ config, sources: currentSources, api }) => {
 	const items = await fetchItemsFromExternalSystem(config);
 	const updatedSources = new Set<string>();
-	
+
 	// Process each item
 	for (const item of items) {
 		const chunks = await processItemIntoChunks(item);
 		const contentHash = calculateContentHash(chunks);
-		
+
 		// Create or update source
 		const result = await api.upsertKnowledgeSource({
 			name: item.title,
@@ -751,15 +751,15 @@ function: async ({ config, sources: currentSources, api }) => {
 			contentHashOrTimestamp: contentHash,
 			externalIdentifier: item.id,
 		});
-		
+
 		// Track this item as processed
 		updatedSources.add(item.id);
-		
+
 		if (result === null) {
 			// Source already up-to-date, skip chunk creation
 			continue;
 		}
-		
+
 		// Add chunks to new or updated source
 		for (const chunk of chunks) {
 			await api.createKnowledgeChunk({
@@ -768,13 +768,13 @@ function: async ({ config, sources: currentSources, api }) => {
 			});
 		}
 	}
-	
+
 	// Clean up sources that are no longer in the external system
 	for (const source of currentSources) {
 		if (updatedSources.has(source.externalIdentifier)) {
 			continue;
 		}
-		
+
 		await api.deleteKnowledgeSource({
 			knowledgeSourceId: source.knowledgeSourceId,
 		});
@@ -859,16 +859,16 @@ export const webpageConnector = createKnowledgeConnector({
 				throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
 			}
 			const html = await response.text();
-			
+
 			// Parse and extract text
 			const dom = new JSDOM(html);
 			const document = dom.window.document;
 			const title = document.querySelector("title")?.textContent || url;
 			const text = document.body.textContent || "";
-			
+
 			// Split into chunks
 			const chunks = await splitTextIntoChunks(text, 2000);
-			
+
 			// Create Knowledge Source
 			const { knowledgeSourceId } = await api.createKnowledgeSource({
 				name: title,
@@ -876,7 +876,7 @@ export const webpageConnector = createKnowledgeConnector({
 				tags: sourceTags,
 				chunkCount: chunks.length,
 			});
-			
+
 			// Add chunks
 			for (const chunk of chunks) {
 				await api.createKnowledgeChunk({
@@ -943,17 +943,17 @@ export const apiConnector = createKnowledgeConnector({
 			defaultValue: ["api-docs"],
 		},
 	] as const,
-	function: async ({ 
-		config: { connection, category, maxPages, sourceTags }, 
+	function: async ({
+		config: { connection, category, maxPages, sourceTags },
 		sources,
-		api 
+		api
 	}) => {
 		const { apiKey } = connection as { apiKey: string };
-		
+
 		let page = 1;
 		let hasMore = true;
 		const allItems: ApiResponse["items"] = [];
-		
+
 		// Fetch all pages with pagination
 		while (hasMore && page <= maxPages) {
 			const response = await fetch(
@@ -962,24 +962,24 @@ export const apiConnector = createKnowledgeConnector({
 					headers: { "Authorization": `Bearer ${apiKey}` },
 				}
 			);
-			
+
 			if (!response.ok) {
 				throw new Error(`API request failed: ${response.statusText}`);
 			}
-			
+
 			const data: ApiResponse = await response.json();
 			allItems.push(...data.items);
 			hasMore = data.hasMore;
 			page++;
-			
+
 			// Rate limiting - wait 250ms between requests
 			await new Promise(resolve => setTimeout(resolve, 250));
 		}
-		
+
 		if (allItems.length === 0) {
 			throw new Error(`No documentation found for category: ${category}`);
 		}
-		
+
 		// Create Knowledge Source
 		const { knowledgeSourceId } = await api.createKnowledgeSource({
 			name: `API Docs - ${category}`,
@@ -987,11 +987,11 @@ export const apiConnector = createKnowledgeConnector({
 			tags: sourceTags,
 			chunkCount: allItems.length,
 		});
-		
+
 		// Add chunks
 		for (const item of allItems) {
 			const text = `${item.title}\n\n${item.description}\n\n${item.content}`;
-			
+
 			await api.createKnowledgeChunk({
 				knowledgeSourceId,
 				text,
@@ -1053,19 +1053,19 @@ export const productionConnector = createKnowledgeConnector({
 	function: async ({ config, sources: currentSources, api }) => {
 		const { connection, baseUrl, sourceTags } = config;
 		const { apiKey } = connection as { apiKey: string };
-		
+
 		// 1. Fetch all items from external system
 		const items = await fetchAllItems(baseUrl, apiKey);
 		const updatedSources = new Set<string>();
-		
+
 		// 2. Process each item
 		for (const item of items) {
 			// Fetch and process chunks
 			const chunks = await fetchAndProcessChunks(baseUrl, apiKey, item.id);
-			
+
 			// Calculate content hash
 			const contentHash = calculateContentHash(chunks);
-			
+
 			// Create or update knowledge source
 			const result = await api.upsertKnowledgeSource({
 				name: item.title,
@@ -1075,15 +1075,15 @@ export const productionConnector = createKnowledgeConnector({
 				externalIdentifier: item.id,
 				contentHashOrTimestamp: contentHash,
 			});
-			
+
 			// Track this item as processed
 			updatedSources.add(item.id);
-			
+
 			if (result === null) {
 				// Source already up-to-date
 				continue;
 			}
-			
+
 			// Add chunks to new or updated source
 			for (const chunk of chunks) {
 				await api.createKnowledgeChunk({
@@ -1092,13 +1092,13 @@ export const productionConnector = createKnowledgeConnector({
 				});
 			}
 		}
-		
+
 		// 3. Clean up sources that no longer exist in external system
 		for (const source of currentSources) {
 			if (updatedSources.has(source.externalIdentifier)) {
 				continue;
 			}
-			
+
 			await api.deleteKnowledgeSource({
 				knowledgeSourceId: source.knowledgeSourceId,
 			});
@@ -1120,7 +1120,7 @@ async function fetchAndProcessChunks(baseUrl: string, apiKey: string, itemId: st
 		headers: { Authorization: `Bearer ${apiKey}` },
 	});
 	const content = await response.json();
-	
+
 	// Process into chunks (use text splitter, parse HTML, etc.)
 	return [
 		{
@@ -1160,7 +1160,7 @@ async function fetchAndProcessChunks(baseUrl: string, apiKey: string, itemId: st
 - [ ] Track processed sources with `Set` and cleanup superseded sources
 - [ ] Add error handling and cleanup
 - [ ] Register connector in `src/module.ts`
-- [ ] Update `package.json` with dependencies (v0.17.0-rc4+)
+- [ ] Update `package.json` with dependencies (v0.17.0+)
 - [ ] Write README documentation with examples
 
 ## Additional Resources

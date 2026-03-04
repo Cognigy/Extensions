@@ -29,9 +29,9 @@ The Diffbot Extension lets you extract structured data from web pages in JSON fo
 
 The Diffbot Crawler Connector automatically creates Knowledge Sources by crawling web pages from the root page and process their content using Diffbot services. For more information, see the [Diffbot Crawl API](https://docs.diffbot.com/reference/crawl-introduction) documentation. You can also see the running crawler on the [Diffbot dashboard](https://app.diffbot.com/crawls/)
 
+Starting with version 2.0.0, this Knowledge Connector also supports knowledge synchronization. Knoweldge synchornization is available in Cognigy.AI 2026.5.0 and later versions. This Knowledge Connector uses `upsertKnowledgeSource` to determine whether a web page needs to be re-ingested and to skip those that are already up to date. Also, if the web pages that were imported with this Knowledge Connector are removed from the external knowledge base, they are also deleted from Cognigy.AI.
 
 ### Chunking
-
 The JSON content returned by Diffbot is flattened and processed using recursive character splitting to create text chunks that are presented in Cognigy.AI as Knowledge Chunks. Each Knowledge Chunk is prefixed with the page title, content type, and URL for web page.
 
 ### Fields
@@ -85,6 +85,8 @@ The JSON content returned by Diffbot is flattened and processed using recursive 
 ## Diffbot Webpage Connector
 
 The Diffbot Webpage Connector automatically creates Knowledge Sources by processing web page content through Diffbot's extraction service.
+
+Starting with version 2.0.0, this Knowledge Connector also supports knowledge synchronization. Knoweldge synchornization is available in Cognigy.AI 2026.5.0 and later versions. This Knowledge Connector uses `upsertKnowledgeSource` to determine whether a web page needs to be re-ingested and to skip those that are already up to date. Also, if the web pages that were imported with this Knowledge Connector are removed from the external knowledge base, they are also deleted from Cognigy.AI.
 
 ### Fields
 

@@ -87,7 +87,7 @@ function sanitizeSourceName(name: string): string {
     return name
         .replace(/\u2013|\u2014/g, "-")
         .replace(/&/g, "and")
-        .replace(/[/?!:()#*+<>=^~%@\\]/g, " ")
+        .replace(/[/?!()#*+<>=^~%@\\]/g, " ")
         .replace(/[ \t]{2,}/g, " ")
         .replace(/-{2,}/g, "-")
         .trim();
@@ -111,18 +111,6 @@ function shortHash(text: string): string {
 /** JSON stored in a source description for hash-based dedup. */
 function buildSourceDescription(articleNumber: string, role: string, hash: string): string {
     return JSON.stringify({ articleNumber, role, hash, synced: new Date().toISOString() });
-}
-
-interface SourceMeta { sourceId: string; hash: string; }
-
-/** Parse a source description written by buildSourceDescription; returns null on failure. */
-function parseSourceMeta(description?: string): SourceMeta | null {
-    if (!description) return null;
-    try {
-        const obj = JSON.parse(description);
-        if (obj.hash && typeof obj.hash === "string") return { sourceId: "", hash: obj.hash };
-    } catch { /* fall through */ }
-    return null;
 }
 
 /**
@@ -533,16 +521,6 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                     (knowledgeStoreId as string).trim(),
                 );
                 for (const src of existing) {
-                    const m = src.name.match(/^\[SF:([^\]]+)\]/);
-                    if (!m) continue;
-                    const meta = parseSourceMeta(src.description);
-                    if (meta) {
-                        existingSourceMap.set(`${m[1]}:${meta.hash ? (src.name.includes("Manager") ? "supervisor" : "agent") : ""}`, { sourceId: src._id, hash: meta.hash });
-                    }
-                }
-                // Rebuild with role from description (more reliable)
-                existingSourceMap.clear();
-                for (const src of existing) {
                     if (!/^\[SF:[^\]]+\]/.test(src.name)) continue;
                     try {
                         const obj = JSON.parse(src.description || "{}");
@@ -574,6 +552,14 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
             // --- Agent Knowledge Source ---
             const agentText = buildArticleText(title, agentFieldList, article);
+
+            // Skip if article has no field body content (only the H1 title line)
+            const agentBody = agentText.replace(/^#[^\n]*\n?/m, "").trim();
+            if (!agentBody) {
+                console.log(`[Salesforce KC] Agent has no body content — skipping: ${articleMeta.articleNumber}`);
+                continue;
+            }
+
             const agentHash = shortHash(agentText);
             const agentKey = `${articleMeta.articleNumber}:agent`;
             const agentExisting = existingSourceMap.get(agentKey);
@@ -711,7 +697,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
                     // Escape article numbers before embedding in SOQL IN clause
                     const inClause = articleNumbers.map(n => `'${n.replace(/'/g, "\\'")}'`).join(", ");
-                    const checkSoql = `SELECT ArticleNumber FROM ${knowledgeApiName} WHERE ArticleNumber IN (${inClause}) AND PublishStatus = 'Online' AND IsLatestVersion = true`;
+                    const checkSoql = `SELECT ArticleNumber FROM ${apiNameRaw} WHERE ArticleNumber IN (${inClause}) AND PublishStatus = 'Online' AND IsLatestVersion = true`;
                     const checkResult = await salesforceConnection.query(checkSoql, { autoFetch: true });
                     const activeNumbers = new Set(
                         checkResult.records.map((r: any) => String(r.ArticleNumber))

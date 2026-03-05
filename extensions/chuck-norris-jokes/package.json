@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@cognigy/extension-tools": "0.16.6",
-    "@dqbd/tiktoken": "1.0.7",
+    "@dqbd/tiktoken": "1.0.22",
     "@types/html-to-text": "9.0.4",
     "html-to-text": "9.0.5",
     "jsdom": "24.1.3",

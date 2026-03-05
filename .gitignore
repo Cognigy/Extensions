@@ -17,3 +17,29 @@ coverage/
 *.tar.gz
 /**/.DS_Store
 .history
+# Node modules and lockfiles
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+**/dist/
+**/build/
+*.tsbuildinfo
+
+# Logs and temp
+*.log
+tmp/
+temp/
+*.tmp
+
+# VS Code
+.vscode/
+
+# OS files
+Thumbs.db
+.DS_Store

@@ -4,10 +4,8 @@ import { DocxLoader } from '@langchain/community/document_loaders/fs/docx';
 import { CSVLoader } from '@langchain/community/document_loaders/fs/csv';
 import { JSONLoader, JSONLinesLoader } from 'langchain/document_loaders/fs/json';
 import { Document } from '@langchain/core/documents';
-
 import { splitDocs } from './textChunker';
 import { BufferLoader } from 'langchain/document_loaders/fs/buffer';
-import * as fs from 'fs';
 import { parseOfficeAsync } from 'officeparser';
 
 export const removeUnnecessaryChars = (text: string): string => {
@@ -67,31 +65,7 @@ export const lsExtractor = async (type: string, inputFile: string): Promise<stri
 	try {
 		docs = await documentLoader.load();
 	} catch (err: any) {
-		// If PDF loader failed, attempt a lightweight fallback using 'pdf-parse' if available
-		if (type === 'pdf') {
-			try {
-				let pdfParse: any = null;
-				try { pdfParse = require('pdf-parse'); } catch (e) { pdfParse = null; }
-
-				if (pdfParse) {
-					const buffer = fs.readFileSync(inputFile);
-					const parsed = await pdfParse(buffer);
-					docs = [
-						new Document({
-							pageContent: parsed?.text || '',
-							metadata: {},
-						}),
-					];
-				} else {
-					throw err;
-				}
-			} catch (fallbackErr: any) {
-				const message = `PDF extraction failed: ${err?.message || err}. Fallback error: ${fallbackErr?.message || fallbackErr}`;
-				throw new Error(message);
-			}
-		} else {
-			throw err;
-		}
+		throw err;
 	}
 
 	// Clean up text for all file types

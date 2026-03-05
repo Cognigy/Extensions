@@ -1,20 +1,57 @@
-# Microsoft Sharepoint
+# Microsoft SharePoint
 
-**Connection:**
+Integrates Cognigy.AI with Microsoft SharePoint.
 
-- Cloud Authentication
-  - [Docu](https://github.com/s-KaiNet/node-sp-auth/wiki/SharePoint%20Online%20addin%20only%20authentication)
+This extension provides:
+- A cloud connection for Microsoft credentials,
+- A Knowledge Connector that ingests files from SharePoint document libraries,
+- Flow Nodes for reading site info and list items.
 
-  - key: clientId
-      - value: Microsoft organization client id
-  - key: clientSecret
-      - value: Microsoft organization client secret
+## Table of Contents
+- [SharePoint Connection](#sharepoint-connection)
+- [SharePoint Knowledge Connector](#sharepoint-knowledge-connector)
+- [SharePoint Flow Nodes](#sharepoint-flow-nodes)
 
-- Basic Authentication
-  - key: username
-    - value: Microsoft Login username (e.g. email)
-  - key: password
-    - value: Microsoft Login password
+---
+
+## SharePoint Connection
+
+The extension uses a connection of type `cloud` with the following keys:
+
+- `tenantId`: Microsoft Entra tenant ID
+- `clientId`: Application (client) ID
+- `clientSecret`: Client secret
+
+The extension authenticates via OAuth2 client credentials against Microsoft Graph.
+
+---
+
+## SharePoint Knowledge Connector
+
+The connector reads files from given directory of a SharePoint site and creates Knowledge Sources plus Knowledge Chunks.
+
+### Connector Fields
+
+- **Connection** (`connection`, required): Cloud connection with `tenantId`, `clientId`, `clientSecret`
+- **SharePoint Hostname** (`hostname`, required): for example `yourtenant.sharepoint.com`
+- **Site Path** (`sitePath`, required): for example `/sites/yoursite`
+- **Source Tags** (`sourceTags`): tags assigned to each created Knowledge Source (default: `sharepoint`)
+
+### Supported File Extensions
+
+- `pdf`
+- `docx`
+- `txt`
+- `csv`
+- `json`
+- `jsonl`
+- `md`
+- `pptx`
+
+---
+
+## SharePoint Flow Nodes
+
 ## Node: Get Sharepoint Site Info
 
 Returns the entire information of a given Sharepoint site. Therefore, you have to define the `url` as `https://[your-tenant].sharepoint.com/sites/[your-site]`.
@@ -131,4 +168,5 @@ This node returns all items of a specified list. You have to define your `url` s
     }
   }
 }
+
 ```

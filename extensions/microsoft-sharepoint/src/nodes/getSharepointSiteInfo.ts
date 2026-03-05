@@ -1,17 +1,14 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-const spauth = require('node-sp-auth');
-const request = require('request-promise');
+import axios from 'axios';
+import { getAccessToken } from "../helpers/getAccessToken";
 
 export interface IGetSharepointSiteInfoParams extends INodeFunctionBaseParams {
 	config: {
 		authentication: "cloud" | "basic";
 		cloudAuth: {
+			tenantId: string;
 			clientId: string;
 			clientSecret: string;
-		};
-		basicAuth: {
-			username: string;
-			password: string;
 		};
 		url: string;
 		storeLocation: string;
@@ -53,19 +50,6 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 			condition: {
 				key: "authentication",
 				value: "cloud",
-			}
-		},
-		{
-			key: "basicAuth",
-			label: "Sharepoint Basic Auth",
-			type: "connection",
-			params: {
-				connectionType: "basic",
-				required: true
-			},
-			condition: {
-				key: "authentication",
-				value: "basic",
 			}
 		},
 		{
@@ -119,16 +103,6 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	],
 	sections: [
 		{
-			key: "connectionSection",
-			label: "Authentication",
-			defaultCollapsed: false,
-			fields: [
-				"authentication",
-				"cloudAuth",
-				"basicAuth",
-			]
-		},
-		{
 			key: "storageOption",
 			label: "Storage Option",
 			defaultCollapsed: true,
@@ -149,43 +123,31 @@ export const getSharepointSiteInfoNode = createNodeDescriptor({
 	},
 	function: async ({ cognigy, config }: IGetSharepointSiteInfoParams) => {
 		const { api } = cognigy;
-		const { cloudAuth, basicAuth, authentication, url, storeLocation, inputKey, contextKey } = config;
-		const { clientId, clientSecret } = cloudAuth;
-		const { username, password } = basicAuth;
-
-		let auth: any;
-
-		switch (authentication) {
-			case 'basic':
-				auth = {
-					username,
-					password
-				};
-				break;
-			case 'cloud':
-				auth = {
-					clientId,
-					clientSecret
-				};
-		}
+		const { cloudAuth, authentication, url, storeLocation, inputKey, contextKey } = config;
 
 		try {
-			const data = await spauth.getAuth(url, auth);
+			let responseData: any;
 
-			let headers = data.headers;
-			headers['Accept'] = 'application/json;odata=verbose';
+			// Get OAuth2 access token for SharePoint Online
+			const { tenantId, clientId, clientSecret } = cloudAuth;
+			const accessToken = await getAccessToken(tenantId, clientId, clientSecret);
 
-			const response = await request.get({
-				url: `${url}/_api/web`,
-				headers: headers,
-				json: true
-			});
+			const response = await axios.get(
+				`${url}/_api/web`,
+				{
+					headers: {
+						'Authorization': `Bearer ${accessToken}`,
+						'Accept': 'application/json;odata=verbose'
+					}
+				}
+			);
+			responseData = response.data;
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response, "simple");
+				api.addToContext(contextKey, responseData, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response);
+				api.addToInput(inputKey, responseData);
 			}
 		} catch (error) {
 			if (storeLocation === "context") {

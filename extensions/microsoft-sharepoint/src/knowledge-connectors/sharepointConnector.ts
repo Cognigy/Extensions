@@ -4,7 +4,8 @@ import { getSharePointFiles } from "./helpers/listFiles";
 import axios from "axios";
 import * as path from 'path';
 import * as crypto from "crypto";
-import { logMessage } from "./helpers/utils/logger";
+import { logMessage } from "../helpers/logger";
+import { getAccessToken } from "../helpers/getAccessToken";
 
 export const sharepointConnector = createKnowledgeConnector({
     type: "sharepointConnector",
@@ -16,7 +17,7 @@ export const sharepointConnector = createKnowledgeConnector({
             label: "Sharepoint Connection",
             type: "connection",
             params: {
-                connectionType: "connector",
+                connectionType: "cloud",
                 required: true,
             },
         },
@@ -60,20 +61,7 @@ export const sharepointConnector = createKnowledgeConnector({
         };
 
         // Get access token
-        const getAccessToken = async (): Promise<string> => {
-            const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
-
-            const params = new URLSearchParams();
-            params.append('client_id', clientId);
-            params.append('client_secret', clientSecret);
-            params.append('scope', 'https://graph.microsoft.com/.default');
-            params.append('grant_type', 'client_credentials');
-
-            const response = await axios.post(tokenUrl, params);
-            return response.data.access_token;
-        };
-
-        const accessToken = await getAccessToken();
+        const accessToken = await getAccessToken(tenantId, clientId, clientSecret);
 
         // Get site ID using hostname and site path
         const siteResponse = await axios.get(

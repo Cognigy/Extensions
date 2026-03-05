@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import axios from 'axios';
-import { logMessage } from "./utils/logger";
+import { logMessage } from "../../helpers/logger";
 
 export type ChunkContent = Pick<
     IKnowledge.CreateKnowledgeChunkParams,
@@ -88,4 +88,3 @@ export const getSharePointFileChunks = async (
         }
     }
 };
-

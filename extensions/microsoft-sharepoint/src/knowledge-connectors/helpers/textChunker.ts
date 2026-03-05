@@ -1,7 +1,6 @@
 import * as splitters from "@langchain/textsplitters";
 
-import { getMaxChunkSize, langchainDefaultChunkSizeInChars } from "./utils/config";
-
+import { getMaxChunkSize, langchainDefaultChunkSizeInChars } from "../../helpers/config";
 
 export async function splitDocs(documents: any): Promise<any[]> {
 	let splitter;

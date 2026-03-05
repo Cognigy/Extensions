@@ -52,7 +52,6 @@ export async function getSharePointFiles(
                 if (!item.size || item.size === 0) return false; // Skip empty files
 
                 const nameLower = item.name.toLowerCase();
-                console.log('=nameLower=', nameLower);
                 return SUPPORTED_EXTENSIONS.some(ext => nameLower.endsWith(`.${ext}`));
             })
             .map((item: any) => ({
@@ -62,7 +61,6 @@ export async function getSharePointFiles(
                 lastModified: new Date(item.lastModifiedDateTime),
                 webUrl: item.webUrl
             }));
-        console.log('=sharePointFiles=', sharePointFiles);
         return sharePointFiles;
 
     } catch (error) {

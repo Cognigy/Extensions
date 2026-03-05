@@ -1,3 +1,4 @@
+import * as crypto from "crypto";
 import { createKnowledgeConnector } from "@cognigy/extension-tools";
 import { authenticate } from "../authenticate";
 import {
@@ -90,6 +91,38 @@ function sanitizeSourceName(name: string): string {
         .replace(/[ \t]{2,}/g, " ")
         .replace(/-{2,}/g, "-")
         .trim();
+}
+
+/** Return true if the string is a valid Salesforce API identifier. */
+function isValidSfApiName(name: string): boolean {
+    return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
+/** Return true if the string looks like a valid BCP 47 / Salesforce language code. */
+function isValidLanguageCode(lang: string): boolean {
+    return /^[a-z]{2,3}(_[A-Za-z0-9]{2,8})*$/.test(lang);
+}
+
+/** First 12 hex chars of SHA-256 — used to detect content changes. */
+function shortHash(text: string): string {
+    return crypto.createHash("sha256").update(text).digest("hex").slice(0, 12);
+}
+
+/** JSON stored in a source description for hash-based dedup. */
+function buildSourceDescription(articleNumber: string, role: string, hash: string): string {
+    return JSON.stringify({ articleNumber, role, hash, synced: new Date().toISOString() });
+}
+
+interface SourceMeta { sourceId: string; hash: string; }
+
+/** Parse a source description written by buildSourceDescription; returns null on failure. */
+function parseSourceMeta(description?: string): SourceMeta | null {
+    if (!description) return null;
+    try {
+        const obj = JSON.parse(description);
+        if (obj.hash && typeof obj.hash === "string") return { sourceId: "", hash: obj.hash };
+    } catch { /* fall through */ }
+    return null;
 }
 
 /**
@@ -419,6 +452,16 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             knowledgeStoreId
         } = config;
 
+        // --- Input validation (prevent SOQL injection) ---------------------
+        const apiNameRaw = (knowledgeApiName as string)?.trim() ?? "";
+        if (!isValidSfApiName(apiNameRaw)) {
+            throw new Error(`[Salesforce KC] Invalid Knowledge Article Object API Name: "${apiNameRaw}". Must match [A-Za-z_][A-Za-z0-9_]*.`);
+        }
+        const langRaw = (language as string)?.trim() ?? "";
+        if (!isValidLanguageCode(langRaw)) {
+            throw new Error(`[Salesforce KC] Invalid Language code: "${langRaw}". Expected format e.g. en_US or de.`);
+        }
+
         const salesforceConnection = await authenticate(oauthConnection as IOAuthConnection);
 
         // Normalise to arrays so the connector doesn't throw if either field is
@@ -426,8 +469,18 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
         const agentFieldList = Array.isArray(agentFields) ? (agentFields as string[]) : [];
         const supervisorFieldList = Array.isArray(supervisorFields) ? (supervisorFields as string[]) : [];
 
+        // Validate all field API names before embedding them in SOQL
+        const invalidFields = [...agentFieldList, ...supervisorFieldList].filter(f => !isValidSfApiName(f));
+        if (invalidFields.length > 0) {
+            throw new Error(`[Salesforce KC] Invalid field API name(s): ${invalidFields.join(", ")}. Field names must match [A-Za-z_][A-Za-z0-9_]*.`);
+        }
+
         // Combine all content fields for a single SOQL query, deduplicated
         const allContentFields = [...new Set([...agentFieldList, ...supervisorFieldList])];
+
+        if (agentFieldList.length === 0) {
+            throw new Error("[Salesforce KC] At least one Agent Content Field is required.");
+        }
 
         // Incremental date filter — validate ISO 8601 format before embedding in SOQL
         const rawDate = (lastSyncDate as string)?.trim() ?? "";
@@ -439,12 +492,17 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             ? `AND LastModifiedDate > ${rawDate}`
             : "";
 
+        // Build SELECT — content fields are only appended when non-empty (avoids trailing comma)
+        const fixedFields = "Id, KnowledgeArticleId, ArticleNumber, Title, UrlName, Language, LastPublishedDate";
+        const selectClause = allContentFields.length > 0
+            ? `${fixedFields}, ${allContentFields.join(", ")}`
+            : fixedFields;
+
         const soql = [
-            `SELECT Id, KnowledgeArticleId, ArticleNumber, Title, UrlName,`,
-            `Language, LastPublishedDate, ${allContentFields.join(", ")}`,
-            `FROM ${knowledgeApiName}`,
+            `SELECT ${selectClause}`,
+            `FROM ${apiNameRaw}`,
             `WHERE PublishStatus = 'Online'`,
-            `AND Language = '${language}'`,
+            `AND Language = '${langRaw}'`,
             `AND IsLatestVersion = true`,
             dateFilter,
             `ORDER BY Title ASC`
@@ -458,6 +516,48 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
         const articles = result.records;
         console.log(`[Salesforce KC] ${articles.length} article(s) to process`);
 
+        // --- Hash-based dedup: build map of existing sources ----------------
+        // Key: "<articleNumber>:<role>"  Value: { sourceId, hash }
+        const dedupEnabled =
+            (cognigyApiUrl as string)?.trim() &&
+            (cognigyApiKey as string)?.trim() &&
+            (knowledgeStoreId as string)?.trim();
+
+        const existingSourceMap = new Map<string, { sourceId: string; hash: string }>();
+
+        if (dedupEnabled) {
+            try {
+                const existing = await listKnowledgeSources(
+                    (cognigyApiUrl as string).trim(),
+                    (cognigyApiKey as string).trim(),
+                    (knowledgeStoreId as string).trim(),
+                );
+                for (const src of existing) {
+                    const m = src.name.match(/^\[SF:([^\]]+)\]/);
+                    if (!m) continue;
+                    const meta = parseSourceMeta(src.description);
+                    if (meta) {
+                        existingSourceMap.set(`${m[1]}:${meta.hash ? (src.name.includes("Manager") ? "supervisor" : "agent") : ""}`, { sourceId: src._id, hash: meta.hash });
+                    }
+                }
+                // Rebuild with role from description (more reliable)
+                existingSourceMap.clear();
+                for (const src of existing) {
+                    if (!/^\[SF:[^\]]+\]/.test(src.name)) continue;
+                    try {
+                        const obj = JSON.parse(src.description || "{}");
+                        if (obj.articleNumber && obj.role && obj.hash) {
+                            existingSourceMap.set(`${obj.articleNumber}:${obj.role}`, { sourceId: src._id, hash: obj.hash });
+                        }
+                    } catch { /* skip unparseable */ }
+                }
+                console.log(`[Salesforce KC] Dedup: ${existingSourceMap.size} tracked source(s) found`);
+            } catch (err) {
+                const msg = err instanceof Error ? err.message : String(err);
+                console.warn(`[Salesforce KC] Could not load existing sources for dedup (will recreate all): ${msg}`);
+            }
+        }
+
         for (const article of articles) {
             const title = article.Title || `Article ${article.ArticleNumber}`;
 
@@ -466,7 +566,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                 articleNumber: String(article.ArticleNumber || ""),
                 knowledgeArticleId: String(article.KnowledgeArticleId || ""),
                 urlName: String(article.UrlName || ""),
-                language: String(article.Language || language),
+                language: String(article.Language || langRaw),
                 lastPublishedDate: String(article.LastPublishedDate || "")
             };
 
@@ -474,29 +574,51 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
             // --- Agent Knowledge Source ---
             const agentText = buildArticleText(title, agentFieldList, article);
-            const agentChunks = chunkArticleMarkdown(agentText);
+            const agentHash = shortHash(agentText);
+            const agentKey = `${articleMeta.articleNumber}:agent`;
+            const agentExisting = existingSourceMap.get(agentKey);
 
-            if (agentChunks.length > 0) {
-                console.log(`[Salesforce KC] Agent: "${title}" (${articleMeta.articleNumber}) — ${agentChunks.length} chunk(s)`);
-                const { knowledgeSourceId: agentSourceId } = await api.createKnowledgeSource({
-                    name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title}`),
-                    tags: agentTags as string[],
-                    chunkCount: agentChunks.length
-                });
+            if (agentExisting && agentExisting.hash === agentHash) {
+                console.log(`[Salesforce KC] Agent unchanged — skipping: ${articleMeta.articleNumber}`);
+            } else {
+                if (agentExisting) {
+                    console.log(`[Salesforce KC] Agent changed — replacing: ${articleMeta.articleNumber}`);
+                    try {
+                        await deleteKnowledgeSourceById(
+                            (cognigyApiUrl as string).trim(),
+                            (cognigyApiKey as string).trim(),
+                            (knowledgeStoreId as string).trim(),
+                            agentExisting.sourceId,
+                        );
+                    } catch (e) {
+                        console.warn(`[Salesforce KC] Could not delete old agent source: ${e instanceof Error ? e.message : e}`);
+                    }
+                }
 
-                for (let i = 0; i < agentChunks.length; i++) {
-                    const agentChunkData: Record<string, string> = {
-                        articleNumber: articleMeta.articleNumber,
-                        role: "agent",
-                        url: articleUrl
-                    };
-                    if (agentChunks[i].section) agentChunkData.section = agentChunks[i].section;
-                    console.log(`[Salesforce KC] Agent chunk ${i + 1} text length: ${agentChunks[i].text.length}`);
-                    await api.createKnowledgeChunk({
-                        knowledgeSourceId: agentSourceId,
-                        text: agentChunks[i].text,
-                        data: agentChunkData
+                const agentChunks = chunkArticleMarkdown(agentText);
+
+                if (agentChunks.length > 0) {
+                    console.log(`[Salesforce KC] Agent: "${title}" (${articleMeta.articleNumber}) — ${agentChunks.length} chunk(s)`);
+                    const { knowledgeSourceId: agentSourceId } = await api.createKnowledgeSource({
+                        name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title}`),
+                        description: buildSourceDescription(articleMeta.articleNumber, "agent", agentHash),
+                        tags: agentTags as string[],
+                        chunkCount: agentChunks.length
                     });
+
+                    for (const chunk of agentChunks) {
+                        const agentChunkData: Record<string, string> = {
+                            articleNumber: articleMeta.articleNumber,
+                            role: "agent",
+                            url: articleUrl
+                        };
+                        if (chunk.section) agentChunkData.section = chunk.section;
+                        await api.createKnowledgeChunk({
+                            knowledgeSourceId: agentSourceId,
+                            text: chunk.text,
+                            data: agentChunkData
+                        });
+                    }
                 }
             }
 
@@ -508,41 +630,58 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
             if (hasSupervisorContent) {
                 const supervisorText = buildArticleText(title, supervisorFieldList, article);
-                const supervisorChunks = chunkArticleMarkdown(supervisorText);
+                const supervisorHash = shortHash(supervisorText);
+                const supervisorKey = `${articleMeta.articleNumber}:supervisor`;
+                const supervisorExisting = existingSourceMap.get(supervisorKey);
 
-                if (supervisorChunks.length > 0) {
-                    console.log(`[Salesforce KC] Supervisor: "${title}" (${articleMeta.articleNumber}) — ${supervisorChunks.length} chunk(s)`);
-                    const { knowledgeSourceId: supervisorSourceId } = await api.createKnowledgeSource({
-                        name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title} - Manager`),
-                        tags: supervisorTags as string[],
-                        chunkCount: supervisorChunks.length
-                    });
+                if (supervisorExisting && supervisorExisting.hash === supervisorHash) {
+                    console.log(`[Salesforce KC] Supervisor unchanged — skipping: ${articleMeta.articleNumber}`);
+                } else {
+                    if (supervisorExisting) {
+                        console.log(`[Salesforce KC] Supervisor changed — replacing: ${articleMeta.articleNumber}`);
+                        try {
+                            await deleteKnowledgeSourceById(
+                                (cognigyApiUrl as string).trim(),
+                                (cognigyApiKey as string).trim(),
+                                (knowledgeStoreId as string).trim(),
+                                supervisorExisting.sourceId,
+                            );
+                        } catch (e) {
+                            console.warn(`[Salesforce KC] Could not delete old supervisor source: ${e instanceof Error ? e.message : e}`);
+                        }
+                    }
 
-                    for (let i = 0; i < supervisorChunks.length; i++) {
-                        const supChunkData: Record<string, string> = {
-                            articleNumber: articleMeta.articleNumber,
-                            role: "supervisor",
-                            url: articleUrl
-                        };
-                        if (supervisorChunks[i].section) supChunkData.section = supervisorChunks[i].section;
-                        console.log(`[Salesforce KC] Supervisor chunk ${i + 1} text length: ${supervisorChunks[i].text.length}`);
-                        await api.createKnowledgeChunk({
-                            knowledgeSourceId: supervisorSourceId,
-                            text: supervisorChunks[i].text,
-                            data: supChunkData
+                    const supervisorChunks = chunkArticleMarkdown(supervisorText);
+
+                    if (supervisorChunks.length > 0) {
+                        console.log(`[Salesforce KC] Supervisor: "${title}" (${articleMeta.articleNumber}) — ${supervisorChunks.length} chunk(s)`);
+                        const { knowledgeSourceId: supervisorSourceId } = await api.createKnowledgeSource({
+                            name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title} - Manager`),
+                            description: buildSourceDescription(articleMeta.articleNumber, "supervisor", supervisorHash),
+                            tags: supervisorTags as string[],
+                            chunkCount: supervisorChunks.length
                         });
+
+                        for (const chunk of supervisorChunks) {
+                            const supChunkData: Record<string, string> = {
+                                articleNumber: articleMeta.articleNumber,
+                                role: "supervisor",
+                                url: articleUrl
+                            };
+                            if (chunk.section) supChunkData.section = chunk.section;
+                            await api.createKnowledgeChunk({
+                                knowledgeSourceId: supervisorSourceId,
+                                text: chunk.text,
+                                data: supChunkData
+                            });
+                        }
                     }
                 }
             }
         }
 
         // --- Stale article removal ---
-        const removalEnabled =
-            (cognigyApiUrl as string)?.trim() &&
-            (cognigyApiKey as string)?.trim() &&
-            (knowledgeStoreId as string)?.trim();
-
-        if (removalEnabled) {
+        if (dedupEnabled) {
             console.log("[Salesforce KC] Checking for stale sources to remove…");
             try {
                 const existingSources = await listKnowledgeSources(

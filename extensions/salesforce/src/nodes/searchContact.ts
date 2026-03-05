@@ -211,11 +211,14 @@ export const searchContactNode = createNodeDescriptor({
         try {
             const salesforceConnection = await authenticate(oauthConnection);
 
+            // Escape single quotes to prevent SOQL injection.
+            const escapedValue = contactFieldValue.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+
             // Step 1: Find the contact ID using the specified field
             // Note: LIMIT 1 is used here because only one record is ever stored (records[0]).
             // sobject.retrieve() is used in Step 2 to return all standard and custom fields
             // without requiring the "View All Data" permission that FIELDS(All) demands.
-            const soql: string = `SELECT Id FROM Contact WHERE ${contactField} = '${contactFieldValue}' ORDER BY CreatedDate DESC LIMIT 1`;
+            const soql: string = `SELECT Id FROM Contact WHERE ${contactField} = '${escapedValue}' ORDER BY CreatedDate DESC LIMIT 1`;
             const result = await salesforceConnection.query(soql);
 
             if (result.records.length === 0) {

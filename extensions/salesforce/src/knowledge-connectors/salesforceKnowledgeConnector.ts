@@ -12,14 +12,15 @@ interface IOAuthConnection {
 }
 
 /**
- * Remove null bytes and non-printable control characters that can cause
- * embedding/store failures. Preserves standard whitespace (newline, tab).
+ * Remove null bytes, C0 and C1 control characters that can cause embedding/store
+ * failures. Preserves tab (\x09), LF (\x0A), CR (\x0D), and all printable
+ * Unicode so non-English article content (accented chars, CJK, etc.) is kept intact.
  */
 function sanitizeText(text: string): string {
     if (!text) return "";
     return text
-        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
-        .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, "")
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "")  // C0 control chars (keep tab/LF/CR)
+        .replace(/[\x7F-\x9F]/g, "")                      // DEL + C1 control chars
         .replace(/[ \t]{2,}/g, " ")
         .trim();
 }
@@ -96,21 +97,19 @@ function sanitizeSourceName(name: string): string {
  *
  * Structure:
  *   # Article Title
- *   <summary paragraph>
  *   ## Field Label
  *   <field content as markdown>
  *   ## Next Field Label
  *   ...
+ *
+ * Note: the standard Salesforce Summary field is intentionally excluded here.
+ * Add "Summary" to agentFields if you want it included as a dedicated chunk.
+ * Including it automatically causes duplicate content when Summary == Overview__c.
  */
-function buildArticleText(title: string, summary: string, fields: string[], article: any): string {
+function buildArticleText(title: string, fields: string[], article: any): string {
     const sections: string[] = [];
 
     if (title) sections.push(`# ${sanitizeText(title)}`);
-
-    if (summary) {
-        const summaryMd = htmlFieldToMarkdown(summary, 1);
-        if (summaryMd) sections.push(summaryMd);
-    }
 
     for (const field of fields) {
         const raw = article[field];
@@ -118,7 +117,7 @@ function buildArticleText(title: string, summary: string, fields: string[], arti
         const content = htmlFieldToMarkdown(String(raw), 2);
         if (!content) continue;
         // Convert API name to a readable label: Manager_Actions__c → Manager Actions
-        const label = field.replace(/__c$/i, "").replace(/_/g, " ");
+        const label = field.replace(/__c$/i, "").replace(/_/g, " ").trim();
         sections.push(`## ${label}\n\n${content}`);
     }
 
@@ -201,12 +200,14 @@ function chunkArticleMarkdown(markdown: string, maxChars: number = 1800): Articl
 
         // H2 section: field-level chunk
         const headingLine = `## ${section.heading}\n\n`;
+        const headingLineCont = `## ${section.heading} (continued)\n\n`; // worst-case length
         const fullText = titlePrefix + headingLine + section.content;
 
         if (fullText.length <= effective) {
             chunks.push({ text: fullText, section: section.heading });
         } else {
-            const subMax = effective - titlePrefix.length - headingLine.length;
+            // Use the longer (continued) heading so sub-chunks never overflow
+            const subMax = effective - titlePrefix.length - headingLineCont.length;
             const subTexts = splitAtBoundaries(section.content, Math.max(subMax, 200));
             for (let i = 0; i < subTexts.length; i++) {
                 const cont = i > 0 ? " (continued)" : "";
@@ -420,19 +421,26 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
         const salesforceConnection = await authenticate(oauthConnection as IOAuthConnection);
 
-        // Combine all content fields for a single SOQL query, deduplicated
-        const allContentFields = [...new Set([
-            ...(agentFields as string[]),
-            ...(supervisorFields as string[])
-        ])];
+        // Normalise to arrays so the connector doesn't throw if either field is
+        // omitted from the config (supervisorFields is marked required: false).
+        const agentFieldList = Array.isArray(agentFields) ? (agentFields as string[]) : [];
+        const supervisorFieldList = Array.isArray(supervisorFields) ? (supervisorFields as string[]) : [];
 
-        // Incremental date filter
-        const dateFilter = (syncMode as string) === "incremental" && (lastSyncDate as string)?.trim()
-            ? `AND LastModifiedDate > ${(lastSyncDate as string).trim()}`
+        // Combine all content fields for a single SOQL query, deduplicated
+        const allContentFields = [...new Set([...agentFieldList, ...supervisorFieldList])];
+
+        // Incremental date filter — validate ISO 8601 format before embedding in SOQL
+        const rawDate = (lastSyncDate as string)?.trim() ?? "";
+        const isValidIsoDate = /^\d{4}-\d{2}-\d{2}(T[\d:.Z+\-]+)?$/.test(rawDate);
+        if ((syncMode as string) === "incremental" && rawDate && !isValidIsoDate) {
+            throw new Error(`[Salesforce KC] Invalid Last Sync Date: "${rawDate}". Expected ISO 8601, e.g. 2026-01-01T00:00:00Z`);
+        }
+        const dateFilter = (syncMode as string) === "incremental" && isValidIsoDate
+            ? `AND LastModifiedDate > ${rawDate}`
             : "";
 
         const soql = [
-            `SELECT Id, KnowledgeArticleId, ArticleNumber, Title, Summary, UrlName,`,
+            `SELECT Id, KnowledgeArticleId, ArticleNumber, Title, UrlName,`,
             `Language, LastPublishedDate, ${allContentFields.join(", ")}`,
             `FROM ${knowledgeApiName}`,
             `WHERE PublishStatus = 'Online'`,
@@ -452,7 +460,6 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
         for (const article of articles) {
             const title = article.Title || `Article ${article.ArticleNumber}`;
-            const summary = article.Summary || "";
 
             const articleMeta = {
                 articleId: String(article.Id || ""),
@@ -466,61 +473,63 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
             const articleUrl = `${salesforceConnection.instanceUrl}/lightning/articles/${articleMeta.knowledgeArticleId}`;
 
             // --- Agent Knowledge Source ---
-            const agentText = buildArticleText(title, summary, agentFields as string[], article);
+            const agentText = buildArticleText(title, agentFieldList, article);
             const agentChunks = chunkArticleMarkdown(agentText);
 
             if (agentChunks.length > 0) {
                 console.log(`[Salesforce KC] Agent: "${title}" (${articleMeta.articleNumber}) — ${agentChunks.length} chunk(s)`);
                 const { knowledgeSourceId: agentSourceId } = await api.createKnowledgeSource({
-                    name: sanitizeSourceName(`[${articleMeta.articleNumber}] ${title}`),
+                    name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title}`),
                     tags: agentTags as string[],
                     chunkCount: agentChunks.length
                 });
 
                 for (let i = 0; i < agentChunks.length; i++) {
-                    console.log(`[Salesforce KC] Agent chunk ${i + 1}/${agentChunks.length} for "${title}"`);
+                    const agentChunkData: Record<string, string> = {
+                        articleNumber: articleMeta.articleNumber,
+                        role: "agent",
+                        url: articleUrl
+                    };
+                    if (agentChunks[i].section) agentChunkData.section = agentChunks[i].section;
+                    console.log(`[Salesforce KC] Agent chunk ${i + 1} text length: ${agentChunks[i].text.length}`);
                     await api.createKnowledgeChunk({
                         knowledgeSourceId: agentSourceId,
                         text: agentChunks[i].text,
-                        data: {
-                            articleNumber: articleMeta.articleNumber,
-                            role: "agent",
-                            section: agentChunks[i].section || null,
-                            url: articleUrl
-                        }
+                        data: agentChunkData
                     });
                 }
             }
 
             // --- Supervisor Knowledge Source ---
-            const hasSupervisorContent = (supervisorFields as string[]).some(field => {
+            const hasSupervisorContent = supervisorFieldList.some(field => {
                 const raw = article[field];
                 return raw && htmlFieldToMarkdown(String(raw)).length > 0;
             });
 
             if (hasSupervisorContent) {
-                const supervisorText = buildArticleText(title, summary, supervisorFields as string[], article);
+                const supervisorText = buildArticleText(title, supervisorFieldList, article);
                 const supervisorChunks = chunkArticleMarkdown(supervisorText);
 
                 if (supervisorChunks.length > 0) {
                     console.log(`[Salesforce KC] Supervisor: "${title}" (${articleMeta.articleNumber}) — ${supervisorChunks.length} chunk(s)`);
                     const { knowledgeSourceId: supervisorSourceId } = await api.createKnowledgeSource({
-                        name: sanitizeSourceName(`[${articleMeta.articleNumber}] ${title} - Manager`),
+                        name: sanitizeSourceName(`[SF:${articleMeta.articleNumber}] ${title} - Manager`),
                         tags: supervisorTags as string[],
                         chunkCount: supervisorChunks.length
                     });
 
                     for (let i = 0; i < supervisorChunks.length; i++) {
-                        console.log(`[Salesforce KC] Supervisor chunk ${i + 1}/${supervisorChunks.length} for "${title}"`);
+                        const supChunkData: Record<string, string> = {
+                            articleNumber: articleMeta.articleNumber,
+                            role: "supervisor",
+                            url: articleUrl
+                        };
+                        if (supervisorChunks[i].section) supChunkData.section = supervisorChunks[i].section;
+                        console.log(`[Salesforce KC] Supervisor chunk ${i + 1} text length: ${supervisorChunks[i].text.length}`);
                         await api.createKnowledgeChunk({
                             knowledgeSourceId: supervisorSourceId,
                             text: supervisorChunks[i].text,
-                            data: {
-                                articleNumber: articleMeta.articleNumber,
-                                role: "supervisor",
-                                section: supervisorChunks[i].section || null,
-                                url: articleUrl
-                            }
+                            data: supChunkData
                         });
                     }
                 }
@@ -542,7 +551,9 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                     (knowledgeStoreId as string).trim(),
                 );
 
-                const sfSources = existingSources.filter(s => /^\[([^\]]+)\]/.test(s.name));
+                // Sources created by this connector are prefixed with [SF:<articleNumber>]
+                // so the pattern is unambiguous even in a shared knowledge store.
+                const sfSources = existingSources.filter(s => /^\[SF:[^\]]+\]/.test(s.name));
                 if (sfSources.length === 0) {
                     console.log("[Salesforce KC] No Salesforce-pattern sources found in store — skipping stale check");
                 } else {
@@ -550,7 +561,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                         ...new Set(
                             sfSources
                                 .map(s => {
-                                    const m = s.name.match(/^\[([^\]]+)\]/);
+                                    const m = s.name.match(/^\[SF:([^\]]+)\]/);
                                     return m ? m[1] : null;
                                 })
                                 .filter(Boolean) as string[]
@@ -559,7 +570,8 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
 
                     console.log(`[Salesforce KC] Verifying ${articleNumbers.length} unique article number(s) in Salesforce…`);
 
-                    const inClause = articleNumbers.map(n => `'${n}'`).join(", ");
+                    // Escape article numbers before embedding in SOQL IN clause
+                    const inClause = articleNumbers.map(n => `'${n.replace(/'/g, "\\'")}'`).join(", ");
                     const checkSoql = `SELECT ArticleNumber FROM ${knowledgeApiName} WHERE ArticleNumber IN (${inClause}) AND PublishStatus = 'Online' AND IsLatestVersion = true`;
                     const checkResult = await salesforceConnection.query(checkSoql, { autoFetch: true });
                     const activeNumbers = new Set(
@@ -567,7 +579,7 @@ export const salesforceKnowledgeConnector = createKnowledgeConnector({
                     );
 
                     for (const src of sfSources) {
-                        const m = src.name.match(/^\[([^\]]+)\]/);
+                        const m = src.name.match(/^\[SF:([^\]]+)\]/);
                         const articleNumber = m ? m[1] : null;
                         if (articleNumber && !activeNumbers.has(articleNumber)) {
                             console.log(`[Salesforce KC] Removing stale source "${src.name}" (article ${articleNumber} no longer active)`);

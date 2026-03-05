@@ -27,13 +27,14 @@ export async function listKnowledgeSources(
     apiKey: string,
     storeId: string,
 ): Promise<ManagedSource[]> {
+    const baseUrl = apiUrl.replace(/\/+$/, "");
     const all: ManagedSource[] = [];
     const limit = 100;
     let skip = 0;
 
     while (true) {
         const res = await axios.get<{ data: ManagedSource[] }>(
-            `${apiUrl}/v2.0/knowledgestores/${storeId}/knowledgesources`,
+            `${baseUrl}/v2.0/knowledgestores/${storeId}/knowledgesources`,
             {
                 params: { limit, skip },
                 headers: { "X-API-Key": apiKey },
@@ -63,8 +64,9 @@ export async function deleteKnowledgeSourceById(
     storeId: string,
     sourceId: string,
 ): Promise<void> {
+    const baseUrl = apiUrl.replace(/\/+$/, "");
     await axios.delete(
-        `${apiUrl}/v2.0/knowledgestores/${storeId}/knowledgesources/${sourceId}`,
+        `${baseUrl}/v2.0/knowledgestores/${storeId}/knowledgesources/${sourceId}`,
         {
             headers: { "X-API-Key": apiKey },
             timeout: REQUEST_TIMEOUT,

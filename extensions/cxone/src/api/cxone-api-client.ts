@@ -198,10 +198,9 @@ export class CXoneApiClient {
         const decodedToken = this.decodeToken(tokens.id_token);
         const apiEndpointUrl = await this.getApiEndpoint(decodedToken.iss, decodedToken.tenantId);
 
-        const url = `${apiEndpointUrl}/inContactAPI/services/${CXONE_API_VERSION}/interactions/${encodeURIComponent(contactId)}/signal?p1=${encodeURIComponent(action)}`;
+        const url = `${apiEndpointUrl}/inContactAPI/services/${CXONE_API_VERSION}/interactions/${encodeURIComponent(contactId)}/signal`;
 
-        // Prepare POST body: p2, p3, etc.
-        const bodyObj: { [key: string]: string } = {};
+        const bodyObj: { [key: string]: string } = { p1: action };
         otherParams.forEach((val, index) => {
             bodyObj[`p${index + 2}`] = val;
         });
@@ -245,21 +244,27 @@ export class CXoneApiClient {
         const decodedToken = this.decodeToken(tokens.id_token);
         const apiEndpointUrl = await this.getApiEndpoint(decodedToken.iss, decodedToken.tenantId);
 
-        const queryString = signalParams
-            .map((val, index) => `p${index + 1}=${encodeURIComponent(val)}`)
-            .join("&");
+        const url = `${apiEndpointUrl}/inContactAPI/services/${CXONE_API_VERSION}/interactions/${encodeURIComponent(contactId)}/signal`;
 
-        const url = `${apiEndpointUrl}/inContactAPI/services/${CXONE_API_VERSION}/interactions/${encodeURIComponent(contactId)}/signal?${queryString}`;
+        const bodyObj: { [key: string]: string } = {};
+        signalParams.forEach((val, index) => {
+            bodyObj[`p${index + 1}`] = val;
+        });
 
         if (this.api.log) {
-            this.api.log("info", `CXone API Client: Sending signal to URL: ${url}`);
+            this.api.log(
+                "info",
+                `CXone API Client: Sending signal to URL: ${url} with body: ${JSON.stringify(bodyObj)}`
+            );
         }
 
         const response = await fetch(url, {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${tokens.access_token}`
-            }
+                Authorization: `Bearer ${tokens.access_token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(bodyObj)
         });
 
         if (!response.ok) {

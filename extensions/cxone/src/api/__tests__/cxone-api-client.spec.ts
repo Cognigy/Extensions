@@ -85,13 +85,18 @@ describe("CXoneApiClient", () => {
             const status = await client.sendSignal("contact1", ["param1", "param2"]);
             expect(status).toBe(204);
             expect(fetchMock).toHaveBeenCalledWith(
-                expect.stringContaining("p1=param1&p2=param2"),
+                expect.stringContaining("/signal"),
                 expect.objectContaining({
                     method: "POST",
                     headers: expect.objectContaining({
                         Authorization: "Bearer token"
-                    })
+                    }),
+                    body: JSON.stringify({ p1: "param1", p2: "param2" })
                 })
+            );
+            expect(fetchMock).toHaveBeenCalledWith(
+                expect.not.stringContaining("?p1="),
+                expect.anything()
             );
         });
 
@@ -119,11 +124,15 @@ describe("CXoneApiClient", () => {
             const status = await client.sendSignalHandover("contact1", "End", ["param1"]);
             expect(status).toBe(204);
             expect(fetchMock).toHaveBeenCalledWith(
-                expect.stringContaining("p1=End"),
+                expect.stringContaining("/signal"),
                 expect.objectContaining({
                     method: "POST",
-                    body: JSON.stringify({ p2: "param1" })
+                    body: JSON.stringify({ p1: "End", p2: "param1" })
                 })
+            );
+            expect(fetchMock).toHaveBeenCalledWith(
+                expect.not.stringContaining("?p1="),
+                expect.anything()
             );
         });
     });

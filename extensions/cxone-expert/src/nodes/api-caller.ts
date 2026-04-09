@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getServerTokenSignature, expertApiCall } from "../helpers/expert-utils";
+import { getServerTokenSignature, expertApiCall } from "../helpers/expert-utils.js";
 
 export interface IExpertApiCallerParams extends INodeFunctionBaseParams {
     config: {
@@ -105,9 +105,9 @@ export const expertApiCaller = createNodeDescriptor({
         { type: "field", key: "storeKey" }
     ],
     appearance: { color: "#27C7FE" },
-    function: async ({ cognigy, config }: IExpertApiCallerParams) => {
-        const { api, context } = cognigy;
-        const { hostname, user, apiPath, method, body, connection, storeLocation, storeKey } = config;
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
+        const { api } = cognigy;
+        const { hostname, user, apiPath, method, body, connection, storeLocation, storeKey } = rawConfig as IExpertApiCallerParams["config"];
 
         if (!connection) throw new Error("Expert API Caller: Connection not found");
 
@@ -115,17 +115,17 @@ export const expertApiCaller = createNodeDescriptor({
         const signature = getServerTokenSignature(connection.serverKey, connection.serverSecret, user);
 
         const url = `https://${hostname}${apiPath.startsWith("/") ? apiPath : "/" + apiPath}`;
-        api.log("info", `Expert API Caller: Calling ${method} ${url}`);
+        api.log?.("info", `Expert API Caller: Calling ${method} ${url}`);
 
         try {
             const data = await expertApiCall(url, signature, method, body);
-            if (storeLocation === "context") api.addToContext(storeKey, data, "simple");
+            if (storeLocation === "context") api.addToContext?.(storeKey, data, "simple");
             // @ts-ignore
             else api.addToInput(storeKey, data);
-            api.log("info", `Expert API Caller: Stored response under ${storeLocation}.${storeKey}`);
+            api.log?.("info", `Expert API Caller: Stored response under ${storeLocation}.${storeKey}`);
         } catch (error: any) {
-            api.log("error", `Expert API Caller Error: ${error.message}`);
-            api.addToContext("ExpertApiCallerError", error.message, "simple");
+            api.log?.("error", `Expert API Caller Error: ${error.message}`);
+            api.addToContext?.("ExpertApiCallerError", error.message, "simple");
             throw error;
         }
     }

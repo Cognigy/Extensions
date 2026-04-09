@@ -1,5 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl } from "../helpers/cxone-utils";
+import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl } from "../helpers/cxone-utils.js";
 import * as jwt from "jsonwebtoken";
 
 export interface IApiCallerParams extends INodeFunctionBaseParams {
@@ -137,9 +137,9 @@ export const cxoneApiCaller = createNodeDescriptor({
         { type: "field", key: "storeKey" }
     ],
     appearance: { color: "#3694FD" },
-    function: async ({ cognigy, config }: IApiCallerParams) => {
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
         const { api, context } = cognigy;
-        const { environment, baseUrl, apiSuffix, method, headers, body, connection, storeLocation, storeKey } = config;
+        const { environment, baseUrl, apiSuffix, method, headers, body, connection, storeLocation, storeKey } = rawConfig as IApiCallerParams["config"];
 
         if (!connection) {
             throw new Error("cxoneApiCaller: CXone API Connection not found");
@@ -191,7 +191,7 @@ export const cxoneApiCaller = createNodeDescriptor({
 
         // Build final URL
         const url = `${apiEndpointUrl}/${apiSuffix.replace(/^\/+/, "")}`;
-        api.log("info", `cxoneApiCaller: Final Endpoint URL is: ${method} ${url}`);
+        api.log?.("info", `cxoneApiCaller: Final Endpoint URL is: ${method} ${url}`);
 
         // Add Authorization header
         const finalHeaders = { "Authorization": `Bearer ${tokens.access_token}`, "Content-Type": "application/json", ...parsedHeaders };
@@ -207,19 +207,18 @@ export const cxoneApiCaller = createNodeDescriptor({
             let data: any;
             try { data = JSON.parse(responseText); } catch { data = responseText; }
 
-            api.log("info", `cxoneApiCaller: Received API Payload: ${response.status}`);
+            api.log?.("info", `cxoneApiCaller: Received API Payload: ${response.status}`);
             if (storeLocation === "context") {
-                api.addToContext(storeKey, data, "simple");
+                api.addToContext?.(storeKey, data, "simple");
             } else {
                 // @ts-ignore
                 api.addToInput(storeKey, data);
             }
-            // api.output("", { status: response.status, data });
-            api.log("info", `cxoneApiCaller: Stored API Payload in ${storeLocation} under key ${storeKey}. Data: ${JSON.stringify(data)}`);
+            api.log?.("info", `cxoneApiCaller: Stored API Payload in ${storeLocation} under key ${storeKey}. Data: ${JSON.stringify(data)}`);
         } catch (error: any) {
-            api.log("error", `cxoneApiCaller Error Calling API: ${error.message}`);
-            api.addToContext("CXoneApiCallerError", error.message, "simple");
-            api.output("Something is not working. Please retry.", { error: error.message });
+            api.log?.("error", `cxoneApiCaller Error Calling API: ${error.message}`);
+            api.addToContext?.("CXoneApiCallerError", error.message, "simple");
+            api.output?.("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

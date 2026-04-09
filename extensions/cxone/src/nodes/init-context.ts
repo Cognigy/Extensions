@@ -54,27 +54,27 @@ export const setCxoneContextInit = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: IsetCxoneContextInitParams) => {
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
         const { api, input, context } = cognigy;
-        const { customerName, ivaParams, businessNumber, flowId } = config;
+        const { customerName, ivaParams, businessNumber, flowId } = rawConfig as IsetCxoneContextInitParams["config"];
 
         // Check if context data already exists - to not re-initialize
         if (context.data && context.data.contactId) {
-            api.log("info", "setCxoneContextInit: Context data already exists, skipping initialization.");
+            api.log?.("info", "setCxoneContextInit: Context data already exists, skipping initialization.");
             return;
         }
 
         try {
             const channel = input?.channel || '';
-            api.log("info", `setCxoneContextInit: Interaction channel: ${channel}`);
+            api.log?.("info", `setCxoneContextInit: Interaction channel: ${channel}`);
             const isVoice = channel.toLowerCase().includes('voice');
-            api.log("info", `setCxoneContextInit: isVoice: ${isVoice}`);
+            api.log?.("info", `setCxoneContextInit: isVoice: ${isVoice}`);
 
             if (isVoice) {
                 const payload = input?.data?.payload;
                 if (!payload) {
-                    api.log("error", "setCxoneContextInit: Voice input data not available");
-                    api.addToContext("setCxoneContextInit", "Voice input data not available", "simple");
+                    api.log?.("error", "setCxoneContextInit: Voice input data not available");
+                    api.addToContext?.("setCxoneContextInit", "Voice input data not available", "simple");
                     return;
                 }
                 const headers = payload?.sip?.headers || {};
@@ -105,7 +105,7 @@ export const setCxoneContextInit = createNodeDescriptor({
                                 }
                             }
                         } catch {
-                            api.log("warn", "setCxoneContextInit: Failed to parse X-CXone-Custom header");
+                            api.log?.("warn", "setCxoneContextInit: Failed to parse X-CXone-Custom header");
                         }
                         xCXoneCustom = parsed;
                     }
@@ -113,11 +113,11 @@ export const setCxoneContextInit = createNodeDescriptor({
                         try {
                             xCXoneExtended = JSON.parse(headers["X-CXone-Extended"]);
                         } catch {
-                            api.log("warn", "setCxoneContextInit: Failed to parse X-CXone-Extended header");
+                            api.log?.("warn", "setCxoneContextInit: Failed to parse X-CXone-Extended header");
                         }
                     }
-                } catch (err) {
-                    api.log("error", "setCxoneContextInit: Error parsing X-CXone headers: " + err.message);
+                } catch (err: any) {
+                    api.log?.("error", "setCxoneContextInit: Error parsing X-CXone headers: " + err.message);
                 }
 
                 // Merge everything into contextData
@@ -135,8 +135,8 @@ export const setCxoneContextInit = createNodeDescriptor({
                 }
 
                 // Add to context for voice
-                api.log("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(contextData)}`);
-                api.addToContext("data", contextData, "simple");
+                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(contextData)}`);
+                api.addToContext?.("data", contextData, "simple");
             } else if (input.data && input.data.contactId) {
                 // Add to context for chat
                 if (input.data.ivaParams) {
@@ -146,8 +146,8 @@ export const setCxoneContextInit = createNodeDescriptor({
                         input.data.ivaParams = {};
                     }
                 }
-                api.log("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(input.data)}`);
-                api.addToContext("data", input.data, "simple");
+                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(input.data)}`);
+                api.addToContext?.("data", input.data, "simple");
             } else {
                  const mData = {
                     "agentId": "",
@@ -169,12 +169,12 @@ export const setCxoneContextInit = createNodeDescriptor({
                 if (ivaParams && typeof ivaParams === "object" && Object.keys(ivaParams).length > 0) mData.ivaParams = ivaParams;
                 if (businessNumber) mData.ocpSessionId = `${businessNumber.trim()}:100000000000`;
 
-                api.log("info", `setCxoneContextInit: No valid data found in input for channel ${channel}. Initializing with data: ${JSON.stringify(mData)}`);
-                api.addToContext("data", mData, "simple");
+                api.log?.("info", `setCxoneContextInit: No valid data found in input for channel ${channel}. Initializing with data: ${JSON.stringify(mData)}`);
+                api.addToContext?.("data", mData, "simple");
             }
-        } catch (error) {
-            api.log("error", `setCxoneContextInit: Error setting context: ${error.message}`);
-            api.addToContext("setCxoneContextInit", `Error setting context: ${error.message}`, 'simple');
+        } catch (error: any) {
+            api.log?.("error", `setCxoneContextInit: Error setting context: ${error.message}`);
+            api.addToContext?.("setCxoneContextInit", `Error setting context: ${error.message}`, 'simple');
         }
     }
 });

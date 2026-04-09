@@ -1,8 +1,8 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import * as jwt from "jsonwebtoken";
-import getKnowledgeHubPayload from "../helpers/kh-payload";
-import formatKnowledgeHubResponse from "../helpers/kh-response";
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl } from "../helpers/cxone-utils";
+import getKnowledgeHubPayload from "../helpers/kh-payload.js";
+import formatKnowledgeHubResponse from "../helpers/kh-response.js";
+import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl } from "../helpers/cxone-utils.js";
 
 export interface IgetKnowledgeHubParams extends INodeFunctionBaseParams {
 	config: {
@@ -176,14 +176,14 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: IgetKnowledgeHubParams) => {
-        const { environment, baseUrl, contactId, bedrockKbId, businessNumber, userUtterance, filters, storeKey, storeLocation, connection } = config;
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
+        const { environment, baseUrl, contactId, bedrockKbId, businessNumber, userUtterance, filters, storeKey, storeLocation, connection } = rawConfig as IgetKnowledgeHubParams["config"];
         const { api, input, context } = cognigy;
-        api.log("info", `getKnowledgeHubInfo: Business Unit Number: ${businessNumber}`);
-        api.log("info", `getKnowledgeHubInfo: Contact ID: ${contactId}`);
-        api.log("info", `getKnowledgeHubInfo: Bedrock KB ID: ${bedrockKbId}`);
-        api.log("info", `getKnowledgeHubInfo: User Utterance: ${userUtterance}`);
-        api.log("info", `getKnowledgeHubInfo: Filters: ${JSON.stringify(filters)}`);
+        api.log?.("info", `getKnowledgeHubInfo: Business Unit Number: ${businessNumber}`);
+        api.log?.("info", `getKnowledgeHubInfo: Contact ID: ${contactId}`);
+        api.log?.("info", `getKnowledgeHubInfo: Bedrock KB ID: ${bedrockKbId}`);
+        api.log?.("info", `getKnowledgeHubInfo: User Utterance: ${userUtterance}`);
+        api.log?.("info", `getKnowledgeHubInfo: Filters: ${JSON.stringify(filters)}`);
 
         if (!connection) {
             throw new Error("getKnowledgeHubInfo: CXone API Connection not found");
@@ -191,13 +191,13 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
 
         let tokenIssuer = environment;
         if (environment === "other") {
-            tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
+            tokenIssuer = baseUrl!.trim().replace(/\/+$/, ''); // remove trailing slashes; baseUrl validated by field requirement
         }
 
-        api.log("info", `getKnowledgeHubInfo: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
+        api.log?.("info", `getKnowledgeHubInfo: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
         // get token URL based on environment
         const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
-        api.log("info", `getKnowledgeHubInfo: got token URL: ${tokenUrl}`);
+        api.log?.("info", `getKnowledgeHubInfo: got token URL: ${tokenUrl}`);
         const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
             tokenUrl: tokenUrl,
@@ -208,17 +208,16 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
 
         try {
             if (!bedrockKbId || !userUtterance || !contactId || !businessNumber) {
-                api.output("getKnowledgeHubInfo Error: Missing parameters", { error: "Missing parameters" });
+                api.output?.("getKnowledgeHubInfo Error: Missing parameters", { error: "Missing parameters" });
                 throw new Error("getKnowledgeHubInfo: Missing parameters");
             }
 
             const channel = input?.channel || '';
-            api.log("info", `getKnowledgeHubInfo: Interaction channel: ${channel}`);
+            api.log?.("info", `getKnowledgeHubInfo: Interaction channel: ${channel}`);
             const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
             const decodedToken: any = jwt.decode(tokens.id_token);
-            // api.log("info", `getKnowledgeHubInfo: decoded id token: ${JSON.stringify(decodedToken)}`);
             const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
-            api.log("info", `getKnowledgeHubInfo: got API endpoint URL: ${apiEndpointUrl}`);
+            api.log?.("info", `getKnowledgeHubInfo: got API endpoint URL: ${apiEndpointUrl}`);
 
             // Set contextRefId before call to KH
             if (!context.contextRefId) {
@@ -231,17 +230,16 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
                 context.contextRefId = khAnswer.contextRefId;
             }
             if (storeLocation === "context") {
-                api.addToContext(storeKey, khAnswer, "simple");
+                api.addToContext?.(storeKey, khAnswer, "simple");
             } else {
                 // @ts-ignore
                 api.addToInput(storeKey, khAnswer);
             }
-            api.log("info", `getKnowledgeHubInfo: Stored Knowledge Hub data in ${storeLocation} under key ${storeKey}. Data: ${JSON.stringify(khAnswer)}`);
-            // api.output("", khAnswer);
-        } catch (error) {
-            api.log("error", `getKnowledgeHubInfo: Error getting information from Knowledge Hub: ${error.message}`);
-            api.addToContext("getKnowledgeHubInfo", `Error getting information from Knowledge Hub for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output("Something is not working. Please retry.", { error: error.message });
+            api.log?.("info", `getKnowledgeHubInfo: Stored Knowledge Hub data in ${storeLocation} under key ${storeKey}. Data: ${JSON.stringify(khAnswer)}`);
+        } catch (error: any) {
+            api.log?.("error", `getKnowledgeHubInfo: Error getting information from Knowledge Hub: ${error.message}`);
+            api.addToContext?.("getKnowledgeHubInfo", `Error getting information from Knowledge Hub for contactId: ${contactId}; error: ${error.message}`, 'simple');
+            api.output?.("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

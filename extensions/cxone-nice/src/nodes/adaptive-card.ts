@@ -52,9 +52,9 @@ export const adaptiveCard = createNodeDescriptor({
     appearance: {
         color: "#3694fd"
     },
-    function: async ({ cognigy, config }: IgetAdaptiveCardParams) => {
-        const { voiceMessage, cardCode } = config;
-        const { api, input, context } = cognigy;
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
+        const { voiceMessage, cardCode } = rawConfig as IgetAdaptiveCardParams["config"];
+        const { api, input } = cognigy;
 
         interface IAdaptiveCard {
             $schema?: string;
@@ -66,7 +66,7 @@ export const adaptiveCard = createNodeDescriptor({
 
         try {
             const oChannel = input?.channel || '';
-            api.log("info", `adaptiveCard: Interaction channel: ${oChannel}`);
+            api.log?.("info", `adaptiveCard: Interaction channel: ${oChannel}`);
 
             const lc = oChannel.toLowerCase().trim();
 
@@ -79,7 +79,7 @@ export const adaptiveCard = createNodeDescriptor({
                 lc.includes("test");
             // Otherwise it is Guide Chat
             const isGuideChat = !isVoice && !isCognigy;
-            api.log("info", `adaptiveCard: isVoice: ${isVoice}, isCognigy: ${isCognigy}, isGuideChat: ${isGuideChat}`);
+            api.log?.("info", `adaptiveCard: isVoice: ${isVoice}, isCognigy: ${isCognigy}, isGuideChat: ${isGuideChat}`);
 
             let outBody: string;
             let cardObj: IAdaptiveCard;
@@ -90,10 +90,10 @@ export const adaptiveCard = createNodeDescriptor({
             }
 
             let outData = {};
-            outBody = null;
             if (isVoice) {
                outBody = voiceMessage;
             } else if (isCognigy) { // Cognigy Webchat
+                outBody = '';
                 outData = {
                     "type": "adaptiveCard",
                     "_cognigy": {
@@ -106,6 +106,7 @@ export const adaptiveCard = createNodeDescriptor({
                     }
                 };
             } else { // NiCE channel for Guide Chat
+                outBody = '';
                 outData = {
                     _cognigy: {
                         _niceCXOne: {
@@ -124,10 +125,10 @@ export const adaptiveCard = createNodeDescriptor({
                     }
                 };
             }
-            api.output(outBody, outData);
-            api.log("info", `adaptiveCard: Outputed ${outBody} with data: ${JSON.stringify(outData)}.`);
+            api.output?.(outBody, outData);
+            api.log?.("info", `adaptiveCard: Outputed ${outBody} with data: ${JSON.stringify(outData)}.`);
         } catch (error) {
-            api.log("error", `adaptiveCard: Error outputing adaptive card; Error: ${error.message}.`);
+            api.log?.("error", `adaptiveCard: Error outputing adaptive card; Error: ${(error as Error).message}.`);
             throw error;
         }
     }

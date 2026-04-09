@@ -1,6 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import * as jwt from "jsonwebtoken";
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignal } from "../helpers/cxone-utils";
+import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignal } from "../helpers/cxone-utils.js";
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     config: {
@@ -95,18 +95,18 @@ export const sendSignalToCXone = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: IgetSendSignalParams) => {
-        const { environment, baseUrl, contactId, signalParams, connection } = config;
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
+        const { environment, baseUrl, contactId, signalParams, connection } = rawConfig as IgetSendSignalParams["config"];
         const { api, input, context } = cognigy;
         let tokenIssuer = environment;
         if (environment === "other") {
             tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
         }
 
-        api.log("info", `sendSignalToCXone: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
+        api.log?.("info", `sendSignalToCXone: Contact ID: ${contactId}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
         // get token URL based on environment
         const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
-        api.log("info", `sendSignalToCXone: got token URL: ${tokenUrl}`);
+        api.log?.("info", `sendSignalToCXone: got token URL: ${tokenUrl}`);
         const basicToken = Buffer.from(`${connection.clientId}:${connection.clientSecret}`).toString('base64');
         const cxOneConfig = {
             tokenUrl: tokenUrl,
@@ -117,18 +117,17 @@ export const sendSignalToCXone = createNodeDescriptor({
 
         try {
             const channel = input?.channel || '';
-            api.log("info", `sendSignalToCXone: Interaction channel: ${channel}`);
+            api.log?.("info", `sendSignalToCXone: Interaction channel: ${channel}`);
             const isVoice = channel.toLowerCase().includes('voice');
-            api.log("info", `sendSignalToCXone: isVoice: ${isVoice}`);
+            api.log?.("info", `sendSignalToCXone: isVoice: ${isVoice}`);
             if (contactId && isVoice) {
                 const tokens = await getToken(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
                 const decodedToken: any = jwt.decode(tokens.id_token);
-                // api.log("info", `sendSignalToCXone: decoded id token: ${JSON.stringify(decodedToken)}`);
                 const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
-                api.log("info", `sendSignalToCXone: got API endpoint URL: ${apiEndpointUrl}`);
+                api.log?.("info", `sendSignalToCXone: got API endpoint URL: ${apiEndpointUrl}`);
                 const signalStatus = await sendSignal(api, apiEndpointUrl, tokens.access_token, contactId, signalParams || []);
-                api.log("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);
-                api.addToContext("CXoneSendSignal", `CXone was Signaled for contactId: ${contactId}, with parameters: ${JSON.stringify(signalParams)}`, 'simple');
+                api.log?.("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);
+                api.addToContext?.("CXoneSendSignal", `CXone was Signaled for contactId: ${contactId}, with parameters: ${JSON.stringify(signalParams)}`, 'simple');
             }
 
             // data for CXone chat channel - to end conversation or escalate to agent
@@ -138,11 +137,11 @@ export const sendSignalToCXone = createNodeDescriptor({
             if (Array.isArray(signalParams) && signalParams.length) {
                 data.Params = signalParams.join('|');
             }
-            api.output(null, data);
-        } catch (error) {
-            api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);
-            api.addToContext("CXoneSendSignal", `Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
-            api.output("Something is not working. Please retry.", { error: error.message });
+            api.output?.("", data);
+        } catch (error: any) {
+            api.log?.("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`);
+            api.addToContext?.("CXoneSendSignal", `Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${error.message}`, 'simple');
+            api.output?.("Something is not working. Please retry.", { error: error.message });
             throw error;
         }
     }

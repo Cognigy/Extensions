@@ -10,21 +10,19 @@
     "outDir": "build",
     "sourceMap": true,
     "moduleResolution": "node",
-    "watch": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "noImplicitReturns": true
   },
   "exclude": [
     "node_modules",
     "build",
     "./vscode",
-    "scripts",
+    "scripts"
   ],
   "include": [
     "../../common/cognigy.d.ts",
-    "src/**/*",
-    "tsconfig.json"
+    "src/**/*"
   ]
 }

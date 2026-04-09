@@ -114,7 +114,7 @@ export const getCxoneConfigUrl = async (api: any, context: any, issuer: string, 
 export const sendSignalHandover = async (api: any, apiEndpointUrl: string, token: string, contactId: string, action: string, otherParms: any[] = []) => {
     const url = `${apiEndpointUrl}/inContactAPI/services/v30.0/interactions/${encodeURIComponent(contactId)}/signal?p1=${encodeURIComponent(action)}`;
     // Prepare POST body: p2, p3, etc., raw strings
-    const bodyObj = {};
+    const bodyObj: Record<string, any> = {};
     otherParms.forEach((val, index) => {
         bodyObj[`p${index + 2}`] = val;
     });
@@ -156,11 +156,17 @@ export const sendSignal = async (api: any, apiEndpointUrl: string, token: string
 // Function to post transcript to TMS
 export const postToTMS = async (api: any, apiEndpointUrl: string, token: string, tmsPayload: any) => {
     const url = `${apiEndpointUrl}/aai/tms/transcripts/post`;
-    api.log("info", `CXone -> postToTMS: About to post to URL: ${url}`);
     const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-    const response = await fetch(url, { method: "POST", headers, body: JSON.stringify(tmsPayload) });
+    const bodyStr = JSON.stringify(tmsPayload);
+    api.log("info", `CXone -> postToTMS: POST ${url}`);
+    api.log("info", `CXone -> postToTMS: Headers: ${JSON.stringify({ ...headers, Authorization: "Bearer ***" })}`);
+    api.log("info", `CXone -> postToTMS: Payload: ${bodyStr}`);
+    const response = await fetch(url, { method: "POST", headers, body: bodyStr });
+    api.log("info", `CXone -> postToTMS: Response status: ${response.status} ${response.statusText}`);
     if (!response.ok) {
-        throw new Error(`CXone -> postToTMS: Error posting to TMS: ${response.status}: ${response.statusText}`);
+        const responseBody = await response.text();
+        api.log("error", `CXone -> postToTMS: Response body: ${responseBody}`);
+        throw new Error(`CXone -> postToTMS: Error posting to TMS: ${response.status}: ${response.statusText} | Body: ${responseBody}`);
     }
     return response.status;
 };

@@ -8,6 +8,7 @@ export interface ICaptureAdaptiveCardAnswerParams extends INodeFunctionBaseParam
         webchatPayloadPath: string;
         storeLocation: string;
         storeKey: string;
+        voiceTextSubKey: string;
     };
 }
 
@@ -90,7 +91,7 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
         },
         {
             key: "storeLocation",
-            label: "Output Store Location",
+            label: "User Answer Store Location",
             type: "select",
             description: "Where to store the answer - Context (persists across turns) or Input (current turn only).",
             params: {
@@ -104,13 +105,23 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
         },
         {
             key: "storeKey",
-            label: "Output Store Key",
+            label: "User Answer Store Key",
             type: "cognigyText",
-            description: "Dot-notation path to write the answer to (e.g. data.adaptiveCardAnswer). For Voice/SMS/WhatsApp the text is stored at this path + .text.",
+            description: "Dot-notation path to store the answer (e.g. data.adaptiveCardAnswer).",
             params: {
                 required: true
             },
             defaultValue: "data.adaptiveCardAnswer"
+        },
+        {
+            key: "voiceTextSubKey",
+            label: "Voice/SMS/WhatsApp Answer Store Sub-key",
+            type: "cognigyText",
+            description: "Sub-key appended to the store path for Voice/SMS/WhatsApp text answers (e.g. 'text' stores at data.adaptiveCardAnswer.text).",
+            params: {
+                required: true
+            },
+            defaultValue: "text"
         }
     ],
     sections: [],
@@ -118,43 +129,50 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
         { type: "field", key: "webchatPayloadPath" },
         { type: "field", key: "payloadPath" },
         { type: "field", key: "storeLocation" },
-        { type: "field", key: "storeKey" }
+        { type: "field", key: "storeKey" },
+        { type: "field", key: "voiceTextSubKey" }
     ],
     appearance: {
         color: "#444791"
     },
     function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
-        const { payloadPath, webchatPayloadPath, storeLocation, storeKey } = rawConfig as ICaptureAdaptiveCardAnswerParams["config"];
+        const { payloadPath, webchatPayloadPath, storeLocation, storeKey, voiceTextSubKey } = rawConfig as ICaptureAdaptiveCardAnswerParams["config"];
         const { api, input, context } = cognigy;
 
         try {
             const { isVoice, isCognigy, isSms } = detectChannel(input, context);
 
             // Read answer from input based on channel
-            const raw = (isVoice || isSms)
-                ? (input as any)?.text                       // Voice / SMS: spoken or typed answer
+            const cardRaw = (isVoice || isSms)
+                ? null
                 : isCognigy
                     ? resolvePath(webchatPayloadPath, cognigy)  // Cognigy Webchat
                     : resolvePath(payloadPath, cognigy);        // Guide Chat (CXone)
 
-            api.log?.("info", `captureAdaptiveCardAnswer: raw = ${JSON.stringify(raw)}, isCognigy=${isCognigy}`);
+            // If no card submission found, fall back to input.text (user typed instead of clicking)
+            const isTextFallback = !isVoice && !isSms && (cardRaw == null || cardRaw === "");
+            const raw = (isVoice || isSms || isTextFallback)
+                ? (input as any)?.text
+                : cardRaw;
+
+            api.log?.("info", `captureAdaptiveCardAnswer: raw = ${JSON.stringify(raw)}, isCognigy=${isCognigy}, isTextFallback=${isTextFallback}`);
 
             if (raw == null || raw === "") {
-                api.log?.("warn", `captureAdaptiveCardAnswer: no answer found at ${isCognigy ? webchatPayloadPath : payloadPath}.`);
+                api.log?.("warn", `captureAdaptiveCardAnswer: no answer found.`);
                 return;
             }
 
             let answer: any;
             let effectiveStoreKey = storeKey;
-            if (isVoice || isSms) {
-                // Voice/SMS: plain text — wrap in object and store at storeKey.text
+            if (isVoice || isSms || isTextFallback) {
+                // Plain text answer — store at storeKey.voiceTextSubKey
                 answer = raw;
-                effectiveStoreKey = storeKey + ".text";
+                effectiveStoreKey = storeKey + "." + voiceTextSubKey;
             } else if (isCognigy) {
-                // Cognigy Webchat: already a plain object
+                // Cognigy Webchat card submission: already a plain object
                 answer = raw;
             } else {
-                // Guide Chat: may be a JSON string; extract .acData if present
+                // Guide Chat card submission: may be a JSON string; extract .acData if present
                 let parsed = raw;
                 if (typeof raw === "string") {
                     try { parsed = JSON.parse(raw); } catch { parsed = raw; }

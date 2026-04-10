@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc:*)",
-      "Bash(npx tslint:*)"
+      "Bash(npx tslint:*)",
+      "Bash(ls \"c:\\\\Projects\\\\Cognigy\\\\Extensions\\\\extensions\\\\cxone-adaptive-card\"/*.tar.gz)"
     ]
   }
 }

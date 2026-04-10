@@ -1,18 +1,19 @@
 {
-  "name": "nice-channel",
-  "version": "1.0.1",
-  "description": "Seamlessly include NiCE channel",
+  "name": "adaptive-card",
+  "version": "1.0.0",
+  "description": "Show and capture Adaptive Cards across channels",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
-    "zip": "tar cfz nice-channel.tar.gz build/* package.json package-lock.json README.md icon.png",
+    "zip": "tar cfz adaptive-card.tar.gz build/* package.json package-lock.json README.md icon.png",
     "build": "npm run transpile && npm run lint && npm run zip",
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "NiCE",
-    "NiCE Channel",
-    "Adaptive Card"
+    "Adaptive Card",
+    "CXone",
+    "Guide Chat",
+    "Cognigy Webchat"
   ],
   "author": "NiCE Alexei",
   "license": "NiCE",

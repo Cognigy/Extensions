@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"from PIL import Image; img = Image.open\\('c:/Projects/Cognigy/Extensions/extensions/cxone-nice/icon.png'\\); print\\(img.size, img.mode\\)\")",
+      "Bash(identify \"c:/Projects/Cognigy/Extensions/extensions/cxone-nice/icon.png\")",
+      "Bash(python -c \"from PIL import Image; img = Image.open\\('c:/Projects/Cognigy/Extensions/extensions/cxone-nice/icon.png'\\); print\\(img.size, img.mode\\)\")",
+      "Bash(magick --version)",
+      "Bash(node -e ':*)"
+    ]
+  }
+}

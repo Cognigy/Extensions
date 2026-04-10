@@ -75,7 +75,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                         isParamsMissing = true;
                     }
                 } catch (err) {
-                    api.log("error", "setNiCEviewContextInit: Error parsing X-NiCEview headers: " + err.message);
+                    api.log("error", "setNiCEviewContextInit: Error parsing X-NiCEview headers: " + (err as Error).message);
                 }
 
                 // Merge everything into contextData
@@ -96,7 +96,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                             try {
                                 ivaParams = JSON.parse(niceViewData.customIvaJson);
                             } catch (err) {
-                                api.log("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${err.message}`);
+                                api.log("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${(err as Error).message}`);
                                 ivaParams = {};
                             }
 
@@ -112,7 +112,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                             contextData.ocpSessionId = niceViewData.ocpSessionId || contextData.ocpSessionId;
                             contextData.voiceSkillId = niceViewData.voiceSkillId || contextData.voiceSkillId;
                         } catch (error) {
-                            api.log("error", `setNiCEviewContextInit: Error getting data from NiCEview service: ${error.message}`);
+                            api.log("error", `setNiCEviewContextInit: Error getting data from NiCEview service: ${(error as Error).message}`);
                         }
                     }
                 }
@@ -143,8 +143,8 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                 api.addToContext("SetNiCEviewContextInit", `No valid data found in input for channel ${channel}`, 'simple');
             }
         } catch (error) {
-            api.log("error", `setNiCEviewContextInit: Error setting context: ${error.message}`);
-            api.addToContext("SetNiCEviewContextInit", `Error setting context: ${error.message}`, 'simple');
+            api.log("error", `setNiCEviewContextInit: Error setting context: ${(error as Error).message}`);
+            api.addToContext("SetNiCEviewContextInit", `Error setting context: ${(error as Error).message}`, 'simple');
         }
     }
 });

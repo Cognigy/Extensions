@@ -3,7 +3,16 @@
     "allow": [
       "Bash(npx tsc:*)",
       "Bash(npx tslint:*)",
-      "Bash(ls \"c:\\\\Projects\\\\Cognigy\\\\Extensions\\\\extensions\\\\cxone-adaptive-card\"/*.tar.gz)"
+      "Bash(ls \"c:\\\\Projects\\\\Cognigy\\\\Extensions\\\\extensions\\\\cxone-adaptive-card\"/*.tar.gz)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(python -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(node -e \"require\\('jimp'\\); console.log\\('jimp ok'\\)\")",
+      "Bash(magick -version)",
+      "Bash(pip install:*)",
+      "Bash(py -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(py -c ':*)",
+      "Bash(node_modules/.bin/tsc --noEmit)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "adaptive-card",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Show and capture Adaptive Cards across channels",
   "main": "build/module.js",
   "scripts": {
@@ -13,17 +13,20 @@
     "Adaptive Card",
     "CXone",
     "Guide Chat",
-    "Cognigy Webchat"
+    "Cognigy Webchat",
+    "Chat",
+    "Voice",
+    "SMS",
+    "WhatsApp",
+    "WebRtc"
   ],
   "author": "NiCE Alexei",
   "license": "NiCE",
   "dependencies": {
     "@cognigy/extension-tools": "^0.14.0",
-    "jsonwebtoken": "^9.0.2",
     "tslint": "^6.1.3"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
     "typescript": "^5.9.2"
   }
 }

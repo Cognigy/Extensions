@@ -63,7 +63,7 @@ export const adaptiveCard = createNodeDescriptor({
         { type: "field", key: "waitForInput" }
     ],
     appearance: {
-        color: "#444791"
+        color: "#445C98"
     },
     function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
         const { voiceMessage, cardCode, waitForInput } = rawConfig as IgetAdaptiveCardParams["config"];

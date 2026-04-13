@@ -111,6 +111,11 @@ describe("sendCopilotStatusNode", () => {
 				.resolves.not.toThrow();
 
 			expect(mock.api.log).toHaveBeenCalledWith("error", expect.stringContaining("API unavailable"));
+			expect(mock.api.addToContext).toHaveBeenCalledWith(
+				"sendCopilotStatus",
+				expect.objectContaining({ status: "error", error: "API unavailable" }),
+				"simple"
+			);
 		});
 	});
 });

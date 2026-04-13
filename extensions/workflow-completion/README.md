@@ -12,9 +12,9 @@ This Cognigy extension provides workflow completion tracking capabilities for yo
 
 2. Upload the generated `workflow-completion-*.tar.gz` file to your Cognigy.AI instance via **Manage > Extensions > Upload Extension**
 
-## Workflow Completion Node
+## Send Status to CXone Copilot Node
 
-A terminal node that marks workflow completion status and captures session metrics.
+This node appears in the Cognigy node palette as **"Send Status to CXone Copilot"** (type `sendCopilotStatus`). It is a terminal node that marks workflow completion status and captures session metrics.
 
 ### Features
 - Simple dropdown to mark workflow as "Success" or "Failure"
@@ -32,10 +32,10 @@ A terminal node that marks workflow completion status and captures session metri
   - `Failure`: Marks the workflow as failed or incomplete
 
 #### Additional Data (Optional)
-- **Additional Data** (`data`): Optional JSON field to include custom data in the output
-  - Accepts valid JSON input
-  - Only included in output when valid data is provided
-  - Invalid JSON will be logged as a warning and ignored
+- **Additional Data** (`data`): Optional field to include custom data in the output (typically JSON)
+  - Value is passed through as provided by the flow
+  - Only included in the output when non-empty data is provided
+  - The node does not validate or parse this field; ensure it contains valid JSON if required by downstream consumers
 
 ### Output
 
@@ -47,16 +47,15 @@ The node outputs data in the following structure:
   "metrics": {
     // Session metrics when available:
     // - sessionId: Unique session identifier
-    // - conversationDuration: Time spent in conversation (ms)
-    // - inputCount: Number of user inputs
-    // - responseCount: Number of bot responses
-    // - stepCount: Number of flow steps executed
+    // - channel: The channel through which the conversation took place
+    // - language: The language of the session
+    // - completionTimestamp: ISO timestamp when the workflow completed
     // Empty object {} if metrics are not accessible
   },
   "data": {
-    // Optional: Custom JSON data when provided
-    // Only present if valid JSON data was specified
-    // Can contain any valid JSON structure
+    // Optional: Custom data when provided
+    // Only present if additional data was specified
+    // Contains whatever structure was supplied (typically JSON)
   }
 }
 ```

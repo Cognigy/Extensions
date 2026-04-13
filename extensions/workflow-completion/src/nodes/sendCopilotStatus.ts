@@ -63,6 +63,7 @@ export const sendCopilotStatusNode = createNodeDescriptor({
 			api.log("debug", `Status sent to CXone Copilot: ${config.status}`);
 		} catch (error) {
 			api.log("error", `Failed to send status to CXone Copilot: ${(error as Error).message}`);
+			api.addToContext("sendCopilotStatus", { status: "error", error: (error as Error).message }, "simple");
 		}
 	}
 });

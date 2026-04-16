@@ -117,7 +117,21 @@ export const handoverToCXone = createNodeDescriptor({
             // Prepare optional parameters
             let finalParams: string[] = [];
             if (Array.isArray(optionalParamsObject) && optionalParamsObject.length > 0) {
-                finalParams = [JSON.stringify(optionalParamsObject)];
+                finalParams = optionalParamsObject.map((p: any) =>
+                    typeof p === "string" ? p : JSON.stringify(p)
+                );
+            } else if (typeof optionalParamsObject === "string") {
+                // Handle case where Cognigy json field delivers a raw string instead of parsed array
+                try {
+                    const parsed = JSON.parse(optionalParamsObject);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        finalParams = parsed.map((p: any) =>
+                            typeof p === "string" ? p : JSON.stringify(p)
+                        );
+                    }
+                } catch (e) {
+                    api.log("warn", `handoverToCXone: Could not parse optionalParamsObject as JSON: ${optionalParamsObject}`);
+                }
             }
             api.log("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
 

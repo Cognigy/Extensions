@@ -83,7 +83,9 @@ describe("handoverToCXone node", () => {
         expect(mockApiClient.sendSignalHandover).toHaveBeenCalledWith(
             baseConfig.spawnedContactId,
             baseConfig.action,
-            [JSON.stringify(baseConfig.optionalParamsObject)]
+            baseConfig.optionalParamsObject.map((p: any) =>
+                typeof p === "string" ? p : JSON.stringify(p)
+            )
         );
         expect(cognigy.api.addToContext).toHaveBeenCalledWith(
             "CXoneHandover",

@@ -6,6 +6,7 @@ export interface ICaptureAdaptiveCardAnswerParams extends INodeFunctionBaseParam
     config: {
         payloadPath: string;
         webchatPayloadPath: string;
+        testChatPayloadPath: string;
         storeLocation: string;
         storeKey: string;
         voiceTextSubKey: string;
@@ -80,6 +81,16 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
             defaultValue: "input.data.adaptivecards"
         },
         {
+            key: "testChatPayloadPath",
+            label: "Cognigy Testchat Answer Path",
+            type: "cognigyText",
+            description: "Dot-notation path to the answer in Cognigy Testchat.",
+            params: {
+                required: true
+            },
+            defaultValue: "input.data.request.value"
+        },
+        {
             key: "payloadPath",
             label: "Guide Chat Answer Path",
             type: "cognigyText",
@@ -127,6 +138,7 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
     sections: [],
     form: [
         { type: "field", key: "webchatPayloadPath" },
+        { type: "field", key: "testChatPayloadPath" },
         { type: "field", key: "payloadPath" },
         { type: "field", key: "storeLocation" },
         { type: "field", key: "storeKey" },
@@ -136,26 +148,35 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
         color: "#445C98"
     },
     function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
-        const { payloadPath, webchatPayloadPath, storeLocation, storeKey, voiceTextSubKey } = rawConfig as ICaptureAdaptiveCardAnswerParams["config"];
+        const { payloadPath, webchatPayloadPath, testChatPayloadPath, storeLocation, storeKey, voiceTextSubKey } = rawConfig as ICaptureAdaptiveCardAnswerParams["config"];
         const { api, input, context } = cognigy;
 
         try {
             const { isVoice, isCognigy, isSms } = detectChannel(input, context);
 
             // Read answer from input based on channel
-            const cardRaw = (isVoice || isSms)
-                ? null
-                : isCognigy
-                    ? resolvePath(webchatPayloadPath, cognigy)  // Cognigy Webchat
-                    : resolvePath(payloadPath, cognigy);        // Guide Chat (CXone)
+            let cardRaw: any;
+            if (isVoice || isSms) {
+                cardRaw = null;
+            } else if (isCognigy) {
+                // Cognigy Webchat: try primary path, fall back to testChatPayloadPath if empty
+                const primary = resolvePath(webchatPayloadPath, cognigy);
+                if (primary) {
+                    cardRaw = primary;
+                } else {
+                    cardRaw = resolvePath(testChatPayloadPath, cognigy);
+                    api.log?.("info", `captureAdaptiveCardAnswer: object not found at webchatPayloadPath, using testChatPayloadPath.`);
+                }
+            } else {
+                cardRaw = resolvePath(payloadPath, cognigy);   // Guide Chat (CXone)
+            }
 
-            // If no card submission found, fall back to input.text (user typed instead of clicking)
-            const isTextFallback = !isVoice && !isSms && (cardRaw == null || cardRaw === "");
-            const raw = (isVoice || isSms || isTextFallback)
+            // If no card submission found, fall back to input.text (user typed instead of clicking)           
+            const raw = (isVoice || isSms || !cardRaw)
                 ? (input as any)?.text
                 : cardRaw;
 
-            api.log?.("info", `captureAdaptiveCardAnswer: raw = ${JSON.stringify(raw)}, isCognigy=${isCognigy}, isTextFallback=${isTextFallback}`);
+            api.log?.("info", `captureAdaptiveCardAnswer: raw = ${JSON.stringify(raw)}, isCognigy=${isCognigy}, isTextFallback=${!cardRaw}`);
 
             if (raw == null || raw === "") {
                 api.log?.("warn", `captureAdaptiveCardAnswer: no answer found.`);
@@ -164,7 +185,7 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
 
             let answer: any;
             let effectiveStoreKey = storeKey;
-            if (isVoice || isSms || isTextFallback) {
+            if (isVoice || isSms || !cardRaw) {
                 // Plain text answer — store at storeKey.voiceTextSubKey
                 answer = raw;
                 effectiveStoreKey = storeKey + "." + voiceTextSubKey;

@@ -5,6 +5,10 @@ import { CXoneApiClient } from "../api/cxone-api-client";
 import { isVoiceChannel } from "../helpers/channel-utils";
 import { SENTINEL_CONTACT_ID, HANDOVER_DELAY_MS, validateConnection, normalizeEnvironmentUrl } from "../config";
 import { createErrorMessage } from "../helpers/errors";
+import { prepareParams } from "../helpers/params";
+
+const ON_SUCCESS_CHILD = "onSuccessHandover";
+const ON_ERROR_CHILD = "onErrorHandover";
 
 export const handoverToCXone = createNodeDescriptor({
     type: "handoverToCXone",
@@ -88,20 +92,40 @@ export const handoverToCXone = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: HandoverNodeParams) => {
+    dependencies: {
+        children: [ON_SUCCESS_CHILD, ON_ERROR_CHILD]
+    },
+    function: async ({ cognigy, config, childConfigs }: HandoverNodeParams) => {
         const { action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
         const { api, input, context } = cognigy;
+
+        const successChild = childConfigs?.find(c => c.type === ON_SUCCESS_CHILD);
+        const errorChild = childConfigs?.find(c => c.type === ON_ERROR_CHILD);
+
+        const routeTo = (child?: { id: string }) => {
+            if (child && typeof api.setNextNode === "function") {
+                api.setNextNode(child.id);
+            }
+        };
 
         // Validate connection
         const connectionValidation = validateConnection(connection);
         if (!connectionValidation.valid) {
-            throw new Error(createErrorMessage("handoverToCXone", "Validation", connectionValidation.error || "Invalid connection"));
+            const msg = connectionValidation.error || "Invalid connection";
+            api.log("error", createErrorMessage("handoverToCXone", "Validation", msg));
+            api.addToContext("CXoneHandover", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) { routeTo(errorChild); return; }
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", msg));
         }
 
         // Validate action
         if (!action || (action !== "End" && action !== "Escalate")) {
-            api.output("handoverToCXone Error: Missing or invalid Action parameter", { error: "Missing or invalid Action parameter" });
-            throw new Error(createErrorMessage("handoverToCXone", "Validation", "Missing or invalid Action parameter"));
+            const msg = "Missing or invalid Action parameter";
+            api.log("error", createErrorMessage("handoverToCXone", "Validation", msg));
+            api.addToContext("CXoneHandover", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) { routeTo(errorChild); return; }
+            api.output("handoverToCXone Error: Missing or invalid Action parameter", { error: msg });
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", msg));
         }
 
         const tokenIssuer = normalizeEnvironmentUrl(connection.environmentUrl);
@@ -115,24 +139,7 @@ export const handoverToCXone = createNodeDescriptor({
             api.log("info", `handoverToCXone: isVoice: ${isVoice}`);
 
             // Prepare optional parameters
-            let finalParams: string[] = [];
-            if (Array.isArray(optionalParamsObject) && optionalParamsObject.length > 0) {
-                finalParams = optionalParamsObject.map((p: any) =>
-                    typeof p === "string" ? p : JSON.stringify(p)
-                );
-            } else if (typeof optionalParamsObject === "string") {
-                // Handle case where Cognigy json field delivers a raw string instead of parsed array
-                try {
-                    const parsed = JSON.parse(optionalParamsObject);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        finalParams = parsed.map((p: any) =>
-                            typeof p === "string" ? p : JSON.stringify(p)
-                        );
-                    }
-                } catch (e) {
-                    api.log("warn", `handoverToCXone: Could not parse optionalParamsObject as JSON: ${optionalParamsObject}`);
-                }
-            }
+            const finalParams = prepareParams(optionalParamsObject, api.log, "handoverToCXone");
             api.log("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
 
             // Handle voice channel handover
@@ -160,7 +167,12 @@ export const handoverToCXone = createNodeDescriptor({
                     finalParams
                 );
                 api.log("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
-                api.addToContext("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, "simple");
+                api.addToContext("CXoneHandover", {
+                    success: true,
+                    action,
+                    contactId: spawnedContactId || contactId,
+                    status: signalStatus
+                }, "simple");
             }
 
             // Output the handover action to NiCE channel for CXone Guide Chat
@@ -205,11 +217,25 @@ export const handoverToCXone = createNodeDescriptor({
 
             // Wait before returning control to avoid unwanted messages during handover
             await new Promise(resolve => setTimeout(resolve, HANDOVER_DELAY_MS));
+
+            routeTo(successChild);
             return;
         } catch (error: any) {
             const errorMessage = error.message || "Unknown error";
             api.log("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${errorMessage}`);
-            api.addToContext("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${errorMessage}`, "simple");
+            api.addToContext("CXoneHandover", {
+                success: false,
+                action,
+                contactId: spawnedContactId || contactId,
+                error: errorMessage
+            }, "simple");
+
+            if (errorChild) {
+                // Best-practices fallback: route to On Failure child instead of throwing
+                routeTo(errorChild);
+                return;
+            }
+
             api.output("Something is not working. Please retry.", { error: errorMessage });
             throw error;
         }

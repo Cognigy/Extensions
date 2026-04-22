@@ -89,7 +89,7 @@ describe("handoverToCXone node", () => {
         );
         expect(cognigy.api.addToContext).toHaveBeenCalledWith(
             "CXoneHandover",
-            expect.stringContaining("Signaled CXone with:"),
+            expect.objectContaining({ success: true, action: baseConfig.action }),
             "simple"
         );
     });
@@ -174,6 +174,60 @@ describe("handoverToCXone node", () => {
         expect(mockApiClient.sendSignalHandover).toHaveBeenCalled();
     });
 
+    it("routes to onSuccessHandover child when sendSignalHandover succeeds", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: baseConfig as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessHandover", config: {} },
+                { id: "error-id", type: "onErrorHandover", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("success-id");
+    });
+
+    it("routes to onErrorHandover child instead of throwing when sendSignalHandover fails", async () => {
+        (mockApiClient.sendSignalHandover as jest.Mock).mockRejectedValueOnce(new Error("signal error"));
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: baseConfig as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessHandover", config: {} },
+                { id: "error-id", type: "onErrorHandover", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneHandover",
+            expect.objectContaining({ success: false, error: "signal error" }),
+            "simple"
+        );
+    });
+
+    it("routes to onErrorHandover child on validation failure", async () => {
+        const cognigy = createMockCognigy();
+
+        await handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, connection: undefined } as any,
+            childConfigs: [
+                { id: "error-id", type: "onErrorHandover", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+    });
+
     it("handles errors from sendSignalHandover", async () => {
         (mockApiClient.sendSignalHandover as jest.Mock).mockRejectedValueOnce(
             new Error("signal error")
@@ -195,7 +249,7 @@ describe("handoverToCXone node", () => {
         );
         expect(cognigy.api.addToContext).toHaveBeenCalledWith(
             "CXoneHandover",
-            expect.stringContaining("Error signaling CXone"),
+            expect.objectContaining({ success: false, error: "signal error" }),
             "simple"
         );
         expect(cognigy.api.output).toHaveBeenCalledWith(

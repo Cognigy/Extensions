@@ -49,7 +49,7 @@ describe("sendSignalToCXone node", () => {
         );
         expect(cognigy.api.addToContext).toHaveBeenCalledWith(
             "CXoneSendSignal",
-            expect.stringContaining("CXone was Signaled"),
+            expect.objectContaining({ success: true, contactId: baseConfig.contactId }),
             "simple"
         );
         // Output for chat channel is always emitted
@@ -92,6 +92,64 @@ describe("sendSignalToCXone node", () => {
         );
     });
 
+    it("stringifies objects inside signalParams before sending", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, signalParams: [{ foo: "bar" }, "plain"] } as any
+        } as any);
+
+        expect(mockApiClient.sendSignal).toHaveBeenCalledWith(
+            baseConfig.contactId,
+            ['{"foo":"bar"}', "plain"]
+        );
+        expect(cognigy.api.output).toHaveBeenCalledWith(
+            null,
+            expect.objectContaining({
+                Intent: "Signal",
+                Params: '{"foo":"bar"}|plain'
+            })
+        );
+    });
+
+    it("parses a raw JSON string as signalParams and stringifies objects", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, signalParams: '[{"a":1},"b"]' } as any
+        } as any);
+
+        expect(mockApiClient.sendSignal).toHaveBeenCalledWith(
+            baseConfig.contactId,
+            ['{"a":1}', "b"]
+        );
+    });
+
+    it("logs warn for unparseable string input and omits Params from output", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "chat" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "", signalParams: "not json" } as any
+        } as any);
+
+        expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
+        expect(cognigy.api.log).toHaveBeenCalledWith(
+            "warn",
+            expect.stringContaining("sendSignalToCXone: Could not parse as JSON")
+        );
+        const outputCall = (cognigy.api.output as jest.Mock).mock.calls.find(c => c[0] === null);
+        expect(outputCall[1]).toEqual({ Intent: "Signal" });
+    });
+
     it("handles errors from helpers and surfaces context and output", async () => {
         (mockApiClient.sendSignal as jest.Mock).mockRejectedValueOnce(new Error("send error"));
 
@@ -112,12 +170,67 @@ describe("sendSignalToCXone node", () => {
         );
         expect(cognigy.api.addToContext).toHaveBeenCalledWith(
             "CXoneSendSignal",
-            expect.stringContaining("Error signaling"),
+            expect.objectContaining({ success: false, error: "send error" }),
             "simple"
         );
         expect(cognigy.api.output).toHaveBeenCalledWith(
             "Something is not working. Please retry.",
             expect.objectContaining({ error: expect.any(String) })
         );
+    });
+
+    it("routes to onSuccessSignal child when sendSignal succeeds", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: baseConfig as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessSignal", config: {} },
+                { id: "error-id", type: "onErrorSignal", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("success-id");
+    });
+
+    it("routes to onErrorSignal instead of throwing when sendSignal fails", async () => {
+        (mockApiClient.sendSignal as jest.Mock).mockRejectedValueOnce(new Error("send error"));
+
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: baseConfig as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessSignal", config: {} },
+                { id: "error-id", type: "onErrorSignal", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneSendSignal",
+            expect.objectContaining({ success: false, error: "send error" }),
+            "simple"
+        );
+    });
+
+    it("routes to onErrorSignal child on validation failure", async () => {
+        const cognigy = createMockCognigy();
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, connection: undefined } as any,
+            childConfigs: [
+                { id: "error-id", type: "onErrorSignal", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
     });
 });

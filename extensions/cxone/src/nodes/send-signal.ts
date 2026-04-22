@@ -4,6 +4,10 @@ import { CXoneApiClient } from "../api/cxone-api-client";
 import { isVoiceChannel } from "../helpers/channel-utils";
 import { validateConnection, normalizeEnvironmentUrl } from "../config";
 import { createErrorMessage } from "../helpers/errors";
+import { prepareParams } from "../helpers/params";
+
+const ON_SUCCESS_CHILD = "onSuccessSignal";
+const ON_ERROR_CHILD = "onErrorSignal";
 
 export const sendSignalToCXone = createNodeDescriptor({
     type: "sendCxoneSignal",
@@ -38,7 +42,7 @@ export const sendSignalToCXone = createNodeDescriptor({
             label: "Signal Parameters",
             type: "json",
             defaultValue: "[]",
-            description: "Parameters to include in signal. Provide parameter values as an array of strings.",
+            description: "Parameters to include in signal. Provide parameter values as an array of strings or objects (objects are JSON-stringified automatically).",
             params: {
                 required: true
             }
@@ -53,20 +57,37 @@ export const sendSignalToCXone = createNodeDescriptor({
     appearance: {
         color: "#3694FD"
     },
-    function: async ({ cognigy, config }: SendSignalNodeParams) => {
+    dependencies: {
+        children: [ON_SUCCESS_CHILD, ON_ERROR_CHILD]
+    },
+    function: async ({ cognigy, config, childConfigs }: SendSignalNodeParams) => {
         const { contactId, signalParams, connection } = config;
         const { api, input, context } = cognigy;
+
+        const successChild = childConfigs?.find(c => c.type === ON_SUCCESS_CHILD);
+        const errorChild = childConfigs?.find(c => c.type === ON_ERROR_CHILD);
+
+        const routeTo = (child?: { id: string }) => {
+            if (child && typeof api.setNextNode === "function") {
+                api.setNextNode(child.id);
+            }
+        };
 
         // Validate connection
         const connectionValidation = validateConnection(connection);
         if (!connectionValidation.valid) {
-            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", connectionValidation.error || "Invalid connection"));
+            const msg = connectionValidation.error || "Invalid connection";
+            api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg));
+            api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) {
+                routeTo(errorChild);
+                return;
+            }
+            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", msg));
         }
 
-        // Validate signalParams
-        if (!Array.isArray(signalParams)) {
-            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", "signalParams must be an array"));
-        }
+        // Prepare signal parameters (accept array of strings/objects, or a raw JSON string)
+        const finalParams = prepareParams(signalParams, api.log, "sendSignalToCXone");
 
         const tokenIssuer = normalizeEnvironmentUrl(connection.environmentUrl);
 
@@ -81,23 +102,51 @@ export const sendSignalToCXone = createNodeDescriptor({
             // Handle voice channel signaling
             if (contactId && isVoice) {
                 const apiClient = new CXoneApiClient(api, context, connection);
-                const signalStatus = await apiClient.sendSignal(contactId, signalParams || []);
+                const signalStatus = await apiClient.sendSignal(contactId, finalParams);
                 api.log("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);
-                api.addToContext("CXoneSendSignal", `CXone was Signaled for contactId: ${contactId}, with parameters: ${JSON.stringify(signalParams)}`, "simple");
+                api.addToContext("CXoneSendSignal", {
+                    success: true,
+                    contactId,
+                    params: finalParams,
+                    status: signalStatus
+                }, "simple");
+            } else {
+                api.addToContext("CXoneSendSignal", {
+                    success: true,
+                    contactId,
+                    params: finalParams,
+                    note: "chat-channel output only"
+                }, "simple");
             }
 
             // Data for CXone chat channel
             const data: { Intent: string; Params?: string } = {
                 Intent: "Signal"
             };
-            if (Array.isArray(signalParams) && signalParams.length) {
-                data.Params = signalParams.join("|");
+            if (finalParams.length) {
+                data.Params = finalParams.join("|");
             }
             api.output(null, data);
+
+            routeTo(successChild);
         } catch (error: any) {
             const errorMessage = error.message || "Unknown error";
-            api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${errorMessage}`);
-            api.addToContext("CXoneSendSignal", `Error signaling '${JSON.stringify(signalParams)}' for contactId: ${contactId}; error: ${errorMessage}`, "simple");
+            api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(finalParams)}' for contactId: ${contactId}; error: ${errorMessage}`);
+            api.addToContext("CXoneSendSignal", {
+                success: false,
+                contactId,
+                params: finalParams,
+                error: errorMessage
+            }, "simple");
+
+            if (errorChild) {
+                // Best-practices fallback: do not throw — let the On Failure branch run
+                routeTo(errorChild);
+                return;
+            }
+
+            // No onError branch wired up — preserve the original contract so flows
+            // that relied on exception-based failure detection keep working.
             api.output("Something is not working. Please retry.", { error: errorMessage });
             throw error;
         }

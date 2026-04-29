@@ -32,22 +32,25 @@ Sends an Adaptive Card to the user. Automatically formats the output for the act
 
 Reads the user's answer from input and stores it in context or input. Place directly after **Show Adaptive Card** with **Wait for Input** enabled.
 
-| Channel                      | Answer read from                                         | Stored as |
-| :---                         | :---                                                     | :--- |
-| 💬 CXone Guide Chat          | `input.data.adaptiveCardAnswer` (configurable)           | Object (`acData` extracted if present) |
-| 🌐 Cognigy Webchat           | `input.data.adaptivecards` (configurable)                | Object |
-| 🎙️ Voice / SMS / WhatsApp    | `input.text`                                             | String at `<store key>.<sub-key>` (default: `data.adaptiveCardAnswer.text`) |
-| ⌨️ Any channel (text typed)  | `input.text` (fallback when no card submission is found) | String at `<store key>.<sub-key>` |
+| Channel                       | Answer read from                                                                                   | Stored as |
+| :---                          | :---                                                                                               | :--- |
+| 💬 CXone Guide Chat          | `input.data.adaptiveCardAnswer` (configurable)                                                     | Object (`acData` extracted if present) |
+| 🌐 Cognigy Webchat           | `input.data.adaptivecards` (configurable), fallback to Testchat path if empty                      | Object |
+| 🧪 Cognigy Testchat          | `input.data.request.value` (configurable), fallback for debugging your demo in Testchat            | Object |
+| 🎙️ Voice / SMS / WhatsApp    | `input.text`                                                                                       | String at `<store key>.<sub-key>` (default: `data.adaptiveCardAnswer.text`) |
+| ⌨️ Any channel (text typed)  | `input.text` (fallback when no card submission is found)                                           | String at `<store key>.<sub-key>` |
 
 #### ⚙️ Fields
 
 | Field                                         | Description |
 | :---                                          | :--- |
 | **Cognigy Webchat Answer Path**               | Dot-notation path to the card answer in Cognigy Webchat (default: `input.data.adaptivecards`). Not used for Guide Chat or Voice/SMS/WhatsApp. |
+| **Cognigy Testchat Answer Path**              | Fallback path used in Cognigy Testchat (default: `input.data.request.value`). Only applied when running in Cognigy Testchat. |
 | **Guide Chat Answer Path**                    | Dot-notation path to the card answer in CXone Guide Chat (default: `input.data.adaptiveCardAnswer`). Not used for Webchat or Voice/SMS/WhatsApp. |
 | **User Answer Store Location**                | Where to store the answer — **Context** (persists across turns, default) or **Input** (current turn only) |
 | **User Answer Store Key**                     | Dot-notation path to write the answer to (default: `data.adaptiveCardAnswer`) |
 | **Voice/SMS/WhatsApp Answer Store Sub-key**   | Sub-key appended to the store path for plain-text answers (default: `text`). For example, with store key `data.adaptiveCardAnswer` and sub-key `text`, the answer is stored at `data.adaptiveCardAnswer.text`. |
+
 
 #### ✅ Recommended Flow
 

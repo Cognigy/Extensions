@@ -12,7 +12,8 @@
       "Bash(pip install:*)",
       "Bash(py -c \"from PIL import Image; print\\('PIL ok'\\)\")",
       "Bash(py -c ':*)",
-      "Bash(node_modules/.bin/tsc --noEmit)"
+      "Bash(node_modules/.bin/tsc --noEmit)",
+      "Bash(tar tzf:*)"
     ]
   }
 }

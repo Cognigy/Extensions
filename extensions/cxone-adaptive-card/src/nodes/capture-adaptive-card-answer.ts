@@ -171,7 +171,7 @@ export const captureAdaptiveCardAnswer = createNodeDescriptor({
                 cardRaw = resolvePath(payloadPath, cognigy);   // Guide Chat (CXone)
             }
 
-            // If no card submission found, fall back to input.text (user typed instead of clicking)           
+            // If no card submission found, fall back to input.text (user typed instead of clicking)
             const raw = (isVoice || isSms || !cardRaw)
                 ? (input as any)?.text
                 : cardRaw;

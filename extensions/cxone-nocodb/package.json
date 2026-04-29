@@ -1,7 +1,7 @@
 {
-  "name": "adaptive-card",
-  "version": "1.0.4",
-  "description": "Show and capture Adaptive Cards across channels",
+  "name": "cxone-nocodb",
+  "version": "1.0.0",
+  "description": "CXone NocoDB Extension for managing records via the NocoDB REST API v2",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",
@@ -10,23 +10,18 @@
     "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [
-    "Adaptive Card",
     "CXone",
-    "Guide Chat",
-    "Cognigy Webchat",
-    "Chat",
-    "Voice",
-    "SMS",
-    "WhatsApp",
-    "WebRtc"
+    "NocoDB",
+    "Database",
+    "Records"
   ],
   "author": "NiCE Alexei",
   "license": "NiCE",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.14.0",
-    "tslint": "^6.1.3"
+    "@cognigy/extension-tools": "^0.14.0"
   },
   "devDependencies": {
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "tslint": "^6.1.3"
   }
 }

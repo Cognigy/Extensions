@@ -1,0 +1,13 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"target": "es2017",
+		"module": "node16",
+		"rootDir": "src",
+		"outDir": "build",
+		"sourceMap": true,
+		"moduleResolution": "node16"
+	}
+}

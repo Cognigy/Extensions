@@ -1,0 +1,32 @@
+{
+  "name": "adaptive-card",
+  "version": "1.0.4",
+  "description": "Show and capture Adaptive Cards across channels",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "node zip.js",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "Adaptive Card",
+    "CXone",
+    "Guide Chat",
+    "Cognigy Webchat",
+    "Chat",
+    "Voice",
+    "SMS",
+    "WhatsApp",
+    "WebRtc"
+  ],
+  "author": "NiCE Alexei",
+  "license": "NiCE",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "tslint": "^6.1.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "cxone-nocodb",
+  "version": "1.0.0",
+  "description": "CXone NocoDB Extension for managing records via the NocoDB REST API v2",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "node zip.js",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "CXone",
+    "NocoDB",
+    "Database",
+    "Records"
+  ],
+  "author": "NiCE Alexei",
+  "license": "NiCE",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "tslint": "^6.1.3"
+  }
+}

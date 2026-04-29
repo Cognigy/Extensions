@@ -6,6 +6,6 @@
     "./vscode",
     "scripts",
     "src/**/*.test.ts",
-    "src/**/*mock*/*.ts",
-  ],
+    "src/**/*mock*/*.ts"
+  ]
 }

@@ -1,0 +1,28 @@
+{
+  "name": "niceview",
+  "version": "1.0.2",
+  "description": "NiCEview extension for applying NiCEview demo settings in your Cognigy flows",
+  "main": "build/module.js",
+  "scripts": {
+    "transpile": "tsc -p .",
+    "zip": "node zip.js",
+    "build": "npm run transpile && npm run lint && npm run zip",
+    "lint": "tslint -c tslint.json src/**/*.ts"
+  },
+  "keywords": [
+    "NiCEview",
+    "NiCEview Context",
+    "NiCEview Settings"
+  ],
+  "author": "NiCE Alexei",
+  "license": "NiCE",
+  "dependencies": {
+    "@cognigy/extension-tools": "^0.14.0",
+    "jsonwebtoken": "^9.0.2"    
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "typescript": "^5.9.2",
+    "tslint": "^6.1.3"
+  }
+}

@@ -1,6 +1,5 @@
 import { createNodeDescriptor } from '@cognigy/extension-tools';
 import scheduleHandbackToBotFlowNodeResolver from './resolvers/scheduleHandbackToBotFlowNodeResolver';
-import getWebhookDropdownOptions from './resolvers/getWebhookDropdownOptions';
 
 export const scheduleHandbackToBotFlowNode = createNodeDescriptor({
   type: 'scheduleHandbackToBotFlow',
@@ -19,15 +18,10 @@ export const scheduleHandbackToBotFlowNode = createNodeDescriptor({
     {
       key: 'id',
       label: 'Webhook ID',
-      description: 'Select the webhook ID to handback to',
-      type: 'select',
+      description: 'The webhook ID, found in 8x8 Configuration Manager for Contact Center.',
+      type: 'cognigyText',
       params: {
-        required: true,
-        placeholder: 'Select webhook ID'
-      },
-      optionsResolver: {
-        dependencies: ['connection'],
-        resolverFunction: getWebhookDropdownOptions
+        required: true
       }
     },
     {

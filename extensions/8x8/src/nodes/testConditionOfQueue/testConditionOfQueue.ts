@@ -1,7 +1,6 @@
 import { createNodeDescriptor } from '@cognigy/extension-tools';
 import type { INodeField, INodeFieldAndSectionFormElement } from '@cognigy/extension-tools/build/interfaces/descriptor';
 import createBasicChildNode from '../../utils/createBasicChildNode';
-import getQueueDropdownOptions from './resolvers/getQueueDropdownOptions';
 import testConditionOfQueueNodeResolver from './resolvers/testConditionOfQueueNodeResolver';
 import { TestConditionOfQueueConditionToggle, TestConditionOfQueueConditionValue, ThereAreNoAgentsValueOption } from './types';
 
@@ -140,15 +139,11 @@ export const testConditionOfQueueNode = createNodeDescriptor({
     },
     {
       key: 'selectQueueId',
-      label: 'Select the queue',
-      description: 'Select the queue',
-      type: 'select',
+      label: 'Queue ID',
+      description: 'The queue ID, found in 8x8 Configuration Manager for Contact Center.',
+      type: 'cognigyText',
       params: {
         required: true
-      },
-      optionsResolver: {
-        dependencies: ['connection'],
-        resolverFunction: getQueueDropdownOptions
       }
     },
     ...conditionFields

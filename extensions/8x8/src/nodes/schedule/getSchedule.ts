@@ -1,6 +1,5 @@
 import { createNodeDescriptor } from '@cognigy/extension-tools';
 import createBasicChildNode from '../../utils/createBasicChildNode';
-import getScheduleDropdownOptions from './resolvers/getScheduleDropdownOptions';
 import scheduleNodeResolver from './resolvers/scheduleNodeResolver';
 
 export const onOpenNode = createBasicChildNode({
@@ -66,15 +65,11 @@ export const getScheduleNode = createNodeDescriptor({
     },
     {
       key: 'scheduleNameToID',
-      label: 'Schedules',
-      description: 'The ID of the schedule',
-      type: 'select',
+      label: 'Schedule ID',
+      description: 'The schedule ID, found in 8x8 Configuration Manager for Contact Center.',
+      type: 'cognigyText',
       params: {
         required: true
-      },
-      optionsResolver: {
-        dependencies: ['connection'],
-        resolverFunction: getScheduleDropdownOptions
       }
     },
     {

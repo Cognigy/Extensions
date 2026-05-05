@@ -43,20 +43,13 @@ exports[`schedule handback to bot > getScheduleHandbackToBotFlowNode should crea
         "type": "connection",
       },
       {
-        "description": "Select the webhook ID to handback to",
+        "description": "The webhook ID, found in 8x8 Configuration Manager for Contact Center.",
         "key": "id",
         "label": "Webhook ID",
-        "optionsResolver": {
-          "dependencies": [
-            "connection",
-          ],
-          "resolverFunction": [Function],
-        },
         "params": {
-          "placeholder": "Select webhook ID",
           "required": true,
         },
-        "type": "select",
+        "type": "cognigyText",
       },
       {
         "defaultValue": "webhook",

@@ -46,19 +46,13 @@ exports[`test condition of queue > getTestConditionOfQueueNode should create the
         "type": "connection",
       },
       {
-        "description": "Select the queue",
+        "description": "The queue ID, found in 8x8 Configuration Manager for Contact Center.",
         "key": "selectQueueId",
-        "label": "Select the queue",
-        "optionsResolver": {
-          "dependencies": [
-            "connection",
-          ],
-          "resolverFunction": [Function],
-        },
+        "label": "Queue ID",
         "params": {
           "required": true,
         },
-        "type": "select",
+        "type": "cognigyText",
       },
       {
         "description": "There are NO agents: Available, busy, working offline, or on break",

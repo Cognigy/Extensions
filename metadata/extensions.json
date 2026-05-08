@@ -1850,8 +1850,8 @@
     {
       "name": "8x8",
       "label": "8x8",
-      "version": "5.2.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8520/8x8.tar.gz",
+      "version": "5.3.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8530/8x8.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/8x8",
       "description": "Integrates with 8x8",
       "longDescription": "Integrates with 8x8",

@@ -1,4 +1,4 @@
-import type { INodeFunctionBaseParams, IResolverParams } from '@cognigy/extension-tools';
+import type { INodeFunctionBaseParams } from '@cognigy/extension-tools';
 import type { I8x8SimpleConnection } from '../../connections/8x8SimpleConnection';
 
 export enum ThereAreNoAgentsValueOption {
@@ -39,29 +39,6 @@ export interface TestConditionOfQueueResolverParams extends INodeFunctionBasePar
     selectQueueId: string
   } & TestConditionOfQueueToggles & TestConditionOfQueueValues
 }
-export interface DropdownOption {
-  value: string
-  label: string
-}
-
-export enum QueueType {
-  Chat = 'chat',
-  Phone = 'phone',
-  Email = 'email',
-  Vmail = 'vmail'
-}
-export interface QueueApiResponse {
-  'queue-id': number
-  'queue-name': string
-  'media-type': QueueType
-}
-
-export type GetQueueDropdownOptionsParams = IResolverParams & {
-  config: {
-    connection: I8x8SimpleConnection
-  }
-};
-
 export interface QueueStatisticsApiResponse {
   'agent-count-busy': number
   'agent-count-loggedOut': number

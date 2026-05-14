@@ -86,6 +86,18 @@ export const sendSignalToCXone = createNodeDescriptor({
             throw new Error(createErrorMessage("sendSignalToCXone", "Validation", msg));
         }
 
+        // Validate contactId
+        if (!contactId || (typeof contactId === "string" && contactId.trim() === "")) {
+            const msg = "Contact ID is required";
+            api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg));
+            api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) {
+                routeTo(errorChild);
+                return;
+            }
+            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", msg));
+        }
+
         // Prepare signal parameters (accept array of strings/objects, or a raw JSON string)
         const finalParams = prepareParams(signalParams, api.log, "sendSignalToCXone");
 

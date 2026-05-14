@@ -128,6 +128,24 @@ export const handoverToCXone = createNodeDescriptor({
             throw new Error(createErrorMessage("handoverToCXone", "Validation", msg));
         }
 
+        // Validate contactId
+        if (!contactId || (typeof contactId === "string" && contactId.trim() === "")) {
+            const msg = "Contact ID is required";
+            api.log("error", createErrorMessage("handoverToCXone", "Validation", msg));
+            api.addToContext("CXoneHandover", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) { routeTo(errorChild); return; }
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", msg));
+        }
+
+        // Validate spawnedContactId
+        if (!spawnedContactId || (typeof spawnedContactId === "string" && spawnedContactId.trim() === "")) {
+            const msg = "Spawned Contact ID is required";
+            api.log("error", createErrorMessage("handoverToCXone", "Validation", msg));
+            api.addToContext("CXoneHandover", { success: false, stage: "validation", error: msg }, "simple");
+            if (errorChild) { routeTo(errorChild); return; }
+            throw new Error(createErrorMessage("handoverToCXone", "Validation", msg));
+        }
+
         const tokenIssuer = normalizeEnvironmentUrl(connection.environmentUrl);
 
         api.log("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment URL: ${tokenIssuer}`);

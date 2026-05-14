@@ -257,4 +257,128 @@ describe("handoverToCXone node", () => {
             expect.objectContaining({ error: expect.any(String) })
         );
     });
+
+    it("throws when contactId is missing and no errorChild is wired", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "" } as any
+        } as any)).rejects.toThrow(/Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneHandover",
+            expect.objectContaining({ success: false, stage: "validation" }),
+            "simple"
+        );
+    });
+
+    it("throws when contactId is undefined", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: undefined } as any
+        } as any)).rejects.toThrow(/Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
+
+    it("treats whitespace-only contactId as missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "   " } as any
+        } as any)).rejects.toThrow(/Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
+
+    it("routes to onErrorHandover child when contactId is missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "" } as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessHandover", config: {} },
+                { id: "error-id", type: "onErrorHandover", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneHandover",
+            expect.objectContaining({ success: false, stage: "validation" }),
+            "simple"
+        );
+    });
+
+    it("throws when spawnedContactId is missing and no errorChild is wired", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, spawnedContactId: "" } as any
+        } as any)).rejects.toThrow(/Spawned Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
+
+    it("throws when spawnedContactId is undefined", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, spawnedContactId: undefined } as any
+        } as any)).rejects.toThrow(/Spawned Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
+
+    it("treats whitespace-only spawnedContactId as missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await expect(handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, spawnedContactId: "   " } as any
+        } as any)).rejects.toThrow(/Spawned Contact ID is required/);
+
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
+
+    it("routes to onErrorHandover child when spawnedContactId is missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: { ...baseConfig, spawnedContactId: "" } as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessHandover", config: {} },
+                { id: "error-id", type: "onErrorHandover", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+        expect(mockApiClient.sendSignalHandover).not.toHaveBeenCalled();
+    });
 });

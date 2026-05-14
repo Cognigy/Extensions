@@ -75,21 +75,23 @@ describe("sendSignalToCXone node", () => {
         expect(mockApiClient.sendSignal).toHaveBeenCalled();
     });
 
-    it("does not call sendSignal when contactId missing", async () => {
+    it("throws when contactId is missing and no errorChild is wired", async () => {
         const cognigy = createMockCognigy({
             input: { channel: "voice" }
         });
 
-        await sendSignalToCXone.function({
+        await expect(sendSignalToCXone.function({
             cognigy,
             config: { ...baseConfig, contactId: "" } as any
-        } as any);
+        } as any)).rejects.toThrow(/Contact ID is required/);
 
         expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
-        expect(cognigy.api.output).toHaveBeenCalledWith(
-            null,
-            expect.objectContaining({ Intent: "Signal" })
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneSendSignal",
+            expect.objectContaining({ success: false, stage: "validation" }),
+            "simple"
         );
+        expect(cognigy.api.output).not.toHaveBeenCalled();
     });
 
     it("stringifies objects inside signalParams before sending", async () => {
@@ -138,7 +140,7 @@ describe("sendSignalToCXone node", () => {
 
         await sendSignalToCXone.function({
             cognigy,
-            config: { ...baseConfig, contactId: "", signalParams: "not json" } as any
+            config: { ...baseConfig, signalParams: "not json" } as any
         } as any);
 
         expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
@@ -232,5 +234,54 @@ describe("sendSignalToCXone node", () => {
         } as any);
 
         expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+    });
+
+    it("throws when contactId is undefined", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await expect(sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: undefined } as any
+        } as any)).rejects.toThrow(/Contact ID is required/);
+
+        expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
+    });
+
+    it("routes to onErrorSignal child when contactId is missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "" } as any,
+            childConfigs: [
+                { id: "success-id", type: "onSuccessSignal", config: {} },
+                { id: "error-id", type: "onErrorSignal", config: {} }
+            ]
+        } as any);
+
+        expect(cognigy.api.setNextNode).toHaveBeenCalledWith("error-id");
+        expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
+        expect(cognigy.api.addToContext).toHaveBeenCalledWith(
+            "CXoneSendSignal",
+            expect.objectContaining({ success: false, stage: "validation" }),
+            "simple"
+        );
+    });
+
+    it("treats whitespace-only contactId as missing", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice" }
+        });
+
+        await expect(sendSignalToCXone.function({
+            cognigy,
+            config: { ...baseConfig, contactId: "   " } as any
+        } as any)).rejects.toThrow(/Contact ID is required/);
+
+        expect(mockApiClient.sendSignal).not.toHaveBeenCalled();
     });
 });

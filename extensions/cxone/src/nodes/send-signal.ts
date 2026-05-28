@@ -138,9 +138,10 @@ export const sendSignalToCXone = createNodeDescriptor({
             if (finalParams.length) {
                 data.Params = finalParams.join("|");
             }
-            api.output(null, data);
+            api.output("", data);
 
             routeTo(successChild);
+            return;
         } catch (error: any) {
             const errorMessage = error.message || "Unknown error";
             api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(finalParams)}' for contactId: ${contactId}; error: ${errorMessage}`);

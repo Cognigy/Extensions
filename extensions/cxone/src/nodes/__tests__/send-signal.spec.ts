@@ -54,7 +54,7 @@ describe("sendSignalToCXone node", () => {
         );
         // Output for chat channel is always emitted
         expect(cognigy.api.output).toHaveBeenCalledWith(
-            null,
+            "",
             expect.objectContaining({
                 Intent: "Signal",
                 Params: "one|two"
@@ -109,7 +109,7 @@ describe("sendSignalToCXone node", () => {
             ['{"foo":"bar"}', "plain"]
         );
         expect(cognigy.api.output).toHaveBeenCalledWith(
-            null,
+            "",
             expect.objectContaining({
                 Intent: "Signal",
                 Params: '{"foo":"bar"}|plain'
@@ -148,7 +148,7 @@ describe("sendSignalToCXone node", () => {
             "warn",
             expect.stringContaining("sendSignalToCXone: Could not parse as JSON")
         );
-        const outputCall = (cognigy.api.output as jest.Mock).mock.calls.find(c => c[0] === null);
+        const outputCall = (cognigy.api.output as jest.Mock).mock.calls.find(c => c[0] === "");
         expect(outputCall[1]).toEqual({ Intent: "Signal" });
     });
 

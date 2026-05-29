@@ -1,6 +1,6 @@
 {
   "name": "twilio",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "Exposes Twilio functionality to Cognigy.AI",
   "main": "build/module.js",
   "scripts": {
@@ -13,17 +13,19 @@
     "Twilio",
     "SMS"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cognigy/Extensions"
+  },
   "author": "Cognigy GmbH",
   "license": "MIT",
   "dependencies": {
-    "@cognigy/extension-tools": "^0.13.0",
-    "axios": "^0.21.2",
-    "qs": "^6.11.2",
-    "tslint": "^6.1.2"
+    "@cognigy/extension-tools": "^0.17.0",
+    "axios": "^1.13.5"
   },
   "devDependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/node": "^13.13.15",
-    "typescript": "^3.8.3"
+    "@types/node": "^18.19.0",
+    "tslint": "^6.1.2",
+    "typescript": "^4.9.5"
   }
 }

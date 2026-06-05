@@ -29,5 +29,8 @@
     "@types/jsdom": "21.1.7",
     "@types/node": "13.13.52",
     "typescript": "5.9.2"
+  },
+  "overrides": {
+    "yaml": "2.8.3"
   }
 }

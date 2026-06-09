@@ -20,6 +20,16 @@ export const TOKEN_CACHE_TTL_MINUTES = 50;
 export const HANDOVER_DELAY_MS = 5000;
 
 /**
+ * Delay (ms) before routing to a child node, to let fire-and-forget api.* writes
+ * (output / log / addToContext / setNextNode) flush to the runtime's gRPC stream
+ * before this node returns and the runtime ends the stream. The api methods are
+ * void (no Promise to await), so this short settle is the only way to avoid the
+ * runtime ending the stream while a write is still in flight, which surfaces as
+ * "13 INTERNAL: Write error: write after end" and halts the flow.
+ */
+export const SIGNAL_STREAM_SETTLE_MS = 500;
+
+/**
  * CXone API version string
  */
 export const CXONE_API_VERSION = "v30.0";

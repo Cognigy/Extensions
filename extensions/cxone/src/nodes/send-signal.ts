@@ -2,7 +2,7 @@ import { createNodeDescriptor } from "@cognigy/extension-tools";
 import { SendSignalNodeParams } from "../types";
 import { CXoneApiClient } from "../api/cxone-api-client";
 import { isVoiceChannel } from "../helpers/channel-utils";
-import { validateConnection, normalizeEnvironmentUrl } from "../config";
+import { validateConnection, normalizeEnvironmentUrl, SIGNAL_STREAM_SETTLE_MS } from "../config";
 import { createErrorMessage } from "../helpers/errors";
 import { prepareParams } from "../helpers/params";
 
@@ -73,29 +73,41 @@ export const sendSignalToCXone = createNodeDescriptor({
             }
         };
 
+        // Let fire-and-forget api.* writes drain to the runtime's gRPC stream before
+        // this function returns. The api methods are void (no Promise to await), so a
+        // short settle is the only way to avoid the runtime ending the stream while a
+        // write is still in flight ("13 INTERNAL: Write error: write after end").
+        const settle = () => new Promise<void>(resolve => setTimeout(resolve, SIGNAL_STREAM_SETTLE_MS));
+
+        // Best-effort diagnostic writes that must never block routing to On Failure.
+        const safe = (fn: () => void) => {
+            try {
+                fn();
+            } catch {
+                /* never let a logging/context write prevent routing */
+            }
+        };
+
         // Validate connection
         const connectionValidation = validateConnection(connection);
         if (!connectionValidation.valid) {
             const msg = connectionValidation.error || "Invalid connection";
-            api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg));
-            api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple");
-            if (errorChild) {
-                routeTo(errorChild);
-                return;
-            }
-            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", msg));
+            safe(() => api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg)));
+            safe(() => api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple"));
+            // No errorChild → routeTo no-ops and the flow continues to the default next node.
+            await settle();
+            routeTo(errorChild);
+            return;
         }
 
         // Validate contactId
         if (!contactId || (typeof contactId === "string" && contactId.trim() === "")) {
             const msg = "Contact ID is required";
-            api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg));
-            api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple");
-            if (errorChild) {
-                routeTo(errorChild);
-                return;
-            }
-            throw new Error(createErrorMessage("sendSignalToCXone", "Validation", msg));
+            safe(() => api.log("error", createErrorMessage("sendSignalToCXone", "Validation", msg)));
+            safe(() => api.addToContext("CXoneSendSignal", { success: false, stage: "validation", error: msg }, "simple"));
+            await settle();
+            routeTo(errorChild);
+            return;
         }
 
         // Prepare signal parameters (accept array of strings/objects, or a raw JSON string)
@@ -111,8 +123,10 @@ export const sendSignalToCXone = createNodeDescriptor({
             const isVoice = isVoiceChannel(input);
             api.log("info", `sendSignalToCXone: isVoice: ${isVoice}`);
 
-            // Handle voice channel signaling
             if (contactId && isVoice) {
+                // Voice: the signal is delivered via the API call. No chat output is
+                // emitted here — an empty-text output on voice is meaningless and its
+                // deferred gRPC write is what races the stream end ("write after end").
                 const apiClient = new CXoneApiClient(api, context, connection);
                 const signalStatus = await apiClient.sendSignal(contactId, finalParams);
                 api.log("info", `sendSignalToCXone: sent signal to CXone for contactId: ${contactId}; status: ${signalStatus}`);
@@ -123,6 +137,14 @@ export const sendSignalToCXone = createNodeDescriptor({
                     status: signalStatus
                 }, "simple");
             } else {
+                // Chat: the signal is delivered as output data on the NiCE CXone channel.
+                const data: { Intent: string; Params?: string } = {
+                    Intent: "Signal"
+                };
+                if (finalParams.length) {
+                    data.Params = finalParams.join("|");
+                }
+                api.output("", data);
                 api.addToContext("CXoneSendSignal", {
                     success: true,
                     contactId,
@@ -131,37 +153,29 @@ export const sendSignalToCXone = createNodeDescriptor({
                 }, "simple");
             }
 
-            // Data for CXone chat channel
-            const data: { Intent: string; Params?: string } = {
-                Intent: "Signal"
-            };
-            if (finalParams.length) {
-                data.Params = finalParams.join("|");
-            }
-            api.output("", data);
-
+            // Flush pending writes before ending the stream, then route.
+            await settle();
             routeTo(successChild);
             return;
         } catch (error: any) {
             const errorMessage = error.message || "Unknown error";
-            api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(finalParams)}' for contactId: ${contactId}; error: ${errorMessage}`);
-            api.addToContext("CXoneSendSignal", {
+            safe(() => api.log("error", `sendSignalToCXone: Error signaling '${JSON.stringify(finalParams)}' for contactId: ${contactId}; error: ${errorMessage}`));
+            safe(() => api.addToContext("CXoneSendSignal", {
                 success: false,
                 contactId,
                 params: finalParams,
                 error: errorMessage
-            }, "simple");
+            }, "simple"));
 
-            if (errorChild) {
-                // Best-practices fallback: do not throw — let the On Failure branch run
-                routeTo(errorChild);
-                return;
+            // No On Failure branch wired up — surface a brief message but never throw,
+            // so the flow continues to the default next node instead of halting.
+            if (!errorChild) {
+                safe(() => api.output("Something is not working. Please retry.", { error: errorMessage }));
             }
 
-            // No onError branch wired up — preserve the original contract so flows
-            // that relied on exception-based failure detection keep working.
-            api.output("Something is not working. Please retry.", { error: errorMessage });
-            throw error;
+            await settle();
+            routeTo(errorChild);
+            return;
         }
     }
 });

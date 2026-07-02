@@ -95,10 +95,10 @@ Each node file must:
 - If the node groups fields, the `sections[]` array must define each section referenced by `form`, and each section's `fields[]` must list real field keys.
 - A node that calls an external API should use a `connection` field whose `params.connectionType` matches a connection schema's `type`.
 - Result storage convention: a `storeLocation` select (`input`/`context`) plus `inputKey`/`contextKey` text fields (conditioned on `storeLocation`), written via `api.addToInput(...)` / `api.addToContext(...)` inside a try/catch.
-- All functions not related to typing and field structure must either be part of the runtime logic or in .ts file within a src/helpers directly
-- Prefer const and let over var 
-- All code must be human readable. Instead of `let a = 1` use `let inputData = 1`
-- Errors must be pushed to the storage location via `api.addToContext()` or `api.addToInput()`, they may be pushed to the log via `api.log("error", string)` as well.
+- All functions not related to typing and field structure must either be part of the runtime logic or be placed in a `.ts` file under `src/helpers/` (optionally grouped in subfolders).
+- Prefer `const` and `let` over `var`.
+- Keep code human-readable: avoid single-letter variable names (e.g., prefer `inputData` over `a`).
+- Errors must be written to the selected storage location via `api.addToContext(...)` or `api.addToInput(...)`; optionally also log them via `api.log("error", ...)`.
 
 Minimal correct shape:
 ```ts

@@ -40,8 +40,8 @@ extensions/<name>/
     │   └── <feature>/<nodeName>.ts
     ├── connections/              # one file per connection schema (only if auth is needed)
     │   └── <connectionName>.ts
-	└── helpers
-		└── <helper-function>.ts  # can be multiple files with one function each or one file with all functions (may be gouped in subfolders)
+    └── helpers/
+        └── <helper-function>.ts  # can be multiple files with one function each or one file with all functions (may be grouped in subfolders)
 ```
 - `src/module.ts` MUST exist and be the entry point.
 - Node logic MUST live under `src/nodes/`. Connection schemas (if any) MUST live under `src/connections/`.

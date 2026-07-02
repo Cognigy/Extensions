@@ -59,7 +59,7 @@ Required fields and conventions:
   - `"lint": "tslint -c tslint.json src/**/*.ts"`
   - `"build": "npm run transpile && npm run lint && npm run zip"`
   - `"zip"` — a `tar` command bundling `build/*`, `package.json`, `package-lock.json`, `README.md`, `icon.png`.
-- `"keywords" — An array relevant for the extension. 
+- `"keywords"` — An array relevant for the extension. 
 - `"license": "MIT"`
 - `"dependencies"` — must include `"@cognigy/extension-tools"`.
 - No hardcoded secrets, tokens, or passwords anywhere in source (call out any you find).

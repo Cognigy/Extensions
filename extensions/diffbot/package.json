@@ -1,6 +1,6 @@
 {
   "name": "diffbot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Integrates with the Diffbot API (Only compatible with Cognigy version v.2026.5.0 and above).",
   "main": "build/module.js",
   "scripts": {
@@ -17,8 +17,8 @@
     "knowledge extensions"
   ],
   "engines": {
-      "node": ">=22.22.0",
-      "npm": ">=11.9.0"
+    "node": ">=22.22.0",
+    "npm": ">=11.9.0"
   },
   "author": "Cognigy GmbH",
   "license": "MIT",
@@ -34,5 +34,9 @@
     "@types/node": "24.2.0",
     "tsx": "4.21.0",
     "typescript": "5.9.2"
+  },
+  "overrides": {
+    "yaml": "2.8.3",
+    "langsmith": "0.6.0"
   }
 }

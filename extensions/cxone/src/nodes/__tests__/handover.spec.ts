@@ -347,6 +347,174 @@ describe("handoverToCXone node", () => {
         expect(cognigy.api.setNextNode).toHaveBeenCalledWith("success-id");
     });
 
+    it("emits a simulated-success debug message to the Interactions Panel", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "adminconsole", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: baseConfig as any
+        } as any);
+
+        expect(cognigy.api.logDebugMessage).toHaveBeenCalledWith(
+            expect.stringContaining("simulated success"),
+            "CXone Exit Interaction"
+        );
+        expect(cognigy.api.output).not.toHaveBeenCalled();
+    });
+
+    it("falls back to api.output for the simulated-success note when logDebugMessage is unavailable", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "adminconsole", transcript: [] }
+        });
+        delete (cognigy.api as any).logDebugMessage;
+
+        await handoverToCXone.function({
+            cognigy,
+            config: baseConfig as any
+        } as any);
+
+        expect(cognigy.api.output).toHaveBeenCalledWith(
+            expect.stringContaining("simulated success"),
+            null
+        );
+    });
+
+    it("does not emit the simulated-success note on non-panel channels", async () => {
+        const cognigy = createMockCognigy({
+            input: { channel: "voice", transcript: [] }
+        });
+
+        await handoverToCXone.function({
+            cognigy,
+            config: baseConfig as any
+        } as any);
+
+        expect(cognigy.api.logDebugMessage).not.toHaveBeenCalled();
+    });
+
+    describe("escalation analytics flag", () => {
+        const escalateConfig = { ...baseConfig, action: "Escalate", setEscalationFlag: true };
+
+        it("sets the flag via addToInput and analyticsdata on successful voice Escalate", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [], analyticsdata: {} }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: escalateConfig as any
+            } as any);
+
+            expect(cognigy.api.addToInput).toHaveBeenCalledWith("handoverEscalations", 1);
+            expect((cognigy.input as any).analyticsdata.handoverEscalations).toBe(1);
+        });
+
+        it("increments an existing analyticsdata counter", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [], analyticsdata: { handoverEscalations: 2 } }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: escalateConfig as any
+            } as any);
+
+            expect(cognigy.api.addToInput).toHaveBeenCalledWith("handoverEscalations", 3);
+            expect((cognigy.input as any).analyticsdata.handoverEscalations).toBe(3);
+        });
+
+        it("sets the flag on a simulated Interactions Panel Escalate", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "adminconsole", transcript: [] }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: escalateConfig as any
+            } as any);
+
+            expect(cognigy.api.addToInput).toHaveBeenCalledWith("handoverEscalations", 1);
+        });
+
+        it("does not set the flag for the End action", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [] }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: { ...baseConfig, setEscalationFlag: true } as any
+            } as any);
+
+            expect(cognigy.api.addToInput).not.toHaveBeenCalled();
+        });
+
+        it("does not set the flag by default (toggle off)", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [] }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: { ...baseConfig, action: "Escalate" } as any
+            } as any);
+
+            expect(cognigy.api.addToInput).not.toHaveBeenCalled();
+        });
+
+        it("does not set the flag when the escalation signal fails", async () => {
+            (mockApiClient.sendSignalHandover as jest.Mock).mockRejectedValueOnce(new Error("signal error"));
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [] }
+            });
+
+            await handoverToCXone.function({
+                cognigy,
+                config: escalateConfig as any
+            } as any);
+
+            expect(cognigy.api.addToInput).not.toHaveBeenCalled();
+        });
+
+        it("still routes to On Success when the flag write is unavailable or throws", async () => {
+            const cognigy = createMockCognigy({
+                input: { channel: "voice", transcript: [] }
+            });
+            delete (cognigy.api as any).addToInput;
+
+            await handoverToCXone.function({
+                cognigy,
+                config: escalateConfig as any,
+                childConfigs: [
+                    { id: "success-id", type: "onSuccessHandover", config: {} },
+                    { id: "error-id", type: "onErrorHandover", config: {} }
+                ]
+            } as any);
+
+            expect(cognigy.api.setNextNode).toHaveBeenCalledWith("success-id");
+
+            const throwing = createMockCognigy({
+                input: { channel: "voice", transcript: [] }
+            });
+            throwing.api.addToInput.mockImplementation(() => {
+                throw new Error("1 CANCELLED: grpc: the client connection is closing");
+            });
+
+            await handoverToCXone.function({
+                cognigy: throwing,
+                config: escalateConfig as any,
+                childConfigs: [
+                    { id: "success-id", type: "onSuccessHandover", config: {} },
+                    { id: "error-id", type: "onErrorHandover", config: {} }
+                ]
+            } as any);
+
+            expect(throwing.api.setNextNode).toHaveBeenCalledWith("success-id");
+        });
+    });
+
     it("continues without throwing when contactId is missing and no errorChild is wired", async () => {
         const cognigy = createMockCognigy({
             input: { channel: "voice", transcript: [] }

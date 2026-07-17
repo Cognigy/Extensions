@@ -78,6 +78,13 @@ export const handoverToCXone = createNodeDescriptor({
             params: {
                 required: false
             }
+        },
+        {
+            key: "setEscalationFlag",
+            label: "Set Escalation Analytics Field",
+            type: "toggle",
+            description: "On a successful Escalate, automatically write the Handover Escalations flag to the Cognigy analytics data (replaces a manual Overwrite Analytics node). Best effort: a failure never affects the flow.",
+            defaultValue: false
         }
     ],
     sections: [],
@@ -87,7 +94,8 @@ export const handoverToCXone = createNodeDescriptor({
         { type: "field", key: "contactId" },
         { type: "field", key: "spawnedContactId" },
         { type: "field", key: "connection" },
-        { type: "field", key: "optionalParamsObject" }
+        { type: "field", key: "optionalParamsObject" },
+        { type: "field", key: "setEscalationFlag" }
     ],
     appearance: {
         color: "#3694FD"
@@ -96,7 +104,7 @@ export const handoverToCXone = createNodeDescriptor({
         children: [ON_SUCCESS_CHILD, ON_ERROR_CHILD]
     },
     function: async ({ cognigy, config, childConfigs }: HandoverNodeParams) => {
-        const { action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = config;
+        const { action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject, setEscalationFlag } = config;
         const { api, input, context } = cognigy;
 
         const successChild = childConfigs?.find(c => c.type === ON_SUCCESS_CHILD);
@@ -236,7 +244,45 @@ export const handoverToCXone = createNodeDescriptor({
                 api.output("", ndata);
                 api.log("info", `handoverToCXone: Done. Output data was sent to CXone Guide Chat channel: ${JSON.stringify(ndata)}`);
             } else {
+                if (isInteractionsPanel) {
+                    // Simulated success: nothing is sent to CXone from the Interactions
+                    // Panel, so tell the tester explicitly instead of only logging it.
+                    const note = `Exit Interaction (${action}): simulated success — Interactions Panel test, no signal was sent to CXone.`;
+                    safe(() => {
+                        // logDebugMessage shows in the panel's debug mode; not in the SDK
+                        // types and possibly not forwarded to extensions → fall back to a
+                        // plain output bubble.
+                        const anyApi = api as any;
+                        if (typeof anyApi.logDebugMessage === "function") {
+                            anyApi.logDebugMessage(note, "CXone Exit Interaction");
+                        } else {
+                            api.output(note, null);
+                        }
+                    });
+                }
                 api.log("info", `handoverToCXone: Done. No output data sent to Voice / Interactions Panel channel.`);
+            }
+
+            // Best-effort bonus: mirror the Overwrite Analytics "Handover Escalations"
+            // field so containment dashboards work without a manual node in the flow.
+            // No documented extension API exists for analytics — addToInput is the
+            // documented input-object write, analyticsdata mutation is the Code Node
+            // convention; either may silently not reach analytics. Must never break
+            // the node, so everything stays inside safe().
+            if (setEscalationFlag && action === "Escalate") {
+                safe(() => {
+                    const key = "handoverEscalations";
+                    const anyApi = api as any;
+                    const anyInput = input as any;
+                    const value = (Number(anyInput?.analyticsdata?.[key]) || 0) + 1;
+                    if (typeof anyApi.addToInput === "function") {
+                        anyApi.addToInput(key, value);
+                    }
+                    if (anyInput?.analyticsdata && typeof anyInput.analyticsdata === "object") {
+                        anyInput.analyticsdata[key] = value;
+                    }
+                    api.log("info", `handoverToCXone: best-effort escalation analytics field '${key}' set to ${value}`);
+                });
             }
 
             // Wait before returning control to avoid unwanted messages during handover

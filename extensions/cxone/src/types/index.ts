@@ -119,6 +119,8 @@ export interface HandoverNodeConfig {
     businessNumber: string;
     optionalParamsObject?: any[];
     connection: CXoneConnection;
+    /** Best-effort: write the handoverEscalations flag to analytics data on successful Escalate (default false) */
+    setEscalationFlag?: boolean;
 }
 
 /**

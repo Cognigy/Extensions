@@ -5,6 +5,8 @@ export interface MockApi {
   addToContext: jest.Mock;
   output: jest.Mock;
   setNextNode: jest.Mock;
+  logDebugMessage: jest.Mock;
+  addToInput: jest.Mock;
 }
 
 export interface MockCognigy {
@@ -18,7 +20,9 @@ export const createMockCognigy = (overrides: Partial<MockCognigy> = {}): MockCog
     log: jest.fn(),
     addToContext: jest.fn(),
     output: jest.fn(),
-    setNextNode: jest.fn()
+    setNextNode: jest.fn(),
+    logDebugMessage: jest.fn(),
+    addToInput: jest.fn()
   };
 
   const base: MockCognigy = {

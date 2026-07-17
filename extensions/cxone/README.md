@@ -95,6 +95,18 @@ The node **waits for 5 seconds before returning control** to the Cognigy flow to
 - **Webchat / Testchat**
   - Does not signal or return any data
 
+- **Interactions Panel (adminconsole)**
+  - Does not signal or return any data (simulated success)
+  - Emits a debug message to the Interactions Panel (visible with debug mode active) noting that the success was simulated and no signal was sent to CXone
+
+#### Escalation Analytics Field (best effort)
+
+When **Set Escalation Analytics Field** is enabled (default off) and the **Escalate to Agent** action succeeds, the node automatically writes the `handoverEscalations` flag to the Cognigy analytics data — the equivalent of a manual **Overwrite Analytics** node with **Handover Escalations** set.
+
+Notes:
+- This is best effort: Cognigy documents no extension API for analytics data, so the write may not reach the analytics record on all Cognigy versions. A failure never affects the flow — the node still routes to On Success.
+- The flag is also set on simulated successes (Interactions Panel tests), so test sessions count toward escalation metrics.
+
 #### Configuration Fields
 
 - **CXone Connection** (required): Select the CXone connection to use
@@ -103,6 +115,7 @@ The node **waits for 5 seconds before returning control** to the Cognigy flow to
 - **Main Contact ID** (required): The CXone Main Contact ID
 - **Spawned Contact ID** (required): The CXone Spawned Contact ID
 - **Parameters (optional)**: Array of JSON objects to be sent to CXone
+- **Set Escalation Analytics Field** (default off): Automatically write the `handoverEscalations` flag to analytics data on successful Escalate
 
 ---
 

@@ -150,13 +150,24 @@ export const sendSMSNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, response.data);
 			}
-		} catch (error) {
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, error, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, error);
+			} catch (error) {
+				const caughtError: any = error;
+
+				const safeError = {
+					message: caughtError && caughtError.message
+						? caughtError.message
+						: "Unknown error",
+					status: caughtError && caughtError.response
+						? caughtError.response.status
+						: undefined
+				};
+
+				if (storeLocation === "context") {
+					api.addToContext(contextKey, safeError, "simple");
+				} else {
+					// @ts-ignore
+					api.addToInput(inputKey, safeError);
+				}
 			}
-		}
 	}
 });

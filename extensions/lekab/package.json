@@ -1,7 +1,7 @@
 {
   "name": "lekab",
   "version": "4.0.0",
-  "description": "Integrates Lekab functionality with Cognigy.AI",
+  "description": "Send SMS messages via Lekab Messaging Platform",
   "main": "build/module.js",
   "scripts": {
     "transpile": "tsc -p .",

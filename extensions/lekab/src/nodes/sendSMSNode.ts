@@ -150,17 +150,10 @@ export const sendSMSNode = createNodeDescriptor({
 				// @ts-ignore
 				api.addToInput(inputKey, response.data);
 			}
-			} catch (error) {
-				const caughtError: any = error;
-
-				const safeError = {
-					message: caughtError && caughtError.message
-						? caughtError.message
-						: "Unknown error",
-					status: caughtError && caughtError.response
-						? caughtError.response.status
-						: undefined
-				};
+		} catch (error) {
+			const safeError = axios.isAxiosError(error)
+				? { message: error.message ?? "Unknown error", status: error.response?.status }
+				: { message: error instanceof Error ? error.message : "Unknown error", status: undefined };
 
 				if (storeLocation === "context") {
 					api.addToContext(contextKey, safeError, "simple");

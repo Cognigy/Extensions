@@ -4,7 +4,8 @@ export const twilioConnection: IConnectionSchema = {
 	type: "twilio",
 	label: "Twilio Account",
 	fields: [
-		{ fieldName: "accountSid" },
-		{ fieldName: "authToken"}
+		{ fieldName: "apiKeySid" },
+		{ fieldName: "apiKeySecret" },
+		{ fieldName: "accountSid" }
 	]
 };

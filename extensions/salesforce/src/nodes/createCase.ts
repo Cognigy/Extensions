@@ -101,7 +101,7 @@ export const createCaseNode = createNodeDescriptor({
                         // Step 3: Map statuses to "options array"
                         return statuses.map((status: ISalesforceCaseStatus) => ({
                             label: status.MasterLabel,
-                            value: status.Id,
+                            value: status.MasterLabel,
                         }));
                     } catch (error) {
                         const errorMessage = error instanceof Error

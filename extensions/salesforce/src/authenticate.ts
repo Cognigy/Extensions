@@ -133,4 +133,4 @@ export const authenticate = async (oauthConnection: IConnection["oauthConnection
         query,
         sobject
     };
-}
+};

@@ -1,22 +1,23 @@
 import { Client } from '@hubspot/api-client';
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 
-export interface ICreateContactParams extends INodeFunctionBaseParams {
+export interface ICreateTicketParams extends INodeFunctionBaseParams {
     config: {
         connection: {
             accessToken: string;
         };
         properties: { [key: string]: string };
+        contactId?: string;
         storeLocation: string;
         inputKey: string;
         contextKey: string;
     };
 }
 
-export const createContactNode = createNodeDescriptor({
-    type: "createContact",
-    defaultLabel: "Create Contact",
-    summary: "Creates a new contact in HubSpot",
+export const createTicket = createNodeDescriptor({
+    type: "createTicket",
+    defaultLabel: "Create Ticket",
+    summary: "Creates a new ticket in HubSpot",
     fields: [
         {
             key: "connection",
@@ -29,12 +30,18 @@ export const createContactNode = createNodeDescriptor({
         },
         {
             key: "properties",
-            label: "Contact Properties",
+            label: "Ticket Properties",
             type: "json",
             params: {
                 required: true
             },
-            description: "JSON object with HubSpot contact properties (e.g., firstname, lastname, email)"
+            description: "JSON object with HubSpot ticket properties (e.g., hs_pipeline, hs_pipeline_stage, subject)"
+        },
+        {
+            key: "contactId",
+            label: "Contact ID (Optional)",
+            type: "cognigyText",
+            description: "HubSpot Contact ID to associate the ticket with"
         },
         {
             key: "storeLocation",
@@ -59,7 +66,7 @@ export const createContactNode = createNodeDescriptor({
             key: "inputKey",
             type: "cognigyText",
             label: "Input Key to store Result",
-            defaultValue: "contactId",
+            defaultValue: "ticketId",
             condition: {
                 key: "storeLocation",
                 value: "input"
@@ -69,7 +76,7 @@ export const createContactNode = createNodeDescriptor({
             key: "contextKey",
             type: "cognigyText",
             label: "Context Key to store Result",
-            defaultValue: "contactId",
+            defaultValue: "ticketId",
             condition: {
                 key: "storeLocation",
                 value: "context"
@@ -91,29 +98,50 @@ export const createContactNode = createNodeDescriptor({
     form: [
         { type: "field", key: "connection" },
         { type: "field", key: "properties" },
+        { type: "field", key: "contactId" },
         { type: "section", key: "storageOptions" }
     ],
-    function: (async ({ cognigy, config }: ICreateContactParams) => {
+    function: (async ({ cognigy, config }: ICreateTicketParams) => {
         const { api } = cognigy;
-        const { connection, properties, storeLocation, inputKey, contextKey } = config;
+        const { connection, properties, contactId, storeLocation, inputKey, contextKey } = config;
 
         try {
             const client = new Client({ accessToken: connection.accessToken });
-            const response = await client.crm.contacts.basicApi.create({ 
+            
+            // Create the ticket
+            const ticketResponse = await client.crm.tickets.basicApi.create({ 
                 properties: properties as { [key: string]: string },
                 associations: []
             });
-            
+
+            const ticketId = ticketResponse.id;
+
+            // Associate with contact if contactId is provided
+            if (contactId) {
+                try {
+                    await client.crm.associations.v4.basicApi.create(
+                        "tickets",
+                        Number(ticketId),
+                        "contacts", 
+                        Number(contactId),
+                        [{ associationCategory: "HUBSPOT_DEFINED", associationTypeId: 16 }]
+                    );
+                } catch (associationError: unknown) {
+                    api.log("warn", `Failed to associate ticket with contact: ${associationError instanceof Error ? associationError.message : String(associationError)}`);
+                }
+            }
+
             // Store the result based on the selected location
             if (storeLocation === "context") {
-                api.addToContext(contextKey, response.id, "simple");
-                api.addToContext("contact", response, "simple");
+                api.addToContext(contextKey, ticketId, "simple");
                 api.addToContext("success", true, "simple");
+                api.addToContext("ticketData", ticketResponse, "simple");
             } else {
-                api.addToInput(inputKey, response.id);
-                api.addToInput("contact", response);
+                api.addToInput(inputKey, ticketId);
                 api.addToInput("success", true);
+                api.addToInput("ticketData", ticketResponse);
             }
+
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             if (storeLocation === "context") {
@@ -125,4 +153,4 @@ export const createContactNode = createNodeDescriptor({
             }
         }
     }) as any
-});
+}); 

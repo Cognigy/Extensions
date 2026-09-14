@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { getNiCEviewData } from "../helpers/services";
+import { redactContextData } from "../helpers/redact";
 
 export const setNiCEviewContextInit = createNodeDescriptor({
     type: "setNiCEviewContextInit",
@@ -46,12 +47,28 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                         try {
                             const parsedHeader = JSON.parse(headers["X-NiCEview-Custom"]);
                             if ("ivaParams" in parsedHeader) {
-                                if (parsedHeader.ivaParams.trim() !== "") {
-                                    try {
-                                        parsed.ivaParams = JSON.parse(parsedHeader.ivaParams);
-                                    } catch {
+                                // Some widget bundles wrap a string ivaParams as {value: "<json>"}
+                                // before serializing to the SIP header. Unwrap so we always work
+                                // with either a string (legacy/patched widget) or an already-parsed
+                                // object (newer payloads).
+                                const rawIva = (parsedHeader.ivaParams
+                                                && typeof parsedHeader.ivaParams === "object"
+                                                && "value" in parsedHeader.ivaParams)
+                                    ? parsedHeader.ivaParams.value
+                                    : parsedHeader.ivaParams;
+
+                                if (typeof rawIva === "string") {
+                                    if (rawIva.trim() !== "") {
+                                        try {
+                                            parsed.ivaParams = JSON.parse(rawIva);
+                                        } catch {
+                                            parsed.ivaParams = {};
+                                        }
+                                    } else {
                                         parsed.ivaParams = {};
                                     }
+                                } else if (rawIva && typeof rawIva === "object") {
+                                    parsed.ivaParams = rawIva;
                                 } else {
                                     parsed.ivaParams = {};
                                 }
@@ -80,6 +97,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
 
                 // Merge everything into contextData
                 const contextData: Record<string, any> = {
+                    ivaParams: {}, // default first, so the spreads below override it when they carry a value
                     ...xNiceviewExtended,
                     ...xNiceview,
                     ...xNiceviewCustom,
@@ -92,52 +110,62 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                         try {
                             api.log("info", "setNiCEviewContextInit: SIP Headers data missing. Retreiving from settings from NiCEview...");
                             const niceViewData = await getNiCEviewData(api, xNiceview.userToken.trim(), xNiceview.demoName.trim(), false);
-                            let ivaParams = {};
-                            try {
-                                ivaParams = JSON.parse(niceViewData.customIvaJson);
-                            } catch (err) {
-                                api.log("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${(err as Error).message}`);
-                                ivaParams = {};
-                            }
 
-                            contextData.agentId = niceViewData.agentId || contextData.agentId;
-                            contextData.ani = niceViewData.ani || contextData.ani;
-                            contextData.contactId = niceViewData.contactId || contextData.contactId;
-                            contextData.copilot = niceViewData.copilot || contextData.copilot;
-                            contextData.customerName = niceViewData.customerName || contextData.customerName;
-                            contextData.digitalSkillId = niceViewData.digitalSkillId || contextData.digitalSkillId;
-                            contextData.flowId = niceViewData.flowId || contextData.flowId;
-                            contextData.invocationId = niceViewData.invocationId || contextData.invocationId;
-                            contextData.ivaParams = ivaParams;
-                            contextData.ocpSessionId = niceViewData.ocpSessionId || contextData.ocpSessionId;
-                            contextData.voiceSkillId = niceViewData.voiceSkillId || contextData.voiceSkillId;
+                            // Only override fields when the service actually returned a value —
+                            // never clobber a good SIP-header value with `{}`/empty from a failed
+                            // service call.
+                            if (niceViewData) {
+                                contextData.agentId         = niceViewData.agentId         || contextData.agentId;
+                                contextData.ani             = niceViewData.ani             || contextData.ani;
+                                contextData.contactId       = niceViewData.contactId       || contextData.contactId;
+                                contextData.copilot         = niceViewData.copilot         || contextData.copilot;
+                                contextData.customerName    = niceViewData.customerName    || contextData.customerName;
+                                contextData.digitalSkillId  = niceViewData.digitalSkillId  || contextData.digitalSkillId;
+                                contextData.flowId          = niceViewData.flowId          || contextData.flowId;
+                                contextData.invocationId    = niceViewData.invocationId    || contextData.invocationId;
+                                contextData.ocpSessionId    = niceViewData.ocpSessionId    || contextData.ocpSessionId;
+                                contextData.voiceSkillId    = niceViewData.voiceSkillId    || contextData.voiceSkillId;
+
+                                if (niceViewData.customIvaJson) {
+                                    try {
+                                        contextData.ivaParams = JSON.parse(niceViewData.customIvaJson);
+                                    } catch (err) {
+                                        api.log("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${(err as Error).message}`);
+                                    }
+                                }
+                            }
                         } catch (error) {
                             api.log("error", `setNiCEviewContextInit: Error getting data from NiCEview service: ${(error as Error).message}`);
                         }
                     }
                 }
 
+                // trimmed at the source: a SIP header value can carry whitespace, and these IDs end up
+                // in CXone API URLs further down the flow
                 if (headers["X-InContact-MasterId"]) {
-                    contextData.contactId = headers["X-InContact-MasterId"].toString();
+                    contextData.contactId = headers["X-InContact-MasterId"].toString().trim();
                 }
                 if (headers["X-InContact-ContactId"]) {
-                    contextData.spawnedContactId = headers["X-InContact-ContactId"].toString();
+                    contextData.spawnedContactId = headers["X-InContact-ContactId"].toString().trim();
                 }
 
                 // Add to context for voice
-                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel}: ${JSON.stringify(contextData)}`);
+                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(contextData))}`);
                 api.addToContext("data", contextData, "simple");
             } else if (input.data && typeof input.data === "object") {
-                // Add to context for chat
-                if (input.data.ivaParams) {
+                // Add to context for chat - copied rather than mutated in place, and ivaParams always exists
+                const chatData: Record<string, any> = { ivaParams: {}, ...input.data };
+                if (typeof input.data.ivaParams === "string") {
                     try {
-                        input.data.ivaParams = JSON.parse(input.data.ivaParams);
+                        chatData.ivaParams = JSON.parse(input.data.ivaParams);
                     } catch {
-                        input.data.ivaParams = {};
+                        chatData.ivaParams = {};
                     }
+                } else if (input.data.ivaParams && typeof input.data.ivaParams === "object") {
+                    chatData.ivaParams = input.data.ivaParams;
                 }
-                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel}: ${JSON.stringify(input.data)}`);
-                api.addToContext("data", input.data, "simple");
+                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(chatData))}`);
+                api.addToContext("data", chatData, "simple");
             } else {
                 api.log("info", `setNiCEviewContextInit: No valid data found in input for channel ${channel}`);
                 api.addToContext("SetNiCEviewContextInit", `No valid data found in input for channel ${channel}`, 'simple');

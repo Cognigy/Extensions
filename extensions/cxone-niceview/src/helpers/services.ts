@@ -19,7 +19,15 @@ export const getNiCEviewData = async (api: any, userToken: string, settingName: 
             throw new Error(`NiCEview -> getNiCEviewData: HTTP error fetching demo settings! Status: ${response.status}`);
         }
 
-        const data = await response.json();
+        // the service can answer with a non-JSON error page (e.g. a gateway error) - say so clearly
+        // instead of failing with "Unexpected token <"
+        const responseText = await response.text();
+        let data: any;
+        try {
+            data = JSON.parse(responseText);
+        } catch {
+            throw new Error(`NiCEview -> getNiCEviewData: the service returned a non-JSON response (${response.status}): ${responseText.slice(0, 200)}`);
+        }
 
         if (data && data.data && data.data.length > 0) {
             const settings = data.data[0];
@@ -34,7 +42,7 @@ export const getNiCEviewData = async (api: any, userToken: string, settingName: 
             return {};
         }
     } catch (error) {
-         api.log("info", `NiCEview -> getNiCEviewData: Error fetching demo settings: ${error.message}`);
+         api.log("error", `NiCEview -> getNiCEviewData: Error fetching demo settings: ${error.message}`);
         throw error;
     }
 };

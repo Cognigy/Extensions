@@ -1,5 +1,6 @@
 type Participant = "Bot" | "Patron";
 type Action = "End" | "Escalate";
+export type MediaType = "Voice" | "Digital";
 
 interface Transcript {
   participantId: Participant;
@@ -22,7 +23,7 @@ interface CognigyPayload {
   virtualAgentId: string;
   contactId: string;
   contactState: "SELF_SERVICE";
-  mediaType: "Voice";
+  mediaType: MediaType;
   selfServiceSessionDetails: SelfServiceSessionDetails;
 }
 
@@ -36,12 +37,30 @@ interface ConversationItem {
   timestamp: number;
 }
 
-export default function transformConversation(conversation: ConversationItem[], action: Action, contactId: string, businessNumber: string): CognigyPayload {
+// TMS expects messageBody to be a string. A Cognigy message can carry a rich payload, a number or
+// nothing at all in payload.text, so it is always coerced before it goes on the wire.
+function toMessageBody(text: any): string {
+  if (text === null || text === undefined) return "";
+  if (typeof text === "string") return text;
+  if (typeof text === "object") return JSON.stringify(text);
+  return String(text);
+}
+
+// TMS wants to know which kind of interaction the transcript came from. "Auto" follows the same
+// rule the rest of the extension uses to tell voice from chat: the Cognigy channel name.
+export function resolveMediaType(channel?: string, configured?: string): MediaType {
+  if (configured === "Voice" || configured === "Digital") return configured;
+  return String(channel || "").toLowerCase().includes("voice") ? "Voice" : "Digital";
+}
+
+export default function transformConversation(conversation: ConversationItem[], action: Action, contactId: string, businessNumber: string, mediaType: MediaType = "Voice"): CognigyPayload {
   const transcripts: Transcript[] = conversation
-    .filter(item => item.type === "output" || (item.type === "input" && item.payload.text))
+    // keep the messages that carry text - a data-only message (e.g. a custom payload or quick
+    // replies) would otherwise show up as a blank line in the CXone transcript
+    .filter(item => toMessageBody(item.payload.text).trim() !== "")
     .map(item => {
       const participantId: Participant = item.role === "assistant" ? "Bot" : "Patron";
-      const messageBody = item.payload.text ?? "";
+      const messageBody = toMessageBody(item.payload.text);
       const date = new Date(item.timestamp);
       const utcDateTime = date.toISOString().replace(/\.\d{3}Z$/, (ms => {
         const msStr = date.getMilliseconds().toString().padStart(3, "0");
@@ -62,7 +81,7 @@ export default function transformConversation(conversation: ConversationItem[], 
     virtualAgentId: "",
     contactId: contactId,
     contactState: "SELF_SERVICE",
-    mediaType: "Voice",
+    mediaType: mediaType,
     selfServiceSessionDetails: {
       transcriptPublishSettingOption: "PUBLISH_TRANSCRIPTS_ONLY",
       sessionCompletionType: action === "End" ? "CONTAINED" : "ESCALATED",

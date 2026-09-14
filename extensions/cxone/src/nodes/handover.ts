@@ -1,7 +1,10 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import * as jwt from "jsonwebtoken";
-import transformConversation from '../helpers/tms-payload.js';
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, postToTMS } from "../helpers/cxone-utils.js";
+import transformConversation, { resolveMediaType } from '../helpers/tms-payload.js';
+import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, postToTMS, makeTokenRefresher } from "../helpers/cxone-utils.js";
+import { isTmsTranscriptPosted, getTmsPostedStatus, setTmsPostedStatus, resolveTranscript } from "../helpers/tms-guard.js";
+import { tryParseJsonField } from "../helpers/json-field.js";
+import { redactTmsPayload } from "../helpers/redact.js";
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     config: {
@@ -65,12 +68,13 @@ export const handoverToCXone = createNodeDescriptor({
             key: "baseUrl",
             label: "Environment Base URL",
             type: "text",
-            description: "The Base URL (Issuer) for the CXone environment.",
+            // no default: this field only appears for 'Other', where pre-filling a listed
+            // environment would quietly point the node somewhere the builder did not choose
+            description: "The Base URL (Issuer) of your CXone environment, e.g. https://cxone.niceincontact.com",
             condition: { key: "environment", value: "other" },
             params: {
                 required: true
-            },
-            defaultValue: "https://cxone.niceincontact.com"
+            }
         },
         {
             key: "action",
@@ -99,6 +103,7 @@ export const handoverToCXone = createNodeDescriptor({
             label: "Main Contact ID",
             type: "cognigyText",
             description: "The CXone Main Contact ID.",
+            defaultValue: "{{context.data.contactId}}",
             params: {
                 required: true
             }
@@ -108,6 +113,7 @@ export const handoverToCXone = createNodeDescriptor({
             label: "Spawned Contact ID",
             type: "cognigyText",
             description: "The CXone Spawned Contact ID.",
+            defaultValue: "{{context.data.spawnedContactId}}",
             params: {
                 required: true
             }
@@ -138,25 +144,30 @@ export const handoverToCXone = createNodeDescriptor({
         color: "#3694FD"
     },
     function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
-        const { environment, baseUrl, action, businessNumber, contactId, spawnedContactId, connection, optionalParamsObject } = rawConfig as IgetSendSignalParams["config"];
+        const config = rawConfig as IgetSendSignalParams["config"];
+        const { environment, baseUrl, action, connection, optionalParamsObject } = config;
+        // identifiers are trimmed: a value resolved from a SIP header or CognigyScript can carry
+        // whitespace, which would break the signal URL, the TMS payload and the duplicate guard
+        const businessNumber = (config.businessNumber || "").trim();
+        const contactId = (config.contactId || "").trim();
+        const spawnedContactId = (config.spawnedContactId || "").trim();
         const { api, input, context } = cognigy;
 
         if (!connection) {
             throw new Error("handoverToCXone: CXone API Connection not found");
         }
+        if (!action) {
+            // configuration error - report it to the flow, never to the customer
+            throw new Error("handoverToCXone: Missing Action parameter");
+        }
+
+        // validate and resolve the token issuer in one block, so baseUrl is known to be set below
+        let tokenIssuer = environment;
         if (environment === "other") {
             if (!baseUrl || baseUrl.trim() === "") {
                 throw new Error("handoverToCXone: Base URL is required when Environment is set to Other");
             }
-        }
-        if (!action) {
-            api.output?.("handoverToCXone Error: Missing Action parameter", { error: "Missing Action parameter" });
-            throw new Error("handoverToCXone: Missing Action parameter");
-        }
-
-        let tokenIssuer = environment;
-        if (environment === "other") {
-            tokenIssuer = baseUrl!.trim().replace(/\/+$/, ''); // remove trailing slashes; baseUrl validated above
+            tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
         }
 
         api.log?.("info", `handoverToCXone: Contact ID: ${contactId}; Spawned Contact ID: ${spawnedContactId}; Action: ${action}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
@@ -166,11 +177,15 @@ export const handoverToCXone = createNodeDescriptor({
             const isVoice = channel.toLowerCase().includes('voice');
             api.log?.("info", `handoverToCXone: isVoice: ${isVoice}`);
 
-            // prepare optional parameters
+            // prepare optional parameters - the json field can arrive as an array or as a JSON string.
+            // An invalid value is ignored rather than thrown, so it can never block the handover itself.
             let finalParams: string[] = [];
+            const parsedOptionalParams = tryParseJsonField(api, optionalParamsObject, "handoverToCXone: Parameters (optional)");
 
-            if (Array.isArray(optionalParamsObject) && optionalParamsObject.length > 0) {
-                finalParams = [JSON.stringify(optionalParamsObject)];
+            if (Array.isArray(parsedOptionalParams) && parsedOptionalParams.length > 0) {
+                finalParams = [JSON.stringify(parsedOptionalParams)];
+            } else if (parsedOptionalParams !== undefined && !Array.isArray(parsedOptionalParams)) {
+                api.log?.("warn", `handoverToCXone: 'Parameters (optional)' is not a JSON array; ignoring it: ${JSON.stringify(parsedOptionalParams)}`);
             }
             api.log?.("info", `handoverToCXone: prepared optional parameters: ${JSON.stringify(finalParams)}`);
 
@@ -190,22 +205,38 @@ export const handoverToCXone = createNodeDescriptor({
                 const decodedToken: any = jwt.decode(tokens.id_token);
                 const apiEndpointUrl = await getCxoneConfigUrl(api, context, decodedToken.iss, decodedToken.tenantId);
                 api.log?.("info", `handoverToCXone: got API endpoint URL: ${apiEndpointUrl}`);
+                // lets the calls below survive a token that CXone considers expired
+                const refreshToken = makeTokenRefresher(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
 
-                const transcript = input.transcript || context.transcript || '';
-                api.log?.("info", `handoverToCXone: transcript available: ${!!transcript}; source: ${input.transcript ? 'input' : context.transcript ? 'context' : 'none'}`);
-                // Send transcript to TMS if available
-                if (transcript) {
-                    api.log?.("info", `handoverToCXone: transcript length: ${JSON.stringify(transcript).length} chars`);
-                    try {
-                        const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber);
-                        api.log?.("info", `handoverToCXone: tmsPayload: ${JSON.stringify(tmsPayload)}`);
-                        const tmsStatus = await postToTMS(api, apiEndpointUrl, tokens.access_token, tmsPayload);
-                        api.log?.("info", `handoverToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`);
-                    } catch (tmsError: any) {
-                        api.log?.("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
+                // Skip the TMS post if a 'Send Transcript to TMS' node (or an earlier run of this node) already posted it
+                if (isTmsTranscriptPosted(context, contactId)) {
+                    api.log?.("info", `handoverToCXone: Transcript was already posted to TMS for contactId: ${contactId} (status: '${getTmsPostedStatus(context)}'); skipping TMS post.`);
+                } else {
+                    const { transcript, reason } = resolveTranscript(api, input, context, "handoverToCXone");
+                    // Send transcript to TMS if available
+                    if (transcript) {
+                        try {
+                            const mediaType = resolveMediaType(channel);
+                            const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber, mediaType);
+                            // every item was filtered out (e.g. data-only inputs) - an empty transcript is not worth posting
+                            if (tmsPayload.selfServiceSessionDetails.transcripts.length === 0) {
+                                api.log?.("warn", `handoverToCXone: the transcript holds no messages with text; nothing posted to TMS for contactId: ${contactId}.`);
+                                setTmsPostedStatus(api, context, "skipped", `Transcript holds no messages with text for contactId: ${contactId}`);
+                            } else {
+                                api.log?.("info", `handoverToCXone: tmsPayload (transcript redacted): ${JSON.stringify(redactTmsPayload(tmsPayload))}`);
+                                const tmsStatus = await postToTMS(api, apiEndpointUrl, tokens.access_token, tmsPayload, refreshToken);
+                                api.log?.("info", `handoverToCXone: posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`);
+                                setTmsPostedStatus(api, context, "posted", `Posted transcript to TMS for contactId: ${contactId}; status: ${tmsStatus}`, contactId);
+                            }
+                        } catch (tmsError: any) {
+                            api.log?.("error", `handoverToCXone: Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
+                            setTmsPostedStatus(api, context, "failed", `Error posting transcript to TMS for contactId: ${contactId}; error: ${tmsError.message}`);
+                        }
+                    } else {
+                        setTmsPostedStatus(api, context, "skipped", `${reason} for contactId: ${contactId}`);
                     }
                 }
-                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams);
+                const signalStatus = await sendSignalHandover(api, apiEndpointUrl, tokens.access_token, spawnedContactId || contactId, action, finalParams, refreshToken);
                 api.log?.("info", `handoverToCXone: sent signal to CXone for contactId: ${spawnedContactId || contactId}; action: ${action}; status: ${signalStatus}`);
                 api.addToContext?.("CXoneHandover", `Signaled CXone with: '${action}' for contactId: ${spawnedContactId || contactId}`, 'simple');
             }
@@ -257,7 +288,8 @@ export const handoverToCXone = createNodeDescriptor({
         } catch (error: any) {
             api.log?.("error", `handoverToCXone: Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`);
             api.addToContext?.("CXoneHandover", `Error signaling CXone with: '${action}' for contactId: ${spawnedContactId || contactId}; error: ${error.message}`, 'simple');
-            api.output?.("Something is not working. Please retry.", { error: error.message });
+            // the error details stay in the log and in the context - they are not sent to the channel
+            api.output?.("Something is not working. Please retry.", null);
             throw error;
         }
     }

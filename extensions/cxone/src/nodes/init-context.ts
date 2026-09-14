@@ -1,4 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { tryParseJsonField, normalizeIvaParams } from "../helpers/json-field.js";
+import { redactContextData } from "../helpers/redact.js";
 
 export interface IsetCxoneContextInitParams extends INodeFunctionBaseParams {
     config: {
@@ -94,15 +96,8 @@ export const setCxoneContextInit = createNodeDescriptor({
                         try {
                             const parsedHeader = JSON.parse(headers["X-CXone-Custom"]);
                             if ("ivaParams" in parsedHeader) {
-                                if (parsedHeader.ivaParams.trim() !== "") {
-                                    try {
-                                        parsed.ivaParams = JSON.parse(parsedHeader.ivaParams);
-                                    } catch {
-                                        parsed.ivaParams = {};
-                                    }
-                                } else {
-                                    parsed.ivaParams = {};
-                                }
+                                // accepts a JSON string, an already parsed object, or { value: "<json>" }
+                                parsed.ivaParams = normalizeIvaParams(api, parsedHeader.ivaParams);
                             }
                         } catch {
                             api.log?.("warn", "setCxoneContextInit: Failed to parse X-CXone-Custom header");
@@ -122,32 +117,32 @@ export const setCxoneContextInit = createNodeDescriptor({
 
                 // Merge everything into contextData
                 const contextData: Record<string, any> = {
+                    ivaParams: {}, // default first, so the spreads below override it when they carry a value
                     ...xCXoneExtended,
                     ...xCXone,
                     ...xCXoneCustom,
                     flowChannel: "VOICE"
                 };
+                // trimmed at the source: a SIP header value can carry whitespace, and these IDs end up
+                // in CXone API URLs and in the TMS payload
                 if (headers["X-InContact-MasterId"]) {
-                    contextData.contactId = headers["X-InContact-MasterId"].toString();
+                    contextData.contactId = headers["X-InContact-MasterId"].toString().trim();
                 }
                 if (headers["X-InContact-ContactId"]) {
-                    contextData.spawnedContactId = headers["X-InContact-ContactId"].toString();
+                    contextData.spawnedContactId = headers["X-InContact-ContactId"].toString().trim();
                 }
 
                 // Add to context for voice
-                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(contextData)}`);
+                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(contextData))}`);
                 api.addToContext?.("data", contextData, "simple");
             } else if (input.data && input.data.contactId) {
-                // Add to context for chat
+                // Add to context for chat - copied rather than mutated in place, and ivaParams always exists
+                const chatData: Record<string, any> = { ivaParams: {}, ...input.data };
                 if (input.data.ivaParams) {
-                    try {
-                        input.data.ivaParams = JSON.parse(input.data.ivaParams);
-                    } catch {
-                        input.data.ivaParams = {};
-                    }
+                    chatData.ivaParams = normalizeIvaParams(api, input.data.ivaParams);
                 }
-                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel}: ${JSON.stringify(input.data)}`);
-                api.addToContext?.("data", input.data, "simple");
+                api.log?.("info", `setCxoneContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(chatData))}`);
+                api.addToContext?.("data", chatData, "simple");
             } else {
                  const mData = {
                     "agentId": "",
@@ -166,10 +161,14 @@ export const setCxoneContextInit = createNodeDescriptor({
                 };
                 if (customerName) mData.customerName = customerName.trim();
                 if (flowId) mData.flowId = flowId.trim();
-                if (ivaParams && typeof ivaParams === "object" && Object.keys(ivaParams).length > 0) mData.ivaParams = ivaParams;
+                // the json field can arrive as an object or as a JSON string; an invalid value is ignored
+                const parsedIvaParams = tryParseJsonField(api, ivaParams, "setCxoneContextInit: Fallback Custom IVA JSON");
+                if (parsedIvaParams && typeof parsedIvaParams === "object" && Object.keys(parsedIvaParams).length > 0) {
+                    mData.ivaParams = parsedIvaParams;
+                }
                 if (businessNumber) mData.ocpSessionId = `${businessNumber.trim()}:100000000000`;
 
-                api.log?.("info", `setCxoneContextInit: No valid data found in input for channel ${channel}. Initializing with data: ${JSON.stringify(mData)}`);
+                api.log?.("info", `setCxoneContextInit: No valid data found in input for channel ${channel}. Initializing with data (ani redacted): ${JSON.stringify(redactContextData(mData))}`);
                 api.addToContext?.("data", mData, "simple");
             }
         } catch (error: any) {

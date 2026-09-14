@@ -127,11 +127,13 @@ export const sendTextelMms = createNodeDescriptor({
 
         api.log("info", `sendTextelMms: got data from Connection.  textelUrl: ${textelConfig.textelUrl}`);
 
+        // configuration errors are reported to the flow before anything is sent, and never to the
+        // customer - the catch below speaks to the channel, so this check stays outside it
+        if (!toPhoneNumber || !bodyText || !fromPhoneNumber) {
+            throw new Error("sendTextelMms: Missing required parameters - 'To', 'From' and 'Message' are all required");
+        }
+
         try {
-            if (!toPhoneNumber || !bodyText || !fromPhoneNumber) {
-                api.output("sendTextelMms Error: Missing required parameters", { error: "Missing required parameters" });
-                throw new Error("sendTextelMms: Missing required parameters");
-            }
             interface SmsPayload {
                 to: string;
                 from: string;
@@ -140,13 +142,19 @@ export const sendTextelMms = createNodeDescriptor({
             }
             const smsPayload: SmsPayload = {
                 to: formatPhoneNumber(toPhoneNumber),
-                from: formatPhoneNumber(formatPhoneNumber(fromPhoneNumber)),
+                from: formatPhoneNumber(fromPhoneNumber),
                 body: bodyText
             };
-            if (attachmentUrl && attachmentUrl.trim().length > 0 && isValidUrl(attachmentUrl)) {
-                smsPayload.attachmentUrl = attachmentUrl;
+            if (attachmentUrl && attachmentUrl.trim().length > 0) {
+                if (isValidUrl(attachmentUrl)) {
+                    smsPayload.attachmentUrl = attachmentUrl;
+                } else {
+                    // tell the builder why the attachment was dropped instead of silently sending an SMS
+                    api.log("warn", `sendTextelMms: 'Attachment URL' is not a valid http(s) URL and was ignored: ${attachmentUrl}`);
+                }
             }
-            api.log("info", `sendTextelMms: about to call API URL: ${textelConfig.textelUrl} with payload: ${JSON.stringify(smsPayload)}`);
+            // the message body is customer facing content - log its size, not its text
+            api.log("info", `sendTextelMms: about to call API URL: ${textelConfig.textelUrl} with payload: ${JSON.stringify({ ...smsPayload, body: `<redacted: ${String(bodyText).length} chars>` })}`);
             const headers = { Authorization: `Bearer ${textelConfig.token}`, "Content-Type": "application/json" };
             const response = await fetch(textelConfig.textelUrl, { method: "POST", headers, body: JSON.stringify(smsPayload) });
             if (!response.ok) {
@@ -162,7 +170,8 @@ export const sendTextelMms = createNodeDescriptor({
         } catch (error) {
             api.log("error", `sendTextelMms: Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`);
             api.addToContext("sendTextelMms", `Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`, 'simple');
-            api.output(`Error sending SMS/MMS to ${toPhoneNumber}`, { error: error.message });
+            // the error details stay in the log and in the context - they are not sent to the channel
+            api.output(`Error sending SMS/MMS to ${toPhoneNumber}`, null);
             throw error;
         }
     }

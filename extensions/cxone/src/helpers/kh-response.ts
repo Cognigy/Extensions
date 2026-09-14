@@ -22,7 +22,7 @@ export default function formatKnowledgeHubResponse(knowledheHubResponse: any, ap
             knowledheHubResponse = null;
         }
     }
-    const toReturn = { answer: null, links: [], images: [], citations: [], contextRefId: "empty" };
+    const toReturn: KnowledgeHubResponse = { answer: null, links: [], images: [], citations: [], contextRefId: "empty" };
     try {
         if (!knowledheHubResponse) throw new Error("Invalid knowledheHubResponse object");
         if ([200, 302].includes(responseCode)) {

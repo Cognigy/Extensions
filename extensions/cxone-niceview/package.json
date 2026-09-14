@@ -7,7 +7,9 @@
     "transpile": "tsc -p .",
     "zip": "node zip.js",
     "build": "npm run transpile && npm run lint && npm run zip",
-    "lint": "tslint -c tslint.json src/**/*.ts"
+    "lint": "tslint -c tslint.json src/**/*.ts",
+    "test": "npm run transpile && node --test test/",
+    "verify": "npm run transpile && npm run lint && node --test test/"
   },
   "keywords": [
     "NiCEview",

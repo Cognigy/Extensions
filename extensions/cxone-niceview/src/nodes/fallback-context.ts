@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { getNiCEviewData } from "../helpers/services";
+import { redactContextData } from "../helpers/redact";
 
 export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     config: {
@@ -32,7 +33,7 @@ export const setNiCEviewContextFallback = createNodeDescriptor({
             label: "Demo Source",
             type: "select",
             description: "Choose whether to use the last saved Demo or specify a Demo name.",
-            defaultValue: "Demo Name",
+            defaultValue: "Last Saved",
             params: {
                 options: [
                     { label: "Last Saved Demo", value: "Last Saved" },
@@ -67,8 +68,17 @@ export const setNiCEviewContextFallback = createNodeDescriptor({
     function: async ({ cognigy, config }: IgetSendSignalParams) => {
         const { api, input, context } = cognigy;
         const { userToken, settingName, demoSource} = config;
-        if (demoSource === "Last Saved") {
-            config.settingName = "";
+        // 'Last Saved' ignores the demo name - the service is called with the token only.
+        // Report missing configuration clearly instead of failing later inside the service call.
+        if (!userToken || userToken.trim() === "") {
+            api.log("error", "setNiCEviewContextFallback: 'User Token' is required; no context data set.");
+            api.addToContext("SetNiCEviewContextFallback", "'User Token' is required", 'simple');
+            return;
+        }
+        if (demoSource === "Demo Name" && (!settingName || settingName.trim() === "")) {
+            api.log("error", "setNiCEviewContextFallback: 'Demo Name' is required when Demo Source is 'Enter Demo Name'; no context data set.");
+            api.addToContext("SetNiCEviewContextFallback", "'Demo Name' is required when Demo Source is 'Enter Demo Name'", 'simple');
+            return;
         }
         if (context.data && context.data.flowId) {
              api.log("info", `setNiCEviewContextFallback: context data exists. Exiting...`);
@@ -100,7 +110,7 @@ export const setNiCEviewContextFallback = createNodeDescriptor({
                 "spawnedContactId": "100000000000",
                 "voiceSkillId": niceViewData.voiceSkillId || ""
             };
-            api.log("info", `setNiCEviewContextFallback: Setting context data: ${JSON.stringify(nvData)}`);
+            api.log("info", `setNiCEviewContextFallback: Setting context data (ani redacted): ${JSON.stringify(redactContextData(nvData))}`);
             api.addToContext("data", nvData, "simple");
         } catch (error) {
             api.log("error", `setNiCEviewContextFallback: Error setting context data: ${error.message}`);

@@ -4,10 +4,10 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"target": "es2017",
-		"module": "commonjs",
+		"module": "node16",
 		"rootDir": "src",
 		"outDir": "build",
 		"sourceMap": true,
-		"moduleResolution": "node10"
+		"moduleResolution": "node16"
 	}
 }

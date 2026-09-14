@@ -1,5 +1,6 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl } from "../helpers/cxone-utils.js";
+import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, makeTokenRefresher, fetchWithAuthRetry } from "../helpers/cxone-utils.js";
+import { parseJsonField, parseJsonObjectField } from "../helpers/json-field.js";
 import * as jwt from "jsonwebtoken";
 
 export interface IApiCallerParams extends INodeFunctionBaseParams {
@@ -8,8 +9,8 @@ export interface IApiCallerParams extends INodeFunctionBaseParams {
         baseUrl?: string; // used only if environment === "other"
         apiSuffix: string;
         method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-        headers?: string; // JSON string
-        body?: string; // JSON string
+        headers?: any; // JSON object, or JSON string
+        body?: any; // JSON object, or JSON string
         storeLocation: string;
         storeKey: string;
         connection: {
@@ -93,13 +94,13 @@ export const cxoneApiCaller = createNodeDescriptor({
             key: "headers",
             label: "Additional Headers (JSON)",
             type: "json",
-            description: "Optional HTTP headers in JSON format (Authorization and Content-Type headers are set automatically)."
+            description: "Optional HTTP headers in JSON format. Authorization (the CXone bearer token) and Content-Type are added automatically - setting either of them here overrides the automatic value."
         },
         {
             key: "body",
             label: "Request Body (JSON)",
             type: "json",
-            description: "Optional request body in JSON format for POST/PUT/PATCH/DELETE requests."
+            description: "Optional request body in JSON format for POST/PUT/PATCH/DELETE requests. Leave empty to send the request without a body; set it to {} to send an empty JSON object. Ignored for GET."
         },
         {
             key: "storeLocation",
@@ -139,40 +140,47 @@ export const cxoneApiCaller = createNodeDescriptor({
     appearance: { color: "#3694FD" },
     function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
         const { api, context } = cognigy;
-        const { environment, baseUrl, apiSuffix, method, headers, body, connection, storeLocation, storeKey } = rawConfig as IApiCallerParams["config"];
+        const config = rawConfig as IApiCallerParams["config"];
+        const { environment, baseUrl, method, headers, body, connection, storeLocation } = config;
+        // trimmed: whitespace would end up in the request URL or in the context key
+        const apiSuffix = (config.apiSuffix || "").trim();
+        const storeKey = (config.storeKey || "").trim();
 
         if (!connection) {
             throw new Error("cxoneApiCaller: CXone API Connection not found");
         }
+        if (!apiSuffix) {
+            throw new Error("cxoneApiCaller: 'API Suffix / Endpoint' is required");
+        }
+        if (!storeKey) {
+            throw new Error("cxoneApiCaller: 'Output Store Key' is required");
+        }
+        // validate and resolve the token issuer in one block, so baseUrl is known to be set below
+        let tokenIssuer = environment;
         if (environment === "other") {
             if (!baseUrl || baseUrl.trim() === "") {
                 throw new Error("cxoneApiCaller: Base URL is required when Environment is set to Other");
             }
-        }
-
-        let tokenIssuer = environment;
-        if (environment === "other") {
             tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
         }
 
-        // Parse headers and body
-        let parsedHeaders = {};
-        try {
-            parsedHeaders = headers ? JSON.parse(headers) : {};
-        } catch {
-            throw new Error("cxoneApiCaller: Headers must be valid JSON");
+        // Parse headers and body - a 'json' field can arrive as an object/array or as a JSON string
+        const rawHeaders = parseJsonObjectField(api, headers, "cxoneApiCaller: Additional Headers");
+        const parsedHeaders: Record<string, string> = {};
+        // header values must be strings
+        for (const [headerName, headerValue] of Object.entries(rawHeaders)) {
+            if (headerValue === null || headerValue === undefined) continue;
+            parsedHeaders[headerName] = typeof headerValue === "string" ? headerValue : JSON.stringify(headerValue);
         }
-        let parsedBody: any;
-        try {
-            if (!body) parsedBody = undefined;
-            else if (typeof body === "string") parsedBody = JSON.parse(body);
-            else parsedBody = body; // already a JSON object
-        } catch {
-            throw new Error("cxoneApiCaller: Body must be valid JSON");
+        api.log?.("info", `cxoneApiCaller: Additional headers: ${JSON.stringify(Object.keys(parsedHeaders))}`);
+
+        // no body is valid for every method, including POST
+        const parsedBody = parseJsonField(api, body, "cxoneApiCaller: Request Body");
+        const sendBody = parsedBody !== undefined && method !== "GET";
+        if (parsedBody !== undefined && method === "GET") {
+            api.log?.("warn", `cxoneApiCaller: a Request Body is configured but GET requests are sent without one; put parameters in the API Suffix query string instead`);
         }
-        if (method !== "GET" && !parsedBody) {
-            throw new Error("cxoneApiCaller: Request body is required for non-GET methods");
-        }
+        api.log?.("info", `cxoneApiCaller: Request body: ${sendBody ? JSON.stringify(parsedBody) : "none"}`);
 
         // Get CXone token
         const tokenUrl = await getCxoneOpenIdUrl(api, context, tokenIssuer);
@@ -193,32 +201,43 @@ export const cxoneApiCaller = createNodeDescriptor({
         const url = `${apiEndpointUrl}/${apiSuffix.replace(/^\/+/, "")}`;
         api.log?.("info", `cxoneApiCaller: Final Endpoint URL is: ${method} ${url}`);
 
-        // Add Authorization header
-        const finalHeaders = { "Authorization": `Bearer ${tokens.access_token}`, "Content-Type": "application/json", ...parsedHeaders };
+        // lets the call survive a token that CXone considers expired
+        const refreshToken = makeTokenRefresher(api, context, cxOneConfig.basicToken, cxOneConfig.accessKeyId, cxOneConfig.accessKeySecret, cxOneConfig.tokenUrl);
 
         try {
-            const response = await fetch(url, {
-                method,
-                headers: finalHeaders,
-                body: parsedBody && method !== "GET" ? JSON.stringify(parsedBody) : undefined
-            });
+            const response = await fetchWithAuthRetry(api, "cxoneApiCaller", tokens.access_token, (accessToken: string) => ({
+                url,
+                init: {
+                    method,
+                    // the Authorization header is rebuilt on a retry, additional headers still win
+                    headers: { "Authorization": `Bearer ${accessToken}`, "Content-Type": "application/json", ...parsedHeaders },
+                    body: sendBody ? JSON.stringify(parsedBody) : undefined
+                }
+            }), refreshToken);
 
             const responseText = await response.text();
             let data: any;
             try { data = JSON.parse(responseText); } catch { data = responseText; }
 
             api.log?.("info", `cxoneApiCaller: Received API Payload: ${response.status}`);
+            // the response body is stored for every status code, so make a failed call visible to the flow
+            api.addToContext?.("CXoneApiCallerStatus", response.status, "simple");
+            if (!response.ok) {
+                api.log?.("error", `cxoneApiCaller: API returned ${response.status} ${response.statusText} for ${method} ${url}; response body stored in ${storeLocation}.${storeKey}. Check context.CXoneApiCallerStatus to branch on this in the flow.`);
+            }
             if (storeLocation === "context") {
                 api.addToContext?.(storeKey, data, "simple");
             } else {
                 // @ts-ignore
                 api.addToInput(storeKey, data);
             }
-            api.log?.("info", `cxoneApiCaller: Stored API Payload in ${storeLocation} under key ${storeKey}. Data: ${JSON.stringify(data)}`);
+            // the response can hold customer data - it is stored in ${storeLocation}.${storeKey} for the flow, so only its size is logged
+            api.log?.("info", `cxoneApiCaller: Stored API Payload in ${storeLocation} under key ${storeKey}. Size: ${responseText.length} chars`);
         } catch (error: any) {
             api.log?.("error", `cxoneApiCaller Error Calling API: ${error.message}`);
             api.addToContext?.("CXoneApiCallerError", error.message, "simple");
-            api.output?.("Something is not working. Please retry.", { error: error.message });
+            // the error details stay in the log and in the context - they are not sent to the channel
+            api.output?.("Something is not working. Please retry.", null);
             throw error;
         }
     }

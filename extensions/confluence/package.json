@@ -38,5 +38,8 @@
         "@cognigy/extension-tools": "^0.17.0",
         "@langchain/textsplitters": "0.1.0",
         "turndown": "7.2.2"
+    },
+    "overrides": {
+        "esbuild": "0.28.1"
     }
 }

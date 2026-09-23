@@ -14,7 +14,12 @@ const formKeys = (node) => new Set((node.form || []).filter(e => e.type === 'fie
 test('the extension declares its nodes', () => {
     assert.strictEqual(extension.options.label, 'NiCEview');
     const types = nodes.map(n => n.type);
-    assert.deepStrictEqual(types, ['setNiCEviewContextInit', 'setNiCEviewContextFallback']);
+    assert.deepStrictEqual(types, [
+        'setNiCEviewContextInit',
+        'setNiCEviewContextFallback',
+        'reportNiCEviewSession',
+        'reportNiCEviewSessionEnd'
+    ]);
     assert.strictEqual(new Set(types).size, types.length, 'node types must be unique');
 });
 

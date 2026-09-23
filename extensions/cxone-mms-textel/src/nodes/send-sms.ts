@@ -112,7 +112,8 @@ export const sendTextelMms = createNodeDescriptor({
     appearance: {
         color: "#1C244A"
     },
-    function: async ({ cognigy, config }: IgetSendSmsParams) => {
+    function: async ({ cognigy, config: rawConfig }: INodeFunctionBaseParams) => {
+        const config = rawConfig as IgetSendSmsParams["config"];
         const { toPhoneNumber, fromPhoneNumber, bodyText, attachmentUrl, connection } = config;
         const { api, input, context } = cognigy;
 
@@ -125,7 +126,7 @@ export const sendTextelMms = createNodeDescriptor({
             token: connection.token
         };
 
-        api.log("info", `sendTextelMms: got data from Connection.  textelUrl: ${textelConfig.textelUrl}`);
+        api.log?.("info", `sendTextelMms: got data from Connection.  textelUrl: ${textelConfig.textelUrl}`);
 
         // configuration errors are reported to the flow before anything is sent, and never to the
         // customer - the catch below speaks to the channel, so this check stays outside it
@@ -150,28 +151,28 @@ export const sendTextelMms = createNodeDescriptor({
                     smsPayload.attachmentUrl = attachmentUrl;
                 } else {
                     // tell the builder why the attachment was dropped instead of silently sending an SMS
-                    api.log("warn", `sendTextelMms: 'Attachment URL' is not a valid http(s) URL and was ignored: ${attachmentUrl}`);
+                    api.log?.("warn", `sendTextelMms: 'Attachment URL' is not a valid http(s) URL and was ignored: ${attachmentUrl}`);
                 }
             }
             // the message body is customer facing content - log its size, not its text
-            api.log("info", `sendTextelMms: about to call API URL: ${textelConfig.textelUrl} with payload: ${JSON.stringify({ ...smsPayload, body: `<redacted: ${String(bodyText).length} chars>` })}`);
+            api.log?.("info", `sendTextelMms: about to call API URL: ${textelConfig.textelUrl} with payload: ${JSON.stringify({ ...smsPayload, body: `<redacted: ${String(bodyText).length} chars>` })}`);
             const headers = { Authorization: `Bearer ${textelConfig.token}`, "Content-Type": "application/json" };
             const response = await fetch(textelConfig.textelUrl, { method: "POST", headers, body: JSON.stringify(smsPayload) });
             if (!response.ok) {
                 throw new Error(`Error calling Textel API. Status: ${response.status}. StatusText: ${response.statusText}.`);
             }
-            api.log("info", `sendTextelMms: Successfully called textel API. Status: ${response.status}. StatusText: ${response.statusText}.`);
+            api.log?.("info", `sendTextelMms: Successfully called textel API. Status: ${response.status}. StatusText: ${response.statusText}.`);
             const data = {
                 status: response.status,
                 statusText: response.statusText
             };
-            api.addToContext("sendTextelMms", `Sent SMS/MMS to ${toPhoneNumber}. Response: ${JSON.stringify(data)}.`, 'simple');
-            // api.output("", data);
+            api.addToContext?.("sendTextelMms", `Sent SMS/MMS to ${toPhoneNumber}. Response: ${JSON.stringify(data)}.`, 'simple');
+            // api.output?.("", data);
         } catch (error) {
-            api.log("error", `sendTextelMms: Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`);
-            api.addToContext("sendTextelMms", `Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`, 'simple');
+            api.log?.("error", `sendTextelMms: Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`);
+            api.addToContext?.("sendTextelMms", `Error sending SMS/MMS to ${toPhoneNumber}; error: ${error.message}`, 'simple');
             // the error details stay in the log and in the context - they are not sent to the channel
-            api.output(`Error sending SMS/MMS to ${toPhoneNumber}`, null);
+            api.output?.(`Error sending SMS/MMS to ${toPhoneNumber}`, null);
             throw error;
         }
     }

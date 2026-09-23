@@ -57,6 +57,30 @@ test('an existing context is left alone', async () => {
     assert.strictEqual(h.context.data.flowId, 'already-set');
 });
 
+test('a live interaction is left alone even without a flowId', async () => {
+    const service = mockNiceviewService();
+    // a real voice contact whose headers carried no flowId: replacing this context would
+    // swap the real contactId and ani for the Test Chat stand-ins, mid-session
+    const h = makeCognigy({ contextData: { contactId: '5550001111', ani: '+15551239999', flowChannel: 'VOICE' } });
+
+    await run(h);
+
+    assert.strictEqual(service.calls.length, 0, 'nothing to fetch - the session is live');
+    assert.strictEqual(h.context.data.contactId, '5550001111');
+    assert.strictEqual(h.context.data.ani, '+15551239999');
+    assert.strictEqual(h.context.data.flowChannel, 'VOICE');
+});
+
+test('the placeholder contact id does not count as a live interaction', async () => {
+    const service = mockNiceviewService();
+    const h = makeCognigy({ contextData: { contactId: '100000000000' } });
+
+    await run(h);
+
+    assert.strictEqual(service.calls.length, 1, 'a Test Chat stand-in is exactly what the fallback replaces');
+    assert.strictEqual(h.context.data.flowId, 'flow-1');
+});
+
 test('a missing user token is reported clearly and nothing is written', async () => {
     const service = mockNiceviewService();
     const h = makeCognigy({});

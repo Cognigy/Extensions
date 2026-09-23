@@ -73,8 +73,9 @@ test('voice: the header values are merged and the channel is flagged', async () 
 
 test('voice: the inContact ids are copied as trimmed strings', async () => {
     mockNiceviewService();
+    // both ids are padded: they end up in CXone API URLs, where a stray space breaks the call
     const headers = Object.assign(completeHeaders({ tier: 'gold' }), {
-        'X-InContact-MasterId': 42,
+        'X-InContact-MasterId': ' 42 ',
         'X-InContact-ContactId': ' 43 '
     });
     const h = makeCognigy({ inputData: voiceInput(headers) });
@@ -83,6 +84,16 @@ test('voice: the inContact ids are copied as trimmed strings', async () => {
 
     assert.strictEqual(h.context.data.contactId, '42');
     assert.strictEqual(h.context.data.spawnedContactId, '43');
+});
+
+test('voice: a numeric inContact id is still copied as a string', async () => {
+    mockNiceviewService();
+    const headers = Object.assign(completeHeaders({ tier: 'gold' }), { 'X-InContact-MasterId': 42 });
+    const h = makeCognigy({ inputData: voiceInput(headers) });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.contactId, '42', 'a header can arrive as a number');
 });
 
 test('voice: a missing SIP payload is reported without throwing', async () => {
@@ -174,7 +185,7 @@ test('no usable input at all is reported, not thrown', async () => {
 
     await assert.doesNotReject(() => run(h));
 
-    assert.match(h.context.SetNiCEviewContextInit, /No valid data found/);
+    assert.match(h.context.setNiCEviewContextInit, /No valid data found/);
 });
 
 test('voice: an empty ivaParams string is treated as no parameters', async () => {
@@ -231,6 +242,31 @@ test('voice: the caller phone number is kept out of the logs', async () => {
     assert.match(h.logText(), /ani redacted/);
 });
 
+test('voice: the demo user token is kept out of the logs', async () => {
+    mockNiceviewService();
+    const headers = completeHeaders({ tier: 'gold' });
+    headers['X-NiCEview'] = '{"customerName":"ACME","userToken":"super-secret-token"}';
+    const h = makeCognigy({ inputData: voiceInput(headers) });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.userToken, 'super-secret-token', 'the flow still gets the real value');
+    assert.ok(!h.logText().includes('super-secret-token'), 'the token fetches demo settings - it is a credential');
+});
+
+test('chat: a nested demo user token is kept out of the logs', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({
+        channel: 'webchat',
+        inputData: { contactId: '77', ivaParams: { contextData: { userToken: 'nested-secret-token' } } }
+    });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ivaParams.contextData.userToken, 'nested-secret-token');
+    assert.ok(!h.logText().includes('nested-secret-token'));
+});
+
 test('chat: the caller phone number is kept out of the logs', async () => {
     mockNiceviewService();
     const h = makeCognigy({ channel: 'webchat', inputData: { contactId: '77', ani: '+15559876543' } });
@@ -239,4 +275,171 @@ test('chat: the caller phone number is kept out of the logs', async () => {
 
     assert.strictEqual(h.context.data.ani, '+15559876543');
     assert.ok(!h.logText().includes('+15559876543'));
+});
+
+// The ani back-fill: without an ani an unrecognised caller cannot be numbered Guest 1,
+// Guest 2 against a demo, so a real voice contact that arrives without one has it filled
+// in from elsewhere on the input. See src/helpers/ani.ts.
+
+// A real telephony contact - not WebRTC, which is either flowChannel COGNIGY_WEBRTC or a
+// voice channel carrying the 100000000000 placeholder contact id - with no ani in the headers
+const realVoiceHeaders = (niceview) => Object.assign(
+    completeHeaders({ tier: 'gold' }),
+    { 'X-NiCEview': JSON.stringify(Object.assign({ customerName: 'ACME' }, niceview || {})) },
+    { 'X-InContact-MasterId': '9876543210' }
+);
+
+test('ani back-fill: a real voice call without an ani takes the number from numberMetaData', async () => {
+    mockNiceviewService();
+    const inputData = Object.assign(voiceInput(realVoiceHeaders()), {
+        numberMetaData: { e164Number: '+15551234567' }
+    });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+15551234567');
+    assert.strictEqual(h.context.aniSource, 'numberMetaData');
+});
+
+test('ani back-fill: a national number is completed with its country code', async () => {
+    mockNiceviewService();
+    const inputData = Object.assign(voiceInput(realVoiceHeaders()), {
+        numberMetaData: { nationalNumber: '5551234567', countryCode: '+1' }
+    });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+15551234567');
+    assert.strictEqual(h.context.aniSource, 'numberMetaData');
+});
+
+test('ani back-fill: an ani that is already there is never overwritten', async () => {
+    mockNiceviewService();
+    const inputData = Object.assign(voiceInput(realVoiceHeaders({ ani: '+15550000000' })), {
+        numberMetaData: { e164Number: '+15551234567' }
+    });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+15550000000');
+    assert.strictEqual(h.context.aniSource, undefined, 'nothing was filled in, so nothing to trace');
+});
+
+test('ani back-fill: a WebRTC demo is left alone (voice with the placeholder contact id)', async () => {
+    mockNiceviewService();
+    const headers = Object.assign(completeHeaders({ tier: 'gold' }), { 'X-InContact-MasterId': '100000000000' });
+    const inputData = Object.assign(voiceInput(headers), { numberMetaData: { e164Number: '+15551234567' } });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined);
+    assert.strictEqual(h.context.aniSource, undefined);
+});
+
+test('ani back-fill: a WebRTC demo is left alone (flowChannel COGNIGY_WEBRTC)', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({
+        channel: 'webchat',
+        inputData: {
+            contactId: '9876543210',
+            flowChannel: 'COGNIGY_WEBRTC',
+            numberMetaData: { e164Number: '+15551234567' }
+        }
+    });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined, 'a WebRTC caller has no number of their own');
+    assert.strictEqual(h.context.aniSource, undefined);
+});
+
+test('ani back-fill: a number in oAuthCustomerName is used when numberMetaData is absent', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({ inputData: voiceInput(realVoiceHeaders({ oAuthCustomerName: '+1 (555) 123-4567' })) });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+1 (555) 123-4567');
+    assert.strictEqual(h.context.aniSource, 'oAuthCustomerName');
+    // the invariant helpers/phone.ts exists to hold: whatever the back-fill accepts as a
+    // number, the redactor masks - otherwise recovering a number would publish it
+    assert.ok(!h.logText().includes('555'), 'the number must not reach the log through oAuthCustomerName either');
+});
+
+test('ani back-fill: a name in oAuthCustomerName is not mistaken for a number', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({ inputData: voiceInput(realVoiceHeaders({ oAuthCustomerName: 'Alex' })) });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined);
+    assert.strictEqual(h.context.aniSource, 'none', 'the attempt is still recorded');
+});
+
+test('ani back-fill: a name that happens to contain digits is not a number', async () => {
+    mockNiceviewService();
+    // enough digits to pass the length check, so only the "digits and punctuation only"
+    // rule keeps this out of the ani - an account label is not a phone number
+    const h = makeCognigy({ inputData: voiceInput(realVoiceHeaders({ oAuthCustomerName: 'Account 5551234567' })) });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined);
+    assert.strictEqual(h.context.aniSource, 'none');
+});
+
+test('ani back-fill: an extension-length value is not accepted as a number', async () => {
+    mockNiceviewService();
+    const inputData = Object.assign(voiceInput(realVoiceHeaders()), { numberMetaData: { e164Number: '4567' } });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined);
+    assert.strictEqual(h.context.aniSource, 'none');
+});
+
+test('ani back-fill: the recovered number is kept out of the logs', async () => {
+    mockNiceviewService();
+    const inputData = Object.assign(voiceInput(realVoiceHeaders()), {
+        numberMetaData: { e164Number: '+15551234567' }
+    });
+    const h = makeCognigy({ inputData });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+15551234567', 'the flow still gets the real value');
+    assert.ok(!h.logText().includes('+15551234567'), 'the recovered number must not be logged');
+    assert.match(h.logText(), /ani was missing; source: numberMetaData/);
+});
+
+test('ani back-fill: a chat contact is left alone', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({
+        channel: 'webchat',
+        inputData: { contactId: '77', flowChannel: 'TESTCHAT', numberMetaData: { e164Number: '+15551234567' } }
+    });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, undefined);
+    assert.strictEqual(h.context.aniSource, undefined);
+});
+
+test('ani back-fill: a real voice contact arriving on the non-SIP path is filled in too', async () => {
+    mockNiceviewService();
+    const h = makeCognigy({
+        channel: 'webchat',
+        inputData: { contactId: '77', flowChannel: 'VOICE', numberMetaData: { e164Number: '+15551234567' } }
+    });
+
+    await run(h);
+
+    assert.strictEqual(h.context.data.ani, '+15551234567');
+    assert.strictEqual(h.context.aniSource, 'numberMetaData');
+    assert.ok(!h.logText().includes('+15551234567'), 'numberMetaData is redacted out of the log too');
 });

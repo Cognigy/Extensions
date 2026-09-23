@@ -1,6 +1,7 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
 import { getNiCEviewData } from "../helpers/services";
 import { redactContextData } from "../helpers/redact";
+import { fillMissingAni } from "../helpers/ani";
 
 export const setNiCEviewContextInit = createNodeDescriptor({
     type: "setNiCEviewContextInit",
@@ -17,15 +18,15 @@ export const setNiCEviewContextInit = createNodeDescriptor({
 
         try {
             const channel = input?.channel || '';
-            api.log("info", `setNiCEviewContextInit: Interaction channel: ${channel}`);
+            api.log?.("info", `setNiCEviewContextInit: Interaction channel: ${channel}`);
             const isVoice = channel.toLowerCase().includes('voice');
-            api.log("info", `setNiCEviewContextInit: isVoice: ${isVoice}`);
+            api.log?.("info", `setNiCEviewContextInit: isVoice: ${isVoice}`);
 
             if (isVoice) {
                 const payload = input?.data?.payload;
                 if (!payload) {
-                    api.log("error", "setNiCEviewContextInit: Voice input data not available after waiting");
-                    api.addToContext("setNiCEviewContextInit", "Voice input data not available", "simple");
+                    api.log?.("error", "setNiCEviewContextInit: Voice input data not available");
+                    api.addToContext?.("setNiCEviewContextInit", "Voice input data not available", "simple");
                     return;
                 }
                 const headers = payload?.sip?.headers || {};
@@ -92,7 +93,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                         isParamsMissing = true;
                     }
                 } catch (err) {
-                    api.log("error", "setNiCEviewContextInit: Error parsing X-NiCEview headers: " + (err as Error).message);
+                    api.log?.("error", "setNiCEviewContextInit: Error parsing X-NiCEview headers: " + (err as Error).message);
                 }
 
                 // Merge everything into contextData
@@ -108,7 +109,7 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                 if (isParamsMissing) {
                     if (xNiceview.userToken && xNiceview.demoName) {
                         try {
-                            api.log("info", "setNiCEviewContextInit: SIP Headers data missing. Retreiving from settings from NiCEview...");
+                            api.log?.("info", "setNiCEviewContextInit: SIP header data is incomplete. Retrieving settings from NiCEview...");
                             const niceViewData = await getNiCEviewData(api, xNiceview.userToken.trim(), xNiceview.demoName.trim(), false);
 
                             // Only override fields when the service actually returned a value —
@@ -130,12 +131,12 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                                     try {
                                         contextData.ivaParams = JSON.parse(niceViewData.customIvaJson);
                                     } catch (err) {
-                                        api.log("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${(err as Error).message}`);
+                                        api.log?.("warn", `setNiCEviewContextInit: Failed to parse customIvaJson: ${(err as Error).message}`);
                                     }
                                 }
                             }
                         } catch (error) {
-                            api.log("error", `setNiCEviewContextInit: Error getting data from NiCEview service: ${(error as Error).message}`);
+                            api.log?.("error", `setNiCEviewContextInit: Error getting data from NiCEview service: ${(error as Error).message}`);
                         }
                     }
                 }
@@ -149,9 +150,18 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                     contextData.spawnedContactId = headers["X-InContact-ContactId"].toString().trim();
                 }
 
+                // After the contact ids are final: a real call that arrived without an ani
+                // gets one from elsewhere on the input, so the caller can still be numbered
+                // Guest 1, Guest 2 instead of reading as a plain "Guest".
+                const aniSource = fillMissingAni(input, contextData);
+                if (aniSource) {
+                    api.log?.("info", `setNiCEviewContextInit: ani was missing; source: ${aniSource}`);
+                    api.addToContext?.("aniSource", aniSource, "simple");
+                }
+
                 // Add to context for voice
-                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(contextData))}`);
-                api.addToContext("data", contextData, "simple");
+                api.log?.("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(contextData))}`);
+                api.addToContext?.("data", contextData, "simple");
             } else if (input.data && typeof input.data === "object") {
                 // Add to context for chat - copied rather than mutated in place, and ivaParams always exists
                 const chatData: Record<string, any> = { ivaParams: {}, ...input.data };
@@ -164,15 +174,22 @@ export const setNiCEviewContextInit = createNodeDescriptor({
                 } else if (input.data.ivaParams && typeof input.data.ivaParams === "object") {
                     chatData.ivaParams = input.data.ivaParams;
                 }
-                api.log("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(chatData))}`);
-                api.addToContext("data", chatData, "simple");
+                // Same ani back-fill as the voice branch: it is gated on flowChannel, so it only
+                // does anything when a real telephony contact came in through this path.
+                const aniSource = fillMissingAni(input, chatData);
+                if (aniSource) {
+                    api.log?.("info", `setNiCEviewContextInit: ani was missing; source: ${aniSource}`);
+                    api.addToContext?.("aniSource", aniSource, "simple");
+                }
+                api.log?.("info", `setNiCEviewContextInit: Setting context data for channel ${channel} (ani redacted): ${JSON.stringify(redactContextData(chatData))}`);
+                api.addToContext?.("data", chatData, "simple");
             } else {
-                api.log("info", `setNiCEviewContextInit: No valid data found in input for channel ${channel}`);
-                api.addToContext("SetNiCEviewContextInit", `No valid data found in input for channel ${channel}`, 'simple');
+                api.log?.("info", `setNiCEviewContextInit: No valid data found in input for channel ${channel}`);
+                api.addToContext?.("setNiCEviewContextInit", `No valid data found in input for channel ${channel}`, 'simple');
             }
         } catch (error) {
-            api.log("error", `setNiCEviewContextInit: Error setting context: ${(error as Error).message}`);
-            api.addToContext("SetNiCEviewContextInit", `Error setting context: ${(error as Error).message}`, 'simple');
+            api.log?.("error", `setNiCEviewContextInit: Error setting context: ${(error as Error).message}`);
+            api.addToContext?.("setNiCEviewContextInit", `Error setting context: ${(error as Error).message}`, 'simple');
         }
     }
 });

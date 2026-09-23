@@ -17,3 +17,8 @@ coverage/
 *.tar.gz
 /**/.DS_Store
 .history
+# Claude Code: local settings and session state, not for the repo
+.claude/
+
+# Service endpoints and keys: compiled into the built extension, never committed
+extensions/*/src/helpers/secrets.local.ts

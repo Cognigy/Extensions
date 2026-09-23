@@ -23,8 +23,11 @@ function makeCognigy(options = {}) {
         output: () => {}
     };
 
+    // sessionId/userId/projectId and anything else a node reads straight off the input
+    const input = Object.assign({ channel: options.channel || 'voice', data: options.inputData }, options.input || {});
+
     return {
-        cognigy: { api, input: { channel: options.channel || 'voice', data: options.inputData }, context },
+        cognigy: { api, input, context },
         context,
         logs,
         logText: () => logs.map(l => `${l.level}: ${l.message}`).join('\n'),
@@ -75,4 +78,37 @@ function mockNiceviewService(options = {}) {
     return state;
 }
 
-module.exports = { require_, BUILD, makeCognigy, voiceInput, mockNiceviewService };
+// Installs a mocked demo-log service on global.fetch and returns the recorder.
+function mockDemoLogService(options = {}) {
+    const state = {
+        calls: [],            // { url, method, headers, body } per request
+        status: options.status || 200,
+        // what the service answers with; the id can sit at the top level or under `result`
+        response: options.response !== undefined ? options.response : { id: 'log-1' },
+        rawBody: options.rawBody !== undefined ? options.rawBody : null,
+        throws: options.throws || null
+    };
+
+    global.fetch = async (url, init = {}) => {
+        state.calls.push({
+            url: String(url),
+            method: init.method,
+            headers: init.headers || {},
+            body: init.body ? JSON.parse(init.body) : null,
+            signal: init.signal
+        });
+        if (state.throws) throw new Error(state.throws);
+        const text = state.rawBody !== null ? state.rawBody : JSON.stringify(state.response);
+        return {
+            ok: state.status < 400,
+            status: state.status,
+            statusText: state.status === 200 ? 'OK' : 'Error',
+            json: async () => JSON.parse(text),
+            text: async () => text
+        };
+    };
+
+    return state;
+}
+
+module.exports = { require_, BUILD, makeCognigy, voiceInput, mockNiceviewService, mockDemoLogService };

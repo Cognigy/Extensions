@@ -396,8 +396,8 @@
     {
       "name": "diffbot",
       "label": "Diffbot",
-      "version": "1.0.1",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/diffbot101/diffbot.tar.gz",
+      "version": "2.0.1",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/diffbot201/diffbot-2.0.1.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/diffbot",
       "description": "Integrates with the Diffbot API",
       "longDescription": "Diffbot provides a powerful API for crawling and importing the content of websites into your Knowledge Base.",
@@ -1585,7 +1585,7 @@
       ]
     },
     {
-      "name": "microsoft-powerautomate",
+      "name": "microsoft-power-automate",
       "label": "Microsoft Power Automate",
       "version": "4.0.0",
       "description": "Trigger automation processes within a virtual agent conversation",
@@ -1848,10 +1848,10 @@
       ]
     },
     {
-      "name": "8x8",
+      "name": "8x8-cognigy-extension",
       "label": "8x8",
-      "version": "5.2.0",
-      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8520/8x8.tar.gz",
+      "version": "5.3.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/8x8530/8x8.tar.gz",
       "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/8x8",
       "description": "Integrates with 8x8",
       "longDescription": "Integrates with 8x8",

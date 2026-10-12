@@ -52,19 +52,13 @@ exports[`schedule > getSchedulesNode should create the nodes for schedule 1`] = 
         "type": "connection",
       },
       {
-        "description": "The ID of the schedule",
+        "description": "The schedule ID, found in 8x8 Configuration Manager for Contact Center.",
         "key": "scheduleNameToID",
-        "label": "Schedules",
-        "optionsResolver": {
-          "dependencies": [
-            "connection",
-          ],
-          "resolverFunction": [Function],
-        },
+        "label": "Schedule ID",
         "params": {
           "required": true,
         },
-        "type": "select",
+        "type": "cognigyText",
       },
       {
         "defaultValue": "input",

@@ -76,7 +76,7 @@ This node allows you to check the condition of a queue before entering a queue. 
 which when met, will trigger specific actions. The node gives the flow much more routing flexibility by allowing testing queue status repeatedly.
 
 1. 8x8 Simple Connection - Steps for creating a connection are located inside the Connections section
-2. Select the queue - The dropdown will display the available queues for which you can test the conditions
+2. Queue ID - the queue ID, found in 8x8 Configuration Manager for Contact Center.
 3. There are NO agents - The following options are presented when you enable the condition:
 * Available
 * Available or Busy
@@ -101,7 +101,7 @@ This node allows you to check the state of the Contact Center schedule and route
 ### Setup Steps:
 
 1. 8x8 Simple Connection: The steps to create a connection can be found in the Connections section.
-2. Select the schedule: The dropdown will show the available schedules.
+2. Schedule ID: the schedule ID, found in 8x8 Configuration Manager for Contact Center.
 
 ### Exit Points:
 
@@ -162,7 +162,7 @@ This node allows you to schedule a handback to bot flow that transitions the con
 ### Setup Steps:
 
 1. **8x8 Simple Connection**: Steps for creating a connection are located inside the Connections section.
-2. **Webhook Selection**: Choose the webhook that points to your desired bot flow from the dropdown (populated automatically based on your connection).
+2. **Webhook ID**: the webhook ID, found in 8x8 Configuration Manager for Contact Center.
 3. **Assignment Configuration** (Optional - Advanced Settings):
   - **Assignment Type**: Currently supports 'webhook' type assignments.
   - **Configuration JSON**: Configure timing and notification settings:

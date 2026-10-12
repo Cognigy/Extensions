@@ -29,15 +29,14 @@ describe('scheduleHandbackToBotFlowNode', () => {
     expect((connectionField.params as any)?.required).toBe(true);
   });
 
-  it('should have webhook dropdown with options resolver', () => {
+  it('should have free-text webhook ID field', () => {
     const idField = scheduleHandbackToBotFlowNode.fields?.find(field => field.key === 'id');
     expect(idField).toBeDefined();
     if (!idField) return;
 
-    expect(idField.type).toBe('select');
+    expect(idField.type).toBe('cognigyText');
     expect((idField.params as any)?.required).toBe(true);
-    expect(idField.optionsResolver).toBeDefined();
-    expect(idField.optionsResolver?.dependencies).toContain('connection');
+    expect((idField as any).optionsResolver).toBeUndefined();
   });
 
   it('should have correct assignment type field', () => {

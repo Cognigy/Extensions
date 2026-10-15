@@ -59,7 +59,7 @@ export const encryptNode = createNodeDescriptor({
 					},
 					{
 						label: "aes-128-gcm",
-						value: "shaes-128-gcma"
+						value: "aes-128-gcm"
 					},
 					{
 						label: "aes-128-ofb",

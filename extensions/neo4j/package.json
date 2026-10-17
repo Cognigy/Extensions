@@ -1,0 +1,27 @@
+{
+	"name": "neo4j",
+	"version": "1.0.0",
+	"author": "Cognigy GmbH",
+	"keywords": [
+		"neo4j",
+		"database"
+	],
+	"license": "MIT",
+	"description": "Connects to Neo4j",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz neo4j.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.16.4",
+		"axios": "1.9.0",
+		"tslint": "^6.1.2"
+	},
+	"devDependencies": {
+		"@types/node": "^13.13.15",
+		"typescript": "^4.5.0"
+	}
+}

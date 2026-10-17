@@ -317,6 +317,25 @@
       ]
     },
     {
+      "name": "cxone",
+      "label": "CXone",
+      "version": "1.0.26",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/cxone1026/cxone.tar.gz",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/cxone",
+      "description": "Integrates Cognigy.AI with CXone for authenticated HTTP requests to CXone APIs.",
+      "longDescription": "The CXone extension enables authenticated HTTP requests to CXone APIs directly from Cognigy.AI flows. It automatically injects CXone bearer tokens from input or context, supports multiple HTTP methods and payload types, provides configurable timeouts and automatic retries with exponential backoff, offers structured error handling, and includes optional response header storage and debug logging with sensitive data redaction.",
+      "tags": ["cxone", "http", "api", "authenticated"],
+      "icon": "data:image/png;base64,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",
+      "nodes": [
+        {
+          "type": "cxoneAuthenticatedCall",
+          "defaultLabel": "CXone Authenticated Call",
+          "description": "Make an authenticated HTTP call using CXone token from input data with timeout and retry controls",
+          "tags": ["cxone", "http", "api", "authenticated"]
+        }
+      ]
+    },
+    {
       "name": "confluence",
       "label": "Confluence",
       "version": "5.0.1",

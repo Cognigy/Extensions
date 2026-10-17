@@ -3,12 +3,19 @@
 	"compilerOptions": {
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
+		"esModuleInterop": true,
 		"target": "es2017",
 		"module": "commonjs",
 		"rootDir": "src",
 		"outDir": "build",
 		"sourceMap": true,
-		"moduleResolution": "node",
-		"watch": false
-	}
+		"moduleResolution": "node"
+	},
+	"exclude": [
+		"node_modules",
+		"build"
+	],
+	"include": [
+		"src/**/*"
+	]
 }

@@ -567,15 +567,14 @@ export const encryptNode = createNodeDescriptor({
 		try {
 			// Prepare key with correct length
 			const keyBuffer = Buffer.from(key);
-			
 			const ivBuffer = Buffer.from(iv, 'utf8');
 
 			const cipher = crypto.createCipheriv(algorithm, keyBuffer, ivBuffer);
 			let crypted = cipher.update(text, 'utf8', 'hex');
 			crypted += cipher.final('hex');
-			
+
 			// Include the IV with the result for decryption
-			result = { 
+			result = {
 				"result": crypted,
 				"iv": ivBuffer.toString('utf8')
 			};

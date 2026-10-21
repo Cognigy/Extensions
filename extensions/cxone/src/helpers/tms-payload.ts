@@ -53,7 +53,14 @@ export function resolveMediaType(channel?: string, configured?: string): MediaTy
   return String(channel || "").toLowerCase().includes("voice") ? "Voice" : "Digital";
 }
 
-export default function transformConversation(conversation: ConversationItem[], action: Action, contactId: string, businessNumber: string, mediaType: MediaType = "Voice"): CognigyPayload {
+// How the session ended, in words. A hang-up is still CONTAINED - the completion types TMS is known
+// to accept are CONTAINED and ESCALATED - only the details say who ended it.
+function completionDetails(action: Action, callerHungUp: boolean): string {
+  if (action !== "End") return "User Escalated Conversation to Live Agent";
+  return callerHungUp ? "Caller Hung Up" : "User Asked to End Conversation";
+}
+
+export default function transformConversation(conversation: ConversationItem[], action: Action, contactId: string, businessNumber: string, mediaType: MediaType = "Voice", callerHungUp: boolean = false): CognigyPayload {
   const transcripts: Transcript[] = conversation
     // keep the messages that carry text - a data-only message (e.g. a custom payload or quick
     // replies) would otherwise show up as a blank line in the CXone transcript
@@ -85,7 +92,7 @@ export default function transformConversation(conversation: ConversationItem[], 
     selfServiceSessionDetails: {
       transcriptPublishSettingOption: "PUBLISH_TRANSCRIPTS_ONLY",
       sessionCompletionType: action === "End" ? "CONTAINED" : "ESCALATED",
-      sessionCompletionDetails: action === "End" ? "User Asked to End Conversation" : "User Escalated Conversation to Live Agent",
+      sessionCompletionDetails: completionDetails(action, callerHungUp),
       transcriptSummary: "",
       transcripts: transcripts
     }

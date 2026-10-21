@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import * as jwt from "jsonwebtoken";
 import transformConversation, { resolveMediaType } from '../helpers/tms-payload.js';
 import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, postToTMS, makeTokenRefresher } from "../helpers/cxone-utils.js";
@@ -10,6 +11,7 @@ export interface IsendTranscriptToTMSParams extends INodeFunctionBaseParams {
         environment: string;
         baseUrl?: string;
         action: string;
+        callerHungUp?: boolean;
         mediaType?: string;
         contactId: string;
         businessNumber: string;
@@ -22,7 +24,7 @@ export interface IsendTranscriptToTMSParams extends INodeFunctionBaseParams {
     };
 }
 
-export const sendTranscriptToTMS = createNodeDescriptor({
+export const sendTranscriptToTMS = instrumentNode("sendTranscriptToTMS", createNodeDescriptor({
     type: "sendTranscriptToTMS",
     defaultLabel: "Send Transcript to TMS",
     summary: "Post the conversation transcript to the CXone Transcript Management System (TMS). Posted only once per conversation.",
@@ -84,6 +86,14 @@ export const sendTranscriptToTMS = createNodeDescriptor({
             }
         },
         {
+            key: "callerHungUp",
+            label: "Caller Hung Up",
+            type: "toggle",
+            description: "Turn on when the caller ended the call (for example in a hang-up flow), so CXone records 'Caller Hung Up' instead of 'User Asked to End Conversation'. Still posted as CONTAINED.",
+            defaultValue: false,
+            condition: { key: "action", value: "End" }
+        },
+        {
             key: "mediaType",
             label: "Media Type",
             type: "select",
@@ -124,6 +134,7 @@ export const sendTranscriptToTMS = createNodeDescriptor({
         { type: "field", key: "environment" },
         { type: "field", key: "baseUrl" },
         { type: "field", key: "action" },
+        { type: "field", key: "callerHungUp" },
         { type: "field", key: "mediaType" },
         { type: "field", key: "businessNumber" },
         { type: "field", key: "contactId" },
@@ -139,6 +150,9 @@ export const sendTranscriptToTMS = createNodeDescriptor({
         // whitespace, which would break the TMS payload and the duplicate guard
         const businessNumber = (config.businessNumber || "").trim();
         const contactId = (config.contactId || "").trim();
+        // Cognigy keeps a hidden field's saved value: a toggle switched on before Session Completion
+        // was changed to 'Escalate' must not leak into an escalation
+        const callerHungUp = action === "End" && (config.callerHungUp === true || String(config.callerHungUp) === "true");
         const { api, input, context } = cognigy;
 
         if (!connection) {
@@ -176,7 +190,7 @@ export const sendTranscriptToTMS = createNodeDescriptor({
             tokenIssuer = baseUrl.trim().replace(/\/+$/, ''); // remove trailing slashes
         }
 
-        api.log?.("info", `sendTranscriptToTMS: Contact ID: ${contactId}; Session Completion: ${action}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
+        api.log?.("info", `sendTranscriptToTMS: Contact ID: ${contactId}; Session Completion: ${action}${callerHungUp ? " (caller hung up)" : ""}; Environment: ${environment}; Environment Base URL: ${tokenIssuer}`);
 
         const { transcript, reason } = resolveTranscript(api, input, context, "sendTranscriptToTMS");
         if (!transcript) {
@@ -198,7 +212,7 @@ export const sendTranscriptToTMS = createNodeDescriptor({
             // "Auto" follows the Cognigy channel: voice -> Voice, anything else -> Digital
             const mediaType = resolveMediaType(input?.channel, config.mediaType);
             api.log?.("info", `sendTranscriptToTMS: media type: ${mediaType} (setting: ${config.mediaType || "auto"}; channel: ${input?.channel || "unknown"})`);
-            const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber, mediaType);
+            const tmsPayload = transformConversation(transcript, action as "End" | "Escalate", contactId, businessNumber, mediaType, callerHungUp);
             // every item was filtered out (e.g. data-only inputs) - an empty transcript is not worth posting
             if (tmsPayload.selfServiceSessionDetails.transcripts.length === 0) {
                 api.log?.("warn", `sendTranscriptToTMS: the transcript holds no messages with text; nothing posted to TMS for contactId: ${contactId}.`);
@@ -217,4 +231,4 @@ export const sendTranscriptToTMS = createNodeDescriptor({
         }
         return;
     }
-});
+}));

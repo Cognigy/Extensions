@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import * as jwt from "jsonwebtoken";
 import getKnowledgeHubPayload from "../helpers/kh-payload.js";
 import formatKnowledgeHubResponse from "../helpers/kh-response.js";
@@ -58,7 +59,7 @@ const getKnowledgeHubAnswer = async (api: any, apiEndpointUrl: string, token: st
     return khAnswer;
 };
 
-export const getKnowledgeHubInfo = createNodeDescriptor({
+export const getKnowledgeHubInfo = instrumentNode("getKnowledgeHubInfo", createNodeDescriptor({
     type: "getKnowledgeHubInfo",
     defaultLabel: "Knowledge Hub",
     summary: "Retrieve information from the Knowledge Hub",
@@ -262,7 +263,6 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
             if (khAnswer.contextRefId && khAnswer.contextRefId !== "empty" && contextRefId === "empty") {
                 contextRefId = khAnswer.contextRefId;
                 api.addToContext?.("contextRefId", contextRefId, "simple");
-                context.contextRefId = contextRefId; // keep the in-memory context in sync for later nodes in this execution
                 api.log?.("info", `getKnowledgeHubInfo: stored contextRefId in context: ${contextRefId}`);
             }
             if (storeLocation === "context") {
@@ -280,4 +280,4 @@ export const getKnowledgeHubInfo = createNodeDescriptor({
             throw error;
         }
     }
-});
+}));

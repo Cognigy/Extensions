@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import * as jwt from "jsonwebtoken";
 import transformConversation, { resolveMediaType } from '../helpers/tms-payload.js';
 import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignalHandover, postToTMS, makeTokenRefresher } from "../helpers/cxone-utils.js";
@@ -28,7 +29,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     };
 }
 
-export const handoverToCXone = createNodeDescriptor({
+export const handoverToCXone = instrumentNode("handoverToCXone", createNodeDescriptor({
     type: "handoverToCXone",
     defaultLabel: "Exit Interaction",
     summary: "Escalate to Agent or End Conversation by returning control to CXone. Send transcript to TMS.",
@@ -293,4 +294,4 @@ export const handoverToCXone = createNodeDescriptor({
             throw error;
         }
     }
-});
+}));

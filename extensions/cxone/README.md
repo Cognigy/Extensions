@@ -11,8 +11,11 @@ Common behavior across all nodes in this extension:
 - **Configuration errors** (missing connection, missing required field, invalid JSON in a `json` field) throw immediately, before any CXone call is made, with a message naming the field. They are reported to the flow only — never sent to the customer.
 - **Runtime errors** are written to the Cognigy log and to the context; the channel only ever receives the generic `"Something is not working. Please retry."`. Internal details (URLs, HTTP status, API response bodies) are deliberately kept out of the outgoing message payload.
 - **Customer data is kept out of the logs**: the transcript posted to TMS is logged with each `messageBody` replaced by `<redacted: N chars>`, the Knowledge Hub logs the size of an utterance rather than its text, the caller's phone number (`ani`) is redacted from the Context Init log, and the CXone API Caller logs only the size of a response, since the body itself is stored under your Output Store Key. Every value still reaches the context and CXone unchanged - only the log line is redacted. Bearer tokens and connection secrets are never logged.
-- The CXone bearer token is cached in the context **encrypted** (AES-256-CBC, key derived from the connection's access key) and refreshed after 50 minutes. If CXone rejects a token earlier than that (`401`/`403`), the node drops the cached token, requests a new one and **retries the call once** — so a tenant with shorter lived tokens does not cause failures.
-- Cached tokens and discovery URLs are tied to the environment, tenant and connection they came from, so a flow that talks to **more than one CXone environment or tenant** never reuses the wrong endpoint or token.
+- **Token and endpoint caching**: the CXone bearer token and the two discovery URLs (token endpoint, API endpoint) are cached in the **extension's memory**, never in the Cognigy context — the token never appears in the context or in the logs. This follows Cognigy's [Extension runtime guidance](https://docs.cognigy.com/ai/for-developers/extensions) ("your Extension module can stay loaded between executions… treat module scope as a cache, not as storage"): while the module stays loaded, later executions reuse the same token and URLs — Exit Interaction after Knowledge Hub, and in practice also later calls (observed in production logs: a call reused the token fetched by the previous call six minutes earlier). After 15 minutes of inactivity or a redeployment Cognigy starts the runtime fresh, and the next node simply fetches them again (three short requests); the log says which happened (`Using cached CXone token…` or `Got a new CXone token…`).
+  - A token is reused for at most 50 minutes and never past the lifetime CXone gives it (`expires_in`). If CXone rejects a token earlier (`401`/`403`), the node drops it, requests a new one and **retries the call once** — so a tenant with shorter lived tokens does not cause failures.
+  - Cached values are tied to the environment, tenant and connection credentials they came from, so a flow that talks to **more than one CXone environment or tenant** — or a connection whose secret was rotated — never reuses the wrong endpoint or token.
+- **Cognigy's API call limit**: "Extensions can make up to **10 API calls per execution**, except for `api.log()`" ([Cognigy docs](https://docs.cognigy.com/ai/for-developers/extensions)); going over shows up as `Extension has emitted too many events (current threshold is 10)` and the node stops where it is. Every node in this extension makes **at most 5** such calls (context or input writes, channel output), even on a cold start with a token refresh and a failing CXone call — Exit Interaction normally makes 4. The documentation does not say whether "per execution" means one node or the whole flow execution, so this deliberately leaves room for other extension nodes in the same flow (for example NiCEview's Report Session End). Nodes write only through `addToContext` / `addToInput`, never by assigning to the context object.
+- **Diagnostics in the log** (`api.log()` has no call limit): every node logs the extension version first (e.g. `handoverToCXone: CXone extension v1.2.5`), then each Cognigy API call it makes, numbered against the limit (`handoverToCXone: Cognigy API call 4 of 10 (addToContext CXoneHandover)` — the key only, never the value), and finally the total (`handoverToCXone: finished, used 4 of 10 Cognigy API calls`). The count is per node; if the limit turns out to apply to the whole flow execution, add up the nodes that ran in that turn.
 - **Contact fields come pre-filled**: every node's `Contact ID` / `Main Contact ID` defaults to `{{context.data.contactId}}` and `Spawned Contact ID` to `{{context.data.spawnedContactId}}`, which is exactly what **Context Init** puts there — so in a normal flow you only pick the connection and the action.
 - **Environment Base URL** is only shown when Environment is `Other`, and is deliberately empty: it must be your own environment, so nothing is pre-filled for you.
 
@@ -55,7 +58,7 @@ If required CXone data is missing, the node populates `context.data` with **defa
 
 ---
 
-# Exit Interaction ✋
+## Exit Interaction ✋
 
 The **Exit Interaction** node allows you to send **End** or **Escalate** signals to the **CXone API** in the Voice channel (either to end a conversation or escalate it to a live agent), or to send a structured data message to Studio in the CXone Guide Chat channel via TextBotExchange.
 
@@ -108,6 +111,25 @@ The node **waits for 5 seconds before returning control** to the Cognigy flow to
 - **Webchat / Testchat**
   - Does not signal or return any data
 
+### 📝 Result in the context
+
+The outcome of the voice signal is written to `context.CXoneHandover`, e.g. `Signaled CXone with: 'End' for contactId: …`, or `Error signaling CXone with: …` when CXone rejected it. On an error the caller hears the generic `"Something is not working. Please retry."` and the node reports the error to the flow.
+
+### 📦 Parameters format
+
+**Parameters (optional)** must be a **JSON array** (or a JSON string holding one). The keys and values inside are free-form — what they mean is up to your CXone Studio script:
+
+```json
+[{ "type": "selfServiceSummary", "value": "Password reset done" }]
+```
+
+- The whole array is sent as **one** serialized string: voice → `p2` of the signal, Guide Chat → `Params`. Parse it in Studio.
+- A value that is not an array (e.g. a single object) is **ignored** with a warning in the log, and the handover still goes ahead without it.
+
+### ☎️ When the caller hangs up
+
+Do **not** use Exit Interaction in a flow that runs after the caller hung up: the call is already gone in CXone, so the signal is rejected (`404: Invalid Contact Id`) and the node reports an error. Use **Send Transcript to TMS** there instead, with **Session Completion** = `End Conversation` and **Caller Hung Up** switched on.
+
 ---
 
 ## Send Transcript to TMS 📝
@@ -122,6 +144,7 @@ It performs exactly the same TMS post as **Exit Interaction**, and the two nodes
 - Transforms it into the TMS payload (bot outputs → `Bot`, user inputs → `Patron`) and POSTs it to `{apiEndpoint}/aai/tms/transcripts/post`
 - **Only messages that carry text are posted.** A data-only message (custom payload, quick replies, an event) would otherwise appear as a blank line in the CXone transcript, so it is skipped; `messageBody` is always sent as a string, so a rich payload in `payload.text` is serialized rather than sent as an object (which TMS rejects). Items with no payload or an unusable timestamp are ignored, and the log states how many were skipped
 - **Session Completion** controls the reported outcome: `End Conversation` → `CONTAINED`, `Escalate to Agent` → `ESCALATED`
+- **Caller Hung Up** (shown only for `End Conversation`, off by default) records a hang-up as `Caller Hung Up` instead of `User Asked to End Conversation` — still `CONTAINED`, the completion types TMS is known to accept being `CONTAINED` and `ESCALATED`. Use it in a hang-up flow, where there is no live call left to signal, so this node — not **Exit Interaction** — is the one to use
 - Reuses the same **CXone Connection** and the cached token / discovery URLs as every other node in this extension
 - Never throws on a TMS failure, so a reporting problem cannot break the flow
 
@@ -132,6 +155,7 @@ It performs exactly the same TMS post as **Exit Interaction**, and the two nodes
 | Environment           | CXone environment (Global Production, FedRAMP Moderate, Australian Sovereign, EU Sovereign, or Other)                          |
 | Environment Base URL  | Base URL (Issuer) — only shown when **Environment** is `Other`                                                                  |
 | Session Completion    | `Escalate to Agent` → `ESCALATED`, `End Conversation` → `CONTAINED`                                                             |
+| Caller Hung Up        | Only shown for `End Conversation`. Off (default): details `User Asked to End Conversation`. On: details `Caller Hung Up`. Both are posted as `CONTAINED` |
 | Media Type            | How CXone records the interaction. **Auto** (default) reports a voice channel as `Voice` and every other channel as `Digital`; pick `Voice` or `Digital` to force it |
 | Business Unit Number  | CXone Business Unit Number (`busId` in the payload) — defaults to `4597359`                                                      |
 | Main Contact ID       | CXone Main Contact ID (`contactId` in the payload) — defaults to `{{context.data.contactId}}` as set by **Context Init**         |
@@ -183,6 +207,24 @@ The **Knowledge Hub** node allows you to query the **CXone Knowledge Hub** in re
 - **Filters** accepts a JSON object or a JSON string (e.g. `{{context.myFilters}}`)
 - Store Knowledge Hub responses in **context** or **input**
 - Return textual answers along with associated **links, citations, and images**
+
+### 🔎 Filters Format
+
+**Filters** is optional. When set, it is sent as-is in `kbFiltering.filters` of the Knowledge Hub query, so it must follow the Knowledge Hub filter format. To limit results to knowledge articles with given tags, use an `in` filter on `Tags`:
+
+```json
+{
+  "in": {
+    "key": "Tags",
+    "value": ["Amelia"]
+  }
+}
+```
+
+- `key` — the knowledge attribute to filter on (e.g. `Tags`)
+- `value` — a list of accepted values; articles matching any of them are returned (e.g. `["Billing", "Refunds"]`)
+
+Leave the field empty to query the whole knowledge base. See [Set Up Autopilot with Knowledge Hub](https://help.nicecxone.com/content/aiassistantsandbots/virtualagenthub/autopilot/setupautopilotwithkh.htm) for the CXone documentation.
 
 ---
 

@@ -30,8 +30,20 @@ const TRANSCRIPT = [
     transcriptItem({ role: 'assistant', type: 'output', payload: { text: 'Transferring you now' }, timestamp: 1767225601000 })
 ];
 
+// Cognigy stops an extension node that emits more than this many events in one execution.
+// Cognigy: "Extensions can make up to 10 API calls per execution, except for api.log()".
+const COGNIGY_EVENT_THRESHOLD = 10;
+
+// The token and discovery caches live in module memory. Every test starts from a cold start -
+// what a real environment sees after 15 minutes of inactivity or a redeployment.
+const resetModuleCaches = () => require_('helpers/cxone-utils.js').resetCaches();
+
 // A stand-in for Cognigy's node context. addToContext writes straight onto the context object,
 // which is how Cognigy makes a write visible to the nodes that run after it.
+//
+// Every api call except log counts against the limit. A node that assigns to the context object
+// directly is counted too: the runtime does not document what such a write costs, so the nodes
+// must only ever write through addToContext.
 function makeCognigy(options = {}) {
     const context = Object.assign({ data: options.contextData || {} }, options.context || {});
     if (options.transcript !== undefined) context.transcript = options.transcript;
@@ -39,23 +51,39 @@ function makeCognigy(options = {}) {
     const logs = [];
     const outputs = [];
     const inputStore = {};
+    const events = [];   // every counted event, as "addToContext <key>", "addToInput <key>" or "output"
+
+    // fails the node the same way Cognigy does, so every test also guards the event budget
+    const emit = (event) => {
+        events.push(event);
+        if (events.length > COGNIGY_EVENT_THRESHOLD) {
+            throw new Error(`Extension has emitted too many events (current threshold is ${COGNIGY_EVENT_THRESHOLD}). Events: ${events.join(', ')}`);
+        }
+    };
 
     const api = {
         log: (level, message) => logs.push({ level, message }),
-        addToContext: (key, value) => { context[key] = value; },
-        addToInput: (key, value) => { inputStore[key] = value; },
-        output: (text, data) => outputs.push({ text, data })
+        addToContext: (key, value) => { emit(`addToContext ${key}`); context[key] = value; },
+        addToInput: (key, value) => { emit(`addToInput ${key}`); inputStore[key] = value; },
+        output: (text, data) => { emit('output'); outputs.push({ text, data }); }
     };
+
+    // the context the NODES see: reading is free, a direct assignment is counted
+    const nodeContext = new Proxy(context, {
+        set: (target, key, value) => { emit(`assign context.${String(key)}`); target[key] = value; return true; },
+        deleteProperty: (target, key) => { emit(`delete context.${String(key)}`); delete target[key]; return true; }
+    });
 
     const input = { channel: options.channel || 'voice', data: options.inputData };
     if (options.inputTranscript !== undefined) input.transcript = options.inputTranscript;
 
     return {
-        cognigy: { api, input, context },
+        cognigy: { api, input, context: nodeContext },
         context,
         logs,
         outputs,
         inputStore,
+        events,
         logText: () => logs.map(l => `${l.level}: ${l.message}`).join('\n'),
         logsAt: (level) => logs.filter(l => l.level === level).map(l => l.message)
     };
@@ -64,6 +92,7 @@ function makeCognigy(options = {}) {
 // Installs a mocked CXone API on global.fetch and returns the recorder. Every field on the
 // returned object can be changed mid-test to steer the next response.
 function mockCxone(options = {}) {
+    resetModuleCaches();
     const state = {
         calls: [],              // "METHOD url" for every request
         lastInit: null,          // the fetch init of the last non-discovery request
@@ -157,6 +186,7 @@ const KH_ANSWER = {
 };
 
 module.exports = {
+    COGNIGY_EVENT_THRESHOLD,
     require_, BUILD, ENVIRONMENT, CONNECTION, TRANSCRIPT, KH_ANSWER,
     fakeIdToken, transcriptItem, makeCognigy, mockCxone, apiCalls
 };

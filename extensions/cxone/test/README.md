@@ -19,9 +19,11 @@ transpiles first, so a stale `build/` cannot produce a misleading pass.
 | `api-caller.test.js` | CXone API Caller: headers/body as object or JSON string, optional bodies, HTTP status visibility, validation |
 | `signal-and-context.test.js` | Signal Interaction and Context Init (voice headers, chat input, Testchat fallback) |
 | `knowledge-hub.test.js` | Knowledge Hub: response-code mapping, conversation reference, non-JSON responses, utterance privacy |
-| `auth.test.js` | Token and discovery caching per environment/tenant, and refresh-and-retry-once on a rejected token |
+| `auth.test.js` | In-memory token and discovery caching per environment/tenant/credentials, token lifetime, the 50-entry bound, failed lookups never cached, and refresh-and-retry-once on a rejected token |
 | `helpers.test.js` | `json-field`, `tms-payload`, `redact`, `tms-guard` |
-| `helpers/harness.js` | Shared fake Cognigy `api` and the mocked CXone API |
+| `event-budget.test.js` | Every node stays within 5 of Cognigy's 10 API calls per execution in its worst case (cold start + token refresh + failing CXone call), never caches in or assigns to the context, and shares its cache with later nodes |
+| `version.test.js` | Every node logs the extension version first |
+| `helpers/harness.js` | Shared fake Cognigy `api` and the mocked CXone API. It counts every API call except `log` (and any direct assignment to the context) like Cognigy, and throws past 10, so every test also guards the limit. It empties the in-memory caches for each test, like a cold start |
 
 ## Notes
 

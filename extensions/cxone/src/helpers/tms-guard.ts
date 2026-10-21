@@ -70,11 +70,7 @@ export const setTmsPostedStatus = (api: any, context: any, status: TmsPostedStat
     api.addToContext?.(TMS_POSTED_KEY, status, "simple");
     api.addToContext?.(TMS_POSTED_DETAILS_KEY, details, "simple");
     if (contactId) api.addToContext?.(TMS_POSTED_CONTACT_KEY, contactId, "simple");
-    // keep the in-memory context in sync, so nodes running later in the same flow execution see the flag
-    if (context && typeof context === "object") {
-        context[TMS_POSTED_KEY] = status;
-        context[TMS_POSTED_DETAILS_KEY] = details;
-        if (contactId) context[TMS_POSTED_CONTACT_KEY] = contactId;
-    }
+    // addToContext is the only write: Cognigy makes it visible to the nodes that run afterwards.
+    // The context object is deliberately not assigned to as well - only documented API calls write.
     api.log?.("info", `CXone -> setTmsPostedStatus: context.${TMS_POSTED_KEY} = '${status}'; details: ${details}`);
 };

@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, makeTokenRefresher, fetchWithAuthRetry } from "../helpers/cxone-utils.js";
 import { parseJsonField, parseJsonObjectField } from "../helpers/json-field.js";
 import * as jwt from "jsonwebtoken";
@@ -22,7 +23,7 @@ export interface IApiCallerParams extends INodeFunctionBaseParams {
     };
 }
 
-export const cxoneApiCaller = createNodeDescriptor({
+export const cxoneApiCaller = instrumentNode("cxoneApiCaller", createNodeDescriptor({
     type: "cxoneApiCaller",
     defaultLabel: "CXone API Caller",
     summary: "Call any CXone API dynamically with configurable method, headers, and body",
@@ -241,4 +242,4 @@ export const cxoneApiCaller = createNodeDescriptor({
             throw error;
         }
     }
-});
+}));

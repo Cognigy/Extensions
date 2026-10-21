@@ -1,61 +1,78 @@
 import * as crypto from "crypto";
 import { redactTmsPayload } from "./redact.js";
 
-// Helper to derive a 256-bit AES key from username and password
-const deriveKey = (username: string, password: string) => {
-  const hash = crypto.createHash("sha256");
-  hash.update(username + ":" + password);
-  return hash.digest().subarray(0, 32);
-};
+// ---------------------------------------------------------------------------------------------
+// Caches: the bearer token and the two discovery URLs are kept in MODULE MEMORY, never in the
+// Cognigy context. This follows Cognigy's Extension runtime guidance:
+//   - "your Extension module can stay loaded between executions", so module-scoped objects are
+//     reused until a cold start ("treat module scope as a cache, not as storage"); after a cold
+//     start (15 minutes of inactivity, or a redeployment) the values are simply fetched again
+//   - an Extension may make only 10 Cognigy API calls per execution (api.log() excepted), so
+//     caching through addToContext would spend that budget on bookkeeping
+// None of these values is business data, and every entry is tied to the environment, tenant and
+// credentials it came from - a different connection or environment never reuses it.
+// ---------------------------------------------------------------------------------------------
 
-// Function to encrypt token data
-const encryptToken = (token: string, username: string, password: string) => {
-  const key = deriveKey(username, password);
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
-  let encrypted = cipher.update(token, "utf8", "base64");
-  encrypted += cipher.final("base64");
-  return iv.toString("base64") + ":" + encrypted;
-};
-
-// Function to decrypt token data
-const decryptToken = (encryptedToken: string, username: string, password: string) => {
-  const key = deriveKey(username, password);
-  const [ivStr, enc] = encryptedToken.split(":");
-  const iv = Buffer.from(ivStr, "base64");
-  const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
-  let decrypted = decipher.update(enc, "base64", "utf8");
-  decrypted += decipher.final("utf8");
-  return decrypted;
-};
-
-// Identifies what a cached value belongs to, without putting the environment or the access key
-// itself into the context. Cached values are only reused for the same environment / credentials.
+// Identifies what a cached value belongs to without keeping the credentials themselves as a key
 const cacheKeyFor = (...parts: string[]) => {
-    return crypto.createHash("sha256").update(parts.join("|")).digest("hex").slice(0, 16);
+    // JSON keeps the parts apart: ("a|b", "c") and ("a", "b|c") must never share a key
+    return crypto.createHash("sha256").update(JSON.stringify(parts)).digest("hex");
 };
 
-// Function to get bearer token
-export const getToken = async (api: any, context: any, bToken: string, uValue: string, pValue: string, tokenUrl: string) => {
-    const cachedData = context?.cxoneEncryptedToken;
-    const cachedTime = context?.cxoneTokenTimestamp;
-    const tokenCacheKey = cacheKeyFor(tokenUrl, uValue);
-    // A token is only valid for the environment and the credentials it was issued for
-    if (cachedData && context?.cxoneTokenCacheKey && context.cxoneTokenCacheKey !== tokenCacheKey) {
-        api.log("info", "CXone -> getToken: Cached token belongs to a different environment or connection, requesting a new one.");
-    } else if (cachedData && cachedTime) {
-        const ageMinutes = (Date.now() - cachedTime) / (1000 * 60);
-        if (ageMinutes < 50) {
-            try {
-                const token = decryptToken(cachedData, uValue, pValue);
-                api.log("info", `CXone -> getToken: Using cached CXone token, age: ${Math.floor(ageMinutes)} min`);
-                return JSON.parse(token);
-            } catch (err) {
-                api.log("warn", "CXone -> getToken: Failed to decrypt cached CXone token, requesting new one.");
-            }
-        } else {
-            api.log("info", "CXone -> getToken: Cached token expired (older than 50 min), refreshing...");
+// A bounded map: a long-running environment serving many connections cannot grow without limit
+const MAX_CACHE_ENTRIES = 50;
+const remember = <T>(cache: Map<string, T>, key: string, value: T): void => {
+    cache.delete(key); // re-inserting moves the key to the end, so the oldest entry is evicted first
+    cache.set(key, value);
+    if (cache.size > MAX_CACHE_ENTRIES) {
+        cache.delete(cache.keys().next().value as string);
+    }
+};
+
+interface ICachedToken {
+    tokens: any;
+    expiresAt: number;
+}
+const tokenCache = new Map<string, ICachedToken>();
+const tokenUrlCache = new Map<string, string>();
+const apiUrlCache = new Map<string, string>();
+
+// A token is reused for at most 50 minutes, and never past the lifetime CXone itself gives it
+const MAX_TOKEN_AGE_MS = 50 * 60 * 1000;
+const TOKEN_EXPIRY_MARGIN_MS = 60 * 1000;
+const tokenLifetimeMs = (tokens: any): number => {
+    const expiresIn = Number(tokens?.expires_in);
+    if (Number.isFinite(expiresIn) && expiresIn > 0) {
+        return Math.max(0, Math.min(MAX_TOKEN_AGE_MS, expiresIn * 1000 - TOKEN_EXPIRY_MARGIN_MS));
+    }
+    return MAX_TOKEN_AGE_MS;
+};
+
+// the token cache key covers the token endpoint and every credential, so a rotated secret is a new key
+const tokenCacheKeyFor = (bToken: string, uValue: string, pValue: string, tokenUrl: string) =>
+    cacheKeyFor(tokenUrl, bToken, uValue, pValue);
+
+/** Empties every cache. For tests - a real environment starts empty on every cold start. */
+export const resetCaches = (): void => {
+    tokenCache.clear();
+    tokenUrlCache.clear();
+    apiUrlCache.clear();
+};
+
+// Function to get bearer token.
+// `context` is no longer used for caching; the parameter is kept so the nodes call it unchanged.
+// `forceRefresh` skips the cache - used when CXone has just rejected the cached token.
+export const getToken = async (api: any, context: any, bToken: string, uValue: string, pValue: string, tokenUrl: string, forceRefresh = false) => {
+    const tokenCacheKey = tokenCacheKeyFor(bToken, uValue, pValue, tokenUrl);
+    const cached = forceRefresh ? undefined : tokenCache.get(tokenCacheKey);
+    if (cached) {
+        const remainingMs = cached.expiresAt - Date.now();
+        if (remainingMs > 0) {
+            api.log("info", `CXone -> getToken: Using cached CXone token, valid for another ${Math.floor(remainingMs / 60000)} min`);
+            return cached.tokens;
         }
+        api.log("info", "CXone -> getToken: Cached token expired, requesting a new one.");
+        tokenCache.delete(tokenCacheKey);
     }
     const headers = {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -66,25 +83,20 @@ export const getToken = async (api: any, context: any, bToken: string, uValue: s
     if (!response.ok) {
         throw new Error(`CXone -> getToken: Error getting bearer token: ${response.status}: ${response.statusText}`);
     }
-    const data = await response.json();
+    const data = await readJsonResponse(api, response, "CXone -> getToken");
+    // never cache (and hand to every later node) a response that carries no token
+    if (!data || typeof data !== "object" || !data.access_token) {
+        throw new Error("CXone -> getToken: the token response did not contain an access token");
+    }
 
-    // Encrypt and store in context
-    const encrypted = encryptToken(JSON.stringify(data), uValue, pValue);
-    api.addToContext("cxoneEncryptedToken", encrypted, "simple");
-    api.addToContext("cxoneTokenTimestamp", Date.now(), "simple");
-    api.addToContext("cxoneTokenCacheKey", tokenCacheKey, "simple");
-    api.log("info", "CXone -> getToken: Cached new encrypted CXone token in context.");
+    remember(tokenCache, tokenCacheKey, { tokens: data, expiresAt: Date.now() + tokenLifetimeMs(data) });
+    api.log("info", "CXone -> getToken: Got a new CXone token and cached it in the extension's memory.");
     return data;
 };
 
 // Drop the cached token so the next getToken() call issues a fresh one.
-export const clearCachedToken = (api: any, context: any): void => {
-    api.addToContext("cxoneEncryptedToken", "", "simple");
-    api.addToContext("cxoneTokenTimestamp", 0, "simple");
-    if (context && typeof context === "object") {
-        context.cxoneEncryptedToken = "";
-        context.cxoneTokenTimestamp = 0;
-    }
+export const clearCachedToken = (api: any, bToken: string, uValue: string, pValue: string, tokenUrl: string): void => {
+    tokenCache.delete(tokenCacheKeyFor(bToken, uValue, pValue, tokenUrl));
     api.log("info", "CXone -> clearCachedToken: Dropped the cached CXone token.");
 };
 
@@ -103,8 +115,14 @@ export const makeTokenRefresher = (api: any, context: any, basicToken: string, a
             api.log("info", "CXone -> makeTokenRefresher: Reusing the token already refreshed during this node execution.");
             return refreshedToken;
         }
-        clearCachedToken(api, context);
-        const freshTokens = await getToken(api, context, basicToken, accessKeyId, accessKeySecret, tokenUrl);
+        // a successful refresh replaces the rejected token in the cache; a failed one drops it
+        let freshTokens: any;
+        try {
+            freshTokens = await getToken(api, context, basicToken, accessKeyId, accessKeySecret, tokenUrl, true);
+        } catch (refreshError) {
+            clearCachedToken(api, basicToken, accessKeyId, accessKeySecret, tokenUrl); // never reuse a token CXone has rejected
+            throw refreshError;
+        }
         const accessToken: string = freshTokens.access_token;
         refreshedToken = accessToken;
         return accessToken;
@@ -153,17 +171,13 @@ const readJsonResponse = async (api: any, response: Response, label: string): Pr
 
 // Function to get token URL via discovery service
 export const getCxoneOpenIdUrl = async (api: any, context: any, issuer: string) => {
-    // Check if the URL is already cached for THIS environment
+    // cached per environment
     const cacheKey = cacheKeyFor(issuer);
-    const cachedTokenUrl = context?.cxoneTokenUrl;
-    if (cachedTokenUrl && context?.cxoneTokenUrlCacheKey === cacheKey) {
-        api.log("info", `CXone -> getCxoneOpenIdUrl: Using cached CXone token URL from context: ${cachedTokenUrl}`);
+    const cachedTokenUrl = tokenUrlCache.get(cacheKey);
+    if (cachedTokenUrl) {
+        api.log("info", `CXone -> getCxoneOpenIdUrl: Using cached CXone token URL: ${cachedTokenUrl}`);
         return cachedTokenUrl;
     }
-    if (cachedTokenUrl) {
-        api.log("info", `CXone -> getCxoneOpenIdUrl: Cached token URL belongs to a different environment, resolving ${issuer} again.`);
-    }
-    // if not cached
     const url = `${issuer}/.well-known/openid-configuration`;
     const response = await fetch(url);
     if (!response.ok) {
@@ -173,25 +187,20 @@ export const getCxoneOpenIdUrl = async (api: any, context: any, issuer: string) 
     if (!data.token_endpoint) {
         throw new Error(`CXone -> getCxoneOpenIdUrl: Token Endpoint URL not found in discovery response`);
     }
-    api.addToContext("cxoneTokenUrl", data.token_endpoint, 'simple');
-    api.addToContext("cxoneTokenUrlCacheKey", cacheKey, 'simple');
+    remember(tokenUrlCache, cacheKey, data.token_endpoint);
     return data.token_endpoint;
 };
 
 // Function to get API endpoint via discovery service
 export const getCxoneConfigUrl = async (api: any, context: any, issuer: string, tenant: string) => {
-    // Check if the URL is already cached for THIS environment and tenant - the api_endpoint is tenant specific
+    // cached per environment AND tenant - the api_endpoint is tenant specific
     const cacheKey = cacheKeyFor(issuer, tenant);
-    const cachedApiUrl = context?.cxoneApiUrl;
-    if (cachedApiUrl && context?.cxoneApiUrlCacheKey === cacheKey) {
-        api.log("info", `CXone -> getCxoneConfigUrl: Using cached API URL from context: ${cachedApiUrl}`);
+    const cachedApiUrl = apiUrlCache.get(cacheKey);
+    if (cachedApiUrl) {
+        api.log("info", `CXone -> getCxoneConfigUrl: Using cached API URL: ${cachedApiUrl}`);
         return cachedApiUrl;
     }
-    if (cachedApiUrl) {
-        api.log("info", `CXone -> getCxoneConfigUrl: Cached API URL belongs to a different environment or tenant, resolving again.`);
-    }
-    // if not cached
-    const url = `${issuer}/.well-known/cxone-configuration?tenantId=${tenant}`;
+    const url = `${issuer}/.well-known/cxone-configuration?tenantId=${encodeURIComponent(tenant)}`;
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`CXone -> getCxoneConfigUrl: Error getting endpoint URL: ${response.status}: ${response.statusText}`);
@@ -200,8 +209,7 @@ export const getCxoneConfigUrl = async (api: any, context: any, issuer: string, 
     if (!data.api_endpoint) {
         throw new Error(`CXone -> getCxoneConfigUrl: API endpoint not found in discovery response`);
     }
-    api.addToContext("cxoneApiUrl", data.api_endpoint, 'simple');
-    api.addToContext("cxoneApiUrlCacheKey", cacheKey, 'simple');
+    remember(apiUrlCache, cacheKey, data.api_endpoint);
     return data.api_endpoint;
 };
 

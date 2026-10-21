@@ -100,17 +100,18 @@ test('a context written by an older build still blocks a repost', () => {
     assert.strictEqual(guard.isTmsTranscriptPosted({ cxoneTmsTranscriptPostedStatus: 'posted' }, '9001'), true);
 });
 
-test('the guard writes both the context and the in-memory copy', () => {
-    const context = {};
+test('the guard writes only through addToContext, one call per documented key', () => {
+    const context = Object.freeze({}); // any direct assignment would throw in strict mode
     const writes = [];
     const localApi = { log: () => {}, addToContext: (k, v) => writes.push([k, v]) };
 
     guard.setTmsPostedStatus(localApi, context, 'posted', 'details here', '9001');
 
-    assert.strictEqual(context.cxoneTmsTranscriptPostedStatus, 'posted');
-    assert.strictEqual(context.cxoneTmsTranscriptPostedContactId, '9001');
-    assert.ok(writes.some(([k, v]) => k === 'cxoneTmsTranscriptPostedStatus' && v === 'posted'),
-        'the status must be persisted through addToContext, not only in memory');
+    assert.deepStrictEqual(writes, [
+        ['cxoneTmsTranscriptPostedStatus', 'posted'],
+        ['cxoneTmsTranscriptPostedDetails', 'details here'],
+        ['cxoneTmsTranscriptPostedContactId', '9001']
+    ]);
 });
 
 test('context redaction hides the caller number without touching anything else', () => {

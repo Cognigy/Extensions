@@ -161,3 +161,9 @@ test('a transport failure tells the customer nothing about the error', async () 
     assert.strictEqual(h.context.CXoneApiCallerError, 'socket hang up');
     assert.ok(cxone.calls.length > 0);
 });
+
+test('a missing connection fails before any HTTP call is made', async () => {
+    const cxone = mockCxone();
+    await assert.rejects(() => run(makeCognigy({}), { connection: undefined }), /CXone API Connection not found/);
+    assert.strictEqual(cxone.calls.length, 0);
+});

@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import * as jwt from "jsonwebtoken";
 import { getToken, getCxoneOpenIdUrl, getCxoneConfigUrl, sendSignal, makeTokenRefresher } from "../helpers/cxone-utils.js";
 import { parseJsonArrayField } from "../helpers/json-field.js";
@@ -18,7 +19,7 @@ export interface IgetSendSignalParams extends INodeFunctionBaseParams {
     };
 }
 
-export const sendSignalToCXone = createNodeDescriptor({
+export const sendSignalToCXone = instrumentNode("sendSignalToCXone", createNodeDescriptor({
     type: "sendCxoneSignal",
     defaultLabel: "Signal Interaction",
     summary: "Signal CXone with arbitrary parameters",
@@ -172,4 +173,4 @@ export const sendSignalToCXone = createNodeDescriptor({
             throw error;
         }
     }
-});
+}));

@@ -1,4 +1,5 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
+import { instrumentNode } from "../helpers/version.js";
 import { tryParseJsonField, normalizeIvaParams } from "../helpers/json-field.js";
 import { redactContextData } from "../helpers/redact.js";
 
@@ -11,7 +12,7 @@ export interface IsetCxoneContextInitParams extends INodeFunctionBaseParams {
     };
 }
 
-export const setCxoneContextInit = createNodeDescriptor({
+export const setCxoneContextInit = instrumentNode("setCxoneContextInit", createNodeDescriptor({
     type: "setCxoneContextInit",
     defaultLabel: "Context Init",
     summary: "Set CXone settings in Cognigy Context for Chat and Voice",
@@ -176,4 +177,4 @@ export const setCxoneContextInit = createNodeDescriptor({
             api.addToContext?.("setCxoneContextInit", `Error setting context: ${error.message}`, 'simple');
         }
     }
-});
+}));

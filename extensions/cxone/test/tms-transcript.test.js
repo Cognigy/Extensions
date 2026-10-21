@@ -239,3 +239,43 @@ test('Environment "Other" requires a base URL', async () => {
     const h = makeCognigy({ transcript: TRANSCRIPT });
     await assert.rejects(() => run(h, { environment: 'other', baseUrl: '  ' }), /Base URL is required/);
 });
+
+test('Caller Hung Up: an ended call is recorded as a hang-up, still CONTAINED', async () => {
+    const cxone = mockCxone();
+    const h = makeCognigy({ transcript: TRANSCRIPT });
+
+    await run(h, { action: 'End', callerHungUp: true });
+
+    const details = cxone.tmsPayload.selfServiceSessionDetails;
+    assert.strictEqual(details.sessionCompletionType, 'CONTAINED');
+    assert.strictEqual(details.sessionCompletionDetails, 'Caller Hung Up');
+    assert.match(h.logText(), /Session Completion: End \(caller hung up\)/);
+});
+
+test('Caller Hung Up is off by default: existing nodes keep "User Asked to End Conversation"', async () => {
+    const cxone = mockCxone();
+
+    await run(makeCognigy({ transcript: TRANSCRIPT }), { action: 'End' });
+
+    assert.strictEqual(cxone.tmsPayload.selfServiceSessionDetails.sessionCompletionDetails, 'User Asked to End Conversation');
+});
+
+test('Caller Hung Up left on from before is ignored once Session Completion is Escalate', async () => {
+    const cxone = mockCxone();
+
+    await run(makeCognigy({ transcript: TRANSCRIPT }), { action: 'Escalate', callerHungUp: true });
+
+    const details = cxone.tmsPayload.selfServiceSessionDetails;
+    assert.strictEqual(details.sessionCompletionType, 'ESCALATED');
+    assert.strictEqual(details.sessionCompletionDetails, 'User Escalated Conversation to Live Agent');
+});
+
+test('Caller Hung Up accepts the toggle value as a string too', async () => {
+    const cxone = mockCxone();
+
+    await run(makeCognigy({ transcript: TRANSCRIPT }), { action: 'End', callerHungUp: 'true' });
+    assert.strictEqual(cxone.tmsPayload.selfServiceSessionDetails.sessionCompletionDetails, 'Caller Hung Up');
+
+    await run(makeCognigy({ transcript: TRANSCRIPT }), { action: 'End', callerHungUp: false });
+    assert.strictEqual(cxone.tmsPayload.selfServiceSessionDetails.sessionCompletionDetails, 'User Asked to End Conversation');
+});

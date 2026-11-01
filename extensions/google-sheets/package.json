@@ -29,6 +29,6 @@
 	"dependencies": {
 		"@cognigy/extension-tools": "^0.13.0",
 		"axios": "^0.20.0",
-		"googleapis": "^91.0.0"
+		"googleapis": "^124.0.0"
 	}
 }

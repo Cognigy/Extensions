@@ -120,22 +120,27 @@ export const getCategoriesNode = createNodeDescriptor({
 
         try {
 
-            const response = await axios({
-                method: "get",
-                url: `https://${subdomain}.zendesk.com/api/v2/help_center/categories`,
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                }
-            });
-
+            const categories = [];
+            let nextPage = `https://${subdomain}.zendesk.com/api/v2/help_center/categories`;
+            while (nextPage) {
+                const response = await axios({
+                    method: "get",
+                    url: nextPage,
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                });
+                categories.push(...response.data.categories);
+                nextPage = response.data.next_page;
+            }
 
             if (storeLocation === "context") {
-                api.addToContext(contextKey, response.data?.categories, "simple");
+                api.addToContext(contextKey, categories, "simple");
             } else {
                 // @ts-ignore
-                api.addToInput(inputKey, response.data?.categories);
+                api.addToInput(inputKey, categories);
             }
 
         } catch (error) {

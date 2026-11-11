@@ -183,7 +183,7 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 				},
 			});
 
-			if (response.data?.content?.data?.agents_online === 0) {
+			if (!(response.data?.content?.data?.agents_online > 0)) {
 				const onOfflineChild = childConfigs.find(child => child.type === "onNoAgentAvailable");
 				api.setNextNode(onOfflineChild.id);
 

@@ -120,21 +120,27 @@ export const getPhoneNumbersNode = createNodeDescriptor({
 
 		try {
 
-			const response = await axios({
-				method: "get",
-				url: `https://${subdomain}.zendesk.com/api/v2/channels/voice/phone_numbers`,
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json",
-					"Authorization": `Bearer ${accessToken}`
-				}
-			});
+			const phoneNumbers = [];
+			let nextPage = `https://${subdomain}.zendesk.com/api/v2/channels/voice/phone_numbers`;
+			while (nextPage) {
+				const response = await axios({
+					method: "get",
+					url: nextPage,
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${accessToken}`
+					}
+				});
+				phoneNumbers.push(...response.data.phone_numbers);
+				nextPage = response.data.next_page;
+			}
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data.phone_numbers, "simple");
+				api.addToContext(contextKey, phoneNumbers, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, response.data.phone_numbers);
+				api.addToInput(inputKey, phoneNumbers);
 			}
 		} catch (error) {
 

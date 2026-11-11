@@ -207,10 +207,10 @@ export const checkLiveAgentAvailabilityNode = createNodeDescriptor({
 		} catch (error) {
 
 			if (storeLocation === "context") {
-				api.addToContext(contextKey, { error: error }, "simple");
+				api.addToContext(contextKey, { error: error.message }, "simple");
 			} else {
 				// @ts-ignore
-				api.addToInput(inputKey, { error: error });
+				api.addToInput(inputKey, { error: error.message });
 			}
 		}
 	}

@@ -1,0 +1,13 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"target": "es2017",
+		"module": "commonjs",
+		"rootDir": "src",
+		"outDir": "build",
+		"sourceMap": true,
+		"moduleResolution": "node"
+	}
+}

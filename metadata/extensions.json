@@ -9,8 +9,8 @@
       "description": "Integrates Cognigy.AI with Zendesk Support, Chat, and Talk",
       "longDescription": "Zendesk develops and markets software for customer service, sales, and other customer interactions. This integration exposes several functions that enables the virtual agent to maintain support tickets, request callbacks in Talk or handover a Webchat conversation to Zendesk Chat.",
       "infoUrl": "https://support.cognigy.com/hc/en-us/sections/4409850326418-Zendesk",
-      "tags": ["support", "ticket", "livechat", "talk"],
-      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNBNAaMQAAAU7SURBVHhe7VpbiBtVGD6J2qp4QbcqVlTobgWjsG5mziSZnJNIVyRYiljdQlurbS1eUVHE6ouLfZGi2O2L4EN90AfxQbyCgoII7UPBCxas+qBoFasFC15bqrv1m81fs5n5k0wm58SBzgcfJDP/7Xwz58w5Z0ZkyJAhQ4YMJzFGb7z52mFz2crVyyn9fxhddcsYZ2uT42vWVUWuWDmSc/zjw6QoVp6ldrcw4c9wttZYrMyK8dJGkfP0t+DxYVJ4+nFqdgtSzXC21ijVDmTNQQD1LmtgkRBgZbPVCzBMAaR6GxlzzcSemmaNrFEdFUV9cTP5AgxLAKn2C887h7ICjvZwYi5iaItSf0SZ2zEMAaT+WRT9UcpImJo6BSe/jBhbonDVvZS5HfYFOIYck5QtBFlbxziYp1Tfi7HGYsraDrsCzGLcuYsyMajXT0Xf3Ms4GqXwqpspYxR2BXiOsnRBqXYl+shfjLMZto28DOwJ8H7QzSlLD8jaGhT6NxNkMEr9mXCuO5ey8LAjwFdCqfMoQ0xIfTscj4UCDUC1T1QqF1L0zjAtgNSHcVdHptzxgNEyeGSwgfuh1K/1vPInYFIA3MWI16DICSHlCBrwAoIdZZN053eipG5FFL7PO9XL6FcL5gTAiK8eoqgG4KpluI1nIMYPQfBQshbnxw61Bw3fhKfK6eQdhVfTeCQ9Q/9aMCWA1LsQrfNgmxjBSIonBdRdm5fVrTlXbctjGp2X6gE06Hrh1JeQZWeU62Mo8BfY76QjLRgRQH0oCoVFFDFlwPw7GBCDQq0IINU3Qk6OULSUwXFOQ5FvnSjWuABS/4o7s0CRUgipty8s2LAAmONXb6IoKYRXvQ1Ftq02TQqAK/8oRUghXO1zj1FjAkj9EjzzzQBpw0TlchR5KFI0aEYAtTe9I36hfhYK/IQv3IQA6kCs6fX/gubS+lW+8CYHEkDq3zDZcsgrfUCBT7KFL+AAAgTT3CnySCGC5TRfeBsTCjAXzDzJOoUINldjbqgkE0C9AquUjvjl8iUo8Ee+8CgTCPApZpNnkmXKUC6fgcb3tZ/YlwBYhYoJfylZpQzBlrrUL7OFd2FsAdClMJMsk0X6kJf6sUjRMRhPADUr3PlNlZTCra1GoZ03SLowlgCueorOpBBedRxX6I+2gvtgTwGkel2I6ZSO+KUVF6HxBxY2qF92F0DtE75/Nh1NGQpTizAw7Q43qF92EeAQu2EaxjXqAtg38m7tQUyOnoBo2/KytlVIvV7I6lVi2sbd0xzxd4Ubk4S8AHr7/IZpJwSvtKXegsbuQYweY486iG60Y14MY5DqYT5Z/2QF4L4ZCBBsxuLKQvz+31MEO9VSvzj4yrFUuwHB/mGTJCArAAenvgR53+Bi9MXgu4DEL0o8VcAt9TsbOCFjCeD7S9H4/Zx/Qs4GXYiix4ScHIHj16FAA7OnAMFbKRsfbQSvzDy1lrL0QKOxGE7vRYIYYA8B8rB5M+xjjupP4davplwdkUO/eZ4PMDi7CuCqTZyPUTa/U+ryqPT0fTC09uFURwEwAUJxP3E+poka7qCsIXh6BfpKojl+XHYUQKp7OHsrlPrz6JcjUl2BE4dZB4PsJACE/5izt8Q5LOgmKDVQLp+Pg1+EjKyQFcDVl+Kc1TsvTDwRaMU5v5Wt3wkb2CIvQG0VZ2uVUn8QpM7hz87ISYtkBfD0I5ytXaqDWFmVt+Qcfy7yOblFiqIfFcDxn+ZsrbJYOSIm775/wl2/UQ6TzoY7I0ve4Bhna5Nyw2aX0mfIkCFDhgwnH4T4F1qbdL6xyR08AAAAAElFTkSuQmCC",
+      "tags": ["support", "ticket", "livechat", "talk", "legacy"],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAD5klEQVR4AexavWsbMRQ/X5KmoZ+kaTt2D9kCDk4WQ6fsMv4DMhW8JCamXoLJYnAgyWBoKXTqFKKlU6G04CEJxOCtZOrUrR+htIXSr9TVu9iurZPudD7pncOd8bNPT9J77/eT9E7W2bZi/koIiPkEsJIZkMyAmDOQLAFKaTsK4SdeFDGAz2QG8CMRpzIhxI7tDADwbLDbsSSAbG3dAPBMotkIMfZT4DwyOT7+2vVtk7298W4hDt88+ba1v3+GCZw8fHoZ01+/Lx481Dk5gNTrE1BAkbcvfqL44Zx0wXPqTg5oNP7wFSbKLAiHcBO2vWx6LfNeQCw4o4mJVB/fZEG2maC+ye7utNcy7xEAUZkigWxv37Var76AD3Q5OPjs5XOAAGiomwRn5I+OPoBtbFHB4iIAgoSOpFabgeswwuzYopGHHyFh7Kr0Zb6VlrSQAMdBs3mqasRp3/fB7ipTnb6uNY8EXo6rL0649G0IQBzx2TCRav22046QlNVo/ADjvKCA39iYZH5dxDOd8O1LQK8X2zB1AYq+rVbjU6+t6GJh4bpIrVNHao9mrJOTX0FsqhMQxCrfdn5+gq6vm78LNF+f8q79yigE0HI50Kj4BS2qh1kp0vvpjBOAsu4h7/ghldQbJQAJ/JgEm5LaGAEo4M8z/l8lpJJGZgiYzV6V+NOmdrbXATO+yLl+ArLZcbpZ+CZyplWnaXutnQBaKPzWClRgLEjGF3QfUGklAGXdh8j4A8g7BW0EIIEPlfE7mAe+tBCAAr5avcIiD5XxWX/XOzwBmcyUy6oJRav13YTZcATkcmO0WDQSWD9YnUmv3y5chyKA5vPGD1NNgg9FAMq615zxATAvQ80AHPBvtGd8HjyUAxOAAn5nhx2eVLRnfADMSzACZnOXeANGyoeHnltpGAQvsSoVZVzKDS3I+Jt544+1pEmPHal1QfuRTufmzlTbKhMQWcYH4uF/TEMeqQER1uLiHRlpSgQ4RmQWNOmFIz+fndFBPF1bey/D4EuArKMm3FIz4JeWCx+lDYaoAJt8N28C0vdv8R1Qyum0Mb88CXIClpcnaemB91m/GTZsWioN7VclpH4SZASk6MqK8OmOioMwbVhwWP9YcbA7H3zALAiUTQjv11pauubSGVIwjA7RLgJYhfJzNd2x0dXV3r+3dNsW2mO32AECogQvDNCwEm6x/wnIZKYN+/M0HxX55wTAUXaxGPjBoieiC1IJBKQwjrJHlQ+bTb1oMv6IMAIzAD2U6vOX93inIh3fxkTZhh8h2NJ69uQdDwZ02HGAv0hmAA8+ynJCQJTsj4LvZAaMwihEGcOFnwFhyfsHAAD//+p14NMAAAAGSURBVAMAFXIqn4kLMgAAAAAASUVORK5CYII=",
       "nodes": [
         {
           "type": "createTicket",
@@ -71,6 +71,101 @@
           "defaultLabel": "Start Live Chat",
           "description": "Initializes the Zendesk Chat within the Cognigy Webchat",
           "tags": ["livechat", "chat", "webchat", "handover"]
+        }
+      ]
+    },
+    {
+      "name": "zendesk-connect",
+      "label": "Zendesk Connect",
+      "version": "4.0.0",
+      "downloadUrl": "https://github.com/Cognigy/Extensions/releases/download/zendesk-connect400/zendesk-connect.tar.gz",
+      "description": "Connects Cognigy.AI to Zendesk using an OAuth sign-in",
+      "longDescription": "Zendesk develops and markets software for customer service, sales, and other customer interactions. This integration exposes several functions that enables the virtual agent to maintain support tickets, request callbacks in Talk or handover a Webchat conversation to Zendesk Chat.",
+      "infoUrl": "https://github.com/Cognigy/Extensions/tree/master/extensions/zendesk-connect",
+      "tags": [
+        "support",
+        "ticket",
+        "livechat",
+        "talk",
+        "oauth"
+      ],
+      "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNBNAaMQAAAU7SURBVHhe7VpbiBtVGD6J2qp4QbcqVlTobgWjsG5mziSZnJNIVyRYiljdQlurbS1eUVHE6ouLfZGi2O2L4EN90AfxQbyCgoII7UPBCxas+qBoFasFC15bqrv1m81fs5n5k0wm58SBzgcfJDP/7Xwz58w5Z0ZkyJAhQ4YMJzFGb7z52mFz2crVyyn9fxhddcsYZ2uT42vWVUWuWDmSc/zjw6QoVp6ldrcw4c9wttZYrMyK8dJGkfP0t+DxYVJ4+nFqdgtSzXC21ijVDmTNQQD1LmtgkRBgZbPVCzBMAaR6GxlzzcSemmaNrFEdFUV9cTP5AgxLAKn2C887h7ICjvZwYi5iaItSf0SZ2zEMAaT+WRT9UcpImJo6BSe/jBhbonDVvZS5HfYFOIYck5QtBFlbxziYp1Tfi7HGYsraDrsCzGLcuYsyMajXT0Xf3Ms4GqXwqpspYxR2BXiOsnRBqXYl+shfjLMZto28DOwJ8H7QzSlLD8jaGhT6NxNkMEr9mXCuO5ey8LAjwFdCqfMoQ0xIfTscj4UCDUC1T1QqF1L0zjAtgNSHcVdHptzxgNEyeGSwgfuh1K/1vPInYFIA3MWI16DICSHlCBrwAoIdZZN053eipG5FFL7PO9XL6FcL5gTAiK8eoqgG4KpluI1nIMYPQfBQshbnxw61Bw3fhKfK6eQdhVfTeCQ9Q/9aMCWA1LsQrfNgmxjBSIonBdRdm5fVrTlXbctjGp2X6gE06Hrh1JeQZWeU62Mo8BfY76QjLRgRQH0oCoVFFDFlwPw7GBCDQq0IINU3Qk6OULSUwXFOQ5FvnSjWuABS/4o7s0CRUgipty8s2LAAmONXb6IoKYRXvQ1Ftq02TQqAK/8oRUghXO1zj1FjAkj9EjzzzQBpw0TlchR5KFI0aEYAtTe9I36hfhYK/IQv3IQA6kCs6fX/gubS+lW+8CYHEkDq3zDZcsgrfUCBT7KFL+AAAgTT3CnySCGC5TRfeBsTCjAXzDzJOoUINldjbqgkE0C9AquUjvjl8iUo8Ee+8CgTCPApZpNnkmXKUC6fgcb3tZ/YlwBYhYoJfylZpQzBlrrUL7OFd2FsAdClMJMsk0X6kJf6sUjRMRhPADUr3PlNlZTCra1GoZ03SLowlgCueorOpBBedRxX6I+2gvtgTwGkel2I6ZSO+KUVF6HxBxY2qF92F0DtE75/Nh1NGQpTizAw7Q43qF92EeAQu2EaxjXqAtg38m7tQUyOnoBo2/KytlVIvV7I6lVi2sbd0xzxd4Ubk4S8AHr7/IZpJwSvtKXegsbuQYweY486iG60Y14MY5DqYT5Z/2QF4L4ZCBBsxuLKQvz+31MEO9VSvzj4yrFUuwHB/mGTJCArAAenvgR53+Bi9MXgu4DEL0o8VcAt9TsbOCFjCeD7S9H4/Zx/Qs4GXYiix4ScHIHj16FAA7OnAMFbKRsfbQSvzDy1lrL0QKOxGE7vRYIYYA8B8rB5M+xjjupP4davplwdkUO/eZ4PMDi7CuCqTZyPUTa/U+ryqPT0fTC09uFURwEwAUJxP3E+poka7qCsIXh6BfpKojl+XHYUQKp7OHsrlPrz6JcjUl2BE4dZB4PsJACE/5izt8Q5LOgmKDVQLp+Pg1+EjKyQFcDVl+Kc1TsvTDwRaMU5v5Wt3wkb2CIvQG0VZ2uVUn8QpM7hz87ISYtkBfD0I5ytXaqDWFmVt+Qcfy7yOblFiqIfFcDxn+ZsrbJYOSIm775/wl2/UQ6TzoY7I0ve4Bhna5Nyw2aX0mfIkCFDhgwnH4T4F1qbdL6xyR08AAAAAElFTkSuQmCC",
+      "nodes": [
+        {
+          "type": "createTicket",
+          "defaultLabel": "Create Ticket",
+          "description": "Creates a new Ticket in Zendesk",
+          "tags": []
+        },
+        {
+          "type": "getTicket",
+          "defaultLabel": "Get Ticket",
+          "description": "Retrieves the information about a given ticket",
+          "tags": []
+        },
+        {
+          "type": "updateTicket",
+          "defaultLabel": "Update Ticket",
+          "description": "Updates a ticket in Zendesk",
+          "tags": []
+        },
+        {
+          "type": "searchArticles",
+          "defaultLabel": "Search Articles",
+          "description": "Searches for Help Center Articles",
+          "tags": [
+            "search",
+            "help"
+          ]
+        },
+        {
+          "type": "getCategories",
+          "defaultLabel": "Get Categories",
+          "description": "Retrieves all categories of the Help Center",
+          "tags": [
+            "search",
+            "help",
+            "category"
+          ]
+        },
+        {
+          "type": "checkLiveAgentAvailability",
+          "defaultLabel": "Check Agent Availability",
+          "description": "Checks if an agent is available in Zendesk Chat",
+          "tags": []
+        },
+        {
+          "type": "startLiveChat",
+          "defaultLabel": "Start Live Chat",
+          "description": "Initializes the Zendesk Chat within the Cognigy Webchat",
+          "tags": [
+            "livechat",
+            "chat",
+            "webchat",
+            "handover"
+          ]
+        },
+        {
+          "type": "getPhoneNumbers",
+          "defaultLabel": "Get Phone Numbers",
+          "description": "Retrieves the list of phone numbers from Zendesk",
+          "tags": [
+            "talk",
+            "phone",
+            "call"
+          ]
+        },
+        {
+          "type": "requestCallback",
+          "defaultLabel": "Request Callback",
+          "description": "Creates a new callback request in Zendesk",
+          "tags": [
+            "talk",
+            "phone",
+            "call",
+            "callback",
+            "request"
+          ]
         }
       ]
     },

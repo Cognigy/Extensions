@@ -1,0 +1,18 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"target": "es2019",
+		"module": "commonjs",
+		"rootDir": "src",
+		"outDir": "build",
+		"sourceMap": true,
+		"moduleResolution": "node",
+		"skipLibCheck": true
+	},
+	"exclude": [
+		"node_modules",
+		"build"
+	]
+}

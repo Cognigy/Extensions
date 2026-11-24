@@ -1,9 +1,10 @@
 {
 	"name": "intento-mt-hub",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Intento Enterprise Language Hub",
 	"main": "build/module.js",
 	"scripts": {
+		"test": "npm run transpile && node --test test/*.test.cjs",
 		"transpile": "tsc -p .",
 		"zip": "tar cfz intento-mt-hub.tar.gz build/* package.json package-lock.json README.md icon.png",
 		"build": "npm run transpile && npm run lint && npm run zip",

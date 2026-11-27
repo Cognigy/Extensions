@@ -1,12 +1,12 @@
 import { createNodeDescriptor, INodeFunctionBaseParams } from "@cognigy/extension-tools";
-import axios from 'axios';
-const qs = require('qs');
+import axios from "axios";
 
 export interface ISendSMSParams extends INodeFunctionBaseParams {
 	config: {
 		connection: {
+			apiKeySid: string;
+			apiKeySecret: string;
 			accountSid: string;
-			authToken: string;
 		};
 		from: string;
 		to: string;
@@ -16,9 +16,13 @@ export interface ISendSMSParams extends INodeFunctionBaseParams {
 		contextKey: string;
 	};
 }
+
+const MAX_SMS_LENGTH = 1600;
+
 export const sendSMSNode = createNodeDescriptor({
 	type: "sendSMS",
 	defaultLabel: "Send SMS",
+	summary: "Sends an SMS message via Twilio",
 	fields: [
 		{
 			key: "connection",
@@ -35,7 +39,7 @@ export const sendSMSNode = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true,
-				placeholder: '+4917324375843'
+				placeholder: "+4917324375843"
 			}
 		},
 		{
@@ -44,7 +48,7 @@ export const sendSMSNode = createNodeDescriptor({
 			type: "cognigyText",
 			params: {
 				required: true,
-				placeholder: '+4912644334511'
+				placeholder: "+4912644334511"
 			}
 		},
 		{
@@ -59,6 +63,7 @@ export const sendSMSNode = createNodeDescriptor({
 			key: "storeLocation",
 			type: "select",
 			label: "Where to store the result",
+			defaultValue: "input",
 			params: {
 				options: [
 					{
@@ -71,8 +76,7 @@ export const sendSMSNode = createNodeDescriptor({
 					}
 				],
 				required: true
-			},
-			defaultValue: "input"
+			}
 		},
 		{
 			key: "inputKey",
@@ -112,57 +116,130 @@ export const sendSMSNode = createNodeDescriptor({
 		{ type: "field", key: "from" },
 		{ type: "field", key: "to" },
 		{ type: "field", key: "body" },
-		{ type: "section", key: "storageOption" },
+		{ type: "section", key: "storageOption" }
 	],
 	appearance: {
 		color: "#F22F46"
 	},
-	function: async ({ cognigy, config }: ISendSMSParams) => {
+	dependencies: {
+		children: [
+			"onSuccessSendSMS",
+			"onErrorSendSMS"
+		]
+	},
+	function: async ({ cognigy, config, childConfigs }: ISendSMSParams) => {
 		const { api } = cognigy;
 		const { connection, from, to, body, storeLocation, inputKey, contextKey } = config;
-		const { accountSid, authToken } = connection;
+		const { apiKeySid, apiKeySecret, accountSid } = connection;
 
-		if (!body) throw new Error("SMS body missing or empty.");
-		if (body.length > 1600) throw new Error("SMS body too long (max 1600 characters).");
-		if (!from) throw new Error("The sender is missing. Define the 'from' field.");
-		if (!to) throw new Error("The receiver is missing. Define a 'to' field.");
+		const storeResult = (result: unknown): void => {
+			if (storeLocation === "context") {
+				api.addToContext(contextKey, result, "simple");
+			} else {
+				// @ts-ignore
+				api.addToInput(inputKey, result);
+			}
+		};
 
 		try {
+			if (!body) {
+				throw new Error("SMS body missing or empty.");
+			}
+			if (body.length > MAX_SMS_LENGTH) {
+				throw new Error(`SMS body too long (max ${MAX_SMS_LENGTH} characters).`);
+			}
+			if (!from) {
+				throw new Error("The sender is missing. Define the 'from' field.");
+			}
+			if (!to) {
+				throw new Error("The receiver is missing. Define the 'to' field.");
+			}
 
-			const smsData = qs.stringify({
-				'From': from,
-				'Body': body,
-				'To': to
-			});
+			const smsData = new URLSearchParams({
+				From: from,
+				To: to,
+				Body: body
+			}).toString();
 
 			const response = await axios({
-				method: 'post',
+				method: "POST",
 				url: `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
 				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Authorization': 'Basic '
+					"Accept": "application/json",
+					"Content-Type": "application/x-www-form-urlencoded"
 				},
 				auth: {
-					username: accountSid,
-					password: authToken
+					username: apiKeySid,
+					password: apiKeySecret
 				},
 				data: smsData
 			});
 
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, response.data, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, response.data);
+			storeResult(response.data);
+
+			const onSuccessChild = childConfigs.find(child => child.type === "onSuccessSendSMS");
+			if (onSuccessChild) {
+				api.setNextNode(onSuccessChild.id);
 			}
 		} catch (error) {
-			if (storeLocation === "context") {
-				api.addToContext(contextKey, error, "simple");
-			} else {
-				// @ts-ignore
-				api.addToInput(inputKey, error);
+			const errorMessage = error instanceof Error
+				? error.message
+				: JSON.stringify(error);
+			api.log("error", `sendSMS execution failed: ${errorMessage}`);
+
+			// @ts-ignore - axios errors expose the upstream response payload
+			storeResult(error?.response?.data ?? { error: errorMessage });
+
+			const onErrorChild = childConfigs.find(child => child.type === "onErrorSendSMS");
+			if (onErrorChild) {
+				api.setNextNode(onErrorChild.id);
 			}
 		}
+	}
+});
+
+export const onSuccessSendSMS = createNodeDescriptor({
+	type: "onSuccessSendSMS",
+	parentType: "sendSMS",
+	defaultLabel: "On Success",
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#61d188",
+		textColor: "white",
+		variant: "mini",
+		showIcon: false
+	}
+});
+
+export const onErrorSendSMS = createNodeDescriptor({
+	type: "onErrorSendSMS",
+	parentType: "sendSMS",
+	defaultLabel: "On Error",
+	constraints: {
+		editable: false,
+		deletable: false,
+		creatable: false,
+		movable: false,
+		placement: {
+			predecessor: {
+				whitelist: []
+			}
+		}
+	},
+	appearance: {
+		color: "#cf142b",
+		textColor: "white",
+		variant: "mini",
+		showIcon: false
 	}
 });

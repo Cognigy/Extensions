@@ -1,24 +1,34 @@
 ﻿Integrates Cognigy.AI with Twilio (https://www.twilio.com)
 
-This Extension is based on twilio (https://www.npmjs.com/package/twilio)
+This Extension talks to the [Twilio REST API](https://www.twilio.com/docs/usage/api) and authenticates using a Twilio [API Key](https://www.twilio.com/docs/usage/api/keys).
 
 ### Connection
 This Extension needs a Connection to be defined and passed to the Nodes. The Connection must have the following keys:
 
-- Sid
+- API Key SID
+  - key: **apiKeySid**
+  - value: Your Twilio API Key SID (starts with `SK...`)
+- API Key Secret
+  - key: **apiKeySecret**
+  - value: The secret that was shown when the API Key was created
+- Account SID
   - key: **accountSid**
-  - value: Your Twilio Account SID
-- Auth Token
-  - key: **authToken**
-  - Your Auth Token
+  - value: Your Twilio Account SID (starts with `AC...`)
 
 # Node: sendSMS
 
 [Twilio Docs on sending SMS](https://www.twilio.com/docs/sms/send-messages#send-an-sms-with-twilios-api)
 
-You need the `from` Sender SMS Number, the `to` Recipient SMS Number and the `to` SMS content (max. 1600 characters).
+You need the `from` Sender SMS Number, the `to` Recipient SMS Number and the `body` SMS content (max. 1600 characters).
 
-The Node will return the following information: 
+The Node has two child Nodes that control the flow depending on the outcome:
+
+- **On Success** – the SMS was accepted by Twilio.
+- **On Error** – sending the SMS failed (validation error or an error response from Twilio).
+
+In both cases the result (the Twilio response on success, or the error payload on failure) is written to the configured Input or Context key.
+
+On success the Node returns the following information: 
 
 ```json
 {

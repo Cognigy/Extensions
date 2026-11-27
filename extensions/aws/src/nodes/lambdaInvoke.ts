@@ -201,7 +201,7 @@ export const lambdaInvokeNode = createNodeDescriptor({
 			// If we have 'LogResult' (by way of LogType:'Tail'), then it's base64 encoded, up to 4kB:
 			// Let's unencode it:
 			if (result.LogResult) {
-				const buff = new Buffer(result.LogResult, 'base64');
+				const buff = Buffer.from(result.LogResult, 'base64');
 				result.LogResult = buff.toString('ascii');
 			}
 		}
@@ -211,7 +211,7 @@ export const lambdaInvokeNode = createNodeDescriptor({
 			cognigy.input[outputInputKey] = result;
 		}
 		if (outputContextKey) {
-			cognigy.api.setContext(outputContextKey, result);
+			cognigy.api.addToContext(outputContextKey, result, 'simple');
 		}
 	}
 });

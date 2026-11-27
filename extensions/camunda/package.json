@@ -1,0 +1,35 @@
+{
+	"name": "camunda",
+	"version": "4.0.0",
+	"description": "Integrates with Camunda and starts processes through an inbound webhook connector",
+	"main": "build/module.js",
+	"scripts": {
+		"transpile": "tsc -p .",
+		"zip": "tar cfz camunda.tar.gz build/* package.json package-lock.json README.md icon.png",
+		"build": "npm run transpile && npm run lint && npm run zip",
+		"lint": "tslint -c tslint.json src/**/*.ts"
+	},
+	"keywords": [
+		"Camunda",
+		"BPMN",
+		"Process",
+		"Workflow",
+		"Orchestration",
+		"Webhook"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Cognigy/Extensions"
+	},
+	"author": "Cognigy GmbH",
+	"license": "MIT",
+	"dependencies": {
+		"@cognigy/extension-tools": "^0.17.0",
+		"axios": "^1.13.5"
+	},
+	"devDependencies": {
+		"@types/node": "^22.5.5",
+		"tslint": "^6.1.3",
+		"typescript": "^5.6.2"
+	}
+}

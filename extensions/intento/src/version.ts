@@ -1,2 +1,2 @@
-export const version = "1.0.0"
-export const userAgent = `Intento.CognigyPackage/${version}`
+export const version = "1.0.1";
+export const userAgent = `Intento.CognigyTransformer/${version}`;
